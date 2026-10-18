@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Tax Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Income Tax</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Income Tax Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Gross Income ($)</label>
+                        <input type="number" id="taxIncome" value="75000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Filing Status</label>
+                        <select id="taxStatus" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                            <option value="single" selected>Single</option>
+                            <option value="married">Married Filing Jointly</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="calculateIncomeTax()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Tax</button>
+
+                <div id="taxResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-red-500">
+                            <p class="text-sm text-gray-500">Estimated Federal Tax</p>
+                            <p class="text-2xl font-bold text-red-500" id="taxAmount">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Effective Tax Rate</p>
+                            <p class="text-xl font-bold text-[#3F51B5]" id="taxEffectiveRate">0%</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
+                            <p class="text-sm text-gray-500">Net Income (Take-Home)</p>
+                            <p class="text-2xl font-bold text-[#14B8A6]" id="taxNetIncome">$0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Income Tax is Calculated</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">The U.S. uses a progressive tax system, meaning your income is divided into "brackets." You don't pay a single tax rate on all your income; instead, different portions of your income are taxed at increasing rates. This calculator uses the 2024 federal tax brackets (simplified) and assumes the standard deduction.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateIncomeTax() {
+            const income = parseFloat(document.getElementById('taxIncome').value);
+            const status = document.getElementById('taxStatus').value;
+
+            if (isNaN(income) || income < 0) {
+                alert("Please enter a valid income.");
+                return;
+            }
+
+            // 2024 Standard Deductions
+            const standardDeduction = status === 'single' ? 14600 : 29200;
+            
+            // Taxable Income
+            let taxableIncome = income - standardDeduction;
+            if (taxableIncome < 0) taxableIncome = 0;
+
+            let taxOwed = 0;
+
+            // 2024 Tax Brackets
+            if (status === 'single') {
+                if (taxableIncome <= 11600) {
+                    taxOwed = taxableIncome * 0.10;
+                } else if (taxableIncome <= 47150) {
+                    taxOwed = 1160 + (taxableIncome - 11600) * 0.12;
+                } else if (taxableIncome <= 100525) {
+                    taxOwed = 5426 + (taxableIncome - 47150) * 0.22;
+                } else if (taxableIncome <= 191950) {
+                    taxOwed = 17168.50 + (taxableIncome - 100525) * 0.24;
+                } else {
+                    // Simplified for higher brackets
+                    taxOwed = 39110.50 + (taxableIncome - 191950) * 0.32; 
+                }
+            } else if (status === 'married') {
+                if (taxableIncome <= 23200) {
+                    taxOwed = taxableIncome * 0.10;
+                } else if (taxableIncome <= 94300) {
+                    taxOwed = 2320 + (taxableIncome - 23200) * 0.12;
+                } else if (taxableIncome <= 201050) {
+                    taxOwed = 10852 + (taxableIncome - 94300) * 0.22;
+                } else if (taxableIncome <= 383900) {
+                    taxOwed = 34337 + (taxableIncome - 201050) * 0.24;
+                } else {
+                    // Simplified for higher brackets
+                    taxOwed = 78221 + (taxableIncome - 383900) * 0.32;
+                }
+            }
+
+            const netIncome = income - taxOwed;
+            const effectiveRate = (taxOwed / income) * 100;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('taxAmount').textContent = formatter.format(taxOwed);
+            document.getElementById('taxEffectiveRate').textContent = effectiveRate.toFixed(2) + "%";
+            document.getElementById('taxNetIncome').textContent = formatter.format(netIncome);
+
+            document.getElementById('taxResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
