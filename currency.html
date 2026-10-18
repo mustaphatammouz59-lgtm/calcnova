@@ -36,25 +36,27 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">From</label>
                         <select id="curFrom" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="usd" selected>USD - US Dollar</option>
-                            <option value="eur">EUR - Euro</option>
-                            <option value="gbp">GBP - British Pound</option>
-                            <option value="jpy">JPY - Japanese Yen</option>
-                            <option value="chf">CHF - Swiss Franc</option>
-                            <option value="cad">CAD - Canadian Dollar</option>
-                            <option value="aud">AUD - Australian Dollar</option>
+                            <option value="USD" selected>USD - US Dollar</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="GBP">GBP - British Pound</option>
+                            <option value="SAR">SAR - Saudi Riyal</option>
+                            <option value="AED">AED - UAE Dirham</option>
+                            <option value="EGP">EGP - Egyptian Pound</option>
+                            <option value="MAD">MAD - Moroccan Dirham</option>
+                            <option value="JPY">JPY - Japanese Yen</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">To</label>
                         <select id="curTo" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="eur" selected>EUR - Euro</option>
-                            <option value="usd">USD - US Dollar</option>
-                            <option value="gbp">GBP - British Pound</option>
-                            <option value="jpy">JPY - Japanese Yen</option>
-                            <option value="chf">CHF - Swiss Franc</option>
-                            <option value="cad">CAD - Canadian Dollar</option>
-                            <option value="aud">AUD - Australian Dollar</option>
+                            <option value="EUR" selected>EUR - Euro</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="GBP">GBP - British Pound</option>
+                            <option value="SAR">SAR - Saudi Riyal</option>
+                            <option value="AED">AED - UAE Dirham</option>
+                            <option value="EGP">EGP - Egyptian Pound</option>
+                            <option value="MAD">MAD - Moroccan Dirham</option>
+                            <option value="JPY">JPY - Japanese Yen</option>
                         </select>
                     </div>
                 </div>
@@ -67,8 +69,8 @@
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Live Exchange Rates</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">This calculator uses the Fawaz Ahmed Currency API, a free and open-source API that provides daily exchange rates for over 200 currencies. It is hosted on a global CDN (jsDelivr) to ensure fast and reliable access from your browser.</p>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">About This Calculator</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">This calculator uses a built-in database of recent exchange rates to provide instant conversions without requiring an internet connection or external API. Rates are approximate and for informational purposes only. For real-time trading, please consult your bank or financial institution.</p>
                 <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
                     <p>In-Article AdSense Banner (Fluid)</p>
                 </div>
@@ -94,7 +96,20 @@
     </footer>
 
     <script>
-        async function convertCurrency() {
+        // قاعدة بيانات تقريبية لأسعار الصرف مقابل الدولار الأمريكي (USD)
+        // تم جمع هذه البيانات تقريباً في أواخر 2024
+        const exchangeRates = {
+            "USD": 1.0,      // US Dollar (Base)
+            "EUR": 0.92,     // Euro
+            "GBP": 0.79,     // British Pound
+            "SAR": 3.75,     // Saudi Riyal
+            "AED": 3.67,     // UAE Dirham
+            "EGP": 49.50,    // Egyptian Pound
+            "MAD": 10.00,    // Moroccan Dirham
+            "JPY": 150.00    // Japanese Yen
+        };
+
+        function convertCurrency() {
             const amount = parseFloat(document.getElementById('curAmount').value);
             const from = document.getElementById('curFrom').value;
             const to = document.getElementById('curTo').value;
@@ -104,56 +119,19 @@
                 return;
             }
 
-            if (from === to) {
-                document.getElementById('curConverted').textContent = amount.toFixed(2) + " " + to.toUpperCase();
-                document.getElementById('curRateInfo').textContent = "Same currency selected";
-                document.getElementById('curResults').classList.remove('hidden');
-                return;
-            }
+            // Convert 'From' currency to USD first
+            const amountInUSD = amount / exchangeRates[from];
 
-            // Using the NEW Fawaz Ahmed API endpoint (npm package version)
-            const apiURL = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${from}.json`;
+            // Convert USD to 'To' currency
+            const converted = amountInUSD * exchangeRates[to];
 
-            try {
-                document.getElementById('curConverted').textContent = "Loading...";
-                document.getElementById('curResults').classList.remove('hidden');
+            // Calculate the direct exchange rate (1 From = X To)
+            const rate = exchangeRates[to] / exchangeRates[from];
 
-                const response = await fetch(apiURL);
-                const data = await response.json();
+            document.getElementById('curRateInfo').textContent = `1 ${from} = ${rate.toFixed(4)} ${to}`;
+            document.getElementById('curConverted').textContent = converted.toFixed(2) + " " + to;
 
-                // The API returns data in format: { "date": "...", "usd": { "eur": 0.92, ... } }
-                const rate = data[from][to];
-                
-                if (rate) {
-                    const converted = amount * rate;
-                    document.getElementById('curRateInfo').textContent = `1 ${from.toUpperCase()} = ${rate.toFixed(4)} ${to.toUpperCase()}`;
-                    document.getElementById('curConverted').textContent = converted.toFixed(2) + " " + to.toUpperCase();
-                } else {
-                    alert("Currency pair not supported. Please try a different pair.");
-                    document.getElementById('curResults').classList.add('hidden');
-                }
-            } catch (error) {
-                console.error("API Error:", error);
-                // Fallback to Cloudflare Pages if jsDelivr fails
-                try {
-                    const fallbackURL = `https://latest.currency-api.pages.dev/v1/currencies/${from}.json`;
-                    const response = await fetch(fallbackURL);
-                    const data = await response.json();
-                    const rate = data[from][to];
-                    
-                    if (rate) {
-                        const converted = amount * rate;
-                        document.getElementById('curRateInfo').textContent = `1 ${from.toUpperCase()} = ${rate.toFixed(4)} ${to.toUpperCase()}`;
-                        document.getElementById('curConverted').textContent = converted.toFixed(2) + " " + to.toUpperCase();
-                    } else {
-                        alert("Currency pair not supported.");
-                        document.getElementById('curResults').classList.add('hidden');
-                    }
-                } catch (fallbackError) {
-                    alert("Network error. Please check your internet connection.");
-                    document.getElementById('curResults').classList.add('hidden');
-                }
-            }
+            document.getElementById('curResults').classList.remove('hidden');
         }
     </script>
 </body>
