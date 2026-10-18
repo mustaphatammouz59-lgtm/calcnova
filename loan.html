@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="#" class="hover:text-[#14B8A6] transition">Health</a>
+                <a href="#" class="hover:text-[#14B8A6] transition">Math</a>
+                <a href="#" class="hover:text-[#14B8A6] transition">Other</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Loan Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        
+        <!-- Left Column -->
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Loan Calculator</h1>
+
+            <!-- The Tool -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Amount ($)</label>
+                        <input type="number" id="loanAmount" value="10000" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-[#14B8A6] outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate (%)</label>
+                        <input type="number" id="loanRate" value="5.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-[#14B8A6] outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Months)</label>
+                        <input type="number" id="loanMonths" value="60" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-[#14B8A6] outline-none">
+                    </div>
+                </div>
+                <button onclick="calculateLoan()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Loan</button>
+
+                <!-- Results -->
+                <div id="loanResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Monthly Payment</p>
+                            <p class="text-xl font-bold text-[#14B8A6]" id="monthlyPay">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Total Interest</p>
+                            <p class="text-xl font-bold text-gray-800" id="totalInt">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Total Cost</p>
+                            <p class="text-xl font-bold text-gray-800" id="totalCost">$0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEO Content -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is a Loan Calculator?</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">A loan calculator is a tool that helps you determine the monthly payments, total interest, and total cost of a loan. Whether you are taking out a personal loan, an auto loan, or a student loan, understanding the financial commitment is crucial before signing any agreement.</p>
+                
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">How to Use This Loan Calculator</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">Simply enter the total loan amount you need, the annual interest rate offered by your lender, and the term of the loan in months. The calculator will instantly compute your fixed monthly payment using the standard amortization formula.</p>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="#" class="hover:text-white transition">About Us</a>
+                <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        function calculateLoan() {
+            const amount = parseFloat(document.getElementById('loanAmount').value);
+            const rate = parseFloat(document.getElementById('loanRate').value);
+            const months = parseInt(document.getElementById('loanMonths').value);
+
+            if (isNaN(amount) || isNaN(rate) || isNaN(months) || amount <= 0 || months <= 0) {
+                alert("Please enter valid positive numbers.");
+                return;
+            }
+
+            const monthlyRate = (rate / 100) / 12;
+            let monthlyPayment = 0;
+
+            if (monthlyRate === 0) {
+                monthlyPayment = amount / months;
+            } else {
+                monthlyPayment = amount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+            }
+
+            const totalCost = monthlyPayment * months;
+            const totalInterest = totalCost - amount;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('monthlyPay').textContent = formatter.format(monthlyPayment);
+            document.getElementById('totalInt').textContent = formatter.format(totalInterest);
+            document.getElementById('totalCost').textContent = formatter.format(totalCost);
+
+            const resultsDiv = document.getElementById('loanResults');
+            resultsDiv.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
