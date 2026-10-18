@@ -9,7 +9,7 @@
 </head>
 <body class="text-gray-800">
 
-    <!-- Navbar (Same as before) -->
+    <!-- Navbar -->
     <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
@@ -77,6 +77,7 @@
             </div>
         </div>
 
+        <!-- Sidebar -->
         <aside class="md:w-1/4">
             <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
                 <p class="font-medium">AdSense Space</p>
@@ -85,8 +86,14 @@
         </aside>
     </main>
 
+    <!-- Footer (تم إصلاحه بالكامل) -->
     <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
         <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
             <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
         </div>
     </footer>
@@ -103,7 +110,6 @@
                 return;
             }
 
-            // Formula: A = P(1 + r/n)^(nt)
             const amount = p * Math.pow((1 + (r / n)), (n * t));
             const interest = amount - p;
 
