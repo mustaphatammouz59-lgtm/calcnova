@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRR Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">IRR</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Internal Rate of Return (IRR) Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <p class="text-sm text-gray-600 mb-4">Enter your initial investment (as a negative number) and your annual cash flows separated by commas. Example: <strong>-10000, 3000, 4200, 6800, 5000</strong></p>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Cash Flows ($)</label>
+                    <input type="text" id="irrCashFlows" value="-10000, 3000, 4200, 6800, 5000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                </div>
+                
+                <button onclick="calculateIRR()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate IRR</button>
+
+                <div id="irrResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
+                    <p class="text-sm text-gray-500">Internal Rate of Return (IRR)</p>
+                    <p class="text-4xl font-bold text-[#14B8A6]" id="irrRate">0%</p>
+                    <p class="text-sm text-gray-500 mt-2">Net Present Value (NPV) at this rate</p>
+                    <p class="text-xl font-bold text-[#3F51B5]" id="irrNPV">$0.00</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is IRR?</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">The Internal Rate of Return (IRR) is a metric used in financial analysis to estimate the profitability of potential investments. IRR is a discount rate that makes the net present value (NPV) of all cash flows equal to zero in a discounted cash flow analysis. Generally, the higher an IRR, the more desirable an investment is to undertake.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateIRR() {
+            const input = document.getElementById('irrCashFlows').value;
+            const strings = input.split(',');
+            let cashFlows = [];
+            
+            for (let i = 0; i < strings.length; i++) {
+                const val = parseFloat(strings[i].trim());
+                if (!isNaN(val)) {
+                    cashFlows.push(val);
+                }
+            }
+
+            if (cashFlows.length < 2) {
+                alert("Please enter at least two valid cash flow numbers.");
+                return;
+            }
+
+            // IRR Calculation using Numerical Iteration (Newton-Raphson method approximation)
+            // We are looking for r where NPV = 0
+            let rate = 0.1; // Initial guess (10%)
+            let maxIterations = 1000;
+            let precision = 0.00001;
+            let found = false;
+
+            for (let i = 0; i < maxIterations; i++) {
+                let npv = 0;
+                let derivative = 0; // To help converge faster
+
+                for (let t = 0; t < cashFlows.length; t++) {
+                    npv += cashFlows[t] / Math.pow(1 + rate, t);
+                    if (t > 0) {
+                        derivative -= (t * cashFlows[t]) / Math.pow(1 + rate, t + 1);
+                    }
+                }
+
+                if (Math.abs(npv) < precision) {
+                    found = true;
+                    break;
+                }
+
+                if (derivative === 0) break; // Prevent division by zero
+
+                // Newton-Raphson step
+                rate = rate - (npv / derivative);
+            }
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            if (found) {
+                document.getElementById('irrRate').textContent = (rate * 100).toFixed(2) + "%";
+                
+                // Calculate final NPV for display (should be ~0)
+                let finalNPV = 0;
+                for (let t = 0; t < cashFlows.length; t++) {
+                    finalNPV += cashFlows[t] / Math.pow(1 + rate, t);
+                }
+                document.getElementById('irrNPV').textContent = formatter.format(finalNPV);
+            } else {
+                document.getElementById('irrRate').textContent = "N/A";
+                document.getElementById('irrNPV').textContent = "Could not converge. Check cash flows.";
+            }
+
+            document.getElementById('irrResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
