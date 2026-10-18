@@ -87,28 +87,31 @@
 
     <script>
         function calculateInflation() {
+            // جلب القيم من الحقول
             const amount = parseFloat(document.getElementById('infAmount').value);
             const rate = parseFloat(document.getElementById('infRate').value) / 100;
             const years = parseFloat(document.getElementById('infYears').value);
 
+            // التحقق من صحة المدخلات
             if (isNaN(amount) || isNaN(rate) || isNaN(years) || amount <= 0 || years <= 0) {
                 alert("Please enter valid positive numbers.");
                 return;
             }
 
-            // 1. Future Cost (How much you need in the future to buy what $amount buys today)
-            // Formula: Future Value = Present Value * (1 + inflation)^years
+            // 1. حساب التكلفة المستقبلية (كم ستحتاج في المستقبل لشراء ما تشتريه اليوم)
             const futureCost = amount * Math.pow((1 + rate), years);
 
-            // 2. Purchasing Power (What $amount will be worth in the future)
-            // Formula: Present Value = Future Value / (1 + inflation)^years
+            // 2. حساب القوة الشرائية (كم ستكون قيمة مالك في المستقبل)
             const purchasingPower = amount / Math.pow((1 + rate), years);
 
+            // تنسيق الأرقام كعملة
             const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
+            // عرض النتائج
             document.getElementById('futureCost').textContent = formatter.format(futureCost);
             document.getElementById('powerLost').textContent = formatter.format(purchasingPower);
 
+            // إظهار قسم النتائج
             document.getElementById('infResults').classList.remove('hidden');
         }
     </script>
