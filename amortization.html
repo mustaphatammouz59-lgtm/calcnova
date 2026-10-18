@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amortization Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Amortization</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Amortization Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Amount ($)</label>
+                        <input type="number" id="amAmount" value="200000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate (%)</label>
+                        <input type="number" id="amRate" value="6" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
+                        <input type="number" id="amYears" value="30" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="calculateAmortization()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate</button>
+
+                <div id="amResults" class="hidden mt-6">
+                    <p class="text-lg font-bold text-[#14B8A6] mb-4">Monthly Payment: <span id="amMonthly">$0</span></p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-200 text-sm">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="py-2 px-4 border-b text-left">Year</th>
+                                    <th class="py-2 px-4 border-b text-left">Interest Paid</th>
+                                    <th class="py-2 px-4 border-b text-left">Principal Paid</th>
+                                    <th class="py-2 px-4 border-b text-left">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="amTableBody">
+                                <!-- Rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is an Amortization Schedule?</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">An amortization schedule is a complete table of periodic loan payments, showing the amount of principal and the amount of interest that comprise each payment until the loan is paid off at the end of its term.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateAmortization() {
+            const amount = parseFloat(document.getElementById('amAmount').value);
+            const rate = parseFloat(document.getElementById('amRate').value) / 100 / 12;
+            const years = parseInt(document.getElementById('amYears').value);
+            const months = years * 12;
+
+            if (isNaN(amount) || isNaN(rate) || isNaN(months)) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            const monthlyPayment = amount * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+            
+            let balance = amount;
+            let tableHTML = "";
+            let yearlyInterest = 0;
+            let yearlyPrincipal = 0;
+
+            for (let i = 1; i <= months; i++) {
+                let interest = balance * rate;
+                let principal = monthlyPayment - interest;
+                balance -= principal;
+                
+                yearlyInterest += interest;
+                yearlyPrincipal += principal;
+
+                if (i % 12 === 0 || i === months) {
+                    const yearNum = Math.ceil(i / 12);
+                    tableHTML += `<tr>
+                        <td class="py-2 px-4 border-b">${yearNum}</td>
+                        <td class="py-2 px-4 border-b text-red-500">$${yearlyInterest.toFixed(2)}</td>
+                        <td class="py-2 px-4 border-b text-green-600">$${yearlyPrincipal.toFixed(2)}</td>
+                        <td class="py-2 px-4 border-b">$${balance < 0 ? 0 : balance.toFixed(2)}</td>
+                    </tr>`;
+                    yearlyInterest = 0;
+                    yearlyPrincipal = 0;
+                }
+            }
+
+            document.getElementById('amMonthly').textContent = '$' + monthlyPayment.toFixed(2);
+            document.getElementById('amTableBody').innerHTML = tableHTML;
+            document.getElementById('amResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
