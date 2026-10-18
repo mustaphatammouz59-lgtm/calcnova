@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CD Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">CD</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">CD Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Initial Deposit ($)</label>
+                        <input type="number" id="cdDeposit" value="10000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
+                        <input type="number" id="cdRate" value="4.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">CD Term (Months)</label>
+                        <select id="cdTerm" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                            <option value="6">6 Months</option>
+                            <option value="12" selected>12 Months (1 Year)</option>
+                            <option value="24">24 Months (2 Years)</option>
+                            <option value="36">36 Months (3 Years)</option>
+                            <option value="60">60 Months (5 Years)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Compound Frequency</label>
+                        <select id="cdComp" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                            <option value="12" selected>Monthly</option>
+                            <option value="4">Quarterly</option>
+                            <option value="2">Semi-Annually</option>
+                            <option value="1">Annually</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="calculateCD()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate CD Return</button>
+
+                <div id="cdResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Initial Deposit</p>
+                            <p class="text-xl font-bold text-gray-800" id="cdP">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Interest Earned</p>
+                            <p class="text-xl font-bold text-[#3F51B5]" id="cdI">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
+                            <p class="text-sm text-gray-500">Maturity Value</p>
+                            <p class="text-2xl font-bold text-[#14B8A6]" id="cdTotal">$0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is a CD?</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">A Certificate of Deposit (CD) is a savings account with a fixed interest rate and a fixed withdrawal date (maturity date). In exchange for leaving your money in the account for a specific period, the bank pays you a higher interest rate than a regular savings account. However, withdrawing money before the maturity date usually results in a penalty fee.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateCD() {
+            const deposit = parseFloat(document.getElementById('cdDeposit').value);
+            const rate = parseFloat(document.getElementById('cdRate').value) / 100;
+            const termMonths = parseInt(document.getElementById('cdTerm').value);
+            const compFreq = parseInt(document.getElementById('cdComp').value);
+
+            if (isNaN(deposit) || isNaN(rate) || isNaN(termMonths) || isNaN(compFreq) || deposit <= 0) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            const years = termMonths / 12;
+            
+            // Compound Interest Formula: A = P(1 + r/n)^(nt)
+            const total = deposit * Math.pow((1 + (rate / compFreq)), (compFreq * years));
+            const interest = total - deposit;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('cdP').textContent = formatter.format(deposit);
+            document.getElementById('cdI').textContent = formatter.format(interest);
+            document.getElementById('cdTotal').textContent = formatter.format(total);
+
+            document.getElementById('cdResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
