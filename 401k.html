@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>401K Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">401K</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">401K Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Age</label>
+                        <input type="number" id="kAge" value="30" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Retirement Age</label>
+                        <input type="number" id="kRetireAge" value="65" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Current 401(k) Balance ($)</label>
+                        <input type="number" id="kBalance" value="20000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Salary ($)</label>
+                        <input type="number" id="kSalary" value="75000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Your Contribution (%)</label>
+                        <input type="number" id="kContrib" value="6" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Employer Match (%)</label>
+                        <input type="number" id="kMatch" value="4" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Expected Annual Return (%)</label>
+                        <input type="number" id="kReturn" value="7" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="calculate401k()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate 401(k) Balance</button>
+
+                <div id="kResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Total Contributions (You + Employer)</p>
+                            <p class="text-xl font-bold text-gray-800" id="kTotalContrib">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Total Interest Earned</p>
+                            <p class="text-xl font-bold text-[#3F51B5]" id="kTotalInterest">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
+                            <p class="text-sm text-gray-500">Estimated Balance at Retirement</p>
+                            <p class="text-2xl font-bold text-[#14B8A6]" id="kFinalBalance">$0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Power of Employer Match</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">A 401(k) is a retirement savings plan sponsored by an employer. One of the biggest benefits is the "employer match," where your employer contributes a percentage of your salary to your account, up to a certain limit, as long as you contribute too. This is essentially free money. This calculator assumes the employer matches your contribution up to the percentage you enter.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculate401k() {
+            const age = parseFloat(document.getElementById('kAge').value);
+            const retireAge = parseFloat(document.getElementById('kRetireAge').value);
+            const balance = parseFloat(document.getElementById('kBalance').value);
+            const salary = parseFloat(document.getElementById('kSalary').value);
+            const contribPct = parseFloat(document.getElementById('kContrib').value) / 100;
+            const matchPct = parseFloat(document.getElementById('kMatch').value) / 100;
+            const returnRate = parseFloat(document.getElementById('kReturn').value) / 100;
+
+            if (isNaN(age) || isNaN(retireAge) || isNaN(balance) || isNaN(salary) || isNaN(contribPct) || isNaN(matchPct) || isNaN(returnRate)) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            if (retireAge <= age) {
+                alert("Retirement age must be greater than current age.");
+                return;
+            }
+
+            const years = retireAge - age;
+            const months = years * 12;
+            const monthlyRate = returnRate / 12;
+
+            // Monthly contributions
+            const monthlyEmployee = (salary * contribPct) / 12;
+            // Employer matches up to the matchPct limit
+            const actualMatchPct = Math.min(contribPct, matchPct);
+            const monthlyEmployer = (salary * actualMatchPct) / 12;
+            
+            const totalMonthlyContrib = monthlyEmployee + monthlyEmployer;
+
+            // Future Value of Current Balance
+            const fvBalance = balance * Math.pow(1 + monthlyRate, months);
+
+            // Future Value of Monthly Contributions
+            let fvContribs = 0;
+            if (monthlyRate > 0) {
+                fvContribs = totalMonthlyContrib * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
+            } else {
+                fvContribs = totalMonthlyContrib * months;
+            }
+
+            const finalBalance = fvBalance + fvContribs;
+            const totalInvested = balance + (totalMonthlyContrib * months);
+            const totalInterest = finalBalance - totalInvested;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('kTotalContrib').textContent = formatter.format(totalInvested);
+            document.getElementById('kTotalInterest').textContent = formatter.format(totalInterest);
+            document.getElementById('kFinalBalance').textContent = formatter.format(finalBalance);
+
+            document.getElementById('kResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
