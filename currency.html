@@ -68,7 +68,7 @@
 
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">Live Exchange Rates</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">This calculator uses a free, open-source API to fetch the latest daily exchange rates. Please note that banks and commercial services usually charge a small fee or margin on top of the mid-market rate shown here.</p>
+                <p class="text-gray-600 mb-4 leading-relaxed">This calculator uses a free, open-source API (Fawaz Ahmed Currency API) hosted on a global CDN to fetch the latest daily exchange rates. Please note that banks and commercial services usually charge a small fee or margin on top of the mid-market rate shown here.</p>
                 <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
                     <p>In-Article AdSense Banner (Fluid)</p>
                 </div>
@@ -111,9 +111,9 @@
                 return;
             }
 
-            // Using a free, no-key, open-source API (irfanokr/currency-api)
-            // The API returns rates based on the 'from' currency.
-            const apiURL = `https://cdn.jsdelivr.net/gh/irfanokr/currency-api@main/v1/currencies/${from}.json`;
+            // Using Fawaz Ahmed Currency API (CDN hosted, zero CORS issues)
+            // URL Structure: .../currencies/{base}.json
+            const apiURL = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${from}.json`;
 
             try {
                 document.getElementById('curConverted').textContent = "Loading...";
@@ -122,8 +122,8 @@
                 const response = await fetch(apiURL);
                 const data = await response.json();
 
-                // The API response structure has the rates inside the base currency key
-                // e.g., if from=usd, data.usd.eur contains the rate
+                // The API returns data like: { "date": "...", "usd": { "eur": 0.92, ... } }
+                // We need to access data[from][to]
                 const rate = data[from][to];
                 
                 if (rate) {
@@ -131,7 +131,7 @@
                     document.getElementById('curRateInfo').textContent = `1 ${from.toUpperCase()} = ${rate.toFixed(4)} ${to.toUpperCase()}`;
                     document.getElementById('curConverted').textContent = converted.toFixed(2) + " " + to.toUpperCase();
                 } else {
-                    alert("Currency pair not supported by this API.");
+                    alert("Currency pair not supported or data unavailable.");
                     document.getElementById('curResults').classList.add('hidden');
                 }
             } catch (error) {
