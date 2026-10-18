@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refinance Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Refinance</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Refinance Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Current Loan</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Remaining Balance ($)</label>
+                        <input type="number" id="refOldBal" value="250000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Interest Rate (%)</label>
+                        <input type="number" id="refOldRate" value="7.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Years Remaining</label>
+                        <input type="number" id="refOldYears" value="25" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+
+                <h2 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">New Loan</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">New Interest Rate (%)</label>
+                        <input type="number" id="refNewRate" value="5.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">New Loan Term (Years)</label>
+                        <input type="number" id="refNewYears" value="30" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Closing Costs / Fees ($)</label>
+                        <input type="number" id="refFees" value="4000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="calculateRefinance()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Savings</button>
+
+                <div id="refResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-4">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Old Monthly Payment</p>
+                            <p class="text-lg font-bold text-gray-800" id="refOldPay">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
+                            <p class="text-sm text-gray-500">New Monthly Payment</p>
+                            <p class="text-lg font-bold text-[#14B8A6]" id="refNewPay">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Monthly Savings</p>
+                            <p class="text-lg font-bold text-green-600" id="refMonthlySave">$0</p>
+                        </div>
+                    </div>
+                    <div class="text-center bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <p class="text-sm text-gray-600">Break-Even Point (Months to recover closing costs)</p>
+                        <p class="text-2xl font-bold text-[#3F51B5]" id="refBreakEven">0 Months</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Should You Refinance?</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">Refinancing can lower your monthly payment or shorten your loan term, but it comes with costs. The "break-even point" is the number of months it takes for your monthly savings to cover the cost of the new loan's closing fees. If you plan to stay in the home longer than the break-even point, refinancing might be a good idea.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateRefinance() {
+            const oldBal = parseFloat(document.getElementById('refOldBal').value);
+            const oldRate = parseFloat(document.getElementById('refOldRate').value) / 100 / 12;
+            const oldYears = parseFloat(document.getElementById('refOldYears').value);
+            
+            const newRate = parseFloat(document.getElementById('refNewRate').value) / 100 / 12;
+            const newYears = parseFloat(document.getElementById('refNewYears').value);
+            const fees = parseFloat(document.getElementById('refFees').value);
+
+            if (isNaN(oldBal) || isNaN(oldRate) || isNaN(oldYears) || isNaN(newRate) || isNaN(newYears) || isNaN(fees)) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            const oldMonths = oldYears * 12;
+            const newMonths = newYears * 12;
+
+            // Calculate Monthly Payments
+            const oldPayment = oldBal * (oldRate * Math.pow(1 + oldRate, oldMonths)) / (Math.pow(1 + oldRate, oldMonths) - 1);
+            const newPayment = oldBal * (newRate * Math.pow(1 + newRate, newMonths)) / (Math.pow(1 + newRate, newMonths) - 1);
+
+            const monthlySavings = oldPayment - newPayment;
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('refOldPay').textContent = formatter.format(oldPayment);
+            document.getElementById('refNewPay').textContent = formatter.format(newPayment);
+
+            const saveEl = document.getElementById('refMonthlySave');
+            saveEl.textContent = formatter.format(monthlySavings);
+
+            if (monthlySavings > 0) {
+                saveEl.className = "text-lg font-bold text-green-600";
+                // Break-even point in months
+                const breakEven = Math.ceil(fees / monthlySavings);
+                document.getElementById('refBreakEven').textContent = breakEven + " Months";
+            } else {
+                saveEl.className = "text-lg font-bold text-red-500";
+                document.getElementById('refBreakEven').textContent = "Never (Payment is higher)";
+            }
+
+            document.getElementById('refResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
