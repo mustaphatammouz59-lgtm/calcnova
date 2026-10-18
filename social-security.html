@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Security Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Social Security</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Social Security Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Age</label>
+                        <input type="number" id="ssAge" value="35" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Average Annual Income ($)</label>
+                        <input type="number" id="ssIncome" value="75000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Years Worked</label>
+                        <input type="number" id="ssYearsWorked" value="20" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Planned Retirement Age</label>
+                        <select id="ssRetireAge" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                            <option value="62">62 (Early)</option>
+                            <option value="67" selected>67 (Full Retirement Age)</option>
+                            <option value="70">70 (Delayed)</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="calculateSS()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Estimate Benefit</button>
+
+                <div id="ssResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
+                    <p class="text-sm text-gray-500">Estimated Monthly Benefit</p>
+                    <p class="text-4xl font-bold text-[#14B8A6]" id="ssMonthlyBenefit">$0</p>
+                    <p class="text-sm text-gray-500 mt-2">Estimated Annual Benefit</p>
+                    <p class="text-xl font-bold text-[#3F51B5]" id="ssAnnualBenefit">$0</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Social Security Works</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">Social Security benefits are calculated based on your highest 35 years of earnings. If you retire early (at 62), your benefit is permanently reduced. If you delay retirement until age 70, your benefit increases. This calculator provides a very rough estimate; for exact figures, you should check your official statement on the SSA.gov website.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateSS() {
+            const age = parseFloat(document.getElementById('ssAge').value);
+            const income = parseFloat(document.getElementById('ssIncome').value);
+            const yearsWorked = parseFloat(document.getElementById('ssYearsWorked').value);
+            const retireAge = parseInt(document.getElementById('ssRetireAge').value);
+
+            if (isNaN(age) || isNaN(income) || isNaN(yearsWorked) || income <= 0) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            // This is a highly simplified approximation model
+            // Real Social Security uses a complex bend-point formula (AIME and PIA)
+            
+            // Step 1: Estimate Primary Insurance Amount (PIA) at Full Retirement Age (67)
+            // Assuming a rough replacement rate of 40% for middle-income earners
+            let pia = (income * 0.40) / 12; 
+
+            // Step 2: Adjust for Early or Delayed Retirement
+            let adjustmentFactor = 1.0;
+            if (retireAge === 62) {
+                adjustmentFactor = 0.70; // 30% reduction for retiring 5 years early
+            } else if (retireAge === 67) {
+                adjustmentFactor = 1.0;  // Full benefit
+            } else if (retireAge === 70) {
+                adjustmentFactor = 1.24; // 24% increase for delaying 3 years past FRA
+            }
+
+            // Step 3: Adjust for years worked (if less than 35 years, benefit is reduced proportionally)
+            let yearsFactor = 1.0;
+            if (yearsWorked < 35) {
+                yearsFactor = yearsWorked / 35;
+            }
+
+            const monthlyBenefit = pia * adjustmentFactor * yearsFactor;
+            const annualBenefit = monthlyBenefit * 12;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('ssMonthlyBenefit').textContent = formatter.format(monthlyBenefit);
+            document.getElementById('ssAnnualBenefit').textContent = formatter.format(annualBenefit);
+
+            document.getElementById('ssResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
