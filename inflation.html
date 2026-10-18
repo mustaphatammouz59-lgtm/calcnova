@@ -60,7 +60,7 @@
 
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">What is Inflation?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Inflation is the rate at which the general level of prices for goods and services is rising, and subsequently, purchasing power is falling. This calculator shows you two things: 1) How much money you will need in the future to buy the same things you can buy today with your initial amount. 2) What the purchasing power of your current money will be in the future.</p>
+                <p class="text-gray-600 mb-4 leading-relaxed">Inflation is the rate at which the general level of prices for goods and services is rising. This calculator shows how much money you will need in the future, and what your current money will be worth.</p>
                 <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
                     <p>In-Article AdSense Banner (Fluid)</p>
                 </div>
@@ -87,31 +87,22 @@
 
     <script>
         function calculateInflation() {
-            // جلب القيم من الحقول
-            const amount = parseFloat(document.getElementById('infAmount').value);
-            const rate = parseFloat(document.getElementById('infRate').value) / 100;
-            const years = parseFloat(document.getElementById('infYears').value);
+            var amount = parseFloat(document.getElementById('infAmount').value);
+            var rate = parseFloat(document.getElementById('infRate').value) / 100;
+            var years = parseFloat(document.getElementById('infYears').value);
 
-            // التحقق من صحة المدخلات
-            if (isNaN(amount) || isNaN(rate) || isNaN(years) || amount <= 0 || years <= 0) {
-                alert("Please enter valid positive numbers.");
+            if (isNaN(amount) || isNaN(rate) || isNaN(years)) {
+                alert("Please enter valid numbers.");
                 return;
             }
 
-            // 1. حساب التكلفة المستقبلية (كم ستحتاج في المستقبل لشراء ما تشتريه اليوم)
-            const futureCost = amount * Math.pow((1 + rate), years);
+            var futureCost = amount * Math.pow((1 + rate), years);
+            var purchasingPower = amount / Math.pow((1 + rate), years);
 
-            // 2. حساب القوة الشرائية (كم ستكون قيمة مالك في المستقبل)
-            const purchasingPower = amount / Math.pow((1 + rate), years);
+            var formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
-            // تنسيق الأرقام كعملة
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            // عرض النتائج
-            document.getElementById('futureCost').textContent = formatter.format(futureCost);
-            document.getElementById('powerLost').textContent = formatter.format(purchasingPower);
-
-            // إظهار قسم النتائج
+            document.getElementById('futureCost').innerHTML = formatter.format(futureCost);
+            document.getElementById('powerLost').innerHTML = formatter.format(purchasingPower);
             document.getElementById('infResults').classList.remove('hidden');
         }
     </script>
