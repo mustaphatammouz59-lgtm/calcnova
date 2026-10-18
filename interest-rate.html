@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interest Rate Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Interest Rate</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Interest Rate Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Initial Amount / Principal ($)</label>
+                        <input type="number" id="irPrincipal" value="10000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Final Amount ($)</label>
+                        <input type="number" id="irFinal" value="15000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Time (Years)</label>
+                        <input type="number" id="irYears" value="5" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="calculateInterestRate()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Interest Rate</button>
+
+                <div id="irResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
+                    <p class="text-sm text-gray-500">Estimated Annual Interest Rate</p>
+                    <p class="text-4xl font-bold text-[#14B8A6]" id="irRateResult">0%</p>
+                    <p class="text-sm text-gray-500 mt-2">(Assuming Compound Interest)</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">How to Calculate Interest Rate</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">Sometimes you know how much you started with, how much you ended up with, and how long it took, but you don't know the interest rate. This calculator uses the compound interest formula to reverse-engineer the annual interest rate based on these three variables.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateInterestRate() {
+            const principal = parseFloat(document.getElementById('irPrincipal').value);
+            const finalAmount = parseFloat(document.getElementById('irFinal').value);
+            const years = parseFloat(document.getElementById('irYears').value);
+
+            if (isNaN(principal) || isNaN(finalAmount) || isNaN(years) || principal <= 0 || years <= 0) {
+                alert("Please enter valid numbers. Principal and Years must be greater than 0.");
+                return;
+            }
+
+            if (finalAmount <= principal) {
+                alert("Final amount must be greater than the initial principal to have a positive interest rate.");
+                return;
+            }
+
+            // Formula for Compound Interest Rate: r = (Final / Principal)^(1/n) - 1
+            const rate = Math.pow((finalAmount / principal), (1 / years)) - 1;
+            const ratePercentage = rate * 100;
+
+            document.getElementById('irRateResult').textContent = ratePercentage.toFixed(2) + "%";
+            document.getElementById('irResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
