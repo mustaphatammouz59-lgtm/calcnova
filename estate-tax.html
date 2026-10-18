@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estate Tax Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Estate Tax</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Estate Tax Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Total Estate Value ($)</label>
+                        <p class="text-xs text-gray-500 mb-1">Total value of assets, property, and cash.</p>
+                        <input type="number" id="etValue" value="15000000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Total Deductions & Debts ($)</label>
+                        <p class="text-xs text-gray-500 mb-1">Mortgages, charitable donations, etc.</p>
+                        <input type="number" id="etDeductions" value="500000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="calculateEstateTax()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Estate Tax</button>
+
+                <div id="etResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Net Taxable Estate</p>
+                            <p class="text-xl font-bold text-gray-800" id="etNetEstate">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-red-500">
+                            <p class="text-sm text-gray-500">Estimated Federal Estate Tax</p>
+                            <p class="text-2xl font-bold text-red-500" id="etTaxOwed">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
+                            <p class="text-sm text-gray-500">Amount Passed to Heirs</p>
+                            <p class="text-2xl font-bold text-[#14B8A6]" id="etNetToHeirs">$0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Understanding the Estate Tax</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">The federal estate tax is a tax on your right to transfer property at your death. It consists of an accounting of everything you own or have certain interests in at the date of death. However, the U.S. has a very high exemption limit (for 2024, it's $13.61 million per individual). This means the first $13.61 million of your estate is completely tax-free. Only the amount exceeding this limit is subject to the 40% federal estate tax rate.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateEstateTax() {
+            const value = parseFloat(document.getElementById('etValue').value);
+            const deductions = parseFloat(document.getElementById('etDeductions').value);
+
+            if (isNaN(value) || isNaN(deductions) || value <= 0 || deductions < 0) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            // 2024 Federal Estate Tax Exemption Limit (Individual)
+            const exemptionLimit = 13610000;
+            const taxRate = 0.40; // 40% flat rate for amounts over exemption
+
+            // Net Estate = Total Value - Deductions
+            const netEstate = value - deductions;
+
+            let taxOwed = 0;
+
+            // Tax is only on the amount above the exemption limit
+            if (netEstate > exemptionLimit) {
+                const taxableAmount = netEstate - exemptionLimit;
+                taxOwed = taxableAmount * taxRate;
+            }
+
+            const amountToHeirs = netEstate - taxOwed;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('etNetEstate').textContent = formatter.format(netEstate > 0 ? netEstate : 0);
+            document.getElementById('etTaxOwed').textContent = formatter.format(taxOwed);
+            document.getElementById('etNetToHeirs').textContent = formatter.format(amountToHeirs > 0 ? amountToHeirs : 0);
+
+            document.getElementById('etResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
