@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Lease Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium"><a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a></div>
+        </div>
+    </nav>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Auto Lease</span>
+    </div>
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Auto Lease Calculator</h1>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div><label class="block text-sm font-medium text-gray-700 mb-1">MSRP / Vehicle Price ($)</label><input type="number" id="leaseMSRP" value="35000" class="w-full border border-gray-300 rounded-md p-2 outline-none"></div>
+                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Negotiated Price ($)</label><input type="number" id="leasePrice" value="33000" class="w-full border border-gray-300 rounded-md p-2 outline-none"></div>
+                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Residual Value (%)</label><input type="number" id="leaseResidual" value="55" class="w-full border border-gray-300 rounded-md p-2 outline-none"></div>
+                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Lease Term (Months)</label><input type="number" id="leaseMonths" value="36" class="w-full border border-gray-300 rounded-md p-2 outline-none"></div>
+                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate (Money Factor APR) (%)</label><input type="number" id="leaseRate" value="5" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none"></div>
+                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Down Payment ($)</label><input type="number" id="leaseDown" value="2000" class="w-full border border-gray-300 rounded-md p-2 outline-none"></div>
+                </div>
+                <button onclick="calculateLease()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Lease Payment</button>
+                <div id="leaseResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
+                    <p class="text-sm text-gray-500">Estimated Monthly Lease Payment</p>
+                    <p class="text-4xl font-bold text-[#14B8A6]" id="leaseMonthly">$0</p>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Auto Leasing Works</h2>
+                <p class="text-gray-600 mb-4">When you lease a car, you are paying for the depreciation of the vehicle during the time you drive it, plus interest (rent charge). This calculator helps you estimate your monthly lease payment.</p>
+            </div>
+        </div>
+        <aside class="md:w-1/4"><div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4"><p>AdSense Space</p></div></aside>
+    </main>
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12"><div class="container mx-auto text-center px-4"><p class="text-sm">&copy; 2024 CalcNova.</p></div></footer>
+    <script>
+        function calculateLease() {
+            const msrp = parseFloat(document.getElementById('leaseMSRP').value);
+            const price = parseFloat(document.getElementById('leasePrice').value);
+            const residualPct = parseFloat(document.getElementById('leaseResidual').value) / 100;
+            const months = parseInt(document.getElementById('leaseMonths').value);
+            const rate = parseFloat(document.getElementById('leaseRate').value) / 100;
+            const down = parseFloat(document.getElementById('leaseDown').value);
+
+            if (isNaN(msrp) || isNaN(price) || isNaN(residualPct) || isNaN(months) || isNaN(rate) || isNaN(down)) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            // Residual Value
+            const residualValue = msrp * residualPct;
+
+            // Depreciation Fee
+            const depreciationFee = (price - down - residualValue) / months;
+
+            // Money Factor (Interest)
+            const moneyFactor = rate / 2400;
+            const financeFee = (price - down + residualValue) * moneyFactor;
+
+            // Monthly Payment
+            const monthlyPayment = depreciationFee + financeFee;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+            document.getElementById('leaseMonthly').textContent = formatter.format(monthlyPayment);
+            document.getElementById('leaseResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
