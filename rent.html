@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Rent</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Rent Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Gross Income ($)</label>
+                        <input type="number" id="rentIncome" value="60000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Monthly Debt Payments ($)</label>
+                        <input type="number" id="rentDebts" value="300" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="calculateRent()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Affordability</button>
+
+                <div id="rentResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
+                            <p class="text-sm text-gray-500">Max Recommended Rent (30% Rule)</p>
+                            <p class="text-2xl font-bold text-[#14B8A6]" id="maxRent">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Max Rent (36% Rule with Debts)</p>
+                            <p class="text-2xl font-bold text-gray-800" id="maxRentWithDebt">$0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Much Rent Can I Afford?</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">Financial experts often recommend the 30% rule, which suggests you should spend no more than 30% of your gross monthly income on rent. However, if you have other debts, you should ensure your total debt (including rent) does not exceed 36% of your gross income. This calculator helps you find a safe rent range.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateRent() {
+            const income = parseFloat(document.getElementById('rentIncome').value);
+            const debts = parseFloat(document.getElementById('rentDebts').value);
+
+            if (isNaN(income) || isNaN(debts) || income <= 0) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            const monthlyIncome = income / 12;
+            
+            // 30% Rule (Housing only)
+            const maxRent30 = monthlyIncome * 0.30;
+            
+            // 36% Rule (Total debt including housing)
+            const maxTotalDebt = monthlyIncome * 0.36;
+            const maxRentWithDebt = maxTotalDebt - debts;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('maxRent').textContent = formatter.format(maxRent30);
+            
+            if (maxRentWithDebt > 0) {
+                document.getElementById('maxRentWithDebt').textContent = formatter.format(maxRentWithDebt);
+            } else {
+                document.getElementById('maxRentWithDebt').textContent = "$0 (Debts too high)";
+            }
+
+            document.getElementById('rentResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+                          </html>
