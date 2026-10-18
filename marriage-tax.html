@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marriage Tax Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Marriage Tax</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Marriage Tax Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Spouse 1 Annual Income ($)</label>
+                        <input type="number" id="mtIncome1" value="80000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Spouse 2 Annual Income ($)</label>
+                        <input type="number" id="mtIncome2" value="60000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="calculateMarriageTax()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Compare Taxes</button>
+
+                <div id="mtResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-4">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Total Tax (Single)</p>
+                            <p class="text-xl font-bold text-gray-800" id="mtSingleTax">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Total Tax (Married)</p>
+                            <p class="text-xl font-bold text-[#3F51B5]" id="mtMarriedTax">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
+                            <p class="text-sm text-gray-500">Tax Savings / Penalty</p>
+                            <p class="text-2xl font-bold text-[#14B8A6]" id="mtDifference">$0</p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-lg font-semibold" id="mtVerdict">Result</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">The "Marriage Penalty" vs "Marriage Bonus"</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">Depending on how much each spouse earns, getting married can either lower or raise your total income tax bill. A <strong>Marriage Bonus</strong> occurs when the combined tax bill is lower than what you would pay if you were single. A <strong>Marriage Penalty</strong> occurs when the combined bill is higher. This usually happens when both spouses have high, relatively equal incomes.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Helper function to calculate tax for single filers (Simplified 2024 brackets)
+        function calcSingleTax(income) {
+            let taxable = income - 14600; // Standard deduction
+            if (taxable <= 0) return 0;
+            if (taxable <= 11600) return taxable * 0.10;
+            if (taxable <= 47150) return 1160 + (taxable - 11600) * 0.12;
+            if (taxable <= 100525) return 5426 + (taxable - 47150) * 0.22;
+            if (taxable <= 191950) return 17168.50 + (taxable - 100525) * 0.24;
+            return 39110.50 + (taxable - 191950) * 0.32;
+        }
+
+        // Helper function to calculate tax for married filers (Simplified 2024 brackets)
+        function calcMarriedTax(income) {
+            let taxable = income - 29200; // Standard deduction
+            if (taxable <= 0) return 0;
+            if (taxable <= 23200) return taxable * 0.10;
+            if (taxable <= 94300) return 2320 + (taxable - 23200) * 0.12;
+            if (taxable <= 201050) return 10852 + (taxable - 94300) * 0.22;
+            if (taxable <= 383900) return 34337 + (taxable - 201050) * 0.24;
+            return 78221 + (taxable - 383900) * 0.32;
+        }
+
+        function calculateMarriageTax() {
+            const income1 = parseFloat(document.getElementById('mtIncome1').value);
+            const income2 = parseFloat(document.getElementById('mtIncome2').value);
+
+            if (isNaN(income1) || isNaN(income2) || income1 < 0 || income2 < 0) {
+                alert("Please enter valid positive numbers.");
+                return;
+            }
+
+            // Calculate Single Taxes
+            const tax1 = calcSingleTax(income1);
+            const tax2 = calcSingleTax(income2);
+            const totalSingleTax = tax1 + tax2;
+
+            // Calculate Married Tax
+            const combinedIncome = income1 + income2;
+            const totalMarriedTax = calcMarriedTax(combinedIncome);
+
+            // Difference
+            const difference = totalSingleTax - totalMarriedTax;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('mtSingleTax').textContent = formatter.format(totalSingleTax);
+            document.getElementById('mtMarriedTax').textContent = formatter.format(totalMarriedTax);
+            
+            const diffEl = document.getElementById('mtDifference');
+            const verdictEl = document.getElementById('mtVerdict');
+            
+            if (difference > 0) {
+                // Married tax is lower -> Bonus
+                diffEl.textContent = formatter.format(difference);
+                diffEl.className = "text-2xl font-bold text-green-500";
+                verdictEl.textContent = "You get a Marriage Bonus! You save money by filing jointly.";
+                verdictEl.className = "text-lg font-semibold text-green-600";
+            } else if (difference < 0) {
+                // Married tax is higher -> Penalty
+                diffEl.textContent = formatter.format(Math.abs(difference));
+                diffEl.className = "text-2xl font-bold text-red-500";
+                verdictEl.textContent = "You face a Marriage Penalty. You pay more tax by filing jointly.";
+                verdictEl.className = "text-lg font-semibold text-red-600";
+            } else {
+                diffEl.textContent = "$0";
+                diffEl.className = "text-2xl font-bold text-gray-800";
+                verdictEl.textContent = "There is no tax advantage or disadvantage to getting married.";
+                verdictEl.className = "text-lg font-semibold text-gray-700";
+            }
+
+            document.getElementById('mtResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
