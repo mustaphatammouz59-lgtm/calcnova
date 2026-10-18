@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalcNova - Free Online Calculators</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="#" class="hover:text-[#14B8A6] transition">Health</a>
+                <a href="#" class="hover:text-[#14B8A6] transition">Math</a>
+                <a href="#" class="hover:text-[#14B8A6] transition">Other</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-white py-16 text-center border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-[#3F51B5] mb-4">Free Online Calculators</h1>
+            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">Fast, reliable, and completely free calculators for finance, health, math, and everyday life.</p>
+            
+            <!-- Search Bar Placeholder -->
+            <div class="max-w-xl mx-auto flex bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                <input type="text" placeholder="Search for a calculator (e.g., Mortgage)..." class="w-full px-4 py-3 outline-none text-gray-700">
+                <button class="bg-[#14B8A6] text-white px-6 font-semibold hover:bg-teal-600 transition">Search</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Categories Grid -->
+    <main class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            
+            <!-- Card 1: Financial -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                <h2 class="text-xl font-bold text-[#3F51B5] mb-4 border-b pb-2">Financial</h2>
+                <ul class="space-y-2">
+                    <li><a href="mortgage.html" class="text-gray-600 hover:text-[#14B8A6] transition">Mortgage Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Loan Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Auto Loan Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Interest Calculator</a></li>
+                </ul>
+                <a href="financial.html" class="block mt-4 text-sm font-semibold text-[#14B8A6] hover:underline">View all Financial →</a>
+            </div>
+
+            <!-- Card 2: Health -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                <h2 class="text-xl font-bold text-[#3F51B5] mb-4 border-b pb-2">Fitness & Health</h2>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">BMI Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Calorie Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Body Fat Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">BMR Calculator</a></li>
+                </ul>
+                <a href="#" class="block mt-4 text-sm font-semibold text-[#14B8A6] hover:underline">View all Health →</a>
+            </div>
+
+            <!-- Card 3: Math -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                <h2 class="text-xl font-bold text-[#3F51B5] mb-4 border-b pb-2">Math</h2>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Scientific Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Fraction Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Percentage Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Random Number Generator</a></li>
+                </ul>
+                <a href="#" class="block mt-4 text-sm font-semibold text-[#14B8A6] hover:underline">View all Math →</a>
+            </div>
+
+            <!-- Card 4: Other -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                <h2 class="text-xl font-bold text-[#3F51B5] mb-4 border-b pb-2">Other</h2>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Age Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Date Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Time Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">GPA Calculator</a></li>
+                </ul>
+                <a href="#" class="block mt-4 text-sm font-semibold text-[#14B8A6] hover:underline">View all Other →</a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="#" class="hover:text-white transition">About Us</a>
+                <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
