@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roth IRA Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Roth IRA</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Roth IRA Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Age</label>
+                        <input type="number" id="rothAge" value="30" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Retirement Age</label>
+                        <input type="number" id="rothRetireAge" value="65" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Balance ($)</label>
+                        <input type="number" id="rothBalance" value="10000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Contribution ($)</label>
+                        <p class="text-xs text-gray-500 mb-1">Limit is $7,000 for 2024 (under 50)</p>
+                        <input type="number" id="rothContrib" value="6000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Expected Annual Return (%)</label>
+                        <input type="number" id="rothReturn" value="7" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="calculateRothIRA()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Roth IRA Growth</button>
+
+                <div id="rothResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Total Contributions</p>
+                            <p class="text-xl font-bold text-gray-800" id="rothTotalContrib">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Total Tax-Free Earnings</p>
+                            <p class="text-xl font-bold text-[#3F51B5]" id="rothTotalInterest">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
+                            <p class="text-sm text-gray-500">Balance at Retirement</p>
+                            <p class="text-2xl font-bold text-[#14B8A6]" id="rothFinalBalance">$0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Why Choose a Roth IRA?</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">A Roth IRA is a retirement account funded with after-tax dollars. This means you pay taxes on the money before you put it in. The major benefit is that when you withdraw the money in retirement (after age 59½ and holding the account for 5 years), your withdrawals are completely tax-free, including all the earnings. This calculator uses annual contributions to estimate your final balance.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateRothIRA() {
+            const age = parseFloat(document.getElementById('rothAge').value);
+            const retireAge = parseFloat(document.getElementById('rothRetireAge').value);
+            const balance = parseFloat(document.getElementById('rothBalance').value);
+            const annualContrib = parseFloat(document.getElementById('rothContrib').value);
+            const returnRate = parseFloat(document.getElementById('rothReturn').value) / 100;
+
+            if (isNaN(age) || isNaN(retireAge) || isNaN(balance) || isNaN(annualContrib) || isNaN(returnRate)) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            if (retireAge <= age) {
+                alert("Retirement age must be greater than current age.");
+                return;
+            }
+
+            const years = retireAge - age;
+            
+            // Future Value of Current Balance
+            const fvBalance = balance * Math.pow(1 + returnRate, years);
+
+            // Future Value of Annual Contributions (Annuity)
+            let fvContribs = 0;
+            if (returnRate > 0) {
+                fvContribs = annualContrib * ((Math.pow(1 + returnRate, years) - 1) / returnRate);
+            } else {
+                fvContribs = annualContrib * years;
+            }
+
+            const finalBalance = fvBalance + fvContribs;
+            const totalContributions = balance + (annualContrib * years);
+            const totalInterest = finalBalance - totalContributions;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('rothTotalContrib').textContent = formatter.format(totalContributions);
+            document.getElementById('rothTotalInterest').textContent = formatter.format(totalInterest);
+            document.getElementById('rothFinalBalance').textContent = formatter.format(finalBalance);
+
+            document.getElementById('rothResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
