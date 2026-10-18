@@ -35,18 +35,12 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Average Interest Rate (APR) (%)</label>
+                        <!-- تم تعديل القيمة الافتراضية لتكون واقعية -->
                         <input type="number" id="dpRate" value="15" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
                     </div>
-                    <div>
+                    <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Monthly Payment Amount ($)</label>
                         <input type="number" id="dpPayment" value="400" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Payoff Strategy</label>
-                        <select id="dpStrategy" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="avalanche" selected>Debt Avalanche (Highest Interest First)</option>
-                            <option value="snowball">Debt Snowball (Smallest Balance First)</option>
-                        </select>
                     </div>
                 </div>
                 <button onclick="calculateDebtPayoff()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Debt Free Date</button>
@@ -66,15 +60,12 @@
                             <p class="text-xl font-bold text-gray-800" id="dpTotalPaid">$0</p>
                         </div>
                     </div>
-                    <div class="mt-4 text-center text-sm text-gray-600 bg-blue-50 p-3 rounded border border-blue-100">
-                        <p><strong>Note:</strong> This is a simplified estimate assuming a single consolidated debt. For multiple debts, <a href="#" class="text-[#3F51B5] underline">use our Credit Cards Payoff Calculator</a> for more accurate results based on your strategy.</p>
-                    </div>
                 </div>
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Debt Avalanche vs. Debt Snowball</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed"><strong>Debt Avalanche:</strong> You pay minimums on all debts and put all extra money toward the debt with the highest interest rate. This saves you the most money in interest over time.<br><br><strong>Debt Snowball:</strong> You pay minimums on all debts and put all extra money toward the smallest balance first. This gives you quick psychological wins to keep you motivated. Choose the strategy that works best for your personality!</p>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">How to Pay Off Debt Faster</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">Paying off debt requires a plan. This calculator helps you see how long it will take to become debt-free based on your monthly payment. If the time is too long, try increasing your monthly payment even by a small amount. You can also explore strategies like the Debt Snowball or Debt Avalanche to tackle multiple debts efficiently.</p>
                 <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
                     <p>In-Article AdSense Banner (Fluid)</p>
                 </div>
@@ -105,6 +96,7 @@
             const apr = parseFloat(document.getElementById('dpRate').value) / 100;
             const payment = parseFloat(document.getElementById('dpPayment').value);
 
+            // التحقق من صحة المدخلات
             if (isNaN(total) || isNaN(apr) || isNaN(payment) || total <= 0 || payment <= 0) {
                 alert("Please enter valid positive numbers.");
                 return;
@@ -112,6 +104,7 @@
 
             const monthlyRate = apr / 12;
             
+            // التحقق مما إذا كانت الدفعة تغطي الفائدة على الأقل
             if (payment <= total * monthlyRate) {
                 alert("Your monthly payment is too low to ever pay off this debt. Please increase the payment amount.");
                 return;
@@ -121,13 +114,13 @@
             let months = 0;
             let totalInterest = 0;
 
+            // حلقة حسابية لحين سداد الدين بالكامل
             while (currentBalance > 0 && months < 1200) {
                 let interest = currentBalance * monthlyRate;
                 let principal = payment - interest;
                 
                 if (principal > currentBalance) {
                     principal = currentBalance;
-                    payment = interest + principal;
                 }
 
                 totalInterest += interest;
@@ -136,6 +129,8 @@
             }
 
             const totalPaid = total + totalInterest;
+            
+            // تنسيق الوقت
             const years = Math.floor(months / 12);
             const remainingMonths = months % 12;
             let timeString = "";
@@ -145,10 +140,12 @@
 
             const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
+            // عرض النتائج
             document.getElementById('dpTime').textContent = timeString;
             document.getElementById('dpTotalInterest').textContent = formatter.format(totalInterest);
             document.getElementById('dpTotalPaid').textContent = formatter.format(totalPaid);
 
+            // إظهار قسم النتائج
             document.getElementById('dpResults').classList.remove('hidden');
         }
     </script>
