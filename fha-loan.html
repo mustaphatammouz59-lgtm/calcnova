@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FHA Loan Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">FHA Loan</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">FHA Loan Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Home Price ($)</label>
+                        <input type="number" id="fhaPrice" value="300000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Down Payment (%)</label>
+                        <input type="number" id="fhaDownPct" value="3.5" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate (%)</label>
+                        <input type="number" id="fhaRate" value="6.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
+                        <select id="fhaYears" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                            <option value="30">30 Years</option>
+                            <option value="15">15 Years</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="calculateFHA()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate FHA Loan</button>
+
+                <div id="fhaResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
+                    <p class="text-sm text-gray-500">Total Monthly Payment (P&I + MIP)</p>
+                    <p class="text-4xl font-bold text-[#14B8A6]" id="fhaTotalPay">$0</p>
+                    <div class="grid grid-cols-2 gap-2 mt-4 text-sm text-gray-600">
+                        <div>Principal & Interest: <span id="fhaPI" class="font-bold">$0</span></div>
+                        <div>Monthly MIP: <span id="fhaMIP" class="font-bold text-red-500">$0</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is an FHA Loan?</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">An FHA loan is a mortgage insured by the Federal Housing Administration. They are popular among first-time homebuyers because they require a lower minimum down payment (as low as 3.5%) and have more lenient credit score requirements. However, they require an upfront and annual Mortgage Insurance Premium (MIP).</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateFHA() {
+            const price = parseFloat(document.getElementById('fhaPrice').value);
+            const downPct = parseFloat(document.getElementById('fhaDownPct').value) / 100;
+            const rate = parseFloat(document.getElementById('fhaRate').value) / 100 / 12;
+            const years = parseInt(document.getElementById('fhaYears').value);
+
+            if (isNaN(price) || isNaN(downPct) || isNaN(rate) || isNaN(years)) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            const downPayment = price * downPct;
+            const loanAmount = price - downPayment;
+            const months = years * 12;
+
+            // Base Mortgage Payment (P&I)
+            const piPayment = loanAmount * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+
+            // FHA Mortgage Insurance Premium (MIP)
+            // Simplified: Annual MIP is roughly 0.55% of the loan amount for 30-year loans > 95% LTV
+            // For 15-year or lower LTV, it might be different. Using 0.55% as a standard approximation.
+            let annualMIPRate = 0.0055; 
+            if (years === 15) annualMIPRate = 0.0045; // Example rate for 15 yr
+            
+            const monthlyMIP = (loanAmount * annualMIPRate) / 12;
+
+            const totalMonthly = piPayment + monthlyMIP;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('fhaTotalPay').textContent = formatter.format(totalMonthly);
+            document.getElementById('fhaPI').textContent = formatter.format(piPayment);
+            document.getElementById('fhaMIP').textContent = formatter.format(monthlyMIP);
+            
+            document.getElementById('fhaResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
