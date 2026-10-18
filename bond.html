@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bond Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Bond</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Bond Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Face Value ($)</label>
+                        <input type="number" id="bondFace" value="1000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Coupon Rate (%)</label>
+                        <input type="number" id="bondCoupon" value="5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Years to Maturity</label>
+                        <input type="number" id="bondYears" value="10" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Yield to Maturity (Market Rate) (%)</label>
+                        <input type="number" id="bondYield" value="6" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="calculateBond()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Bond Price</button>
+
+                <div id="bondResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
+                    <p class="text-sm text-gray-500">Estimated Bond Price (Present Value)</p>
+                    <p class="text-4xl font-bold text-[#14B8A6]" id="bondPrice">$0</p>
+                    <p class="text-sm text-gray-500 mt-2">Annual Coupon Payment</p>
+                    <p class="text-xl font-bold text-[#3F51B5]" id="bondAnnualCoupon">$0</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Bond Pricing Works</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">A bond's price is the present value of its future cash flows (coupon payments and the return of the face value at maturity), discounted at the current market yield. If the market yield is higher than the coupon rate, the bond trades at a discount. If the yield is lower, it trades at a premium.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateBond() {
+            const face = parseFloat(document.getElementById('bondFace').value);
+            const couponRate = parseFloat(document.getElementById('bondCoupon').value) / 100;
+            const years = parseFloat(document.getElementById('bondYears').value);
+            const yieldRate = parseFloat(document.getElementById('bondYield').value) / 100;
+
+            if (isNaN(face) || isNaN(couponRate) || isNaN(years) || isNaN(yieldRate) || face <= 0 || years <= 0) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            const annualCoupon = face * couponRate;
+            
+            // Present Value of Coupons (Annuity)
+            // Formula: C * [1 - (1 + r)^-n] / r
+            let pvCoupons = 0;
+            if (yieldRate > 0) {
+                pvCoupons = annualCoupon * ((1 - Math.pow(1 + yieldRate, -years)) / yieldRate);
+            } else {
+                pvCoupons = annualCoupon * years;
+            }
+
+            // Present Value of Face Value
+            // Formula: F / (1 + r)^n
+            const pvFace = face / Math.pow(1 + yieldRate, years);
+
+            const bondPrice = pvCoupons + pvFace;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('bondPrice').textContent = formatter.format(bondPrice);
+            document.getElementById('bondAnnualCoupon').textContent = formatter.format(annualCoupon);
+
+            document.getElementById('bondResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
