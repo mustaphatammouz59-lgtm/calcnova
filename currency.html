@@ -68,7 +68,7 @@
 
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">Live Exchange Rates</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">This calculator uses the Frankfurter API, which provides exchange rates based on data from the European Central Bank. Rates are updated daily and cover major world currencies. Please note that banks and commercial services usually charge a small fee or margin on top of the mid-market rate shown here.</p>
+                <p class="text-gray-600 mb-4 leading-relaxed">This calculator uses the Frankfurter API (new domain), which provides exchange rates based on data from the European Central Bank. Rates are updated daily and cover major world currencies.</p>
                 <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
                     <p>In-Article AdSense Banner (Fluid)</p>
                 </div>
@@ -111,8 +111,8 @@
                 return;
             }
 
-            // Using Frankfurter API (ECB data, no key, CORS enabled)
-            const apiURL = `https://api.frankfurter.app/latest?amount=${amount}&from=${from}&to=${to}`;
+            // Using the NEW Frankfurter domain (api.frankfurter.dev) with CORS headers
+            const apiURL = `https://api.frankfurter.dev/v1/latest?amount=${amount}&from=${from}&to=${to}`;
 
             try {
                 document.getElementById('curConverted').textContent = "Loading...";
