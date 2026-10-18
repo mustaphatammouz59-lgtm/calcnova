@@ -95,44 +95,71 @@
         </div>
     </footer>
 
-    <script>
-        // قاعدة بيانات تقريبية لأسعار الصرف مقابل الدولار الأمريكي (USD)
-        // تم جمع هذه البيانات تقريباً في أواخر 2024
-        const exchangeRates = {
-            "USD": 1.0,      // US Dollar (Base)
-            "EUR": 0.92,     // Euro
-            "GBP": 0.79,     // British Pound
-            "SAR": 3.75,     // Saudi Riyal
-            "AED": 3.67,     // UAE Dirham
-            "EGP": 49.50,    // Egyptian Pound
-            "MAD": 10.00,    // Moroccan Dirham
-            "JPY": 150.00    // Japanese Yen
-        };
+<script>
+async function convertCurrency() {
 
-        function convertCurrency() {
-            const amount = parseFloat(document.getElementById('curAmount').value);
-            const from = document.getElementById('curFrom').value;
-            const to = document.getElementById('curTo').value;
+    const amount = parseFloat(document.getElementById("curAmount").value);
+    const from = document.getElementById("curFrom").value.toUpperCase();
+    const to = document.getElementById("curTo").value.toUpperCase();
 
-            if (isNaN(amount) || amount < 0) {
-                alert("Please enter a valid amount.");
-                return;
-            }
+    if (isNaN(amount) || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+    }
 
-            // Convert 'From' currency to USD first
-            const amountInUSD = amount / exchangeRates[from];
+    document.getElementById("curResults").classList.remove("hidden");
+    document.getElementById("curRateInfo").textContent = "Loading...";
+    document.getElementById("curConverted").textContent = "...";
 
-            // Convert USD to 'To' currency
-            const converted = amountInUSD * exchangeRates[to];
+    if (from === to) {
+        document.getElementById("curRateInfo").textContent = "Same currency";
+        document.getElementById("curConverted").textContent =
+            amount.toFixed(2) + " " + to;
+        return;
+    }
 
-            // Calculate the direct exchange rate (1 From = X To)
-            const rate = exchangeRates[to] / exchangeRates[from];
+    try {
 
-            document.getElementById('curRateInfo').textContent = `1 ${from} = ${rate.toFixed(4)} ${to}`;
-            document.getElementById('curConverted').textContent = converted.toFixed(2) + " " + to;
+        const response = await fetch(
+            "https://open.er-api.com/v6/latest/" + from
+        );
 
-            document.getElementById('curResults').classList.remove('hidden');
+        if (!response.ok) {
+            throw new Error("API Error");
         }
-    </script>
+
+        const data = await response.json();
+
+        if (data.result !== "success") {
+            throw new Error("Invalid API response");
+        }
+
+        const rate = data.rates[to];
+
+        if (!rate) {
+            throw new Error("Currency not found");
+        }
+
+        const converted = amount * rate;
+
+        document.getElementById("curRateInfo").textContent =
+            `1 ${from} = ${rate.toFixed(6)} ${to}`;
+
+        document.getElementById("curConverted").textContent =
+            `${converted.toFixed(2)} ${to}`;
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("curRateInfo").textContent =
+            "Unable to load exchange rates";
+
+        document.getElementById("curConverted").textContent =
+            "Error";
+
+    }
+}
+</script>
 </body>
 </html>
