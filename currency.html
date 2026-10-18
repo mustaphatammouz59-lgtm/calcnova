@@ -42,6 +42,7 @@
                             <option value="SAR">SAR - Saudi Riyal</option>
                             <option value="AED">AED - UAE Dirham</option>
                             <option value="EGP">EGP - Egyptian Pound</option>
+                            <option value="MAD">MAD - Moroccan Dirham</option>
                         </select>
                     </div>
                     <div>
@@ -53,6 +54,7 @@
                             <option value="SAR">SAR - Saudi Riyal</option>
                             <option value="AED">AED - UAE Dirham</option>
                             <option value="EGP">EGP - Egyptian Pound</option>
+                            <option value="MAD">MAD - Moroccan Dirham</option>
                         </select>
                     </div>
                 </div>
@@ -109,8 +111,8 @@
                 return;
             }
 
-            // Using a free, no-key-required API for live exchange rates
-            const apiURL = `https://open.er-api.com/v6/latest/${from}`;
+            // Using exchangerate.host (CORS enabled, no API key required)
+            const apiURL = `https://api.exchangerate.host/convert?from=${from}&to=${to}&amount=${amount}`;
 
             try {
                 document.getElementById('curConverted').textContent = "Loading...";
@@ -119,12 +121,10 @@
                 const response = await fetch(apiURL);
                 const data = await response.json();
 
-                if (data.result === "success") {
-                    const rate = data.rates[to];
-                    const converted = amount * rate;
-                    
-                    document.getElementById('curRateInfo').textContent = `1 ${from} = ${rate.toFixed(4)} ${to}`;
-                    document.getElementById('curConverted').textContent = converted.toFixed(2) + " " + to;
+                if (data.success) {
+                    // The API returns the final converted result directly
+                    document.getElementById('curRateInfo').textContent = `1 ${from} = ${data.info.rate.toFixed(4)} ${to}`;
+                    document.getElementById('curConverted').textContent = data.result.toFixed(2) + " " + to;
                 } else {
                     alert("Error fetching exchange rates. Please try again later.");
                     document.getElementById('curResults').classList.add('hidden');
