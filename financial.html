@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Calculators - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="text-[#14B8A6] font-bold">Financial</a>
+                <a href="#" class="hover:text-[#14B8A6] transition">Health</a>
+                <a href="#" class="hover:text-[#14B8A6] transition">Math</a>
+                <a href="#" class="hover:text-[#14B8A6] transition">Other</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <span class="text-gray-800 font-medium">Financial Calculators</span>
+    </div>
+
+    <!-- Main Layout -->
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        
+        <!-- Left Column: Links -->
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-2">Financial Calculators</h1>
+            <p class="text-gray-600 mb-8">A complete list of our free financial calculators to help you plan your future.</p>
+
+            <!-- Category: Mortgage -->
+            <div class="mb-8 bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Mortgage & Real Estate</h2>
+                <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    <li><a href="mortgage.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Mortgage Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] hover:underline">Amortization Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] hover:underline">Mortgage Payoff Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] hover:underline">House Affordability</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] hover:underline">Refinance Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] hover:underline">Rent vs. Buy</a></li>
+                </ul>
+            </div>
+
+            <!-- Category: Investment -->
+            <div class="mb-8 bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Investment</h2>
+                <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] hover:underline">Interest Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] hover:underline">Investment Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] hover:underline">Compound Interest</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] hover:underline">Savings Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] hover:underline">ROI Calculator</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] hover:underline">Future Value</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right Column: Sidebar (Ad Space) -->
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="#" class="hover:text-white transition">About Us</a>
+                <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
