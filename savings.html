@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savings Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Savings</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Savings Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Initial Savings ($)</label>
+                        <input type="number" id="savInitial" value="5000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Monthly Contribution ($)</label>
+                        <input type="number" id="savMonthly" value="500" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
+                        <input type="number" id="savRate" value="4" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Target Goal ($)</label>
+                        <input type="number" id="savGoal" value="50000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="calculateSavings()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Savings Goal</button>
+
+                <div id="savResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
+                    <p class="text-sm text-gray-500">Time Required to Reach Goal</p>
+                    <p class="text-3xl font-bold text-[#14B8A6]" id="savTime">0 Years</p>
+                    <p class="text-sm text-gray-500 mt-2">Total Amount Saved</p>
+                    <p class="text-xl font-bold text-gray-800" id="savTotal">$0</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Reaching Your Savings Goal</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">This calculator estimates how long it will take to reach your savings goal based on your initial deposit, monthly contributions, and the interest rate offered by your bank. It compounds interest monthly to give you a highly accurate estimate.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateSavings() {
+            const initial = parseFloat(document.getElementById('savInitial').value);
+            const monthly = parseFloat(document.getElementById('savMonthly').value);
+            const rate = parseFloat(document.getElementById('savRate').value) / 100 / 12; // Monthly rate
+            const goal = parseFloat(document.getElementById('savGoal').value);
+
+            if (isNaN(initial) || isNaN(monthly) || isNaN(rate) || isNaN(goal) || goal <= initial) {
+                alert("Please enter valid numbers. Target goal must be greater than initial savings.");
+                return;
+            }
+
+            let currentBalance = initial;
+            let months = 0;
+            const maxMonths = 1200; // Limit to 100 years to prevent infinite loops
+
+            while (currentBalance < goal && months < maxMonths) {
+                // Add interest
+                currentBalance *= (1 + rate);
+                // Add monthly contribution
+                currentBalance += monthly;
+                months++;
+            }
+
+            const years = Math.floor(months / 12);
+            const remainingMonths = months % 12;
+
+            const timeString = years + " Years and " + remainingMonths + " Months";
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('savTime').textContent = timeString;
+            document.getElementById('savTotal').textContent = formatter.format(currentBalance);
+            
+            document.getElementById('savResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
