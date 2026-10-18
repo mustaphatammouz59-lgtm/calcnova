@@ -36,25 +36,25 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">From</label>
                         <select id="curFrom" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="usd" selected>USD - US Dollar</option>
-                            <option value="eur">EUR - Euro</option>
-                            <option value="gbp">GBP - British Pound</option>
-                            <option value="sar">SAR - Saudi Riyal</option>
-                            <option value="aed">AED - UAE Dirham</option>
-                            <option value="egp">EGP - Egyptian Pound</option>
-                            <option value="mad">MAD - Moroccan Dirham</option>
+                            <option value="USD" selected>USD - US Dollar</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="GBP">GBP - British Pound</option>
+                            <option value="JPY">JPY - Japanese Yen</option>
+                            <option value="CHF">CHF - Swiss Franc</option>
+                            <option value="CAD">CAD - Canadian Dollar</option>
+                            <option value="AUD">AUD - Australian Dollar</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">To</label>
                         <select id="curTo" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="eur" selected>EUR - Euro</option>
-                            <option value="usd">USD - US Dollar</option>
-                            <option value="gbp">GBP - British Pound</option>
-                            <option value="sar">SAR - Saudi Riyal</option>
-                            <option value="aed">AED - UAE Dirham</option>
-                            <option value="egp">EGP - Egyptian Pound</option>
-                            <option value="mad">MAD - Moroccan Dirham</option>
+                            <option value="EUR" selected>EUR - Euro</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="GBP">GBP - British Pound</option>
+                            <option value="JPY">JPY - Japanese Yen</option>
+                            <option value="CHF">CHF - Swiss Franc</option>
+                            <option value="CAD">CAD - Canadian Dollar</option>
+                            <option value="AUD">AUD - Australian Dollar</option>
                         </select>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
 
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">Live Exchange Rates</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">This calculator uses a free, open-source API (Fawaz Ahmed Currency API) hosted on a global CDN to fetch the latest daily exchange rates. Please note that banks and commercial services usually charge a small fee or margin on top of the mid-market rate shown here.</p>
+                <p class="text-gray-600 mb-4 leading-relaxed">This calculator uses the Frankfurter API, which provides exchange rates based on data from the European Central Bank. Rates are updated daily and cover major world currencies. Please note that banks and commercial services usually charge a small fee or margin on top of the mid-market rate shown here.</p>
                 <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
                     <p>In-Article AdSense Banner (Fluid)</p>
                 </div>
@@ -105,15 +105,14 @@
             }
 
             if (from === to) {
-                document.getElementById('curConverted').textContent = amount.toFixed(2) + " " + to.toUpperCase();
+                document.getElementById('curConverted').textContent = amount.toFixed(2) + " " + to;
                 document.getElementById('curRateInfo').textContent = "Same currency selected";
                 document.getElementById('curResults').classList.remove('hidden');
                 return;
             }
 
-            // Using Fawaz Ahmed Currency API (CDN hosted, zero CORS issues)
-            // URL Structure: .../currencies/{base}.json
-            const apiURL = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${from}.json`;
+            // Using Frankfurter API (ECB data, no key, CORS enabled)
+            const apiURL = `https://api.frankfurter.app/latest?amount=${amount}&from=${from}&to=${to}`;
 
             try {
                 document.getElementById('curConverted').textContent = "Loading...";
@@ -122,16 +121,15 @@
                 const response = await fetch(apiURL);
                 const data = await response.json();
 
-                // The API returns data like: { "date": "...", "usd": { "eur": 0.92, ... } }
-                // We need to access data[from][to]
-                const rate = data[from][to];
-                
-                if (rate) {
-                    const converted = amount * rate;
-                    document.getElementById('curRateInfo').textContent = `1 ${from.toUpperCase()} = ${rate.toFixed(4)} ${to.toUpperCase()}`;
-                    document.getElementById('curConverted').textContent = converted.toFixed(2) + " " + to.toUpperCase();
+                // Frankfurter returns the converted result directly in data.rates[to]
+                if (data.rates && data.rates[to]) {
+                    const converted = data.rates[to];
+                    const rate = converted / amount;
+                    
+                    document.getElementById('curRateInfo').textContent = `1 ${from} = ${rate.toFixed(4)} ${to} (ECB Rate)`;
+                    document.getElementById('curConverted').textContent = converted.toFixed(2) + " " + to;
                 } else {
-                    alert("Currency pair not supported or data unavailable.");
+                    alert("Currency pair not supported by this API. Please try a different pair (e.g., USD to EUR).");
                     document.getElementById('curResults').classList.add('hidden');
                 }
             } catch (error) {
