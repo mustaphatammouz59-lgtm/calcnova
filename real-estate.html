@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Real Estate</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Real Estate Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Property Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Purchase Price ($)</label>
+                        <input type="number" id="rePrice" value="250000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Down Payment (%)</label>
+                        <input type="number" id="reDownPct" value="20" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Interest Rate (%)</label>
+                        <input type="number" id="reRate" value="6.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+
+                <h2 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Income & Expenses (Monthly)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Monthly Rental Income ($)</label>
+                        <input type="number" id="reRent" value="2000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Total Monthly Expenses (Tax, Ins, Maint.) ($)</label>
+                        <input type="number" id="reExpenses" value="600" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="calculateRealEstate()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Analyze Investment</button>
+
+                <div id="reResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Monthly Cash Flow</p>
+                            <p class="text-xl font-bold text-[#14B8A6]" id="reCashFlow">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Cash on Cash Return (Annual)</p>
+                            <p class="text-xl font-bold text-[#3F51B5]" id="reCOC">0%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">How to Evaluate a Real Estate Investment</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">When investing in real estate, two of the most important metrics are Cash Flow and Cash on Cash Return. Cash flow is the money left over after paying all expenses and the mortgage. Cash on Cash Return measures the annual return on the actual cash you invested (down payment + closing costs).</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateRealEstate() {
+            const price = parseFloat(document.getElementById('rePrice').value);
+            const downPct = parseFloat(document.getElementById('reDownPct').value) / 100;
+            const rate = parseFloat(document.getElementById('reRate').value) / 100 / 12;
+            const rent = parseFloat(document.getElementById('reRent').value);
+            const expenses = parseFloat(document.getElementById('reExpenses').value);
+
+            if (isNaN(price) || isNaN(downPct) || isNaN(rate) || isNaN(rent) || isNaN(expenses)) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            const downPayment = price * downPct;
+            const loanAmount = price - downPayment;
+            const months = 30 * 12; // Assuming 30-year fixed
+
+            // Calculate Mortgage Payment (P&I)
+            const mortgagePayment = loanAmount * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+            
+            // Monthly Cash Flow
+            const cashFlow = rent - expenses - mortgagePayment;
+
+            // Cash on Cash Return (Annual Cash Flow / Total Cash Invested)
+            // Assuming 3% closing costs for simplicity
+            const closingCosts = price * 0.03;
+            const totalCashInvested = downPayment + closingCosts;
+            const annualCashFlow = cashFlow * 12;
+            const cocReturn = (annualCashFlow / totalCashInvested) * 100;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('reCashFlow').textContent = formatter.format(cashFlow);
+            document.getElementById('reCOC').textContent = cocReturn.toFixed(2) + "%";
+            
+            // Color code the cash flow
+            const cfEl = document.getElementById('reCashFlow');
+            if (cashFlow > 0) {
+                cfEl.className = "text-xl font-bold text-green-500";
+            } else {
+                cfEl.className = "text-xl font-bold text-red-500";
+            }
+
+            document.getElementById('reResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
