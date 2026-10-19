@@ -429,7 +429,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="grid grid-cols-1 gap-4 mb-6">
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
                         <p class="flex justify-between mb-2"><span>House Price:</span> <span class="font-bold">${formatMoney(homePrice)}</span></p>
                         <p class="flex justify-between mb-2"><span>Loan Amount:</span> <span class="font-bold">${formatMoney(principal)}</span></p>
@@ -438,6 +438,10 @@
                     </div>
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                         <canvas id="pieChart"></canvas>
+                    </div>
+                    <!-- الرسم الخطي -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <canvas id="lineChart"></canvas>
                     </div>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
@@ -459,7 +463,9 @@
             document.getElementById('placeholderArea').classList.add('hidden');
             resultsArea.classList.remove('hidden');
 
+            // رسم المخططات
             drawPieChart(monthlyPI, currentMonthlyTax, currentMonthlyIns, currentMonthlyOther);
+            drawLineChart(principal, scheduleData, initialTotalMonthly);
 
             window.currentScheduleData = scheduleData;
             window.isMonthlyView = false;
@@ -517,9 +523,29 @@
             });
         }
 
-        function formatMoney(amount) {
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
-        }
-    </script>
-</body>
-    </html>
+        // دالة رسم الرسم الخطي (Balance vs Interest vs Payment)
+        function drawLineChart(principal, scheduleData, monthlyPayment) {
+            const ctx = document.getElementById('lineChart').getContext('2d');
+            
+            let labels = ["0"];
+            let balanceData = [principal];
+            let interestData = [0];
+            let paymentData = [0];
+
+            let currentBalance = principal;
+            let totalInterestPaid = 0;
+            let totalPaymentPaid = 0;
+
+            let yearlyGroups = {};
+            scheduleData.forEach(row => {
+                if (!yearlyGroups[row.year]) yearlyGroups[row.year] = { interest: 0, principal: 0, balance: 0 };
+                yearlyGroups[row.year].interest += row.interest;
+                yearlyGroups[row.year].principal += row.principal;
+                yearlyGroups[row.year].balance = row.balance;
+            });
+
+            for (const year in yearlyGroups) {
+                labels.push(year);
+                const data = yearlyGroups[year];
+                currentBalance -= data.principal;
+                total
