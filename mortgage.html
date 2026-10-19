@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mortgage Calculator - CalcNova</title>
+    <meta name="description" content="Use CalcNova Mortgage Calculator to estimate your monthly mortgage payment, loan amount, interest, taxes, insurance, and total home loan costs.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/mortgage">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a mortgage calculator?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A mortgage calculator helps estimate monthly home loan payments based on loan amount, interest rate, and loan term."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is a mortgage payment calculated?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Mortgage payments are calculated using the loan amount, interest rate, and repayment period."
+          }
+        }
+      ]
+    }
+    </script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style> 
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 45%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { width: 55%; border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .section-title { font-weight: bold; font-size: 0.9rem; color: #1F2937; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.25rem;}
+        
+        .extra-payment-row { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+        .extra-payment-row input[type="number"] { width: 30%; text-align: center; padding: 0.25rem; border: 1px solid #D1D5DB; border-radius: 0.375rem;}
+        .extra-payment-row select, .extra-payment-row input[type="text"] { width: 25%; text-align: center; background-color: #F9FAFB; border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.25rem;}
+        .extra-payment-row span { width: 15%; text-align: center; font-size: 0.75rem; color: #6B7280; }
+
+        @media print {
+            nav, footer, .no-print, #calculator-form, #placeholderArea { display: none !important; }
+            #resultsArea { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            .md\:w-2\/5 { width: 100% !important; }
+            .md\:w-3\/5 { width: 100% !important; }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Mortgage</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Mortgage Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
+            
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="input-group">
+                    <label>Home Price</label>
+                    <div class="w-[55%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="homePrice" value="400000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Down Payment</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="downPayment" value="20" class="w-2/3">
+                        <select id="downType" class="w-1/3 bg-gray-50"><option value="percent">%</option><option value="amount">$</option></select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Loan Term</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="loanTerm" value="30" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Interest Rate</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="interestRate" value="7.26" step="0.01" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Start Date</label>
+                    <div class="w-[55%] flex gap-1">
+                        <select id="startMonth" class="w-1/2 bg-gray-50"><option>Oct</option></select>
+                        <input type="text" id="startYear" value="2026" class="w-1/2 text-center bg-gray-50 border border-gray-300 rounded-md">
+                    </div>
+                </div>
+                
+                <div class="mt-4 flex items-center">
+                    <input type="checkbox" id="includeTaxes" onchange="toggleAdvanced()" class="h-4 w-4 text-[#3F51B5] border-gray-300 rounded">
+                    <label for="includeTaxes" class="ml-2 font-bold text-gray-700">Include Taxes & Costs Below</label>
+                </div>
+
+                <div id="advancedInputs" class="hidden">
+                    <div class="text-right text-sm text-gray-600 mt-2 mb-1">Annual Tax & Cost</div>
+                    
+                    <div class="input-group">
+                        <label>Property Taxes</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="propTaxPct" value="1.2" step="0.01" class="w-2/3">
+                            <select id="propTaxUnit" onchange="handleUnitChange('propTaxPct', this.value)" class="w-1/3 bg-gray-50">
+                                <option value="percent">%</option>
+                                <option value="dollar">$</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Home Insurance</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="homeIns" value="1500" class="w-2/3">
+                            <select class="w-1/3 bg-gray-50"><option>$</option></select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>PMI Insurance</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="pmi" value="0" class="w-2/3">
+                            <select class="w-1/3 bg-gray-50"><option>$</option></select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>HOA Fee</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="hoaFee" value="0" class="w-2/3">
+                            <select class="w-1/3 bg-gray-50"><option>$</option></select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Other Costs</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="otherCosts" value="4000" class="w-2/3">
+                            <select class="w-1/3 bg-gray-50"><option>$</option></select>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-2 mb-2">
+                        <a href="#" onclick="toggleAdvancedOptions(event)" id="advancedOptionsBtn" class="text-[#3F51B5] text-sm font-semibold hover:underline">+ More Options</a>
+                    </div>
+
+                    <div id="moreAdvancedOptions" class="hidden">
+                        <div class="section-title">Annual Tax & Cost Increase</div>
+                        <div class="input-group"><label>Property Taxes Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="taxIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                        <div class="input-group"><label>Home Insurance Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="insIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+
+                        <div class="section-title">Extra Payments</div>
+                        <div class="extra-payment-row">
+                            <label class="text-sm text-gray-700 w-1/3">Extra Monthly</label>
+                            <input type="number" id="extraMonthly" value="0">
+                            <span>from</span>
+                            <select class="month-select"></select>
+                            <input type="text" class="year-input">
+                        </div>
+
+                        <div class="text-center mt-2 mb-2">
+                            <a href="#" onclick="toggleAdditionalOneTime(event)" id="additionalBtn" class="text-[#3F51B5] text-sm hover:underline">+ Additional One-Time Payments</a>
+                        </div>
+
+                        <div id="additionalOneTimeDiv" class="hidden space-y-1">
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateMortgage()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md flex justify-center items-center gap-2">
+                        Calculate
+                    </button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
+                </div>
+            </div>
+            
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mt-6 text-sm">
+                <h3 class="font-bold text-gray-800 mb-2 border-b pb-2">Latest Mortgage Rates</h3>
+                <div class="space-y-1 mb-4">
+                    <p class="flex justify-between">
+                        <span class="text-gray-600">30 Years:</span> 
+                        <a href="#" onclick="setRate(7.26, 30); return false;" id="rate30" class="font-bold text-[#3F51B5] hover:underline">7.26%</a>
+                    </p>
+                    <p class="flex justify-between">
+                        <span class="text-gray-600">15 Years:</span> 
+                        <a href="#" onclick="setRate(6.479, 15); return false;" id="rate15" class="font-bold text-[#3F51B5] hover:underline">6.479%</a>
+                    </p>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <a href="https://www.bankrate.com/mortgages/mortgage-rates/" target="_blank" class="w-full text-center bg-[#3F51B5] text-white py-2 rounded-md font-semibold hover:bg-blue-800 transition">See your local rates</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="md:w-3/5">
+            <div id="resultsArea" class="hidden"></div>
+            <div id="placeholderArea" class="hidden bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center text-gray-500">
+                <p class="text-xl font-semibold mb-2">Ready to calculate</p>
+            </div>
+        </div>
+    </main>
+    
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Mortgage Calculator</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Our Mortgage Calculator helps you estimate your monthly home loan payment,
+                total interest, and the overall cost of your mortgage.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Mortgage Calculator FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">What is a mortgage calculator?</h4>
+                    <p class="text-gray-700">A mortgage calculator is a tool that estimates your monthly home loan payments.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What affects my mortgage payment?</h4>
+                    <p class="text-gray-700">Your payment depends on the home price, down payment, interest rate, loan term, taxes, and insurance costs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto text-center px-4">
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. الميزات الجديدة ---
+        let pieChartInstance = null;
+        let lineChartInstance = null;
+        let currentScheduleData = [];
+        let isMonthlyView = false;
+
+        function handleUnitChange(inputId, unit) {
+            const input = document.getElementById(inputId);
+            const homePrice = parseFloat(document.getElementById('homePrice').value) || 0;
+            if (unit === 'dollar') {
+                const percentValue = parseFloat(input.value) || 0;
+                input.value = Math.round((homePrice * percentValue) / 100);
+            } else {
+                const dollarValue = parseFloat(input.value) || 0;
+                input.value = ((dollarValue / homePrice) * 100).toFixed(2);
+            }
+            calculateMortgage(); // تحديث تلقائي
+        }
+
+        function toggleAdditionalOneTime(event) {
+            event.preventDefault();
+            const div = document.getElementById('additionalOneTimeDiv');
+            const btn = document.getElementById('additionalBtn');
+            if (div.classList.contains('hidden')) {
+                div.classList.remove('hidden');
+                btn.textContent = "- Hide Below Inputs";
+            } else {
+                div.classList.add('hidden');
+                btn.textContent = "+ Additional One-Time Payments";
+            }
+        }
+
+        function setRate(rate, term) {
+            document.getElementById('interestRate').value = rate;
+            document.getElementById('loanTerm').value = term;
+            calculateMortgage();
+        }
+
+        // --- 2. الدوال الأساسية ---
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const currentYear = new Date().getFullYear();
+            
+            document.querySelectorAll('.month-select, #startMonth').forEach(select => {
+                select.innerHTML = '';
+                months.forEach(month => {
+                    let option = document.createElement("option");
+                    option.text = month;
+                    option.value = month;
+                    if(month === "Oct") option.selected = true;
+                    select.add(option);
+                });
+            });
+
+            document.querySelectorAll('.year-input, #startYear').forEach(input => {
+                input.value = currentYear;
+            });
+
+            calculateMortgage();
+        });
+
+        function toggleAdvanced() {
+            const checkbox = document.getElementById('includeTaxes');
+            const advancedDiv = document.getElementById('advancedInputs');
+            if (checkbox.checked) {
+                advancedDiv.classList.remove('hidden');
+            } else {
+                advancedDiv.classList.add('hidden');
+            }
+        }
+
+        function toggleAdvancedOptions(event) {
+            event.preventDefault();
+            const moreOptionsDiv = document.getElementById('moreAdvancedOptions');
+            const btn = document.getElementById('advancedOptionsBtn');
+            if (moreOptionsDiv.classList.contains('hidden')) {
+                moreOptionsDiv.classList.remove('hidden');
+                btn.textContent = "- Fewer Options";
+            } else {
+                moreOptionsDiv.classList.add('hidden');
+                btn.textContent = "+ More Options";
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('homePrice').value = '';
+            document.getElementById('downPayment').value = '';
+            document.getElementById('interestRate').value = '';
+            document.getElementById('resultsArea').classList.add('hidden');
+            document.getElementById('placeholderArea').classList.remove('hidden');
+        }
+
+        // --- 3. دالة الحساب الرئيسية ---
+        function calculateMortgage() {
+            const homePrice = parseFloat(document.getElementById('homePrice').value);
+            const downInput = parseFloat(document.getElementById('downPayment').value);
+            const downType = document.getElementById('downType').value;
+            const termYears = parseInt(document.getElementById('loanTerm').value);
+            const rate = parseFloat(document.getElementById('interestRate').value);
+
+            if (isNaN(homePrice) || isNaN(downInput) || isNaN(termYears) || isNaN(rate)) return;
+
+            let downPaymentAmount = downType === 'percent' ? homePrice * (downInput / 100) : downInput;
+            const principal = homePrice - downPaymentAmount;
+            
+            if (principal <= 0) {
+                alert("Down payment cannot be greater than or equal to the home price.");
+                return;
+            }
+
+            const monthlyRate = (rate / 100) / 12;
+            const totalMonths = termYears * 12;
+
+            let annualTax = 0, annualIns = 0, annualPMI = 0, monthlyHOA = 0, annualOther = 0;
+            let taxIncrease = 0, insIncrease = 0;
+            
+            if (document.getElementById('includeTaxes').checked) {
+                const propTaxUnit = document.getElementById('propTaxUnit').value;
+                if (propTaxUnit === 'percent') {
+                    annualTax = homePrice * ((parseFloat(document.getElementById('propTaxPct').value) || 0) / 100);
+                } else {
+                    annualTax = parseFloat(document.getElementById('propTaxPct').value) || 0;
+                }
+                annualIns = parseFloat(document.getElementById('homeIns').value) || 0;
+                annualPMI = parseFloat(document.getElementById('pmi').value) || 0;
+                monthlyHOA = parseFloat(document.getElementById('hoaFee').value) || 0;
+                annualOther = parseFloat(document.getElementById('otherCosts').value) || 0;
+                
+                taxIncrease = (parseFloat(document.getElementById('taxIncrease').value) || 0) / 100;
+                insIncrease = (parseFloat(document.getElementById('insIncrease').value) || 0) / 100;
+            }
+
+            let currentMonthlyTax = annualTax / 12;
+            let currentMonthlyIns = annualIns / 12;
+            let currentMonthlyPMI = annualPMI / 12;
+            let currentMonthlyHOA = monthlyHOA;
+            let currentMonthlyOther = annualOther / 12;
+
+            let monthlyPI = 0;
+            if (monthlyRate === 0) {
+                monthlyPI = principal / totalMonths;
+            } else {
+                monthlyPI = principal * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+            }
+
+            const initialTotalMonthly = monthlyPI + currentMonthlyTax + currentMonthlyIns + currentMonthlyPMI + currentMonthlyHOA + currentMonthlyOther;
+
+            let currentBalance = principal;
+            let totalInterestPaid = 0;
+            let actualMonthCount = 0;
+            currentScheduleData = [];
+
+            for (let i = 1; i <= totalMonths; i++) {
+                if (currentBalance <= 0) break;
+                let interest = currentBalance * monthlyRate;
+                let principalPaid = monthlyPI - interest;
+                if (principalPaid > currentBalance) principalPaid = currentBalance;
+                
+                currentBalance -= principalPaid;
+                totalInterestPaid += interest;
+                actualMonthCount = i;
+                
+                currentScheduleData.push({
+                    month: i,
+                    year: Math.ceil(i / 12),
+                    interest: interest,
+                    principal: principalPaid,
+                    balance: currentBalance > 0 ? currentBalance : 0
+                });
+
+                if (i % 12 === 0) {
+                    currentMonthlyTax *= (1 + taxIncrease);
+                    currentMonthlyIns *= (1 + insIncrease);
+                }
+            }
+
+            const resultsArea = document.getElementById('resultsArea');
+            resultsArea.innerHTML = `
+                <div class="bg-[#4CAF50] text-white p-4 rounded-xl shadow-md text-center mb-6">
+                    <p class="text-sm opacity-90">Monthly Pay</p>
+                    <p class="text-4xl font-bold">${formatMoney(initialTotalMonthly)}</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-700">
+                            <tr><th class="py-2 px-3 border-b">Category</th><th class="py-2 px-3 border-b text-right">Monthly</th><th class="py-2 px-3 border-b text-right">Total</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b hover:bg-gray-50"><td class="py-2 px-3">Mortgage Payment</td><td class="py-2 px-3 text-right">${formatMoney(monthlyPI)}</td><td class="py-2 px-3 text-right">${formatMoney(monthlyPI * actualMonthCount)}</td></tr>
+                            <tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">Property Tax</td><td class="py-2 px-3 text-right">${formatMoney(currentMonthlyTax)}</td><td class="py-2 px-3 text-right">-</td></tr>
+                            <tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">Home Insurance</td><td class="py-2 px-3 text-right">${formatMoney(currentMonthlyIns)}</td><td class="py-2 px-3 text-right">-</td></tr>
+                            <tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">Other Costs</td><td class="py-2 px-3 text-right">${formatMoney(currentMonthlyOther)}</td><td class="py-2 px-3 text-right">-</td></tr>
+                            <tr class="bg-gray-100 font-bold border-b"><td class="py-2 px-3">Total Out-of-Pocket</td><td class="py-2 px-3 text-right text-[#14B8A6]">${formatMoney(initialTotalMonthly)}</td><td class="py-2 px-3 text-right">-</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="grid grid-cols-1 gap-4 mb-6">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                        <p class="flex justify-between mb-2"><span>House Price:</span> <span class="font-bold">${formatMoney(homePrice)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Loan Amount:</span> <span class="font-bold">${formatMoney(principal)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Down Payment:</span> <span class="font-bold">${formatMoney(downPaymentAmount)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Total Interest:</span> <span class="font-bold text-red-500">${formatMoney(totalInterestPaid)}</span></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-lg font-bold text-gray-800">Amortization Schedule</h3>
+                        <button onclick="toggleScheduleView()" id="scheduleToggleBtn" class="text-sm text-[#3F51B5] font-semibold hover:underline">Show Monthly Schedule</button>
+                    </div>
+                    <div class="overflow-x-auto max-h-96 overflow-y-auto">
+                        <table class="min-w-full text-sm text-left">
+                            <thead class="bg-gray-100 text-gray-700 sticky top-0">
+                                <tr><th class="py-2 px-3 border-b">Year</th><th class="py-2 px-3 border-b">Interest</th><th class="py-2 px-3 border-b">Principal</th><th class="py-2 px-3 border-b">Balance</th></tr>
+                            </thead>
+                            <tbody id="amortizationTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('placeholderArea').classList.add('hidden');
+            resultsArea.classList.remove('hidden');
+
+            drawPieChart(monthlyPI, currentMonthlyTax, currentMonthlyIns, currentMonthlyOther);
+            drawLineChart(principal, currentScheduleData, initialTotalMonthly);
+
+            isMonthlyView = false;
+            renderTable();
+        }
+
+        function renderTable() {
+            let tbodyHTML = "";
+            if (isMonthlyView) {
+                currentScheduleData.forEach((row, index) => {
+                    if (index < 12 || index % 12 === 0) {
+                        tbodyHTML += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-1 px-3">${row.month}</td><td class="py-1 px-3 text-right text-red-500">${formatMoney(row.interest)}</td><td class="py-1 px-3 text-right text-green-600">${formatMoney(row.principal)}</td><td class="py-1 px-3 text-right font-semibold">${formatMoney(row.balance)}</td></tr>`;
+                    }
+                });
+            } else {
+                let yearlyGroups = {};
+                currentScheduleData.forEach(row => {
+                    if (!yearlyGroups[row.year]) yearlyGroups[row.year] = { interest: 0, principal: 0, balance: 0 };
+                    yearlyGroups[row.year].interest += row.interest;
+                    yearlyGroups[row.year].principal += row.principal;
+                    yearlyGroups[row.year].balance = row.balance;
+                });
+                for (const year in yearlyGroups) {
+                    const d = yearlyGroups[year];
+                    tbodyHTML += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-2 px-3 font-medium">${year}</td><td class="py-2 px-3 text-right text-red-500">${formatMoney(d.interest)}</td><td class="py-2 px-3 text-right text-green-600">${formatMoney(d.principal)}</td><td class="py-2 px-3 text-right font-semibold">${formatMoney(d.balance)}</td></tr>`;
+                }
+            }
+            document.getElementById('amortizationTable').innerHTML = tbodyHTML;
+        }
+
+        function toggleScheduleView() {
+            isMonthlyView = !isMonthlyView;
+            document.getElementById('scheduleToggleBtn').textContent = isMonthlyView ? "Show Annual Schedule" : "Show Monthly Schedule";
+            renderTable();
+        }
+
+        function drawPieChart(pi, tax, ins, other) {
+            const ctx = document.getElementById('pieChart').getContext('2d');
+            if (pieChartInstance) pieChartInstance.destroy();
+            const dataValues = [pi, tax, ins, other].filter(val => val > 0);
+            const labels = ["P&I", "Tax", "Insurance", "Other"];
+            const colors = ["#3F51B5", "#14B8A6", "#EF4444", "#F59E0B"];
+            const filteredLabels = [], filteredColors = [];
+            [pi, tax, ins, other].forEach((val, idx) => {
+                if (val > 0) { filteredLabels.push(labels[idx]); filteredColors.push(colors[idx]); }
+            });
+            pieChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: { labels: filteredLabels, datasets: [{ data: dataValues, backgroundColor: filteredColors }] },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        function drawLineChart(principal, scheduleData, monthlyPayment) {
+            const ctx = document.getElementById('lineChart').getContext('2d');
+            if (lineChartInstance) lineChartInstance.destroy();
+            let labels = ["0"];
+            let balanceData = [principal];
+            let interestData = [0];
+            let paymentData = [0];
+            let currentBalance = principal;
+            let totalInterestPaid = 0;
+            let totalPaymentPaid = 0;
+            let yearlyGroups = {};
+            scheduleData.forEach(row => {
+                if (!yearlyGroups[row.year]) yearlyGroups[row.year] = { interest: 0, principal: 0, balance: 0 };
+                yearlyGroups[row.year].interest += row.interest;
+                yearlyGroups[row.year].principal += row.principal;
+                yearlyGroups[row.year].balance = row.balance;
+            });
+            for (const year in yearlyGroups) {
+                labels.push(year);
+                const data = yearlyGroups[year];
+                currentBalance -= data.principal;
+                totalInterestPaid += data.interest;
+                totalPaymentPaid += (monthlyPayment * 12);
+                balanceData.push(currentBalance > 0 ? currentBalance : 0);
+                interestData.push(totalInterestPaid);
+                paymentData.push(totalPaymentPaid);
+            }
+            lineChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Balance', data: balanceData, borderColor: '#3B82F6', borderWidth: 3, tension: 0.1 },
+                        { label: 'Interest', data: interestData, borderColor: '#84CC16', borderWidth: 3, tension: 0.1 },
+                        { label: 'Payment', data: paymentData, borderColor: '#991B1B', borderWidth: 3, tension: 0.1 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'top' } },
+                    scales: {
+                        x: { title: { display: true, text: 'Year' } },
+                        y: { beginAtZero: true, ticks: { callback: function(value) { return '$' + (value / 1000).toFixed(0) + 'K'; } } }
+                    }
+                }
+            });
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+        }
+    </script>
+</body>
+</html>
