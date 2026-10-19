@@ -126,63 +126,71 @@
                             <select class="w-1/3 bg-gray-50"><option>$</option></select>
                         </div>
                     </div>
-
-                    <!-- Annual Increase -->
-                    <div class="section-title">Annual Tax & Cost Increase</div>
-                    <div class="input-group"><label>Property Taxes Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="taxIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
-                    <div class="input-group"><label>Home Insurance Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="insIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
-                    <div class="input-group"><label>HOA Fee Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="hoaIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
-                    <div class="input-group"><label>Other Costs Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="otherIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
-
-                    <!-- Extra Payments -->
-                    <div class="section-title">Extra Payments</div>
                     
-                    <div class="extra-payment-row">
-                        <label class="text-sm text-gray-700 w-1/3">Extra Monthly</label>
-                        <input type="number" id="extraMonthly" value="0">
-                        <span>from</span>
-                        <select class="month-select"></select>
-                        <input type="text" class="year-input">
-                    </div>
-                    
-                    <div class="extra-payment-row">
-                        <label class="text-sm text-gray-700 w-1/3">Extra Yearly</label>
-                        <input type="number" id="extraYearly" value="0">
-                        <span>from</span>
-                        <select class="month-select"></select>
-                        <input type="text" class="year-input">
-                    </div>
-                    
-                    <div class="extra-payment-row">
-                        <label class="text-sm text-gray-700 w-1/3">One-time Pay</label>
-                        <input type="number" id="extraOneTime" value="0">
-                        <span>in</span>
-                        <select class="month-select"></select>
-                        <input type="text" class="year-input">
-                    </div>
-
+                    <!-- زر More Options -->
                     <div class="text-center mt-2 mb-2">
-                        <a href="#" onclick="toggleExtraInputs()" id="extraToggleBtn" class="text-[#3F51B5] text-sm hover:underline">+ Show Below Inputs</a>
+                        <a href="#" onclick="toggleAdvancedOptions(event)" id="advancedOptionsBtn" class="text-[#3F51B5] text-sm font-semibold hover:underline">+ More Options</a>
                     </div>
 
-                    <!-- 10 Extra Hidden Inputs -->
-                    <div id="extraHiddenInputs" class="hidden space-y-1">
-                        <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
-                        <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
-                        <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
-                        <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
-                        <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
-                        <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
-                        <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
-                        <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
-                        <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
-                        <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
-                    </div>
+                    <!-- الحقول الإضافية (مخفية افتراضياً) -->
+                    <div id="moreAdvancedOptions" class="hidden">
+                        <!-- Annual Increase -->
+                        <div class="section-title">Annual Tax & Cost Increase</div>
+                        <div class="input-group"><label>Property Taxes Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="taxIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                        <div class="input-group"><label>Home Insurance Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="insIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                        <div class="input-group"><label>HOA Fee Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="hoaIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                        <div class="input-group"><label>Other Costs Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="otherIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
 
-                    <!-- Biweekly Checkbox -->
-                    <div class="mt-4 flex items-center">
-                        <input type="checkbox" id="showBiweekly" class="h-4 w-4 text-[#3F51B5] border-gray-300 rounded">
-                        <label for="showBiweekly" class="ml-2 text-sm text-gray-700">Show Biweekly Payback Results</label>
+                        <!-- Extra Payments -->
+                        <div class="section-title">Extra Payments</div>
+                        
+                        <div class="extra-payment-row">
+                            <label class="text-sm text-gray-700 w-1/3">Extra Monthly</label>
+                            <input type="number" id="extraMonthly" value="0">
+                            <span>from</span>
+                            <select class="month-select"></select>
+                            <input type="text" class="year-input">
+                        </div>
+                        
+                        <div class="extra-payment-row">
+                            <label class="text-sm text-gray-700 w-1/3">Extra Yearly</label>
+                            <input type="number" id="extraYearly" value="0">
+                            <span>from</span>
+                            <select class="month-select"></select>
+                            <input type="text" class="year-input">
+                        </div>
+                        
+                        <div class="extra-payment-row">
+                            <label class="text-sm text-gray-700 w-1/3">One-time Pay</label>
+                            <input type="number" id="extraOneTime" value="0">
+                            <span>in</span>
+                            <select class="month-select"></select>
+                            <input type="text" class="year-input">
+                        </div>
+
+                        <div class="text-center mt-2 mb-2">
+                            <a href="#" onclick="toggleExtraInputs()" id="extraToggleBtn" class="text-[#3F51B5] text-sm hover:underline">+ Show Below Inputs</a>
+                        </div>
+
+                        <!-- 10 Extra Hidden Inputs -->
+                        <div id="extraHiddenInputs" class="hidden space-y-1">
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                        </div>
+
+                        <!-- Biweekly Checkbox -->
+                        <div class="mt-4 flex items-center">
+                            <input type="checkbox" id="showBiweekly" class="h-4 w-4 text-[#3F51B5] border-gray-300 rounded">
+                            <label for="showBiweekly" class="ml-2 text-sm text-gray-700">Show Biweekly Payback Results</label>
+                        </div>
                     </div>
                 </div>
 
@@ -245,6 +253,20 @@
                 advancedDiv.classList.remove('hidden');
             } else {
                 advancedDiv.classList.add('hidden');
+            }
+        }
+
+        function toggleAdvancedOptions(event) {
+            event.preventDefault();
+            const moreOptionsDiv = document.getElementById('moreAdvancedOptions');
+            const btn = document.getElementById('advancedOptionsBtn');
+            
+            if (moreOptionsDiv.classList.contains('hidden')) {
+                moreOptionsDiv.classList.remove('hidden');
+                btn.textContent = "- Fewer Options";
+            } else {
+                moreOptionsDiv.classList.add('hidden');
+                btn.textContent = "+ More Options";
             }
         }
 
