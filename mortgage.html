@@ -98,12 +98,13 @@
                     </div>
                 </div>
                 
+                <!-- تفعيل الخيار افتراضياً -->
                 <div class="mt-4 flex items-center">
-                    <input type="checkbox" id="includeTaxes" onchange="toggleAdvanced()" class="h-4 w-4 text-[#3F51B5] border-gray-300 rounded">
+                    <input type="checkbox" id="includeTaxes" onchange="toggleAdvanced()" checked class="h-4 w-4 text-[#3F51B5] border-gray-300 rounded">
                     <label for="includeTaxes" class="ml-2 font-bold text-gray-700">Include Taxes & Costs Below</label>
                 </div>
 
-                <div id="advancedInputs" class="hidden">
+                <div id="advancedInputs">
                     <div class="text-right text-sm text-gray-600 mt-2 mb-1">Annual Tax & Cost</div>
                     
                     <div class="input-group">
@@ -146,10 +147,10 @@
                     </div>
                     
                     <div class="text-center mt-2 mb-2">
-                        <a href="#" onclick="toggleAdvancedOptions(event)" id="advancedOptionsBtn" class="text-[#3F51B5] text-sm font-semibold hover:underline">+ More Options</a>
+                        <a href="#" onclick="toggleAdvancedOptions(event)" id="advancedOptionsBtn" class="text-[#3F51B5] text-sm font-semibold hover:underline">- Fewer Options</a>
                     </div>
 
-                    <div id="moreAdvancedOptions" class="hidden">
+                    <div id="moreAdvancedOptions">
                         <div class="section-title">Annual Tax & Cost Increase</div>
                         <div class="input-group"><label>Property Taxes Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="taxIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
                         <div class="input-group"><label>Home Insurance Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="insIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
@@ -206,9 +207,14 @@
                         <span class="text-gray-600">15 Years:</span> 
                         <a href="#" onclick="setRate(6.479, 15); return false;" id="rate15" class="font-bold text-[#3F51B5] hover:underline">6.479%</a>
                     </p>
+                    <p class="flex justify-between">
+                        <span class="text-gray-600">10 Years:</span> 
+                        <a href="#" onclick="setRate(6.355, 10); return false;" id="rate10" class="font-bold text-[#3F51B5] hover:underline">6.355%</a>
+                    </p>
                 </div>
                 <div class="flex flex-col gap-2">
                     <a href="https://www.bankrate.com/mortgages/mortgage-rates/" target="_blank" class="w-full text-center bg-[#3F51B5] text-white py-2 rounded-md font-semibold hover:bg-blue-800 transition">See your local rates</a>
+                    <a href="https://www.bankrate.com/mortgages/mortgage-pre-approval/" target="_blank" class="w-full text-center bg-white border border-[#3F51B5] text-[#3F51B5] py-2 rounded-md font-semibold hover:bg-gray-50 transition">Get pre-approval</a>
                 </div>
             </div>
         </div>
@@ -249,7 +255,6 @@
     </footer>
 
     <script>
-        // --- 1. الميزات الجديدة ---
         let pieChartInstance = null;
         let lineChartInstance = null;
         let currentScheduleData = [];
@@ -287,12 +292,11 @@
             calculateMortgage();
         }
 
-        // --- 2. الدوال الأساسية ---
         window.addEventListener('DOMContentLoaded', (event) => {
             const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             const currentYear = new Date().getFullYear();
             
-            document.querySelectorAll('.month-select, #startMonth').forEach(select => {
+            document.querySelectorAll('.month-select').forEach(select => {
                 select.innerHTML = '';
                 months.forEach(month => {
                     let option = document.createElement("option");
@@ -303,7 +307,7 @@
                 });
             });
 
-            document.querySelectorAll('.year-input, #startYear').forEach(input => {
+            document.querySelectorAll('.year-input').forEach(input => {
                 input.value = currentYear;
             });
 
@@ -341,7 +345,6 @@
             document.getElementById('placeholderArea').classList.remove('hidden');
         }
 
-        // --- 3. دالة الحساب الرئيسية ---
         function calculateMortgage() {
             const homePrice = parseFloat(document.getElementById('homePrice').value);
             const downInput = parseFloat(document.getElementById('downPayment').value);
@@ -438,9 +441,9 @@
                         </thead>
                         <tbody>
                             <tr class="border-b hover:bg-gray-50"><td class="py-2 px-3">Mortgage Payment</td><td class="py-2 px-3 text-right">${formatMoney(monthlyPI)}</td><td class="py-2 px-3 text-right">${formatMoney(monthlyPI * actualMonthCount)}</td></tr>
-                            <tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">Property Tax</td><td class="py-2 px-3 text-right">${formatMoney(currentMonthlyTax)}</td><td class="py-2 px-3 text-right">-</td></tr>
-                            <tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">Home Insurance</td><td class="py-2 px-3 text-right">${formatMoney(currentMonthlyIns)}</td><td class="py-2 px-3 text-right">-</td></tr>
-                            <tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">Other Costs</td><td class="py-2 px-3 text-right">${formatMoney(currentMonthlyOther)}</td><td class="py-2 px-3 text-right">-</td></tr>
+                            <tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">Property Tax</td><td class="py-2 px-3 text-right">${formatMoney(currentMonthlyTax)}</td><td class="py-2 px-3 text-right">${formatMoney(currentMonthlyTax * actualMonthCount)}</td></tr>
+                            <tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">Home Insurance</td><td class="py-2 px-3 text-right">${formatMoney(currentMonthlyIns)}</td><td class="py-2 px-3 text-right">${formatMoney(currentMonthlyIns * actualMonthCount)}</td></tr>
+                            <tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">Other Costs</td><td class="py-2 px-3 text-right">${formatMoney(currentMonthlyOther)}</td><td class="py-2 px-3 text-right">${formatMoney(currentMonthlyOther * actualMonthCount)}</td></tr>
                             <tr class="bg-gray-100 font-bold border-b"><td class="py-2 px-3">Total Out-of-Pocket</td><td class="py-2 px-3 text-right text-[#14B8A6]">${formatMoney(initialTotalMonthly)}</td><td class="py-2 px-3 text-right">-</td></tr>
                         </tbody>
                     </table>
@@ -451,6 +454,7 @@
                         <p class="flex justify-between mb-2"><span>Loan Amount:</span> <span class="font-bold">${formatMoney(principal)}</span></p>
                         <p class="flex justify-between mb-2"><span>Down Payment:</span> <span class="font-bold">${formatMoney(downPaymentAmount)}</span></p>
                         <p class="flex justify-between mb-2"><span>Total Interest:</span> <span class="font-bold text-red-500">${formatMoney(totalInterestPaid)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Mortgage Payoff Date:</span> <span class="font-bold">${getPayoffDate(actualMonthCount)}</span></p>
                     </div>
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                         <canvas id="pieChart"></canvas>
@@ -467,7 +471,7 @@
                     <div class="overflow-x-auto max-h-96 overflow-y-auto">
                         <table class="min-w-full text-sm text-left">
                             <thead class="bg-gray-100 text-gray-700 sticky top-0">
-                                <tr><th class="py-2 px-3 border-b">Year</th><th class="py-2 px-3 border-b">Interest</th><th class="py-2 px-3 border-b">Principal</th><th class="py-2 px-3 border-b">Balance</th></tr>
+                                <tr><th class="py-2 px-3 border-b">Year</th><th class="py-2 px-3 border-b">Date</th><th class="py-2 px-3 border-b">Interest</th><th class="py-2 px-3 border-b">Principal</th><th class="py-2 px-3 border-b">Balance</th></tr>
                             </thead>
                             <tbody id="amortizationTable"></tbody>
                         </table>
@@ -485,12 +489,18 @@
             renderTable();
         }
 
+        function getPayoffDate(months) {
+            const d = new Date();
+            d.setMonth(d.getMonth() + months);
+            return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        }
+
         function renderTable() {
             let tbodyHTML = "";
             if (isMonthlyView) {
                 currentScheduleData.forEach((row, index) => {
                     if (index < 12 || index % 12 === 0) {
-                        tbodyHTML += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-1 px-3">${row.month}</td><td class="py-1 px-3 text-right text-red-500">${formatMoney(row.interest)}</td><td class="py-1 px-3 text-right text-green-600">${formatMoney(row.principal)}</td><td class="py-1 px-3 text-right font-semibold">${formatMoney(row.balance)}</td></tr>`;
+                        tbodyHTML += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-1 px-3">${row.month}</td><td class="py-1 px-3">${getMonthDate(row.month)}</td><td class="py-1 px-3 text-right text-red-500">${formatMoney(row.interest)}</td><td class="py-1 px-3 text-right text-green-600">${formatMoney(row.principal)}</td><td class="py-1 px-3 text-right font-semibold">${formatMoney(row.balance)}</td></tr>`;
                     }
                 });
             } else {
@@ -503,10 +513,24 @@
                 });
                 for (const year in yearlyGroups) {
                     const d = yearlyGroups[year];
-                    tbodyHTML += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-2 px-3 font-medium">${year}</td><td class="py-2 px-3 text-right text-red-500">${formatMoney(d.interest)}</td><td class="py-2 px-3 text-right text-green-600">${formatMoney(d.principal)}</td><td class="py-2 px-3 text-right font-semibold">${formatMoney(d.balance)}</td></tr>`;
+                    tbodyHTML += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-2 px-3 font-medium">${year}</td><td class="py-2 px-3">${getYearDate(year)}</td><td class="py-2 px-3 text-right text-red-500">${formatMoney(d.interest)}</td><td class="py-2 px-3 text-right text-green-600">${formatMoney(d.principal)}</td><td class="py-2 px-3 text-right font-semibold">${formatMoney(d.balance)}</td></tr>`;
                 }
             }
             document.getElementById('amortizationTable').innerHTML = tbodyHTML;
+        }
+
+        function getMonthDate(monthNum) {
+            const d = new Date();
+            d.setMonth(d.getMonth() + monthNum);
+            return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        }
+
+        function getYearDate(yearNum) {
+            const start = new Date();
+            const end = new Date();
+            start.setMonth(start.getMonth() + (yearNum - 1) * 12);
+            end.setMonth(end.getMonth() + yearNum * 12 - 1);
+            return `${start.getMonth()+1}/${start.getFullYear()}-${end.getMonth()+1}/${end.getFullYear()}`;
         }
 
         function toggleScheduleView() {
@@ -585,4 +609,4 @@
         }
     </script>
 </body>
-                                </html>
+    </html>
