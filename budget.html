@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Budget</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Monthly Budget Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="mb-6">
+                    <label class="block text-lg font-semibold text-[#3F51B5] mb-2">Monthly Net Income ($)</label>
+                    <input type="number" id="budIncome" value="4000" class="w-full border border-gray-300 rounded-md p-3 outline-none text-xl font-bold">
+                </div>
+
+                <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Monthly Expenses</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Housing (Rent/Mortgage) ($)</label>
+                        <input type="number" id="budHousing" value="1200" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Utilities (Electric, Water, Internet) ($)</label>
+                        <input type="number" id="budUtilities" value="300" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Groceries & Food ($)</label>
+                        <input type="number" id="budFood" value="500" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Transportation (Gas, Car Payment) ($)</label>
+                        <input type="number" id="budTransport" value="400" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Insurance (Health, Car, Life) ($)</label>
+                        <input type="number" id="budInsurance" value="200" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Debt Payments (Loans, Credit Cards) ($)</label>
+                        <input type="number" id="budDebt" value="150" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Entertainment, Dining Out & Miscellaneous ($)</label>
+                        <input type="number" id="budMisc" value="300" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
+                    </div>
+                </div>
+                <button onclick="calculateBudget()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Budget</button>
+
+                <div id="budResults" class="hidden mt-8 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Total Expenses</p>
+                            <p class="text-xl font-bold text-red-500" id="budTotalExpenses">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
+                            <p class="text-sm text-gray-500">Remaining Money (Savings)</p>
+                            <p class="text-3xl font-bold text-[#14B8A6]" id="budRemaining">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Savings Rate</p>
+                            <p class="text-xl font-bold text-[#3F51B5]" id="budSavingsRate">0%</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center" id="budStatusContainer">
+                        <p class="text-lg font-semibold" id="budStatus">Result</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">The 50/30/20 Rule</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">A popular budgeting guideline is the 50/30/20 rule. It suggests you should spend 50% of your net income on <strong>needs</strong> (housing, food, utilities), 30% on <strong>wants</strong> (entertainment, dining out), and save the remaining 20% for <strong>savings and debt repayment</strong>. This calculator helps you see where your money is going.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateBudget() {
+            const income = parseFloat(document.getElementById('budIncome').value);
+            
+            // جمع كل النفقات
+            const inputs = document.querySelectorAll('.expense-input');
+            let totalExpenses = 0;
+            
+            inputs.forEach(input => {
+                const val = parseFloat(input.value);
+                if (!isNaN(val)) {
+                    totalExpenses += val;
+                }
+            });
+
+            if (isNaN(income) || income <= 0) {
+                alert("Please enter a valid monthly income.");
+                return;
+            }
+
+            const remaining = income - totalExpenses;
+            const savingsRate = (remaining / income) * 100;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('budTotalExpenses').textContent = formatter.format(totalExpenses);
+            
+            const remEl = document.getElementById('budRemaining');
+            remEl.textContent = formatter.format(remaining);
+            
+            const rateEl = document.getElementById('budSavingsRate');
+            rateEl.textContent = savingsRate.toFixed(1) + "%";
+
+            const statusEl = document.getElementById('budStatus');
+            if (remaining < 0) {
+                remEl.className = "text-3xl font-bold text-red-500";
+                statusEl.textContent = "Warning: You are spending more than you earn!";
+                statusEl.className = "text-lg font-semibold text-red-600";
+            } else if (savingsRate < 20) {
+                remEl.className = "text-3xl font-bold text-yellow-500";
+                statusEl.textContent = "Good, but try to save at least 20% of your income.";
+                statusEl.className = "text-lg font-semibold text-yellow-600";
+            } else {
+                remEl.className = "text-3xl font-bold text-[#14B8A6]";
+                statusEl.textContent = "Excellent! You are on track with your savings.";
+                statusEl.className = "text-lg font-semibold text-green-600";
+            }
+
+            document.getElementById('budResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+                  </html>
