@@ -244,8 +244,16 @@
 
         // 2. دوال التحكم
         function toggleAdvanced() {
-            const advancedDiv = document.getElementById('advancedInputs');
-            advancedDiv.classList.toggle('hidden');
+    const checkbox = document.getElementById('includeTaxes');
+    const advancedDiv = document.getElementById('advancedInputs');
+    
+    // إذا تم تحديد المربع، نظهر الحقول
+    if (checkbox.checked) {
+        advancedDiv.classList.remove('hidden');
+    } else {
+        // إذا تم إلغاء التحديد، نخفي الحقول
+        advancedDiv.classList.add('hidden');
+    }
         }
 
         function toggleExtraInputs() {
