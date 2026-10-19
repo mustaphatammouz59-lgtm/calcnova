@@ -220,7 +220,6 @@
     </footer>
 
     <script>
-        // 1. كود ملء الأشهر والسنوات تلقائياً
         window.addEventListener('DOMContentLoaded', (event) => {
             const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             const currentYear = new Date().getFullYear();
@@ -245,7 +244,6 @@
             calculateMortgage();
         });
 
-        // 2. دوال التحكم
         function toggleAdvanced() {
             const checkbox = document.getElementById('includeTaxes');
             const advancedDiv = document.getElementById('advancedInputs');
@@ -289,7 +287,6 @@
             document.getElementById('placeholderArea').classList.remove('hidden');
         }
 
-        // 3. دالة الحساب الرئيسية
         function calculateMortgage() {
             const homePrice = parseFloat(document.getElementById('homePrice').value);
             const downInput = parseFloat(document.getElementById('downPayment').value);
@@ -540,4 +537,8 @@
         }
 
         function formatMoney(amount) {
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+        }
+    </script>
+</body>
+</html>
