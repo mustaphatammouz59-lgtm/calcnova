@@ -8,45 +8,38 @@
     <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
 </head>
 <body class="text-gray-800">
-
     <!-- Navbar -->
     <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-                <a href="#" class="hover:text-[#14B8A6] transition">Health</a>
-                <a href="#" class="hover:text-[#14B8A6] transition">Math</a>
-                <a href="#" class="hover:text-[#14B8A6] transition">Other</a>
             </div>
         </div>
     </nav>
 
     <!-- Breadcrumbs -->
     <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Mortgage Calculator</span>
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Mortgage</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        
-        <!-- Left Column: Calculator & SEO -->
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Mortgage Calculator</h1>
-
-            <!-- The Tool -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <!-- Left Column: Inputs -->
+        <div class="md:w-1/3">
+            <h1 class="text-2xl font-bold text-[#3F51B5] mb-4">Mortgage Calculator</h1>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Home Price ($)</label>
-                        <input type="number" id="homePrice" value="400000" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-[#14B8A6] outline-none">
+                        <input type="number" id="homePrice" value="400000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Down Payment (%)</label>
-                        <input type="number" id="downPayment" value="20" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-[#14B8A6] outline-none">
+                        <input type="number" id="downPayment" value="20" class="w-full border border-gray-300 rounded-md p-2 outline-none">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
-                        <select id="loanTerm" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-[#14B8A6] outline-none">
+                        <select id="loanTerm" class="w-full border border-gray-300 rounded-md p-2 outline-none">
                             <option value="30">30 Years</option>
                             <option value="15">15 Years</option>
                             <option value="10">10 Years</option>
@@ -54,66 +47,87 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate (%)</label>
-                        <input type="number" id="interestRate" value="7.26" step="0.01" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-[#14B8A6] outline-none">
+                        <input type="number" id="interestRate" value="7.26" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
                     </div>
-                </div>
-                <button onclick="calculateMortgage()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate</button>
+                    
+                    <!-- Toggle for Extra Options -->
+                    <div class="mt-4 border-t pt-4">
+                        <label class="flex items-center space-x-2 text-sm font-medium text-gray-700 cursor-pointer">
+                            <input type="checkbox" id="showAdvanced" onchange="toggleAdvanced()" class="form-checkbox h-4 w-4 text-[#3F51B5]">
+                            <span>Include Taxes, Insurance & Extra Payments</span>
+                        </label>
+                    </div>
 
-                <!-- Results Area -->
-                <div id="results" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <h3 class="text-lg font-bold text-[#3F51B5] mb-3">Results</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Monthly Payment</p>
-                            <p class="text-xl font-bold text-[#14B8A6]" id="monthlyPayment">$0</p>
+                    <!-- Advanced Inputs (Hidden by default) -->
+                    <div id="advancedInputs" class="hidden space-y-4 mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Property Tax ($/year)</label>
+                            <input type="number" id="propTax" value="4800" class="w-full border border-gray-300 rounded-md p-2 outline-none">
                         </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest</p>
-                            <p class="text-xl font-bold text-gray-800" id="totalInterest">$0</p>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Home Insurance ($/year)</label>
+                            <input type="number" id="homeIns" value="1500" class="w-full border border-gray-300 rounded-md p-2 outline-none">
                         </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Loan Amount</p>
-                            <p class="text-xl font-bold text-gray-800" id="totalLoan">$0</p>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">HOA Fee ($/month)</label>
+                            <input type="number" id="hoaFee" value="0" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Extra Monthly Payment ($)</label>
+                            <input type="number" id="extraPayment" value="0" class="w-full border border-gray-300 rounded-md p-2 outline-none">
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- SEO Content -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is a Mortgage?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A mortgage is a type of loan used to purchase or maintain a home, land, or other types of real estate. The borrower agrees to pay the lender over time, typically in a series of regular payments that are divided into two parts: principal and interest. The property itself serves as collateral to secure the loan.</p>
-                
-                <!-- AdSense Placeholder -->
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
-
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">How to Calculate Mortgage Payments</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">The monthly payment for a fixed-rate mortgage is calculated using a specific formula that takes into account the loan amount, the interest rate, and the loan term. This calculator uses the standard amortization formula to give you an accurate estimate.</p>
-
-                <h3 class="text-xl font-bold text-gray-800 mb-3 mt-6">Frequently Asked Questions</h3>
-                <div class="space-y-4">
-                    <div>
-                        <p class="font-semibold text-gray-800">What is Private Mortgage Insurance (PMI)?</p>
-                        <p class="text-gray-600 text-sm mt-1">PMI is usually required if your down payment is less than 20% of the home's value. It protects the lender in case you default on the loan.</p>
-                    </div>
-                    <div>
-                        <p class="font-semibold text-gray-800">Can I pay off my mortgage early?</p>
-                        <p class="text-gray-600 text-sm mt-1">Yes, many lenders allow extra payments towards the principal. This reduces your total interest and shortens the loan term.</p>
-                    </div>
-                </div>
+                <button onclick="calculateMortgage()" class="w-full mt-6 bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate</button>
             </div>
         </div>
 
-        <!-- Right Column: Sidebar -->
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-                <p class="text-sm">(300x250 Banner)</p>
-            </div>
-        </aside>
+        <!-- Right Column: Results & Chart -->
+        <div class="md:w-2/3">
+            <!-- Results Area (Will be filled by JS) -->
+            <div id="resultsArea" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border-2 border-[#14B8A6] text-center">
+                        <p class="text-sm text-gray-500">Monthly Payment (P&I)</p>
+                        <p class="text-3xl font-bold text-[#14B8A6]" id="monthlyPI">$0</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                        <p class="text-sm text-gray-500">Total Monthly (With Tax & Ins)</p>
+                        <p class="text-2xl font-bold text-gray-800" id="monthlyTotal">$0</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
+                        <p class="text-sm text-gray-500">Total Interest Paid</p>
+                        <p class="text-2xl font-bold text-red-500" id="totalInterest">$0</p>
+                    </div>
+                </div>
 
+                <!-- Amortization Schedule Table -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-3">Amortization Schedule (Yearly)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-left">
+                            <thead class="bg-gray-100 text-gray-700">
+                                <tr>
+                                    <th class="py-2 px-3 border-b">Year</th>
+                                    <th class="py-2 px-3 border-b">Interest</th>
+                                    <th class="py-2 px-3 border-b">Principal</th>
+                                    <th class="py-2 px-3 border-b">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="amortizationTable">
+                                <!-- Rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Placeholder before calculation -->
+            <div id="placeholderArea" class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center text-gray-500">
+                <p class="text-xl font-semibold mb-2">Ready to calculate</p>
+                <p>Enter your loan details on the left and click Calculate.</p>
+            </div>
+        </div>
     </main>
 
     <!-- Footer -->
@@ -128,51 +142,121 @@
         </div>
     </footer>
 
-    <!-- JavaScript -->
     <script>
-        function calculateMortgage() {
-            // Get inputs
-            const price = parseFloat(document.getElementById('homePrice').value);
-            const downPercent = parseFloat(document.getElementById('downPayment').value);
-            const termYears = parseInt(document.getElementById('loanTerm').value);
-            const rate = parseFloat(document.getElementById('interestRate').value);
-
-            // Validation
-            if (isNaN(price) || isNaN(downPercent) || isNaN(termYears) || isNaN(rate)) {
-                alert("Please enter valid numbers in all fields.");
-                return;
-            }
-
-            // Calculations
-            const downPaymentAmount = price * (downPercent / 100);
-            const principal = price - downPaymentAmount;
-            const monthlyRate = (rate / 100) / 12;
-            const numberOfPayments = termYears * 12;
-
-            let monthlyPayment = 0;
-            if (monthlyRate === 0) {
-                monthlyPayment = principal / numberOfPayments;
-            } else {
-                monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) / (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
-            }
-
-            const totalPayment = monthlyPayment * numberOfPayments;
-            const totalInterest = totalPayment - principal;
-
-            // Format numbers to currency
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            // Display results
-            document.getElementById('monthlyPayment').textContent = formatter.format(monthlyPayment);
-            document.getElementById('totalInterest').textContent = formatter.format(totalInterest);
-            document.getElementById('totalLoan').textContent = formatter.format(totalAmount = totalPayment + downPaymentAmount);
-
-            // Show results
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.classList.remove('hidden');
-            resultsDiv.classList.add('animate-pulse'); // Add a small animation
-            setTimeout(() => resultsDiv.classList.remove('animate-pulse'), 500);
+    // دالة إظهار وإخفاء الخيارات المتقدمة
+    function toggleAdvanced() {
+        const checkbox = document.getElementById('showAdvanced');
+        const advancedDiv = document.getElementById('advancedInputs');
+        if (checkbox.checked) {
+            advancedDiv.classList.remove('hidden');
+        } else {
+            advancedDiv.classList.add('hidden');
         }
-    </script>
+    }
+
+    // الدالة الرئيسية للحساب
+    function calculateMortgage() {
+        // 1. جلب القيم الأساسية
+        const homePrice = parseFloat(document.getElementById('homePrice').value);
+        const downPercent = parseFloat(document.getElementById('downPayment').value);
+        const termYears = parseInt(document.getElementById('loanTerm').value);
+        const rate = parseFloat(document.getElementById('interestRate').value);
+
+        // التحقق من صحة المدخلات
+        if (isNaN(homePrice) || isNaN(downPercent) || isNaN(termYears) || isNaN(rate)) {
+            alert("Please enter valid numbers in the main fields.");
+            return;
+        }
+
+        // 2. الحسابات الأساسية
+        const downPaymentAmount = homePrice * (downPercent / 100);
+        const principal = homePrice - downPaymentAmount;
+        const monthlyRate = (rate / 100) / 12;
+        const totalMonths = termYears * 12;
+
+        // حساب القسط الشهري (Principal & Interest)
+        let monthlyPI = 0;
+        if (monthlyRate === 0) {
+            monthlyPI = principal / totalMonths;
+        } else {
+            monthlyPI = principal * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+        }
+
+        // 3. جلب القيم المتقدمة (إذا تم تفعيلها)
+        let annualTax = 0;
+        let annualIns = 0;
+        let monthlyHOA = 0;
+        let extraPayment = 0;
+
+        if (document.getElementById('showAdvanced').checked) {
+            annualTax = parseFloat(document.getElementById('propTax').value) || 0;
+            annualIns = parseFloat(document.getElementById('homeIns').value) || 0;
+            monthlyHOA = parseFloat(document.getElementById('hoaFee').value) || 0;
+            extraPayment = parseFloat(document.getElementById('extraPayment').value) || 0;
+        }
+
+        const monthlyTax = annualTax / 12;
+        const monthlyIns = annualIns / 12;
+        const totalMonthlyPayment = monthlyPI + monthlyTax + monthlyIns + monthlyHOA + extraPayment;
+
+        // 4. إعداد جدول الاستهلاك (Amortization Schedule)
+        let currentBalance = principal;
+        let scheduleHTML = "";
+        let totalInterestPaid = 0;
+        let totalMonthsPaid = 0;
+        let yearlyInterest = 0;
+        let yearlyPrincipal = 0;
+
+        // إذا كان هناك دفعة إضافية، فإن القرض سيُسدد أسرع
+        const actualMonthlyPayment = monthlyPI + extraPayment;
+
+        for (let i = 1; i <= totalMonths; i++) {
+            if (currentBalance <= 0) break;
+
+            let interest = currentBalance * monthlyRate;
+            let principalPaid = actualMonthlyPayment - interest;
+
+            // تعديل الدفعة الأخيرة
+            if (principalPaid > currentBalance) {
+                principalPaid = currentBalance;
+            }
+
+            currentBalance -= principalPaid;
+            totalInterestPaid += interest;
+            yearlyInterest += interest;
+            yearlyPrincipal += principalPaid;
+            totalMonthsPaid++;
+
+            // إضافة صف للجدول كل 12 شهر (نهاية السنة)
+            if (i % 12 === 0 || currentBalance <= 0) {
+                const yearNum = Math.ceil(i / 12);
+                scheduleHTML += `<tr class="border-b hover:bg-gray-50">
+                    <td class="py-2 px-3">Year ${yearNum}</td>
+                    <td class="py-2 px-3 text-red-500">${formatMoney(yearlyInterest)}</td>
+                    <td class="py-2 px-3 text-green-600">${formatMoney(yearlyPrincipal)}</td>
+                    <td class="py-2 px-3 font-semibold">${formatMoney(currentBalance > 0 ? currentBalance : 0)}</td>
+                </tr>`;
+                yearlyInterest = 0;
+                yearlyPrincipal = 0;
+            }
+        }
+
+        // 5. عرض النتائج في الصفحة
+        document.getElementById('monthlyPI').textContent = formatMoney(monthlyPI);
+        document.getElementById('monthlyTotal').textContent = formatMoney(totalMonthlyPayment);
+        document.getElementById('totalInterest').textContent = formatMoney(totalInterestPaid);
+        document.getElementById('amortizationTable').innerHTML = scheduleHTML;
+
+        // إخفاء رسالة الترحيب وإظهار النتائج
+        document.getElementById('placeholderArea').classList.add('hidden');
+        document.getElementById('resultsArea').classList.remove('hidden');
+    }
+
+    // دالة مساعدة لتنسيق الأرقام كعملة
+    function formatMoney(amount) {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+    }
+            </script>
+
 </body>
 </html>
