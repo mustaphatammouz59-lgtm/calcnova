@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Cost Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">College Cost</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">College Cost Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Annual Cost (Tuition + Living) ($)</label>
+                        <input type="number" id="ccAnnualCost" value="25000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Cost Increase (%)</label>
+                        <p class="text-xs text-gray-500 mb-1">Education inflation is usually 4-6%</p>
+                        <input type="number" id="ccInflation" value="5" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Years Until College Starts</label>
+                        <input type="number" id="ccYearsUntil" value="10" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="calculateCollegeCost()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Future Costs</button>
+
+                <div id="ccResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Cost of First Year</p>
+                            <p class="text-xl font-bold text-gray-800" id="ccFirstYear">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Cost of Fourth Year</p>
+                            <p class="text-xl font-bold text-[#3F51B5]" id="ccFourthYear">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
+                            <p class="text-sm text-gray-500">Total 4-Year Cost</p>
+                            <p class="text-2xl font-bold text-[#14B8A6]" id="ccTotal4Year">$0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Rising Cost of Education</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">College tuition has historically increased at a rate much higher than general inflation. This calculator helps parents and students plan ahead by estimating how much a 4-year degree will cost by the time the student is ready to enroll. It assumes the cost increases every year while the student is in school.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateCollegeCost() {
+            const currentCost = parseFloat(document.getElementById('ccAnnualCost').value);
+            const inflationRate = parseFloat(document.getElementById('ccInflation').value) / 100;
+            const yearsUntilStart = parseInt(document.getElementById('ccYearsUntil').value);
+
+            if (isNaN(currentCost) || isNaN(inflationRate) || isNaN(yearsUntilStart) || currentCost <= 0) {
+                alert("Please enter valid positive numbers.");
+                return;
+            }
+
+            // حساب تكلفة السنة الأولى في المستقبل
+            const firstYearCost = currentCost * Math.pow((1 + inflationRate), yearsUntilStart);
+            
+            // حساب تكلفة السنة الرابعة (بعد 3 سنوات من بدء الكلية)
+            const fourthYearCost = firstYearCost * Math.pow((1 + inflationRate), 3);
+
+            // حساب التكلفة الإجمالية لأربع سنوات (السنة الأولى + الثانية + الثالثة + الرابعة)
+            let total4Year = 0;
+            for (let i = 0; i < 4; i++) {
+                total4Year += firstYearCost * Math.pow((1 + inflationRate), i);
+            }
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('ccFirstYear').textContent = formatter.format(firstYearCost);
+            document.getElementById('ccFourthYear').textContent = formatter.format(fourthYearCost);
+            document.getElementById('ccTotal4Year').textContent = formatter.format(total4Year);
+
+            document.getElementById('ccResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
