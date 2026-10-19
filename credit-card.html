@@ -91,12 +91,12 @@
 
     <script>
         function calculateCreditCard() {
-            // جلب القيم من الحقول
+            // جلب القيم
             const balance = parseFloat(document.getElementById('ccBalance').value);
             const apr = parseFloat(document.getElementById('ccRate').value) / 100;
             const payment = parseFloat(document.getElementById('ccPayment').value);
 
-            // التحقق من صحة المدخلات
+            // التحقق من المدخلات
             if (isNaN(balance) || isNaN(apr) || isNaN(payment) || balance <= 0 || payment <= 0) {
                 alert("Please enter valid positive numbers.");
                 return;
@@ -104,7 +104,7 @@
 
             const monthlyRate = apr / 12;
             
-            // التحقق مما إذا كانت الدفعة تغطي الفائدة
+            // التحقق من أن الدفعة تغطي الفائدة
             if (payment <= balance * monthlyRate) {
                 alert("Your monthly payment is too low to ever pay off this balance. Please increase the payment amount.");
                 return;
@@ -114,14 +114,13 @@
             let months = 0;
             let totalInterest = 0;
 
-            // حلقة حسابية
+            // الحساب
             while (currentBalance > 0 && months < 1200) {
                 let interest = currentBalance * monthlyRate;
                 let principal = payment - interest;
                 
                 if (principal > currentBalance) {
                     principal = currentBalance;
-                    payment = interest + principal; 
                 }
 
                 totalInterest += interest;
@@ -131,7 +130,7 @@
 
             const totalPaid = balance + totalInterest;
 
-            // تنسيق المدة الزمنية
+            // تنسيق الوقت
             const years = Math.floor(months / 12);
             const remainingMonths = months % 12;
             let timeString = "";
@@ -141,12 +140,11 @@
 
             const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
-            // عرض النتائج في الصفحة
+            // عرض النتائج
             document.getElementById('ccTime').textContent = timeString;
             document.getElementById('ccTotalInterest').textContent = formatter.format(totalInterest);
             document.getElementById('ccTotalPaid').textContent = formatter.format(totalPaid);
 
-            // إظهار قسم النتائج
             document.getElementById('ccResults').classList.remove('hidden');
         }
     </script>
