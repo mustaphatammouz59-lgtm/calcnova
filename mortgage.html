@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mortgage Calculator - CalcNova</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- استدعاء مكتبة الرسوم البيانية Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
 </head>
 <body class="text-gray-800">
@@ -20,7 +22,7 @@
 
     <!-- Breadcrumbs -->
     <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Mortgage</span>
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Mortgage Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
@@ -29,18 +31,28 @@
             <h1 class="text-2xl font-bold text-[#3F51B5] mb-4">Mortgage Calculator</h1>
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
                 <div class="space-y-4">
+                    <!-- Basic Inputs -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Home Price ($)</label>
                         <input type="number" id="homePrice" value="400000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Down Payment (%)</label>
-                        <input type="number" id="downPayment" value="20" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Down Payment</label>
+                            <input type="number" id="downPayment" value="20" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                        </div>
+                        <div class="flex items-end">
+                            <select id="downType" class="w-full border border-gray-300 rounded-md p-2 outline-none bg-gray-50">
+                                <option value="percent" selected>%</option>
+                                <option value="amount">$</option>
+                            </select>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
                         <select id="loanTerm" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="30">30 Years</option>
+                            <option value="30" selected>30 Years</option>
+                            <option value="20">20 Years</option>
                             <option value="15">15 Years</option>
                             <option value="10">10 Years</option>
                         </select>
@@ -50,7 +62,7 @@
                         <input type="number" id="interestRate" value="7.26" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
                     </div>
                     
-                    <!-- Toggle for Extra Options -->
+                    <!-- Advanced Toggle -->
                     <div class="mt-4 border-t pt-4">
                         <label class="flex items-center space-x-2 text-sm font-medium text-gray-700 cursor-pointer">
                             <input type="checkbox" id="showAdvanced" onchange="toggleAdvanced()" class="form-checkbox h-4 w-4 text-[#3F51B5]">
@@ -60,58 +72,100 @@
 
                     <!-- Advanced Inputs (Hidden by default) -->
                     <div id="advancedInputs" class="hidden space-y-4 mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Property Tax ($/year)</label>
-                            <input type="number" id="propTax" value="4800" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Property Tax (%/yr)</label>
+                                <input type="number" id="propTaxPct" value="1.2" step="0.01" class="w-full border border-gray-300 rounded-md p-1 text-sm outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Home Insurance ($/yr)</label>
+                                <input type="number" id="homeIns" value="1500" class="w-full border border-gray-300 rounded-md p-1 text-sm outline-none">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">PMI ($/yr)</label>
+                                <input type="number" id="pmi" value="0" class="w-full border border-gray-300 rounded-md p-1 text-sm outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">HOA ($/mo)</label>
+                                <input type="number" id="hoaFee" value="0" class="w-full border border-gray-300 rounded-md p-1 text-sm outline-none">
+                            </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Home Insurance ($/year)</label>
-                            <input type="number" id="homeIns" value="1500" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Other Costs ($/yr)</label>
+                            <input type="number" id="otherCosts" value="4000" class="w-full border border-gray-300 rounded-md p-1 text-sm outline-none">
                         </div>
+                        
+                        <hr class="my-2 border-gray-300">
+                        
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">HOA Fee ($/month)</label>
-                            <input type="number" id="hoaFee" value="0" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Extra Monthly Payment ($)</label>
-                            <input type="number" id="extraPayment" value="0" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Extra Monthly Payment ($)</label>
+                            <input type="number" id="extraMonthly" value="0" class="w-full border border-gray-300 rounded-md p-1 text-sm outline-none">
                         </div>
                     </div>
                 </div>
-                <button onclick="calculateMortgage()" class="w-full mt-6 bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate</button>
+                
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateMortgage()" class="w-full bg-[#3F51B5] text-white font-bold py-2 rounded-md hover:bg-blue-800 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-400 text-white font-bold py-2 rounded-md hover:bg-gray-500 transition">Clear</button>
+                </div>
             </div>
         </div>
 
-        <!-- Right Column: Results & Chart -->
+        <!-- Right Column: Results & Charts -->
         <div class="md:w-2/3">
-            <!-- Results Area (Will be filled by JS) -->
             <div id="resultsArea" class="hidden">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-white p-4 rounded-xl shadow-sm border-2 border-[#14B8A6] text-center">
-                        <p class="text-sm text-gray-500">Monthly Payment (P&I)</p>
-                        <p class="text-3xl font-bold text-[#14B8A6]" id="monthlyPI">$0</p>
+                
+                <!-- Top Monthly Pay Box -->
+                <div class="bg-[#14B8A6] text-white p-4 rounded-xl shadow-md text-center mb-6">
+                    <p class="text-sm opacity-90">Total Monthly Payment (Out-of-Pocket)</p>
+                    <p class="text-4xl font-bold" id="topMonthlyPay">$0.00</p>
+                </div>
+
+                <!-- Breakdown Table -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-700">
+                            <tr>
+                                <th class="py-2 px-3 border-b">Category</th>
+                                <th class="py-2 px-3 border-b text-right">Monthly</th>
+                                <th class="py-2 px-3 border-b text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="breakdownTableBody">
+                            <!-- Rows will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Charts Area -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <h3 class="text-sm font-bold text-gray-800 mb-2 text-center">Payment Breakdown</h3>
+                        <canvas id="pieChart"></canvas>
                     </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
-                        <p class="text-sm text-gray-500">Total Monthly (With Tax & Ins)</p>
-                        <p class="text-2xl font-bold text-gray-800" id="monthlyTotal">$0</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center">
-                        <p class="text-sm text-gray-500">Total Interest Paid</p>
-                        <p class="text-2xl font-bold text-red-500" id="totalInterest">$0</p>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <h3 class="text-sm font-bold text-gray-800 mb-2 text-center">Balance Over Time</h3>
+                        <canvas id="lineChart"></canvas>
                     </div>
                 </div>
 
                 <!-- Amortization Schedule Table -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-3">Amortization Schedule (Yearly)</h3>
-                    <div class="overflow-x-auto">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-lg font-bold text-gray-800">Amortization Schedule</h3>
+                        <button onclick="toggleScheduleView()" id="scheduleToggleBtn" class="text-sm text-[#3F51B5] font-semibold hover:underline">Show Monthly Schedule</button>
+                    </div>
+                    <div class="overflow-x-auto max-h-96 overflow-y-auto">
                         <table class="min-w-full text-sm text-left">
-                            <thead class="bg-gray-100 text-gray-700">
+                            <thead class="bg-gray-100 text-gray-700 sticky top-0">
                                 <tr>
-                                    <th class="py-2 px-3 border-b">Year</th>
-                                    <th class="py-2 px-3 border-b">Interest</th>
-                                    <th class="py-2 px-3 border-b">Principal</th>
-                                    <th class="py-2 px-3 border-b">Balance</th>
+                                    <th class="py-2 px-3 border-b">No.</th>
+                                    <th class="py-2 px-3 border-b">Date</th>
+                                    <th class="py-2 px-3 border-b text-right">Interest</th>
+                                    <th class="py-2 px-3 border-b text-right">Principal</th>
+                                    <th class="py-2 px-3 border-b text-right">Balance</th>
                                 </tr>
                             </thead>
                             <tbody id="amortizationTable">
@@ -122,13 +176,38 @@
                 </div>
             </div>
             
-            <!-- Placeholder before calculation -->
+            <!-- Placeholder -->
             <div id="placeholderArea" class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center text-gray-500">
                 <p class="text-xl font-semibold mb-2">Ready to calculate</p>
                 <p>Enter your loan details on the left and click Calculate.</p>
             </div>
         </div>
     </main>
+
+    <!-- SEO Content Section -->
+    <section class="container mx-auto px-4 py-12 max-w-4xl text-gray-700">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">What is a Mortgage?</h2>
+        <p class="mb-4">A mortgage is a type of loan used to purchase or maintain a home, land, or other types of real estate. The borrower agrees to pay the lender over time, typically in a series of regular payments that are divided into two parts: principal and interest. The property itself serves as collateral to secure the loan.</p>
+        
+        <h3 class="text-xl font-bold text-gray-800 mb-3 mt-6">How to Calculate Mortgage Payments</h3>
+        <p class="mb-4">The monthly payment for a fixed-rate mortgage is calculated using a specific formula that takes into account the loan amount, the interest rate, and the loan term. This calculator uses the standard amortization formula to give you an accurate estimate: M = P [ i(1 + i)^n ] / [ (1 + i)^n – 1 ].</p>
+        
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+            <p>In-Article AdSense Banner (Fluid)</p>
+        </div>
+
+        <h3 class="text-xl font-bold text-gray-800 mb-3 mt-6">Frequently Asked Questions</h3>
+        <div class="space-y-4">
+            <div>
+                <p class="font-semibold text-gray-800">What is Private Mortgage Insurance (PMI)?</p>
+                <p class="text-sm mt-1">PMI is usually required if your down payment is less than 20% of the home's value. It protects the lender in case you default on the loan.</p>
+            </div>
+            <div>
+                <p class="font-semibold text-gray-800">Can I pay off my mortgage early?</p>
+                <p class="text-sm mt-1">Yes, many lenders allow extra payments towards the principal. This reduces your total interest and shortens the loan term.</p>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
@@ -142,7 +221,13 @@
         </div>
     </footer>
 
-    <script>
+<script>
+    // متغيرات عامة للرسوم البيانية
+    let pieChartInstance = null;
+    let lineChartInstance = null;
+    let currentScheduleData = []; // لحفظ بيانات الجدول للتبديل بين السنوي والشهري
+    let isMonthlyView = false;
+
     // دالة إظهار وإخفاء الخيارات المتقدمة
     function toggleAdvanced() {
         const checkbox = document.getElementById('showAdvanced');
@@ -154,27 +239,80 @@
         }
     }
 
+    // دالة مسح الحقول
+    function clearForm() {
+        document.getElementById('homePrice').value = '';
+        document.getElementById('downPayment').value = '';
+        document.getElementById('interestRate').value = '';
+        document.getElementById('showAdvanced').checked = false;
+        toggleAdvanced();
+        document.getElementById('resultsArea').classList.add('hidden');
+        document.getElementById('placeholderArea').classList.remove('hidden');
+    }
+
+    // دالة تبديل عرض الجدول (سنوي / شهري)
+    function toggleScheduleView() {
+        isMonthlyView = !isMonthlyView;
+        const btn = document.getElementById('scheduleToggleBtn');
+        btn.textContent = isMonthlyView ? "Show Annual Schedule" : "Show Monthly Schedule";
+        renderTable();
+    }
+
     // الدالة الرئيسية للحساب
     function calculateMortgage() {
         // 1. جلب القيم الأساسية
         const homePrice = parseFloat(document.getElementById('homePrice').value);
-        const downPercent = parseFloat(document.getElementById('downPayment').value);
+        const downInput = parseFloat(document.getElementById('downPayment').value);
+        const downType = document.getElementById('downType').value;
         const termYears = parseInt(document.getElementById('loanTerm').value);
         const rate = parseFloat(document.getElementById('interestRate').value);
 
-        // التحقق من صحة المدخلات
-        if (isNaN(homePrice) || isNaN(downPercent) || isNaN(termYears) || isNaN(rate)) {
+        if (isNaN(homePrice) || isNaN(downInput) || isNaN(termYears) || isNaN(rate)) {
             alert("Please enter valid numbers in the main fields.");
             return;
         }
 
-        // 2. الحسابات الأساسية
-        const downPaymentAmount = homePrice * (downPercent / 100);
+        // 2. حساب مبلغ الدفعة المقدمة ومبلغ القرض
+        let downPaymentAmount = 0;
+        if (downType === 'percent') {
+            downPaymentAmount = homePrice * (downInput / 100);
+        } else {
+            downPaymentAmount = downInput;
+        }
+        
         const principal = homePrice - downPaymentAmount;
+        if (principal <= 0) {
+            alert("Down payment cannot be greater than or equal to the home price.");
+            return;
+        }
+
         const monthlyRate = (rate / 100) / 12;
         const totalMonths = termYears * 12;
 
-        // حساب القسط الشهري (Principal & Interest)
+        // 3. جلب القيم المتقدمة (إذا تم تفعيلها)
+        let annualTaxPct = 0;
+        let annualIns = 0;
+        let annualPMI = 0;
+        let monthlyHOA = 0;
+        let annualOther = 0;
+        let extraMonthly = 0;
+
+        if (document.getElementById('showAdvanced').checked) {
+            annualTaxPct = (parseFloat(document.getElementById('propTaxPct').value) || 0) / 100;
+            annualIns = parseFloat(document.getElementById('homeIns').value) || 0;
+            annualPMI = parseFloat(document.getElementById('pmi').value) || 0;
+            monthlyHOA = parseFloat(document.getElementById('hoaFee').value) || 0;
+            annualOther = parseFloat(document.getElementById('otherCosts').value) || 0;
+            extraMonthly = parseFloat(document.getElementById('extraMonthly').value) || 0;
+        }
+
+        // حساب التكاليف الشهرية
+        const monthlyTax = (homePrice * annualTaxPct) / 12;
+        const monthlyIns = annualIns / 12;
+        const monthlyPMI = annualPMI / 12;
+        const monthlyOther = annualOther / 12;
+
+        // 4. حساب القسط الشهري (Principal & Interest)
         let monthlyPI = 0;
         if (monthlyRate === 0) {
             monthlyPI = principal / totalMonths;
@@ -182,41 +320,25 @@
             monthlyPI = principal * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
         }
 
-        // 3. جلب القيم المتقدمة (إذا تم تفعيلها)
-        let annualTax = 0;
-        let annualIns = 0;
-        let monthlyHOA = 0;
-        let extraPayment = 0;
+        const totalMonthlyPayment = monthlyPI + monthlyTax + monthlyIns + monthlyPMI + monthlyHOA + monthlyOther + extraMonthly;
 
-        if (document.getElementById('showAdvanced').checked) {
-            annualTax = parseFloat(document.getElementById('propTax').value) || 0;
-            annualIns = parseFloat(document.getElementById('homeIns').value) || 0;
-            monthlyHOA = parseFloat(document.getElementById('hoaFee').value) || 0;
-            extraPayment = parseFloat(document.getElementById('extraPayment').value) || 0;
-        }
-
-        const monthlyTax = annualTax / 12;
-        const monthlyIns = annualIns / 12;
-        const totalMonthlyPayment = monthlyPI + monthlyTax + monthlyIns + monthlyHOA + extraPayment;
-
-        // 4. إعداد جدول الاستهلاك (Amortization Schedule)
+        // 5. إنشاء جدول الاستهلاك
+        currentScheduleData = []; // تصفير البيانات
         let currentBalance = principal;
-        let scheduleHTML = "";
         let totalInterestPaid = 0;
-        let totalMonthsPaid = 0;
         let yearlyInterest = 0;
         let yearlyPrincipal = 0;
-
-        // إذا كان هناك دفعة إضافية، فإن القرض سيُسدد أسرع
-        const actualMonthlyPayment = monthlyPI + extraPayment;
+        let actualMonthCount = 0;
+        
+        // استخدام دفعة إضافية إذا وجدت لتقصير مدة القرض
+        const actualMonthlyPI = monthlyPI + extraMonthly;
 
         for (let i = 1; i <= totalMonths; i++) {
             if (currentBalance <= 0) break;
 
             let interest = currentBalance * monthlyRate;
-            let principalPaid = actualMonthlyPayment - interest;
+            let principalPaid = actualMonthlyPI - interest;
 
-            // تعديل الدفعة الأخيرة
             if (principalPaid > currentBalance) {
                 principalPaid = currentBalance;
             }
@@ -225,38 +347,226 @@
             totalInterestPaid += interest;
             yearlyInterest += interest;
             yearlyPrincipal += principalPaid;
-            totalMonthsPaid++;
+            actualMonthCount = i;
 
-            // إضافة صف للجدول كل 12 شهر (نهاية السنة)
+            // حفظ البيانات لكل شهر
+            currentScheduleData.push({
+                month: i,
+                year: Math.ceil(i / 12),
+                interest: interest,
+                principal: principalPaid,
+                balance: currentBalance > 0 ? currentBalance : 0
+            });
+
+            // تجميع البيانات السنوية
             if (i % 12 === 0 || currentBalance <= 0) {
-                const yearNum = Math.ceil(i / 12);
-                scheduleHTML += `<tr class="border-b hover:bg-gray-50">
-                    <td class="py-2 px-3">Year ${yearNum}</td>
-                    <td class="py-2 px-3 text-red-500">${formatMoney(yearlyInterest)}</td>
-                    <td class="py-2 px-3 text-green-600">${formatMoney(yearlyPrincipal)}</td>
-                    <td class="py-2 px-3 font-semibold">${formatMoney(currentBalance > 0 ? currentBalance : 0)}</td>
-                </tr>`;
-                yearlyInterest = 0;
-                yearlyPrincipal = 0;
+                // (يمكن إضافة منطق التجميع السنوي هنا إذا لزم الأمر)
             }
         }
 
-        // 5. عرض النتائج في الصفحة
-        document.getElementById('monthlyPI').textContent = formatMoney(monthlyPI);
-        document.getElementById('monthlyTotal').textContent = formatMoney(totalMonthlyPayment);
-        document.getElementById('totalInterest').textContent = formatMoney(totalInterestPaid);
-        document.getElementById('amortizationTable').innerHTML = scheduleHTML;
+        // 6. تحديث الواجهة (النتائج)
+        document.getElementById('topMonthlyPay').textContent = formatMoney(totalMonthlyPayment);
+        
+        // بناء جدول التفاصيل
+        let tableHTML = `
+            <tr class="border-b hover:bg-gray-50">
+                <td class="py-2 px-3">Principal & Interest</td>
+                <td class="py-2 px-3 text-right">${formatMoney(monthlyPI)}</td>
+                <td class="py-2 px-3 text-right">${formatMoney(monthlyPI * actualMonthCount)}</td>
+            </tr>
+        `;
+        if (document.getElementById('showAdvanced').checked) {
+            tableHTML += `
+                <tr class="border-b hover:bg-gray-50 text-gray-600">
+                    <td class="py-2 px-3">Property Tax</td>
+                    <td class="py-2 px-3 text-right">${formatMoney(monthlyTax)}</td>
+                    <td class="py-2 px-3 text-right">${formatMoney(monthlyTax * actualMonthCount)}</td>
+                </tr>
+                <tr class="border-b hover:bg-gray-50 text-gray-600">
+                    <td class="py-2 px-3">Home Insurance</td>
+                    <td class="py-2 px-3 text-right">${formatMoney(monthlyIns)}</td>
+                    <td class="py-2 px-3 text-right">${formatMoney(monthlyIns * actualMonthCount)}</td>
+                </tr>
+            `;
+        }
+        tableHTML += `
+            <tr class="bg-gray-100 font-bold border-b">
+                <td class="py-2 px-3">Total Out-of-Pocket</td>
+                <td class="py-2 px-3 text-right text-[#14B8A6]">${formatMoney(totalMonthlyPayment)}</td>
+                <td class="py-2 px-3 text-right">${formatMoney(totalMonthlyPayment * actualMonthCount)}</td>
+            </tr>
+        `;
+        document.getElementById('breakdownTableBody').innerHTML = tableHTML;
 
-        // إخفاء رسالة الترحيب وإظهار النتائج
+        // إظهار النتائج
         document.getElementById('placeholderArea').classList.add('hidden');
         document.getElementById('resultsArea').classList.remove('hidden');
+
+        // 7. رسم الرسوم البيانية
+        drawPieChart(principal, monthlyPI, monthlyTax, monthlyIns, monthlyPMI, monthlyHOA, monthlyOther);
+        drawLineChart(principal, currentScheduleData, actualMonthlyPI);
+
+        // 8. عرض الجدول (الافتراضي سنوي)
+        isMonthlyView = false;
+        document.getElementById('scheduleToggleBtn').textContent = "Show Monthly Schedule";
+        renderTable();
+    }
+
+    // دالة عرض الجدول
+    function renderTable() {
+        let tbodyHTML = "";
+        
+        if (isMonthlyView) {
+            // عرض شهري (أول 12 شهر وسنوات أخرى للاختصار)
+            currentScheduleData.forEach((row, index) => {
+                if (index < 12 || index % 12 === 0 || index === currentScheduleData.length - 1) {
+                    tbodyHTML += `<tr class="border-b hover:bg-gray-50 text-sm">
+                        <td class="py-1 px-3">${row.month}</td>
+                        <td class="py-1 px-3 text-gray-500">Month ${row.month}</td>
+                        <td class="py-1 px-3 text-right text-red-500">${formatMoney(row.interest)}</td>
+                        <td class="py-1 px-3 text-right text-green-600">${formatMoney(row.principal)}</td>
+                        <td class="py-1 px-3 text-right font-semibold">${formatMoney(row.balance)}</td>
+                    </tr>`;
+                }
+            });
+        } else {
+            // عرض سنوي
+            let yearlyGroups = {};
+            currentScheduleData.forEach(row => {
+                if (!yearlyGroups[row.year]) {
+                    yearlyGroups[row.year] = { interest: 0, principal: 0, balance: 0 };
+                }
+                yearlyGroups[row.year].interest += row.interest;
+                yearlyGroups[row.year].principal += row.principal;
+                yearlyGroups[row.year].balance = row.balance; // آخر رصيد في السنة
+            });
+
+            for (const year in yearlyGroups) {
+                const data = yearlyGroups[year];
+                tbodyHTML += `<tr class="border-b hover:bg-gray-50 text-sm">
+                    <td class="py-2 px-3 font-medium">${year}</td>
+                    <td class="py-2 px-3 text-gray-500">Year ${year}</td>
+                    <td class="py-2 px-3 text-right text-red-500">${formatMoney(data.interest)}</td>
+                    <td class="py-2 px-3 text-right text-green-600">${formatMoney(data.principal)}</td>
+                    <td class="py-2 px-3 text-right font-semibold">${formatMoney(data.balance)}</td>
+                </tr>`;
+            }
+        }
+        document.getElementById('amortizationTable').innerHTML = tbodyHTML;
+    }
+
+    // دالة رسم الرسم الدائري
+    function drawPieChart(principal, pi, tax, ins, pmi, hoa, other) {
+        const ctx = document.getElementById('pieChart').getContext('2d');
+        if (pieChartInstance) pieChartInstance.destroy();
+
+        const dataValues = [pi, tax, ins, pmi, hoa, other].filter(val => val > 0);
+        const labels = ["P&I", "Tax", "Insurance", "PMI", "HOA", "Other"];
+        const colors = ["#3F51B5", "#14B8A6", "#EF4444", "#F59E0B", "#8B5CF6", "#6B7280"];
+        
+        // تصفية التسميات والألوان لتطابق القيم
+        const filteredLabels = [];
+        const filteredColors = [];
+        let labelIndex = 0;
+        [pi, tax, ins, pmi, hoa, other].forEach(val => {
+            if (val > 0) {
+                filteredLabels.push(labels[labelIndex]);
+                filteredColors.push(colors[labelIndex]);
+            }
+            labelIndex++;
+        });
+
+        pieChartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: filteredLabels,
+                datasets: [{
+                    data: dataValues,
+                    backgroundColor: filteredColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+
+    // دالة رسم الرسم الخطي
+    function drawLineChart(principal, scheduleData, actualMonthlyPayment) {
+        const ctx = document.getElementById('lineChart').getContext('2d');
+        if (lineChartInstance) lineChartInstance.destroy();
+
+        // تجميع البيانات سنوياً للرسم البياني
+        let yearlyBalances = [principal];
+        let yearlyPayments = [0];
+        let currentBal = principal;
+        let totalPaid = 0;
+
+        let yearGroups = {};
+        scheduleData.forEach(row => {
+            if (!yearGroups[row.year]) yearGroups[row.year] = { principalPaid: 0 };
+            yearGroups[row.year].principalPaid += row.principal;
+        });
+
+        for (const year in yearGroups) {
+            currentBal -= yearGroups[year].principalPaid;
+            yearlyBalances.push(currentBal > 0 ? currentBal : 0);
+            
+            totalPaid += (actualMonthlyPayment * 12); // تقريب
+            yearlyPayments.push(totalPaid);
+        }
+
+        const labels = Array.from({length: yearlyBalances.length}, (_, i) => `Yr ${i}`);
+
+        lineChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Remaining Balance',
+                        data: yearlyBalances,
+                        borderColor: '#3F51B5',
+                        backgroundColor: 'rgba(63, 81, 181, 0.1)',
+                        fill: true,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Total Paid',
+                        data: yearlyPayments,
+                        borderColor: '#EF4444',
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + (value / 1000).toFixed(0) + 'k';
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     // دالة مساعدة لتنسيق الأرقام كعملة
     function formatMoney(amount) {
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
     }
-            </script>
+                </script>
 
 </body>
 </html>
