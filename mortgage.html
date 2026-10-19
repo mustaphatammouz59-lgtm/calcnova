@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mortgage Calculator - CalcNova</title>
+    <meta name="description" content="Use CalcNova Mortgage Calculator to estimate your monthly mortgage payment, loan amount, interest, taxes, insurance, PMI, HOA, extra payments, early payoff savings, and full amortization schedule.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/mortgage">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is a mortgage calculator?",
+                "acceptedAnswer": { "@type": "Answer", "text": "A mortgage calculator is a tool that estimates your monthly home loan payments, total interest paid, and payoff date based on the home price, down payment, rate, and term." }
+            },
+            {
+                "@type": "Question",
+                "name": "Do extra payments really save money?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. Extra payments go directly toward principal, which reduces the balance that interest is charged on. Even $100 extra per month on a 30-year loan can shave years off the term and save a large amount of interest." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is PMI and when do I pay it?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Private mortgage insurance (PMI) protects the lender if you default. Lenders usually require it when your down payment is less than 20% of the home price, and it is typically removed once your loan balance drops below 80% of the home's value." }
+            }
+        ]
+    }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 45%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { width: 55%; border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .section-title { font-weight: bold; font-size: 0.9rem; color: #1F2937; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.25rem;}
+
+        .extra-payment-row { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+        .extra-payment-row input[type="number"] { width: 30%; text-align: center; padding: 0.25rem; border: 1px solid #D1D5DB; border-radius: 0.375rem;}
+        .extra-payment-row select, .extra-payment-row input[type="text"] { width: 25%; text-align: center; background-color: #F9FAFB; border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.25rem;}
+        .extra-payment-row span { width: 15%; text-align: center; font-size: 0.75rem; color: #6B7280; }
+
+        @media print {
+            nav, footer, .no-print, #calculator-form, #placeholderArea { display: none !important; }
+            #resultsArea { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            .md\:w-2\/5 { width: 100% !important; }
+            .md\:w-3\/5 { width: 100% !important; }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Mortgage</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Mortgage Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="input-group">
+                    <label>Home Price</label>
+                    <div class="w-[55%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="homePrice" value="400000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Down Payment</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="downPayment" value="20" class="w-2/3">
+                        <select id="downType" onchange="handleUnitChange('downPayment', this.value)" class="w-1/3 bg-gray-50"><option value="percent">%</option><option value="amount">$</option></select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Loan Term</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="loanTerm" value="30" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Interest Rate</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="interestRate" value="7.26" step="0.01" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Start Date</label>
+                    <div class="w-[55%] flex gap-1">
+                        <select id="startMonth" class="w-1/2 bg-gray-50"></select>
+                        <input type="number" id="startYear" value="2026" class="w-1/2">
+                    </div>
+                </div>
+
+                <div class="mt-4 flex items-center">
+                    <input type="checkbox" id="includeTaxes" onchange="toggleAdvanced()" checked class="h-4 w-4 text-[#3F51B5] border-gray-300 rounded">
+                    <label for="includeTaxes" class="ml-2 font-bold text-gray-700">Include Taxes &amp; Costs Below</label>
+                </div>
+
+                <div id="advancedInputs">
+                    <div class="text-right text-sm text-gray-600 mt-2 mb-1">Annual Tax &amp; Cost</div>
+
+                    <div class="input-group">
+                        <label>Property Taxes</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="propTaxPct" value="1.2" step="0.01" class="w-2/3">
+                            <select id="propTaxUnit" onchange="handleUnitChange('propTaxPct', this.value)" class="w-1/3 bg-gray-50">
+                                <option value="percent">%</option>
+                                <option value="dollar">$</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Home Insurance</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="homeIns" value="1500" class="w-2/3">
+                            <select id="homeInsUnit" onchange="handleUnitChange('homeIns', this.value)" class="w-1/3 bg-gray-50">
+                                <option value="dollar">$</option>
+                                <option value="percent">%</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>PMI Insurance</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="pmi" value="0" class="w-2/3">
+                            <select id="pmiUnit" onchange="handleUnitChange('pmi', this.value)" class="w-1/3 bg-gray-50">
+                                <option value="dollar">$</option>
+                                <option value="percent">%</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>HOA Fee (monthly)</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="hoaFee" value="0" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">$</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Other Costs</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="otherCosts" value="4000" class="w-2/3">
+                            <select id="otherCostsUnit" onchange="handleUnitChange('otherCosts', this.value)" class="w-1/3 bg-gray-50">
+                                <option value="dollar">$</option>
+                                <option value="percent">%</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-2 mb-2">
+                        <a href="#" onclick="toggleAdvancedOptions(event)" id="advancedOptionsBtn" class="text-[#3F51B5] text-sm font-semibold hover:underline">- Fewer Options</a>
+                    </div>
+
+                    <div id="moreAdvancedOptions">
+                        <div class="section-title">Annual Tax &amp; Cost Increase</div>
+                        <div class="input-group"><label>Property Taxes Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="taxIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                        <div class="input-group"><label>Home Insurance Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="insIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+
+                        <div class="section-title">Extra Payments</div>
+                        <div class="extra-payment-row">
+                            <label class="text-sm text-gray-700 w-1/3">Extra Monthly</label>
+                            <input type="number" id="extraMonthly" value="0">
+                            <span>from</span>
+                            <select class="month-select"></select>
+                            <input type="text" class="year-input">
+                        </div>
+                        <div class="extra-payment-row">
+                            <label class="text-sm text-gray-700 w-1/3">Extra Yearly</label>
+                            <input type="number" id="extraYearly" value="0">
+                            <span>from</span>
+                            <select class="month-select"></select>
+                            <input type="text" class="year-input">
+                        </div>
+
+                        <div class="text-center mt-2 mb-2">
+                            <a href="#" onclick="toggleAdditionalOneTime(event)" id="additionalBtn" class="text-[#3F51B5] text-sm hover:underline">+ Additional One-Time Payments</a>
+                        </div>
+
+                        <div id="additionalOneTimeDiv" class="hidden space-y-1">
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                            <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateMortgage()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md flex justify-center items-center gap-2">
+                        Calculate
+                    </button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
+                </div>
+            </div>
+
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mt-6 text-sm">
+                <h3 class="font-bold text-gray-800 mb-2 border-b pb-2">Latest Mortgage Rates</h3>
+                <div class="space-y-1 mb-4">
+                    <p class="flex justify-between">
+                        <span class="text-gray-600">30 Years:</span>
+                        <a href="#" onclick="setRate(7.26, 30); return false;" class="font-bold text-[#3F51B5] hover:underline">7.26%</a>
+                    </p>
+                    <p class="flex justify-between">
+                        <span class="text-gray-600">15 Years:</span>
+                        <a href="#" onclick="setRate(6.479, 15); return false;" class="font-bold text-[#3F51B5] hover:underline">6.479%</a>
+                    </p>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <a href="https://www.bankrate.com/mortgages/mortgage-rates/" target="_blank" rel="noopener" class="w-full text-center bg-[#3F51B5] text-white py-2 rounded-md font-semibold hover:bg-blue-800 transition">See your local rates</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="md:w-3/5">
+            <div id="resultsArea" class="hidden"></div>
+            <div id="placeholderArea" class="hidden bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center text-gray-500">
+                <p class="text-xl font-semibold mb-2">Ready to calculate</p>
+            </div>
+        </div>
+    </main>
+
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Mortgage Calculator</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Our Mortgage Calculator helps you estimate your monthly home loan payment,
+                total interest, and the overall cost of your mortgage &mdash; including property taxes,
+                home insurance, PMI, HOA fees, and the effect of extra payments on your payoff date.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">How is the monthly payment calculated?</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                For a fixed-rate mortgage, the monthly principal &amp; interest payment is calculated with the
+                standard amortization formula: <strong>M = P &times; r(1+r)<sup>n</sup> / ((1+r)<sup>n</sup> &minus; 1)</strong>,
+                where <strong>P</strong> is the loan amount (home price minus down payment), <strong>r</strong> is the
+                monthly interest rate (annual rate &divide; 12), and <strong>n</strong> is the total number of monthly
+                payments (loan term in years &times; 12). Each payment first covers that month&rsquo;s interest on the
+                remaining balance; the rest reduces the principal. Early in the loan most of the payment is interest,
+                while later payments go mostly toward principal.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">What affects my mortgage payment?</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Your payment depends on the home price, down payment, interest rate, and loan term &mdash; plus
+                recurring ownership costs: property taxes, home insurance, private mortgage insurance (PMI, usually
+                required when the down payment is below 20%), HOA fees, and maintenance. Use the extra-payments
+                options above to see how paying a little more each month can shorten your loan by years and save
+                tens of thousands in interest.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Mortgage Calculator FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">What is a mortgage calculator?</h4>
+                    <p class="text-gray-700">A mortgage calculator is a tool that estimates your monthly home loan payments, total interest paid, and payoff date based on the home price, down payment, rate, and term.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Do extra payments really save money?</h4>
+                    <p class="text-gray-700">Yes. Extra payments go directly toward principal, which reduces the balance that interest is charged on. Even $100 extra per month on a 30-year loan can shave years off the term and save a large amount of interest &mdash; try it above to see your exact savings.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What is PMI and when do I pay it?</h4>
+                    <p class="text-gray-700">Private mortgage insurance (PMI) protects the lender if you default. Lenders usually require it when your down payment is less than 20% of the home price, and it is typically removed once your loan balance drops below 80% of the home&rsquo;s value.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto text-center px-4">
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let pieChartInstance = null;
+        let lineChartInstance = null;
+        let currentScheduleData = [];
+        let isMonthlyView = false;
+        let scheduleStartAbs = 0; // absolute month index of first payment (year*12 + monthIndex)
+
+        const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        function isNumber(n) { return !isNaN(parseFloat(n)) && isFinite(n); }
+
+        function handleUnitChange(inputId, unit) {
+            const input = document.getElementById(inputId);
+            const homePrice = parseFloat((document.getElementById('homePrice').value + "").replaceAll(',', '')) || 0;
+            const val = parseFloat((input.value + "").replaceAll(',', '')) || 0;
+            if (homePrice > 0 && isNumber(val)) {
+                if (unit === 'dollar') {
+                    input.value = Math.round(homePrice * val / 100);
+                } else {
+                    input.value = ((val / homePrice) * 100).toFixed(2);
+                }
+            }
+            calculateMortgage();
+        }
+
+        function toggleAdditionalOneTime(event) {
+            event.preventDefault();
+            const div = document.getElementById('additionalOneTimeDiv');
+            const btn = document.getElementById('additionalBtn');
+            if (div.classList.contains('hidden')) {
+                div.classList.remove('hidden');
+                btn.textContent = "- Hide Below Inputs";
+            } else {
+                div.classList.add('hidden');
+                btn.textContent = "+ Additional One-Time Payments";
+            }
+        }
+
+        function setRate(rate, term) {
+            document.getElementById('interestRate').value = rate;
+            document.getElementById('loanTerm').value = term;
+            calculateMortgage();
+        }
+
+        function buildMonthOptions(select, selectedIdx) {
+            select.innerHTML = '';
+            MONTH_NAMES.forEach((name, idx) => {
+                const option = document.createElement("option");
+                option.text = name;
+                option.value = idx;
+                if (idx === selectedIdx) option.selected = true;
+                select.add(option);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const now = new Date();
+            const curMonth = now.getMonth();
+            const curYear = now.getFullYear();
+
+            buildMonthOptions(document.getElementById('startMonth'), curMonth);
+            document.getElementById('startYear').value = curYear;
+
+            document.querySelectorAll('.month-select').forEach(select => buildMonthOptions(select, curMonth));
+            document.querySelectorAll('.year-input').forEach(input => { input.value = curYear; });
+
+            prefillFromURL();
+            calculateMortgage();
+        });
+
+        function toggleAdvanced() {
+            const checkbox = document.getElementById('includeTaxes');
+            const advancedDiv = document.getElementById('advancedInputs');
+            advancedDiv.classList.toggle('hidden', !checkbox.checked);
+            calculateMortgage();
+        }
+
+        function toggleAdvancedOptions(event) {
+            event.preventDefault();
+            const moreOptionsDiv = document.getElementById('moreAdvancedOptions');
+            const btn = document.getElementById('advancedOptionsBtn');
+            const hidden = moreOptionsDiv.classList.toggle('hidden');
+            btn.textContent = hidden ? "+ More Options" : "- Fewer Options";
+        }
+
+        function clearForm() {
+            ['homePrice', 'downPayment', 'interestRate', 'extraMonthly', 'extraYearly'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            document.querySelectorAll('.onetime-amt').forEach(i => i.value = 0);
+            document.getElementById('resultsArea').classList.add('hidden');
+            document.getElementById('placeholderArea').classList.remove('hidden');
+        }
+
+        function absMonthOf(yearInput, monthSelect, fallbackYear) {
+            const y = parseInt(yearInput.value) || fallbackYear;
+            const m = parseInt(monthSelect.value);
+            return y * 12 + (isNaN(m) ? 0 : m);
+        }
+
+        function readExtras(startAbs, startYear) {
+            const extras = { mAmt: 0, mFrom: 1, yAmt: 0, yFrom: 1, oneTime: [] };
+
+            const mAmt = parseFloat(document.getElementById('extraMonthly').value) || 0;
+            if (mAmt > 0) {
+                const row = document.getElementById('extraMonthly').closest('.extra-payment-row');
+                const fromAbs = absMonthOf(row.querySelector('.year-input'), row.querySelector('.month-select'), startYear);
+                extras.mAmt = mAmt;
+                extras.mFrom = Math.max(1, fromAbs - startAbs + 1);
+            }
+
+            const yAmt = parseFloat(document.getElementById('extraYearly').value) || 0;
+            if (yAmt > 0) {
+                const row = document.getElementById('extraYearly').closest('.extra-payment-row');
+                const fromAbs = absMonthOf(row.querySelector('.year-input'), row.querySelector('.month-select'), startYear);
+                extras.yAmt = yAmt;
+                extras.yFrom = Math.max(1, fromAbs - startAbs + 1);
+            }
+
+            document.querySelectorAll('#additionalOneTimeDiv .extra-payment-row').forEach(row => {
+                const amt = parseFloat(row.querySelector('.onetime-amt').value) || 0;
+                if (amt > 0) {
+                    const atAbs = absMonthOf(row.querySelector('.year-input'), row.querySelector('.month-select'), startYear);
+                    const at = Math.max(1, atAbs - startAbs + 1);
+                    extras.oneTime.push({ amt, at });
+                }
+            });
+
+            return extras;
+        }
+
+        function runSchedule(p, extras) {
+            let bal = p.principal;
+            let totInt = 0, totPI = 0, totExtra = 0;
+            let totTax = 0, totIns = 0, totPMI = 0, totHOA = 0, totOth = 0;
+            let tax = p.initTax, ins = p.initIns, pmi = p.initPMI, hoa = p.initHOA, oth = p.initOther;
+            const rows = [];
+            let n = 0;
+
+            for (let i = 1; i <= p.totalMonths; i++) {
+                if (bal <= 0.005) break;
+                const interest = bal * p.monthlyRate;
+                let princ = p.monthlyPI - interest;
+                if (princ < 0) princ = 0;
+
+                let extra = 0;
+                if (extras) {
+                    if (extras.mAmt > 0 && i >= extras.mFrom) extra += extras.mAmt;
+                    if (extras.yAmt > 0 && i >= extras.yFrom && ((p.startAbs + i - 1 - (p.startAbs + extras.yFrom - 1)) % 12 === 0)) extra += extras.yAmt;
+                    for (const o of extras.oneTime) if (o.at === i) extra += o.amt;
+                }
+
+                let payPrinc = Math.min(princ, bal);
+                let payExtra = Math.min(extra, bal - payPrinc);
+                bal = bal - payPrinc - payExtra;
+
+                totInt += interest;
+                totPI += payPrinc + interest;
+                totExtra += payExtra;
+                totTax += tax; totIns += ins; totPMI += pmi; totHOA += hoa; totOth += oth;
+                n = i;
+
+                rows.push({
+                    month: i,
+                    year: Math.ceil(i / 12),
+                    interest, principal: payPrinc, extra: payExtra,
+                    balance: Math.max(bal, 0),
+                    tax, ins, pmi, hoa, oth,
+                    totalPay: payPrinc + interest + payExtra + tax + ins + pmi + hoa + oth
+                });
+
+                if (i % 12 === 0) {
+                    tax *= (1 + p.taxInc);
+                    ins *= (1 + p.insInc);
+                }
+            }
+            return { n, totInt, totPI, totExtra, totTax, totIns, totPMI, totHOA, totOth, rows };
+        }
+
+        function calculateMortgage() {
+            const homePrice = parseFloat(document.getElementById('homePrice').value);
+            const downInput = parseFloat(document.getElementById('downPayment').value);
+            const downType = document.getElementById('downType').value;
+            const termYears = parseInt(document.getElementById('loanTerm').value);
+            const rate = parseFloat(document.getElementById('interestRate').value);
+
+            if (isNaN(homePrice) || isNaN(downInput) || isNaN(termYears) || isNaN(rate) || termYears <= 0) return;
+
+            const downPaymentAmount = downType === 'percent' ? homePrice * (downInput / 100) : downInput;
+            const principal = homePrice - downPaymentAmount;
+
+            if (principal <= 0) {
+                alert("Down payment cannot be greater than or equal to the home price.");
+                return;
+            }
+
+            const startMonthIdx = parseInt(document.getElementById('startMonth').value);
+            const startYear = parseInt(document.getElementById('startYear').value) || new Date().getFullYear();
+            const startAbs = startYear * 12 + (isNaN(startMonthIdx) ? 0 : startMonthIdx);
+            scheduleStartAbs = startAbs;
+
+            const monthlyRate = (rate / 100) / 12;
+            const totalMonths = termYears * 12;
+
+            let initTax = 0, initIns = 0, initPMI = 0, initHOA = 0, initOther = 0;
+            let taxInc = 0, insInc = 0;
+
+            if (document.getElementById('includeTaxes').checked) {
+                const propTaxUnit = document.getElementById('propTaxUnit').value;
+                const propTaxVal = parseFloat(document.getElementById('propTaxPct').value) || 0;
+                const annualTax = propTaxUnit === 'percent' ? homePrice * (propTaxVal / 100) : propTaxVal;
+                initTax = annualTax / 12;
+
+                const insUnit = document.getElementById('homeInsUnit').value;
+                const insVal = parseFloat(document.getElementById('homeIns').value) || 0;
+                initIns = (insUnit === 'percent' ? homePrice * (insVal / 100) : insVal) / 12;
+
+                const pmiUnit = document.getElementById('pmiUnit').value;
+                const pmiVal = parseFloat(document.getElementById('pmi').value) || 0;
+                initPMI = (pmiUnit === 'percent' ? homePrice * (pmiVal / 100) : pmiVal) / 12;
+
+                initHOA = parseFloat(document.getElementById('hoaFee').value) || 0;
+
+                const othUnit = document.getElementById('otherCostsUnit').value;
+                const othVal = parseFloat(document.getElementById('otherCosts').value) || 0;
+                initOther = (othUnit === 'percent' ? homePrice * (othVal / 100) : othVal) / 12;
+
+                taxInc = (parseFloat(document.getElementById('taxIncrease').value) || 0) / 100;
+                insInc = (parseFloat(document.getElementById('insIncrease').value) || 0) / 100;
+            }
+
+            let monthlyPI = 0;
+            if (monthlyRate === 0) {
+                monthlyPI = principal / totalMonths;
+            } else {
+                const f = Math.pow(1 + monthlyRate, totalMonths);
+                monthlyPI = principal * (monthlyRate * f) / (f - 1);
+            }
+
+            const params = {
+                principal, monthlyRate, totalMonths, monthlyPI, startAbs,
+                initTax, initIns, initPMI, initHOA, initOther, taxInc, insInc
+            };
+
+            const extras = readExtras(startAbs, startYear);
+            const hasExtras = extras.mAmt > 0 || extras.yAmt > 0 || extras.oneTime.length > 0;
+
+            const base = runSchedule(params, null);
+            const sched = hasExtras ? runSchedule(params, extras) : base;
+            currentScheduleData = sched.rows;
+
+            const initialTotalMonthly = monthlyPI + initTax + initIns + initPMI + initHOA + initOther;
+            const grandTotal = sched.totPI + sched.totExtra + sched.totTax + sched.totIns + sched.totPMI + sched.totHOA + sched.totOth;
+
+            let savingsHTML = "";
+            if (hasExtras) {
+                const savedInterest = base.totInt - sched.totInt;
+                const savedMonths = base.n - sched.n;
+                if (savedInterest > 0.5 || savedMonths > 0) {
+                    savingsHTML = `
+                    <div class="bg-[#E8F5E9] border border-green-300 text-green-900 p-4 rounded-xl shadow-sm mb-6 text-sm">
+                        <p class="font-bold text-base mb-1">Extra payments payoff summary</p>
+                        <p>Without extra payments: payoff in <strong>${formatDuration(base.n)}</strong> with <strong>${formatMoney(base.totInt)}</strong> total interest.</p>
+                        <p>With your extra payments: payoff in <strong>${formatDuration(sched.n)}</strong> with <strong>${formatMoney(sched.totInt)}</strong> total interest.</p>
+                        <p class="mt-1">You save <strong class="text-green-700">${formatMoney(savedInterest)}</strong> in interest and finish <strong class="text-green-700">${formatDuration(savedMonths)}</strong> early.</p>
+                    </div>`;
+                }
+            }
+
+            // Biweekly comparison: half the monthly P&I every 2 weeks (26 payments/year)
+            const bw = computeBiweekly(principal, rate, monthlyPI);
+            const bwSaveInt = base.totInt - bw.interest;
+            const bwSaveMonths = base.n - Math.round(bw.years * 12);
+            const biweeklyHTML = (bw.periods > 0 && bwSaveInt > 0.5) ? `
+                <div class="bg-[#E3F2FD] border border-blue-300 text-blue-900 p-4 rounded-xl shadow-sm mb-6 text-sm">
+                    <p class="font-bold text-base mb-1">Biweekly payment option</p>
+                    <p>Pay <strong>${formatMoney(monthlyPI / 2)}</strong> every 2 weeks instead of ${formatMoney(monthlyPI)} monthly:</p>
+                    <p class="mt-1">Payoff in <strong>${bw.years.toFixed(1)} years</strong> with <strong>${formatMoney(bw.interest)}</strong> total interest (P&amp;I only).</p>
+                    <p class="mt-1">That saves <strong class="text-blue-700">${formatMoney(bwSaveInt)}</strong> in interest and <strong class="text-blue-700">${formatDuration(bwSaveMonths)}</strong> vs standard monthly payments.</p>
+                </div>` : "";
+
+            const resultsArea = document.getElementById('resultsArea');
+            resultsArea.innerHTML = `
+                <div class="bg-[#4CAF50] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Monthly Pay</p>
+                    <p class="text-4xl font-bold">${formatMoney(initialTotalMonthly)}</p>
+                </div>
+                <div class="flex flex-wrap gap-2 mb-6 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                    <button onclick="downloadCSV()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">⬇ Download Schedule (CSV)</button>
+                </div>
+                ${savingsHTML}
+                ${biweeklyHTML}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-700">
+                            <tr><th class="py-2 px-3 border-b">Category</th><th class="py-2 px-3 border-b text-right">Monthly</th><th class="py-2 px-3 border-b text-right">Total</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b hover:bg-gray-50 font-semibold"><td class="py-2 px-3">Mortgage Payment (P&amp;I)</td><td class="py-2 px-3 text-right">${formatMoney(monthlyPI)}</td><td class="py-2 px-3 text-right">${formatMoney(sched.totPI)}</td></tr>
+                            ${sched.totExtra > 0 ? `<tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">Extra Payments</td><td class="py-2 px-3 text-right">&mdash;</td><td class="py-2 px-3 text-right">${formatMoney(sched.totExtra)}</td></tr>` : ""}
+                            ${sched.totTax > 0 ? `<tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">Property Tax</td><td class="py-2 px-3 text-right">${formatMoney(initTax)}</td><td class="py-2 px-3 text-right">${formatMoney(sched.totTax)}</td></tr>` : ""}
+                            ${sched.totIns > 0 ? `<tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">Home Insurance</td><td class="py-2 px-3 text-right">${formatMoney(initIns)}</td><td class="py-2 px-3 text-right">${formatMoney(sched.totIns)}</td></tr>` : ""}
+                            ${sched.totPMI > 0 ? `<tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">PMI Insurance</td><td class="py-2 px-3 text-right">${formatMoney(initPMI)}</td><td class="py-2 px-3 text-right">${formatMoney(sched.totPMI)}</td></tr>` : ""}
+                            ${sched.totHOA > 0 ? `<tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">HOA Fee</td><td class="py-2 px-3 text-right">${formatMoney(initHOA)}</td><td class="py-2 px-3 text-right">${formatMoney(sched.totHOA)}</td></tr>` : ""}
+                            ${sched.totOth > 0 ? `<tr class="border-b hover:bg-gray-50 text-gray-600"><td class="py-2 px-3">Other Costs</td><td class="py-2 px-3 text-right">${formatMoney(initOther)}</td><td class="py-2 px-3 text-right">${formatMoney(sched.totOth)}</td></tr>` : ""}
+                            <tr class="bg-gray-100 font-bold border-b"><td class="py-2 px-3">Total Out-of-Pocket</td><td class="py-2 px-3 text-right text-[#14B8A6]">${formatMoney(initialTotalMonthly)}</td><td class="py-2 px-3 text-right">${formatMoney(grandTotal)}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="grid grid-cols-1 gap-4 mb-6">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                        <p class="flex justify-between mb-2"><span>House Price:</span> <span class="font-bold">${formatMoney(homePrice)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Loan Amount:</span> <span class="font-bold">${formatMoney(principal)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Down Payment:</span> <span class="font-bold">${formatMoney(downPaymentAmount)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Total of ${sched.n} Mortgage Payments:</span> <span class="font-bold">${formatMoney(sched.totPI)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Total Interest:</span> <span class="font-bold text-red-500">${formatMoney(sched.totInt)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Mortgage Payoff Date:</span> <span class="font-bold">${formatAbsMonth(startAbs + sched.n - 1)}</span></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-lg font-bold text-gray-800">Amortization Schedule</h3>
+                        <button onclick="toggleScheduleView()" id="scheduleToggleBtn" class="text-sm text-[#3F51B5] font-semibold hover:underline">Show Monthly Schedule</button>
+                    </div>
+                    <div class="overflow-x-auto max-h-96 overflow-y-auto">
+                        <table class="min-w-full text-sm text-left">
+                            <thead class="bg-gray-100 text-gray-700 sticky top-0">
+                                <tr><th class="py-2 px-3 border-b">Year</th><th class="py-2 px-3 border-b">Date</th><th class="py-2 px-3 border-b text-right">Interest</th><th class="py-2 px-3 border-b text-right">Principal</th><th class="py-2 px-3 border-b text-right">Balance</th></tr>
+                            </thead>
+                            <tbody id="amortizationTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('placeholderArea').classList.add('hidden');
+            resultsArea.classList.remove('hidden');
+
+            drawPieChart(monthlyPI, initTax, initIns, initPMI, initHOA, initOther);
+            drawLineChart(sched.rows);
+
+            isMonthlyView = false;
+            renderTable();
+
+            // Keep the URL in sync so the current calculation is shareable/bookmarkable
+            try {
+                history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams());
+            } catch (e) {}
+        }
+
+        function formatDuration(months) {
+            const y = Math.floor(months / 12);
+            const m = months % 12;
+            if (y === 0) return m + (m === 1 ? " month" : " months");
+            if (m === 0) return y + (y === 1 ? " year" : " years");
+            return y + (y === 1 ? " year " : " years ") + m + (m === 1 ? " month" : " months");
+        }
+
+        function formatAbsMonth(abs) {
+            const y = Math.floor(abs / 12);
+            const m = abs % 12;
+            return MONTH_NAMES[m] + " " + y;
+        }
+
+        function formatMonthYear(abs) {
+            const y = Math.floor(abs / 12);
+            const m = abs % 12;
+            return (m + 1) + "/" + y;
+        }
+
+        function renderTable() {
+            let tbodyHTML = "";
+            if (isMonthlyView) {
+                currentScheduleData.forEach((row) => {
+                    tbodyHTML += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-1 px-3">${row.month}</td><td class="py-1 px-3">${formatMonthYear(scheduleStartAbs + row.month - 1)}</td><td class="py-1 px-3 text-right text-red-500">${formatMoney(row.interest)}</td><td class="py-1 px-3 text-right text-green-600">${formatMoney(row.principal + row.extra)}</td><td class="py-1 px-3 text-right font-semibold">${formatMoney(row.balance)}</td></tr>`;
+                });
+            } else {
+                const yearlyGroups = {};
+                currentScheduleData.forEach(row => {
+                    if (!yearlyGroups[row.year]) yearlyGroups[row.year] = { interest: 0, principal: 0, balance: 0, startAbs: scheduleStartAbs + (row.year - 1) * 12 };
+                    yearlyGroups[row.year].interest += row.interest;
+                    yearlyGroups[row.year].principal += row.principal + row.extra;
+                    yearlyGroups[row.year].balance = row.balance;
+                });
+                for (const year in yearlyGroups) {
+                    const d = yearlyGroups[year];
+                    tbodyHTML += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-2 px-3 font-medium">${year}</td><td class="py-2 px-3">${formatMonthYear(d.startAbs)}-${formatMonthYear(d.startAbs + 11)}</td><td class="py-2 px-3 text-right text-red-500">${formatMoney(d.interest)}</td><td class="py-2 px-3 text-right text-green-600">${formatMoney(d.principal)}</td><td class="py-2 px-3 text-right font-semibold">${formatMoney(d.balance)}</td></tr>`;
+                }
+            }
+            document.getElementById('amortizationTable').innerHTML = tbodyHTML;
+        }
+
+        function toggleScheduleView() {
+            isMonthlyView = !isMonthlyView;
+            document.getElementById('scheduleToggleBtn').textContent = isMonthlyView ? "Show Annual Schedule" : "Show Monthly Schedule";
+            renderTable();
+        }
+
+        function drawPieChart(pi, tax, ins, pmi, hoa, other) {
+            const ctx = document.getElementById('pieChart').getContext('2d');
+            if (pieChartInstance) pieChartInstance.destroy();
+            const entries = [
+                { label: "P&I", val: pi, color: "#3F51B5" },
+                { label: "Tax", val: tax, color: "#14B8A6" },
+                { label: "Insurance", val: ins, color: "#EF4444" },
+                { label: "PMI", val: pmi, color: "#8B5CF6" },
+                { label: "HOA", val: hoa, color: "#F59E0B" },
+                { label: "Other", val: other, color: "#6B7280" }
+            ].filter(e => e.val > 0);
+            pieChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: entries.map(e => e.label),
+                    datasets: [{ data: entries.map(e => e.val), backgroundColor: entries.map(e => e.color) }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        function drawLineChart(rows) {
+            const ctx = document.getElementById('lineChart').getContext('2d');
+            if (lineChartInstance) lineChartInstance.destroy();
+            const labels = ["0"];
+            const balanceData = [rows.length ? rows[0].balance + rows[0].principal + rows[0].extra : 0];
+            const interestData = [0];
+            const paymentData = [0];
+            const yearlyGroups = {};
+            rows.forEach(row => {
+                if (!yearlyGroups[row.year]) yearlyGroups[row.year] = { interest: 0, pay: 0, balance: 0 };
+                yearlyGroups[row.year].interest += row.interest;
+                yearlyGroups[row.year].pay += row.totalPay;
+                yearlyGroups[row.year].balance = row.balance;
+            });
+            let cumInt = 0, cumPay = 0;
+            for (const year in yearlyGroups) {
+                labels.push(year);
+                cumInt += yearlyGroups[year].interest;
+                cumPay += yearlyGroups[year].pay;
+                balanceData.push(yearlyGroups[year].balance);
+                interestData.push(cumInt);
+                paymentData.push(cumPay);
+            }
+            lineChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Balance', data: balanceData, borderColor: '#3B82F6', borderWidth: 3, tension: 0.1, pointRadius: 0 },
+                        { label: 'Interest', data: interestData, borderColor: '#84CC16', borderWidth: 3, tension: 0.1, pointRadius: 0 },
+                        { label: 'Payment', data: paymentData, borderColor: '#991B1B', borderWidth: 3, tension: 0.1, pointRadius: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'top' } },
+                    scales: {
+                        x: { title: { display: true, text: 'Year' } },
+                        y: { beginAtZero: true, ticks: { callback: function(value) { return '$' + (value / 1000).toFixed(0) + 'K'; } } }
+                    }
+                }
+            });
+        }
+
+        function computeBiweekly(principal, annualRatePct, monthlyPI) {
+            const r = (annualRatePct / 100) / 26;
+            const pay = monthlyPI / 2;
+            let bal = principal, totInt = 0, n = 0;
+            if (r === 0) {
+                n = Math.ceil(principal / pay);
+            } else {
+                // Guard: if half-payment doesn't cover first period's interest, biweekly can't amortize
+                if (pay <= principal * r) return { periods: 0, years: 0, interest: 0 };
+                while (bal > 0.005 && n < 26 * 60) {
+                    const interest = bal * r;
+                    let p = pay - interest;
+                    if (p < 0) p = 0;
+                    p = Math.min(p, bal);
+                    bal -= p;
+                    totInt += interest;
+                    n++;
+                }
+            }
+            return { periods: n, years: n / 26, interest: totInt };
+        }
+
+        function buildShareParams() {
+            const v = id => document.getElementById(id).value;
+            const p = new URLSearchParams();
+            p.set('price', v('homePrice'));
+            p.set('down', v('downPayment'));
+            p.set('downType', v('downType'));
+            p.set('term', v('loanTerm'));
+            p.set('rate', v('interestRate'));
+            p.set('sm', v('startMonth'));
+            p.set('sy', v('startYear'));
+            if (document.getElementById('includeTaxes').checked) {
+                p.set('tax', v('propTaxPct'));
+                p.set('taxU', v('propTaxUnit'));
+                p.set('ins', v('homeIns'));
+                p.set('insU', v('homeInsUnit'));
+                p.set('pmi', v('pmi'));
+                p.set('pmiU', v('pmiUnit'));
+                p.set('hoa', v('hoaFee'));
+                p.set('oth', v('otherCosts'));
+                p.set('othU', v('otherCostsUnit'));
+                p.set('taxInc', v('taxIncrease'));
+                p.set('insInc', v('insIncrease'));
+            }
+            const xm = v('extraMonthly');
+            if (parseFloat(xm) > 0) p.set('xm', xm);
+            const xy = v('extraYearly');
+            if (parseFloat(xy) > 0) p.set('xy', xy);
+            return p.toString();
+        }
+
+        function copyShareLink() {
+            const base = window.location.href.split('?')[0];
+            const url = base + '?' + buildShareParams();
+            const done = () => {
+                const btn = event && event.target ? event.target : null;
+                if (btn) {
+                    const orig = btn.textContent;
+                    btn.textContent = '✓ Copied!';
+                    setTimeout(() => btn.textContent = orig, 2000);
+                }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else {
+                fallbackCopy(url, done);
+            }
+        }
+
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta);
+            done();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (!q.get('price') && !q.get('rate')) return;
+            const set = (id, key) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); };
+            set('homePrice', 'price');
+            set('downPayment', 'down');
+            set('downType', 'downType');
+            set('loanTerm', 'term');
+            set('interestRate', 'rate');
+            set('startMonth', 'sm');
+            set('startYear', 'sy');
+            if (q.get('tax') !== null) {
+                document.getElementById('includeTaxes').checked = true;
+                set('propTaxPct', 'tax');
+                set('propTaxUnit', 'taxU');
+                set('homeIns', 'ins');
+                set('homeInsUnit', 'insU');
+                set('pmi', 'pmi');
+                set('pmiUnit', 'pmiU');
+                set('hoaFee', 'hoa');
+                set('otherCosts', 'oth');
+                set('otherCostsUnit', 'othU');
+                set('taxIncrease', 'taxInc');
+                set('insIncrease', 'insInc');
+            }
+            set('extraMonthly', 'xm');
+            set('extraYearly', 'xy');
+        }
+
+        function downloadCSV() {
+            if (!currentScheduleData.length) return;
+            const rows = [["Month", "Date", "Interest", "Principal", "Extra Payment", "Ending Balance"]];
+            currentScheduleData.forEach(r => {
+                rows.push([
+                    r.month,
+                    formatMonthYear(scheduleStartAbs + r.month - 1),
+                    r.interest.toFixed(2),
+                    r.principal.toFixed(2),
+                    r.extra.toFixed(2),
+                    r.balance.toFixed(2)
+                ]);
+            });
+            const csv = rows.map(x => x.join(",")).join("\n");
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "calcnova-amortization-schedule.csv";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+        }
+    </script>
+</body>
+</html>
