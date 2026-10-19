@@ -200,7 +200,6 @@
                 </div>
             </div>
             
-            <!-- AdSense Space (Sidebar) -->
             <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
                 <p class="font-medium">AdSense Space</p>
                 <p class="text-sm">(300x250 Banner)</p>
@@ -574,9 +573,8 @@
             return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
         }
 
-        // 4. دالة جلب أسعار الفائدة الحية من FRED
+        // 4. دالة جلب أسعار الفائدة الحية من FRED (باستخدام Proxy لتجاوز CORS)
         async function fetchMortgageRates() {
-            // ضع مفتاح API الخاص بك هنا (من حسابك على FRED)
             const apiKey = '6629866ed78c6a5bacb490dcc8f4c1fc'; 
             
             const seriesIds = {
@@ -587,8 +585,11 @@
 
             for (const [elementId, seriesId] of Object.entries(seriesIds)) {
                 try {
-                    const url = `https://api.stlouisfed.org/fred/series/observations?series_id=${seriesId}&api_key=${apiKey}&file_type=json&sort_order=desc&limit=1`;
-                    const response = await fetch(url);
+                    const fredUrl = `https://api.stlouisfed.org/fred/series/observations?series_id=${seriesId}&api_key=${apiKey}&file_type=json&sort_order=desc&limit=1`;
+                    // استخدام Proxy مجاني (corsproxy.io) لتجاوز حظر CORS
+                    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(fredUrl)}`;
+                    
+                    const response = await fetch(proxyUrl);
                     const data = await response.json();
                     
                     if (data.observations && data.observations.length > 0) {
@@ -600,10 +601,9 @@
                     }
                 } catch (error) {
                     console.error("Error fetching rate for " + seriesId, error);
-                    // في حال حدوث خطأ (مثلاً CORS)، ستبقى الأرقام الثابتة كما هي
                 }
             }
         }
     </script>
 </body>
-                                                                                        </html>
+</html>
