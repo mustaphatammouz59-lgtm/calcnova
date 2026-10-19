@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lease Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Lease</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Lease Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Asset Value / MSRP ($)</label>
+                        <input type="number" id="lsValue" value="40000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Negotiated Price ($)</label>
+                        <input type="number" id="lsPrice" value="38000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Down Payment ($)</label>
+                        <input type="number" id="lsDown" value="3000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Residual Value (%)</label>
+                        <p class="text-xs text-gray-500 mb-1">Estimated value at end of lease</p>
+                        <input type="number" id="lsResidual" value="55" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Lease Term (Months)</label>
+                        <select id="lsMonths" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                            <option value="24">24 Months</option>
+                            <option value="36" selected>36 Months</option>
+                            <option value="48">48 Months</option>
+                            <option value="60">60 Months</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate / APR (%)</label>
+                        <input type="number" id="lsRate" value="6" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="calculateLease()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Lease Payment</button>
+
+                <div id="lsResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
+                            <p class="text-sm text-gray-500">Monthly Lease Payment</p>
+                            <p class="text-3xl font-bold text-[#14B8A6]" id="lsMonthly">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Total Lease Cost</p>
+                            <p class="text-xl font-bold text-gray-800" id="lsTotalCost">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">Depreciation Cost</p>
+                            <p class="text-xl font-bold text-[#3F51B5]" id="lsDepreciation">$0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Leasing Works</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">When you lease an asset, you are essentially paying for the depreciation that occurs during the time you use it, plus interest (often called the "rent charge" or "money factor"). Leasing often results in lower monthly payments than buying, but you do not own the asset at the end of the term unless you choose to buy it out for the residual value.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calculateLease() {
+            const msrp = parseFloat(document.getElementById('lsValue').value);
+            const price = parseFloat(document.getElementById('lsPrice').value);
+            const down = parseFloat(document.getElementById('lsDown').value);
+            const residualPct = parseFloat(document.getElementById('lsResidual').value) / 100;
+            const months = parseInt(document.getElementById('lsMonths').value);
+            const rate = parseFloat(document.getElementById('lsRate').value) / 100;
+
+            if (isNaN(msrp) || isNaN(price) || isNaN(down) || isNaN(residualPct) || isNaN(months) || isNaN(rate) || price <= 0) {
+                alert("Please enter valid positive numbers.");
+                return;
+            }
+
+            // Residual Value
+            const residualValue = msrp * residualPct;
+
+            // Depreciation Fee (Amount to be paid off over the lease term)
+            const depreciationFee = (price - down - residualValue) / months;
+
+            // Money Factor (Interest)
+            const moneyFactor = rate / 2400; 
+            const financeFee = (price - down + residualValue) * moneyFactor;
+
+            // Monthly Payment
+            const monthlyPayment = depreciationFee + financeFee;
+
+            const totalLeaseCost = (monthlyPayment * months) + down;
+            const totalDepreciation = price - residualValue;
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('lsMonthly').textContent = formatter.format(monthlyPayment);
+            document.getElementById('lsTotalCost').textContent = formatter.format(totalLeaseCost);
+            document.getElementById('lsDepreciation').textContent = formatter.format(totalDepreciation);
+
+            document.getElementById('lsResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
