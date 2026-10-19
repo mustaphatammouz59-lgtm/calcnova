@@ -14,30 +14,20 @@
         .input-group input:focus { border-color: #3F51B5; }
         .section-title { font-weight: bold; font-size: 0.9rem; color: #1F2937; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.25rem;}
         
-        /* تنسيق حقول الدفعات الإضافية */
         .extra-payment-row { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
         .extra-payment-row input[type="number"] { width: 30%; text-align: center; padding: 0.25rem; border: 1px solid #D1D5DB; border-radius: 0.375rem;}
         .extra-payment-row select, .extra-payment-row input[type="text"] { width: 25%; text-align: center; background-color: #F9FAFB; border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.25rem;}
         .extra-payment-row span { width: 15%; text-align: center; font-size: 0.75rem; color: #6B7280; }
 
-        /* إخفاء العناصر عند الطباعة */
         @media print {
-            nav, footer, .no-print, #calculator-form, #placeholderArea {
-                display: none !important;
-            }
-            #resultsArea {
-                display: block !important;
-                width: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
+            nav, footer, .no-print, #calculator-form, #placeholderArea { display: none !important; }
+            #resultsArea { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
             .md\:w-2\/5 { width: 100% !important; }
             .md\:w-3\/5 { width: 100% !important; }
         }
     </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
     <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
@@ -47,7 +37,6 @@
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
     <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
         <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Mortgage</span>
     </div>
@@ -57,7 +46,6 @@
         <div class="md:w-2/5 no-print" id="calculator-form">
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-2xl font-bold text-[#3F51B5]">Mortgage Calculator</h1>
-                <!-- زر الطباعة -->
                 <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                     Print
@@ -65,8 +53,6 @@
             </div>
             
             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
-                
-                <!-- Basic Inputs -->
                 <div class="input-group">
                     <label>Home Price</label>
                     <div class="w-[55%] flex">
@@ -103,16 +89,13 @@
                     </div>
                 </div>
                 
-                <!-- Include Taxes Checkbox -->
                 <div class="mt-4 flex items-center">
                     <input type="checkbox" id="includeTaxes" onchange="toggleAdvanced()" class="h-4 w-4 text-[#3F51B5] border-gray-300 rounded">
                     <label for="includeTaxes" class="ml-2 font-bold text-gray-700">Include Taxes & Costs Below</label>
                 </div>
 
-                <!-- Advanced Inputs -->
                 <div id="advancedInputs" class="hidden">
                     <div class="text-right text-sm text-gray-600 mt-2 mb-1">Annual Tax & Cost</div>
-                    
                     <div class="input-group">
                         <label>Property Taxes</label>
                         <div class="w-[55%] flex gap-1">
@@ -149,23 +132,18 @@
                         </div>
                     </div>
                     
-                    <!-- زر More Options -->
                     <div class="text-center mt-2 mb-2">
                         <a href="#" onclick="toggleAdvancedOptions(event)" id="advancedOptionsBtn" class="text-[#3F51B5] text-sm font-semibold hover:underline">+ More Options</a>
                     </div>
 
-                    <!-- الحقول الإضافية -->
                     <div id="moreAdvancedOptions" class="hidden">
-                        <!-- Annual Increase -->
                         <div class="section-title">Annual Tax & Cost Increase</div>
                         <div class="input-group"><label>Property Taxes Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="taxIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
                         <div class="input-group"><label>Home Insurance Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="insIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
                         <div class="input-group"><label>HOA Fee Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="hoaIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
                         <div class="input-group"><label>Other Costs Increase</label><div class="w-[55%] flex gap-1"><input type="number" id="otherIncrease" value="0" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
 
-                        <!-- Extra Payments -->
                         <div class="section-title">Extra Payments</div>
-                        
                         <div class="extra-payment-row">
                             <label class="text-sm text-gray-700 w-1/3">Extra Monthly</label>
                             <input type="number" id="extraMonthly" value="0">
@@ -173,7 +151,6 @@
                             <select class="month-select"></select>
                             <input type="text" class="year-input">
                         </div>
-                        
                         <div class="extra-payment-row">
                             <label class="text-sm text-gray-700 w-1/3">Extra Yearly</label>
                             <input type="number" id="extraYearly" value="0">
@@ -181,7 +158,6 @@
                             <select class="month-select"></select>
                             <input type="text" class="year-input">
                         </div>
-                        
                         <div class="extra-payment-row">
                             <label class="text-sm text-gray-700 w-1/3">One-time Pay</label>
                             <input type="number" id="extraOneTime" value="0">
@@ -194,7 +170,6 @@
                             <a href="#" onclick="toggleExtraInputs()" id="extraToggleBtn" class="text-[#3F51B5] text-sm hover:underline">+ Show Below Inputs</a>
                         </div>
 
-                        <!-- 10 Extra Hidden Inputs -->
                         <div id="extraHiddenInputs" class="hidden space-y-1">
                             <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
                             <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
@@ -208,7 +183,6 @@
                             <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
                         </div>
 
-                        <!-- Biweekly Checkbox -->
                         <div class="mt-4 flex items-center">
                             <input type="checkbox" id="showBiweekly" class="h-4 w-4 text-[#3F51B5] border-gray-300 rounded">
                             <label for="showBiweekly" class="ml-2 text-sm text-gray-700">Show Biweekly Payback Results</label>
@@ -216,7 +190,6 @@
                     </div>
                 </div>
 
-                <!-- Buttons -->
                 <div class="flex gap-2 mt-6">
                     <button onclick="calculateMortgage()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md flex justify-center items-center gap-2">
                         Calculate <span class="text-xl">▶</span>
@@ -225,7 +198,6 @@
                 </div>
             </div>
             
-            <!-- AdSense Space (Sidebar) -->
             <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
                 <p class="font-medium">AdSense Space</p>
                 <p class="text-sm">(300x250 Banner)</p>
@@ -234,13 +206,9 @@
 
         <!-- Right Column: Results -->
         <div class="md:w-3/5">
-            <!-- النتائج مخفية افتراضياً (لأنها ستملأ تلقائياً) -->
-            <div id="resultsArea" class="hidden">
-                <!-- سيتم ملؤها بواسطة الجافاسكريبت -->
-            </div>
+            <div id="resultsArea" class="hidden"></div>
             <div id="placeholderArea" class="hidden bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center text-gray-500">
                 <p class="text-xl font-semibold mb-2">Ready to calculate</p>
-                <p>Enter your loan details on the left and click Calculate.</p>
             </div>
         </div>
     </main>
@@ -274,7 +242,6 @@
                 input.value = currentYear;
             });
 
-            // استدعاء الحساب تلقائياً عند فتح الصفحة
             calculateMortgage();
         });
 
@@ -282,7 +249,6 @@
         function toggleAdvanced() {
             const checkbox = document.getElementById('includeTaxes');
             const advancedDiv = document.getElementById('advancedInputs');
-            
             if (checkbox.checked) {
                 advancedDiv.classList.remove('hidden');
             } else {
@@ -294,7 +260,6 @@
             event.preventDefault();
             const moreOptionsDiv = document.getElementById('moreAdvancedOptions');
             const btn = document.getElementById('advancedOptionsBtn');
-            
             if (moreOptionsDiv.classList.contains('hidden')) {
                 moreOptionsDiv.classList.remove('hidden');
                 btn.textContent = "- Fewer Options";
@@ -332,9 +297,7 @@
             const termYears = parseInt(document.getElementById('loanTerm').value);
             const rate = parseFloat(document.getElementById('interestRate').value);
 
-            if (isNaN(homePrice) || isNaN(downInput) || isNaN(termYears) || isNaN(rate)) {
-                return; // لا تفعل شيئاً إذا كانت الحقول فارغة
-            }
+            if (isNaN(homePrice) || isNaN(downInput) || isNaN(termYears) || isNaN(rate)) return;
 
             let downPaymentAmount = downType === 'percent' ? homePrice * (downInput / 100) : downInput;
             const principal = homePrice - downPaymentAmount;
@@ -439,7 +402,6 @@
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                         <canvas id="pieChart"></canvas>
                     </div>
-                    <!-- الرسم الخطي -->
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                         <canvas id="lineChart"></canvas>
                     </div>
@@ -463,7 +425,6 @@
             document.getElementById('placeholderArea').classList.add('hidden');
             resultsArea.classList.remove('hidden');
 
-            // رسم المخططات
             drawPieChart(monthlyPI, currentMonthlyTax, currentMonthlyIns, currentMonthlyOther);
             drawLineChart(principal, scheduleData, initialTotalMonthly);
 
@@ -523,7 +484,6 @@
             });
         }
 
-        // دالة رسم الرسم الخطي (Balance vs Interest vs Payment)
         function drawLineChart(principal, scheduleData, monthlyPayment) {
             const ctx = document.getElementById('lineChart').getContext('2d');
             
@@ -548,4 +508,36 @@
                 labels.push(year);
                 const data = yearlyGroups[year];
                 currentBalance -= data.principal;
-                total
+                totalInterestPaid += data.interest;
+                totalPaymentPaid += (monthlyPayment * 12);
+
+                balanceData.push(currentBalance > 0 ? currentBalance : 0);
+                interestData.push(totalInterestPaid);
+                paymentData.push(totalPaymentPaid);
+            }
+
+            if (window.lineChartInstance) window.lineChartInstance.destroy();
+
+            window.lineChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Balance', data: balanceData, borderColor: '#3B82F6', borderWidth: 3, tension: 0.1 },
+                        { label: 'Interest', data: interestData, borderColor: '#84CC16', borderWidth: 3, tension: 0.1 },
+                        { label: 'Payment', data: paymentData, borderColor: '#991B1B', borderWidth: 3, tension: 0.1 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'top' } },
+                    scales: {
+                        x: { title: { display: true, text: 'Year' } },
+                        y: { beginAtZero: true, ticks: { callback: function(value) { return '$' + (value / 1000).toFixed(0) + 'K'; } } }
+                    }
+                }
+            });
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format
