@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAT Calculator - CalcNova</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumbs -->
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">VAT</span>
+    </div>
+
+    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
+        <div class="md:w-3/4">
+            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">VAT Calculator</h1>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Calculation Type</label>
+                    <select id="vatType" class="w-full border border-gray-300 rounded-md p-2 outline-none mb-4">
+                        <option value="add">Add VAT (Net to Gross)</option>
+                        <option value="remove">Remove VAT (Gross to Net)</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1" id="vatAmountLabel">Amount (Excluding VAT) ($)</label>
+                        <input type="number" id="vatAmount" value="1000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">VAT Rate (%)</label>
+                        <select id="vatRateSelect" class="w-full border border-gray-300 rounded-md p-2 outline-none mb-2">
+                            <option value="5">5%</option>
+                            <option value="15">15%</option>
+                            <option value="20" selected>20% (UK/EU Standard)</option>
+                            <option value="custom">Custom Rate</option>
+                        </select>
+                        <input type="number" id="vatRateCustom" placeholder="Enter custom %" class="w-full border border-gray-300 rounded-md p-2 outline-none hidden">
+                    </div>
+                </div>
+                <button onclick="calculateVAT()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate VAT</button>
+
+                <div id="vatResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500" id="vatNetLabel">Net Amount</p>
+                            <p class="text-xl font-bold text-gray-800" id="vatNet">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm">
+                            <p class="text-sm text-gray-500">VAT Amount</p>
+                            <p class="text-xl font-bold text-red-500" id="vatTax">$0</p>
+                        </div>
+                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
+                            <p class="text-sm text-gray-500" id="vatGrossLabel">Gross Amount</p>
+                            <p class="text-2xl font-bold text-[#14B8A6]" id="vatGross">$0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is VAT?</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">Value Added Tax (VAT) is a consumption tax placed on a product whenever value is added at each stage of the supply chain, from production to the point of sale. The amount of VAT that the user pays is on the cost of the product, less any of the costs of materials used in the product that have already been taxed.</p>
+                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p>In-Article AdSense Banner (Fluid)</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="md:w-1/4">
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+                <p class="font-medium">AdSense Space</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+        <div class="container mx-auto text-center px-4">
+            <div class="mb-4 space-x-4">
+                <a href="about.html" class="hover:text-white transition">About Us</a>
+                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            </div>
+            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // إظهار/إخفاء حقل النسبة المخصصة
+        document.getElementById('vatRateSelect').addEventListener('change', function() {
+            const customInput = document.getElementById('vatRateCustom');
+            if (this.value === 'custom') {
+                customInput.classList.remove('hidden');
+            } else {
+                customInput.classList.add('hidden');
+            }
+        });
+
+        // تغيير العناوين بناءً على نوع الحساب
+        document.getElementById('vatType').addEventListener('change', function() {
+            const type = this.value;
+            const amountLabel = document.getElementById('vatAmountLabel');
+            const netLabel = document.getElementById('vatNetLabel');
+            const grossLabel = document.getElementById('vatGrossLabel');
+
+            if (type === 'add') {
+                amountLabel.textContent = "Amount (Excluding VAT) ($)";
+                netLabel.textContent = "Net Amount";
+                grossLabel.textContent = "Gross Amount";
+            } else {
+                amountLabel.textContent = "Amount (Including VAT) ($)";
+                netLabel.textContent = "Net Amount";
+                grossLabel.textContent = "Gross Amount";
+            }
+        });
+
+        function calculateVAT() {
+            const type = document.getElementById('vatType').value;
+            const amount = parseFloat(document.getElementById('vatAmount').value);
+            
+            let rate = 0;
+            const rateSelect = document.getElementById('vatRateSelect').value;
+            if (rateSelect === 'custom') {
+                rate = parseFloat(document.getElementById('vatRateCustom').value) / 100;
+            } else {
+                rate = parseFloat(rateSelect) / 100;
+            }
+
+            if (isNaN(amount) || isNaN(rate) || amount < 0) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+
+            let net, tax, gross;
+
+            if (type === 'add') {
+                net = amount;
+                tax = amount * rate;
+                gross = amount + tax;
+            } else {
+                gross = amount;
+                net = amount / (1 + rate);
+                tax = gross - net;
+            }
+
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+            document.getElementById('vatNet').textContent = formatter.format(net);
+            document.getElementById('vatTax').textContent = formatter.format(tax);
+            document.getElementById('vatGross').textContent = formatter.format(gross);
+
+            document.getElementById('vatResults').classList.remove('hidden');
+        }
+    </script>
+</body>
+                  </html>
