@@ -3,178 +3,499 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cash Back vs Low Interest Calculator - CalcNova</title>
+    <title>Cash Back or Low Interest Calculator - CalcNova</title>
+    <meta name="description" content="Free calculator to decide between a manufacturer's cash back rebate and a low interest rate offer on a car purchase — with sales tax by state, fees, and the exact break-even rebate.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/cash-back-or-low-interest">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Cash Back or Low Interest Calculator - CalcNova">
+    <meta property="og:description" content="Rebate or low rate — which saves more? Both offers priced out to the dollar.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/cash-back-or-low-interest">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cash Back or Low Interest Calculator - CalcNova">
+    <meta name="twitter:description" content="Compare a cash rebate against low-interest financing on the same car, tax and fees included.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Cash Back or Low Interest Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/cash-back-or-low-interest" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Is cash back or a low interest rate better?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Whichever removes more money. Compare the rebate against the total interest the low rate saves over the full term: on a $40,000 loan for 60 months, dropping from 5% to 2% saves $3,092.07 of interest, so any rebate under that amount loses to the low rate — and any rebate above it wins. Longer terms and larger loans make the low rate worth more; shorter terms make the rebate worth more." }
+            },
+            {
+                "@type": "Question",
+                "name": "Are cash rebates taxed?",
+                "acceptedAnswer": { "@type": "Answer", "text": "For sales-tax purposes, it depends on the state. About twenty states do not tax manufacturer rebates, so tax is figured on the reduced price; the rest tax the price before the rebate. Select your state in the calculator and the correct treatment is applied." }
+            },
+            {
+                "@type": "Question",
+                "name": "Who qualifies for low-interest financing?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Usually only 'well-qualified buyers' — the fine print in car ads — meaning excellent credit, and sometimes a larger down payment or a shorter term. If you do not qualify, the rebate is the only real offer on the table, which is exactly why dealers advertise the rate so loudly." }
+            },
+            {
+                "@type": "Question",
+                "name": "What if I plan to pay cash for the car?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Take the rebate — with no loan, an interest rate is worth nothing. The low-rate offer only has value to someone who finances, and only for as long as they keep the loan: paying the loan off early shrinks the interest saved and can flip the winner to the rebate." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .section-title { font-weight: bold; font-size: 0.9rem; color: #1F2937; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.25rem; }
+        @media print { nav, footer, .no-print, #calculator-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Cash Back vs Low Interest</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Cash Back or Low Interest Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Cash Back or Low Interest Calculator</h1>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Cash Back or Low Interest Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">Manufacturers often make you choose: a cash rebate <em>or</em> a low rate — rarely both. Enter both offers as quoted and see which one actually leaves you ahead. For the loan itself in full detail, use the <a href="auto-loan.html" class="text-[#3F51B5] font-semibold hover:underline">Auto Loan Calculator</a>.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <!-- Option 1: Cash Back -->
-                    <div class="space-y-4 border-r-0 md:border-r border-gray-200 pr-0 md:pr-4">
-                        <h2 class="text-xl font-semibold text-[#3F51B5]">Option 1: Cash Back</h2>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Vehicle Price ($)</label>
-                            <input type="number" id="cbPrice1" value="30000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Cash Back Rebate ($)</label>
-                            <input type="number" id="cbRebate" value="3000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate (%)</label>
-                            <input type="number" id="cbRate1" value="6.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                        </div>
-                    </div>
-
-                    <!-- Option 2: Low Interest -->
-                    <div class="space-y-4">
-                        <h2 class="text-xl font-semibold text-[#14B8A6]">Option 2: Low Interest</h2>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Vehicle Price ($)</label>
-                            <input type="number" id="cbPrice2" value="30000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate (%)</label>
-                            <input type="number" id="cbRate2" value="1.9" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                        </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="section-title" style="margin-top:0;">Cash Back Offer</div>
+                <div class="input-group">
+                    <label>Cash Back Amount</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="cashback" value="1000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
                 </div>
-
-                <!-- Common Inputs -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 border-t pt-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Down Payment ($)</label>
-                        <input type="number" id="cbDown" value="5000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Months)</label>
-                        <input type="number" id="cbMonths" value="60" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                <div class="input-group">
+                    <label>Interest Rate (High)</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="ratehigh" value="5" step="0.001" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
                     </div>
                 </div>
+                <p class="text-xs text-gray-500">The standard rate you would pay if you take the rebate.</p>
 
-                <button onclick="calculateCashBack()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Compare Options</button>
+                <div class="section-title">Low Interest Rate Offer</div>
+                <div class="input-group">
+                    <label>Interest Rate (Low)</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="ratelow" value="2" step="0.001" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500">The promotional rate — full price, no rebate.</p>
 
-                <div id="cbResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="text-center mb-4">
-                        <p class="text-lg font-bold text-gray-800" id="cbVerdict">Result</p>
+                <div class="section-title">Other Information</div>
+                <div class="input-group">
+                    <label>Auto Price</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="price" value="50000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border border-gray-200">
-                            <p class="text-sm text-gray-500">Total Cost (Cash Back)</p>
-                            <p class="text-2xl font-bold text-[#3F51B5]" id="cbCost1">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border border-gray-200">
-                            <p class="text-sm text-gray-500">Total Cost (Low Interest)</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="cbCost2">$0</p>
-                        </div>
+                </div>
+                <div class="input-group">
+                    <label>Loan Term</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="term" value="60" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">months</span>
                     </div>
+                </div>
+                <div class="input-group">
+                    <label>Down Payment</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="down" value="10000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Trade-in Value</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="tradein" value="0" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Your State</label>
+                    <select id="state" class="w-[58%] bg-gray-50"></select>
+                </div>
+                <div class="input-group">
+                    <label>Sales Tax</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="saletax" value="7" step="0.1" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Title, Registration &amp; Other Fees</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="fees" value="2000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <label class="flex items-center gap-2 cursor-pointer mt-3">
+                    <input type="checkbox" id="include_fees" class="w-4 h-4"> Include all fees in loan
+                </label>
+
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateCB()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Which Deal is Better?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Car dealerships often offer a choice: a cash rebate (which lowers the price) with a standard interest rate, or a promotional low interest rate (like 0% or 1.9%) with no rebate. This calculator compares the total cost of both options over the life of the loan to help you decide which one saves you more money.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
+        <div class="md:w-3/5">
+            <div id="resultsArea"></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Rebate or Rate: Pricing the Two Offers Honestly</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                The choice looks like marketing — a pile of cash or a tiny rate — but it is arithmetic. The rebate
+                shrinks the loan on day one; the low rate shrinks every month's interest for the life of the loan.
+                Which wins depends on just four things: the size of the rebate, the gap between the two rates, the
+                amount financed, and the term. Bigger loans and longer terms multiply the value of a rate cut;
+                small loans and short terms make the cash worth more. The verdict above is decided the honest way —
+                total cost of the whole deal under each offer, tax and fees included — and the break-even rebate
+                shown with it tells you exactly how large a rebate would have to be to flip the answer. (Tax and
+                fee treatment follows U.S. rules; buyers elsewhere can set the tax rate to match.)
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The cash rebate, up close</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Manufacturer rebates run from a few hundred to several thousand dollars and exist mainly to move
+                metal — clearing last year's inventory or jump-starting a slow seller. Alongside the headline
+                rebate sit narrower ones: military, recent-graduate, first-time-buyer, loyalty for returning
+                same-brand owners, and "conquest" money for switching from a rival. Some require financing through
+                the manufacturer's captive lender. Watch the tax line: in about twenty states a rebate is treated
+                as the manufacturer's money, so sales tax is figured on the price <em>after</em> the rebate; in the
+                rest, you are taxed on the full price as if the rebate never happened — this calculator applies
+                your state's rule when you select it. Rebates arrive either as an instant deduction at signing
+                (best) or a mail-in check weeks later. And do not confuse a rebate with <em>holdback</em> — the 2–3%
+                of MSRP the manufacturer quietly returns to the dealer; the rebate is yours, the holdback is
+                theirs, and the car's price is negotiable on top of both.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Low-interest financing, up close</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                A subsidized rate — 0%, 0.9%, 1.9% — is the manufacturer buying down your interest through its
+                captive lender, and it is usually reserved for "well-qualified buyers": excellent credit, often a
+                healthy down payment, and frequently a shorter term than the rebate deal allows. Two cautions.
+                First, some low rates are <em>introductory</em>, lasting 12 months before resetting higher; this
+                calculator assumes the rate holds for the whole term, so it does not fit teaser deals. Second,
+                the rate's value evaporates if you pay the loan off early or trade the car in year two — you only
+                collect interest savings for the months you actually carry the balance. Financing through the
+                dealer for the rate also hands the dealer both dials (price and loan) at once; arrive with an
+                outside preapproval so the "low rate" has something to beat.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Considerations before you sign either way</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Shop the rate anyway.</strong> Even the manufacturer's best offer may lose to your bank or credit
+                union, especially on used cars where captive lenders rarely play. <strong>Mind the term being sold with
+                the rate.</strong> Loans have stretched to 84–90 months; pairing a long term with fast depreciation is
+                how buyers end up underwater — owing more than the car is worth. The low rate paired with a short
+                term is the genuinely cheap deal; check both columns' totals, not just the monthly payment.
+                <strong>Keep negotiating the car.</strong> A rebate comes from the manufacturer, not the dealer's pocket,
+                so accepting it does not end the negotiation over the car's price. <strong>Beware the bait.</strong>
+                Advertising a 0% rate that most visitors mysteriously "don't qualify" for is an old, illegal-in-
+                most-places trick that still works because by the time the rate changes, the buyer has fallen for
+                the car. And <strong>let your own situation vote:</strong> a buyer whose credit will not qualify for the
+                low rate, or who needs liquidity for something urgent, should take the cash without a second
+                thought — the calculator prices money, not circumstances.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">So which is better?</h4>
+                    <p class="text-gray-700">Whichever removes more money in total. On the defaults, the drop from 5% to 2% saves $3,092 in interest — more than the $1,000 rebate, so the low rate wins. A rebate above $3,092 would flip it.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Are rebates taxed?</h4>
+                    <p class="text-gray-700">Depends on the state — about twenty don't tax them (tax on the reduced price); the rest tax the full price. The state selector applies the right rule.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Who gets the low rate?</h4>
+                    <p class="text-gray-700">"Well-qualified buyers" — excellent credit, sometimes more money down or a shorter term. If your credit is bruised, the rebate is likely the only real offer.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Paying cash for the car?</h4>
+                    <p class="text-gray-700">Take the rebate, always. A rate you never pay is worth zero.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. It assumes the low rate applies for the full loan term and that both offers are taken on the same car,
+                term, and down payment.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="auto-loan.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Auto Loan Calculator</h3>
+                <p class="text-sm text-gray-600">The full loan picture — schedule, tax, fees, trade-in.</p>
+            </a>
+            <a href="loan.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Loan Calculator</h3>
+                <p class="text-sm text-gray-600">Any installment loan, with extra payments.</p>
+            </a>
+            <a href="debt-to-income.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Debt-to-Income</h3>
+                <p class="text-sm text-gray-600">Will the new payment fit your DTI?</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateCashBack() {
-            // Option 1 (Cash Back)
-            const price1 = parseFloat(document.getElementById('cbPrice1').value);
-            const rebate = parseFloat(document.getElementById('cbRebate').value);
-            const rate1 = parseFloat(document.getElementById('cbRate1').value) / 100 / 12;
-            
-            // Option 2 (Low Interest)
-            const price2 = parseFloat(document.getElementById('cbPrice2').value);
-            const rate2 = parseFloat(document.getElementById('cbRate2').value) / 100 / 12;
+        let chartInstance = null;
+        const STATES = ['', 'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
+        const STATE_NAMES = { '': '-- Select --', AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', DC: 'District of Columbia', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming' };
+        const NO_TRADE_REDUCTION = ['CA', 'DC', 'HI', 'KY', 'MD', 'MI', 'MT', 'VA'];
+        const REBATE_NOT_TAXED = ['AK', 'AZ', 'DE', 'IA', 'KS', 'KY', 'LA', 'MA', 'MN', 'MO', 'MT', 'NE', 'NH', 'OK', 'OR', 'PA', 'RI', 'TX', 'UT', 'VT', 'WY'];
 
-            // Common
-            const down = parseFloat(document.getElementById('cbDown').value);
-            const months = parseInt(document.getElementById('cbMonths').value);
+        window.addEventListener('DOMContentLoaded', () => {
+            const sel = document.getElementById('state');
+            STATES.forEach(s => {
+                const o = document.createElement('option');
+                o.value = s; o.textContent = STATE_NAMES[s];
+                sel.appendChild(o);
+            });
+            prefillFromURL();
+            calculateCB();
+        });
 
-            if (isNaN(price1) || isNaN(rebate) || isNaN(rate1) || isNaN(price2) || isNaN(rate2) || isNaN(down) || isNaN(months)) {
-                alert("Please enter valid numbers.");
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+
+        function clearForm() {
+            document.getElementById('price').value = '';
+            document.getElementById('resultsArea').innerHTML = '';
+        }
+
+        function loanFigures(loan, ratePct, n) {
+            const r = ratePct / 100 / 12;
+            const pay = loan <= 0 ? 0 : (r === 0 ? loan / n : loan * r / (1 - Math.pow(1 + r, -n)));
+            let bal = loan, totalInterest = 0;
+            const balances = [loan];
+            for (let t = 1; t <= n; t++) {
+                const interest = bal * r;
+                let principal = pay - interest;
+                if (principal > bal) principal = bal;
+                bal -= principal; totalInterest += interest;
+                if (t % 12 === 0 || t === n) balances.push(Math.max(bal, 0));
+            }
+            return { pay, totalInterest, totalPayments: loan + totalInterest, balances };
+        }
+
+        function taxFor(price, rebate, trade, state, taxPct) {
+            let basis = price;
+            if (REBATE_NOT_TAXED.includes(state)) basis -= rebate;
+            if (!NO_TRADE_REDUCTION.includes(state)) basis -= trade;
+            return taxPct / 100 * Math.max(basis, 0);
+        }
+
+        function calculateCB() {
+            const out = document.getElementById('resultsArea');
+            const cashback = num('cashback'), rateHigh = num('ratehigh'), rateLow = num('ratelow');
+            const price = num('price'), term = Math.round(num('term'));
+            const down = num('down'), trade = num('tradein');
+            const state = document.getElementById('state').value;
+            const taxPct = num('saletax'), fees = num('fees');
+            const includeFees = document.getElementById('include_fees').checked;
+
+            if (price <= 0 || term <= 0) {
+                out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a valid auto price and loan term.</div>';
                 return;
             }
 
-            // Calculate Option 1
-            const loanAmount1 = price1 - rebate - down;
-            const monthly1 = loanAmount1 * (rate1 * Math.pow(1 + rate1, months)) / (Math.pow(1 + rate1, months) - 1);
-            const totalCost1 = (monthly1 * months) + down + rebate; // Total out of pocket (including down)
-
-            // Calculate Option 2
-            const loanAmount2 = price2 - down;
-            let monthly2 = 0;
-            if (rate2 === 0) {
-                monthly2 = loanAmount2 / months;
-            } else {
-                monthly2 = loanAmount2 * (rate2 * Math.pow(1 + rate2, months)) / (Math.pow(1 + rate2, months) - 1);
+            // Each side pays its own tax figure: the rebate may change the tax basis by state rule.
+            const taxCB = taxFor(price, cashback, trade, state, taxPct);
+            const taxLow = taxFor(price, 0, trade, state, taxPct);
+            const addCB = includeFees ? taxCB + fees : 0;
+            const addLow = includeFees ? taxLow + fees : 0;
+            const loanCB = price - cashback - down - trade + addCB;
+            const loanLow = price - down - trade + addLow;
+            if (loanCB < 0 || loanLow < 0) {
+                out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Down payment, rebate and trade-in exceed the price — no loan is needed on at least one side.</div>';
+                return;
             }
-            const totalCost2 = (monthly2 * months) + down;
+            const cb = loanFigures(loanCB, rateHigh, term);
+            const low = loanFigures(loanLow, rateLow, term);
+            const upfrontCB = down + (includeFees ? 0 : taxCB + fees);
+            const upfrontLow = down + (includeFees ? 0 : taxLow + fees);
+            const costCB = price - cashback + taxCB + fees + cb.totalInterest;
+            const costLow = price + taxLow + fees + low.totalInterest;
+            const interestSaved = cb.totalInterest - low.totalInterest;
+            const lowWins = costLow <= costCB;
+            const margin = Math.abs(costCB - costLow);
 
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-            
-            document.getElementById('cbCost1').textContent = formatter.format(totalCost1);
-            document.getElementById('cbCost2').textContent = formatter.format(totalCost2);
+            const verdictHTML = lowWins
+                ? `<div class="bg-green-600 text-white p-4 rounded-xl shadow-md text-center mb-4">
+                       <p class="text-xl font-bold">The Low Interest Rate Offer Is Better!</p>
+                       <p class="text-sm opacity-95 mt-1">The low rate saves ${formatMoney(interestSaved)} in interest — more than the ${formatMoney(cashback)} cash back. You come out ${formatMoney(margin)} ahead overall.</p>
+                   </div>`
+                : `<div class="bg-green-600 text-white p-4 rounded-xl shadow-md text-center mb-4">
+                       <p class="text-xl font-bold">The Cash Back Offer Is Better!</p>
+                       <p class="text-sm opacity-95 mt-1">The low rate would only save ${formatMoney(Math.max(interestSaved, 0))} in interest — less than the ${formatMoney(cashback)} cash back. You come out ${formatMoney(margin)} ahead overall.</p>
+                   </div>`;
 
-            const verdictEl = document.getElementById('cbVerdict');
-            // Compare costs (ignoring the actual price differences if they input different prices, but usually they are the same)
-            const diff = Math.abs(totalCost1 - totalCost2);
-            
-            if (totalCost1 < totalCost2) {
-                verdictEl.textContent = "Cash Back is better. You save " + formatter.format(diff);
-                verdictEl.className = "text-lg font-bold text-[#3F51B5]";
-            } else if (totalCost2 < totalCost1) {
-                verdictEl.textContent = "Low Interest is better. You save " + formatter.format(diff);
-                verdictEl.className = "text-lg font-bold text-[#14B8A6]";
-            } else {
-                verdictEl.textContent = "Both options cost the same.";
-                verdictEl.className = "text-lg font-bold text-gray-800";
+            const panel = (title, loan, tax, upfront, fig, cost, feesInLoan) => `
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-sm flex-1">
+                    <h3 class="font-bold text-[#3F51B5] mb-3">${title}</h3>
+                    <p class="flex justify-between mb-2"><span>Total Loan Amount:</span> <span class="font-bold">${formatMoney(loan)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Sales Tax:</span> <span class="font-bold">${formatMoney(tax)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Upfront Payment:</span> <span class="font-bold">${formatMoney(upfront)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Monthly Pay:</span> <span class="font-bold">${formatMoney(fig.pay)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total of ${term} Loan Payments:</span> <span class="font-bold">${formatMoney(fig.totalPayments)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total Loan Interest:</span> <span class="font-bold">${formatMoney(fig.totalInterest)}</span></p>
+                    <p class="flex justify-between"><span>Total Cost:</span> <span class="font-bold">${formatMoney(cost)}</span></p>
+                </div>`;
+
+            out.innerHTML = `
+                ${verdictHTML}
+                <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                    ${panel('With Cash Back Offer', loanCB, taxCB, upfrontCB, cb, costCB, includeFees)}
+                    ${panel('With Low Interest Rate Offer', loanLow, taxLow, upfrontLow, low, costLow, includeFees)}
+                </div>
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm mb-6">
+                    <p class="font-bold text-gray-800 mb-1">Break-even cash back: ${formatMoney(Math.max(interestSaved, 0))}</p>
+                    <p class="text-gray-700">A rebate would have to exceed the interest the low rate saves — ${formatMoney(Math.max(interestSaved, 0))} on these numbers — before cash back becomes the better offer. Every extra month of term or dollar financed raises that bar; paying the loan off early lowers it.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="balChart"></canvas>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                </div>`;
+
+            const cv = document.getElementById('balChart');
+            if (cv) {
+                const ctx = cv.getContext('2d');
+                if (chartInstance) chartInstance.destroy();
+                const maxLen = Math.max(cb.balances.length, low.balances.length);
+                chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({ length: maxLen }, (_, i) => i * 12),
+                        datasets: [
+                            { label: 'Balance — Cash Back (' + rateHigh + '%)', data: cb.balances.map(v => Math.round(v)), borderColor: '#B45309', backgroundColor: 'rgba(180,83,9,0.07)', fill: true, borderWidth: 2.5, tension: 0.15, pointRadius: 0 },
+                            { label: 'Balance — Low Rate (' + rateLow + '%)', data: low.balances.map(v => Math.round(v)), borderColor: '#3F51B5', backgroundColor: 'rgba(63,81,181,0.07)', fill: true, borderWidth: 2.5, tension: 0.15, pointRadius: 0 }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'top' }, title: { display: true, text: 'Loan Balance Under Each Offer' } },
+                        scales: {
+                            x: { title: { display: true, text: 'Months' } },
+                            y: { beginAtZero: true, ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } }
+                        }
+                    }
+                });
             }
-
-            document.getElementById('cbResults').classList.remove('hidden');
+            updateURL();
         }
+
+        const PARAMS = [['cashback', 'cb'], ['ratehigh', 'rh'], ['ratelow', 'rl'], ['price', 'p'], ['term', 't'], ['down', 'd'], ['tradein', 'ti'], ['state', 'st'], ['saletax', 'sx'], ['fees', 'f'], ['include_fees', 'ifl']];
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            PARAMS.forEach(([id, key]) => {
+                const el = document.getElementById(id);
+                p.set(key, el.type === 'checkbox' ? (el.checked ? '1' : '0') : el.value);
+            });
+            return p.toString();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => {
+                if (q.get(key) === null) return;
+                const el = document.getElementById(id);
+                if (el.type === 'checkbox') el.checked = q.get(key) === '1';
+                else el.value = q.get(key);
+            });
+        }
+
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-</html>
+        </html>
