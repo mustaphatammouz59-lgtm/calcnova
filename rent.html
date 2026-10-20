@@ -257,6 +257,12 @@
             document.getElementById('resultsArea').innerHTML = '';
         }
 
+        function labelStyle(pct) {
+            if (pct <= 16) return 'left: 0; text-align: left;';
+            if (pct >= 84) return 'right: 0; text-align: right;';
+            return 'left: ' + pct + '%; transform: translateX(-50%); text-align: center;';
+        }
+
         function calculateRent() {
             const incomeRaw = parseFloat(document.getElementById('income').value);
             const unit = document.getElementById('incomeUnit').value;
@@ -294,15 +300,15 @@
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
                     <div class="relative h-4 rounded-full overflow-hidden" style="background: linear-gradient(to right, #4CAF50 0%, #4CAF50 28%, #F59E0B 28%, #F59E0B 36%, #EF4444 36%, #EF4444 100%);"></div>
-                    <div class="relative h-10 text-xs text-gray-600">
-                        <div class="absolute" style="left: ${recPct}%; transform: translateX(-50%);">
-                            <div class="w-0.5 h-2 bg-gray-700 mx-auto"></div>
-                            <div class="text-center whitespace-nowrap">Recommended<br><strong class="text-gray-800">${formatMoney(recommended)}</strong></div>
-                        </div>
-                        <div class="absolute" style="left: ${maxPct}%; transform: translateX(-50%);">
-                            <div class="w-0.5 h-2 bg-gray-700 mx-auto"></div>
-                            <div class="text-center whitespace-nowrap">Maximum<br><strong class="text-gray-800">${formatMoney(maxRent)}</strong></div>
-                        </div>
+                    <div class="relative h-3">
+                        <div class="absolute top-0 w-0.5 h-2.5 bg-gray-800" style="left: ${recPct}%; transform: translateX(-50%);"></div>
+                        <div class="absolute top-0 w-0.5 h-2.5 bg-gray-800" style="left: ${maxPct}%; transform: translateX(-50%);"></div>
+                    </div>
+                    <div class="relative h-6 text-xs text-gray-600">
+                        <div class="absolute whitespace-nowrap" style="${labelStyle(recPct)}">Recommended: <strong class="text-green-700">${formatMoney(recommended)}</strong></div>
+                    </div>
+                    <div class="relative h-6 text-xs text-gray-600">
+                        <div class="absolute whitespace-nowrap" style="${labelStyle(maxPct)}">Maximum: <strong class="text-gray-800">${formatMoney(maxRent)}</strong></div>
                     </div>
                     <p class="text-xs text-gray-500 mt-1">Bar shows rent as a share of your gross monthly income (${formatMoney(monthly)}). Green = within the 28% guideline, amber = up to the 36% ceiling, red = beyond it.</p>
                     ${stretched ? `<p class="text-xs text-orange-600 mt-2 font-semibold">Note: your debts pull the 36% maximum below the 28% recommendation &mdash; the lower figure is the safer target.</p>` : ''}
