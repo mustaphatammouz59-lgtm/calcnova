@@ -4,123 +4,636 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Equity Loan Calculator - CalcNova</title>
+    <meta name="description" content="Free home equity loan calculator: monthly payment, total interest, closing costs and true APR — plus a second calculator for how much you can borrow at 80% CLTV.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/home-equity-loan">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Home Equity Loan Calculator - CalcNova">
+    <meta property="og:description" content="Fixed-rate second mortgage payments with closing costs and APR — and the maximum you can borrow against your equity.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/home-equity-loan">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Home Equity Loan Calculator - CalcNova">
+    <meta name="twitter:description" content="What a home equity loan really costs — payment, interest, closing costs, APR.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Home Equity Loan Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/home-equity-loan" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How much can I borrow with a home equity loan?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Most lenders cap the combined loan-to-value (CLTV) — your mortgage balance plus the new loan, divided by the home's value — at 80%, though some go to 85–90%. Example: a $600,000 home with a $250,000 mortgage at an 80% cap leaves $600,000 × 80% − $250,000 = $230,000 of borrowing room." }
+            },
+            {
+                "@type": "Question",
+                "name": "What are typical closing costs on a home equity loan?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Usually 2% to 5% of the loan amount, covering appraisal, origination, title search, document and notary fees. Some lenders advertise no-closing-cost loans, but those typically carry a higher interest rate or early-payoff restrictions." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is the difference between a home equity loan and a HELOC?",
+                "acceptedAnswer": { "@type": "Answer", "text": "A home equity loan pays one lump sum and repays it in fixed payments at a fixed rate. A HELOC is a revolving line you draw from as needed, usually at a variable rate — better for phased spending, riskier when rates rise." }
+            },
+            {
+                "@type": "Question",
+                "name": "Is home equity loan interest tax deductible?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Only in a narrow case: under current IRS rules the interest is generally deductible when the loan proceeds are used to buy, build, or substantially improve the home securing the loan. Interest on funds used for other purposes, such as debt consolidation, generally is not. Check the current IRS guidance or a tax professional for your situation." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .section-title { font-weight: bold; font-size: 0.9rem; color: #1F2937; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.25rem;}
+        @media print {
+            nav, footer, .no-print, #calculator-form { display: none !important; }
+            #resultsArea { display: block !important; width: 100% !important; }
+            #scheduleWrap { max-height: none !important; overflow: visible !important; }
+        }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Home Equity Loan</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Home Equity Loan Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Home Equity Loan Calculator</h1>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Home Equity Loan Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Home Value ($)</label>
-                        <input type="number" id="heValue" value="400000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Mortgage Balance ($)</label>
-                        <input type="number" id="heBalance" value="250000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="section-title" style="margin-top:0;">Loan Details</div>
+                <div class="input-group">
+                    <label>Loan Amount</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="amount" value="150000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Maximum Combined Loan-to-Value (CLTV) (%)</label>
-                    <select id="heCLTV" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                        <option value="0.80" selected>80% (Standard)</option>
-                        <option value="0.85">85% (May require good credit)</option>
-                        <option value="0.90">90% (Usually requires excellent credit)</option>
-                    </select>
+                <div class="input-group">
+                    <label>Interest Rate</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="rate" value="8" step="0.001" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
                 </div>
-                <button onclick="calculateHomeEquity()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Available Equity</button>
+                <div class="input-group">
+                    <label>Loan Term</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="term_years" value="15" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Start Date</label>
+                    <div class="w-[58%] flex gap-1">
+                        <select id="start_month" class="w-1/2 bg-gray-50">
+                            <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+                            <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+                            <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+                            <option value="10" selected>Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+                        </select>
+                        <input type="number" id="start_year" value="2026" class="w-1/2">
+                    </div>
+                </div>
 
-                <div id="heResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center mb-4">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Current Equity</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="heCurrentEquity">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Estimated Loan You Can Get</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="heAvailableLoan">$0</p>
+                <div class="section-title">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="include_costs" class="w-4 h-4"> Include Closing Costs
+                    </label>
+                </div>
+                <div id="costFields">
+                    <div class="input-group">
+                        <label>Closing Costs</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="cost_value" value="7500" class="w-2/3">
+                            <select id="cost_unit" class="w-1/3 bg-gray-50">
+                                <option value="usd" selected>$</option>
+                                <option value="pct">%</option>
+                            </select>
                         </div>
                     </div>
+                    <p class="text-xs text-gray-500 mb-2">Appraisal, origination, title search, document and notary fees — typically 2–5% of the loan.</p>
+                    <div class="input-group">
+                        <label>Costs Paid</label>
+                        <select id="cost_mode" class="w-[58%] bg-gray-50">
+                            <option value="deducted" selected>Deducted from the loan</option>
+                            <option value="upfront">Paid upfront in cash</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateHEL()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Home Equity Loans Work</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A home equity loan allows you to borrow against the value of your home. The amount you can borrow is determined by your Combined Loan-to-Value (CLTV) ratio. Most lenders will allow you to borrow up to 80% or 85% of your home's appraised value, minus what you still owe on your first mortgage.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
+        <div class="md:w-3/5">
+            <div id="resultsArea"></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-2">How Much Can You Borrow?</h2>
+            <p class="text-gray-700 leading-7 mb-5">
+                Lenders cap the <strong>combined loan-to-value ratio (CLTV)</strong>: your existing mortgage balance plus the
+                new loan, as a share of the home's value. At the common 80% cap, your borrowing room is
+                <em>home value × 80% − mortgage balance</em>. Estimate yours here:
+            </p>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="text-sm">
+                    <div class="input-group">
+                        <label>Current Home Value</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="home_value" value="600000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Mortgage Balance Owed</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="mort_balance" value="250000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Max LTV the Lender Allows</label>
+                        <select id="max_ltv" class="w-[58%] bg-gray-50">
+                            <option value="60">60%</option>
+                            <option value="70">70%</option>
+                            <option value="75">75%</option>
+                            <option value="80" selected>80%</option>
+                            <option value="85">85%</option>
+                            <option value="90">90%</option>
+                        </select>
+                    </div>
+                    <button onclick="calculateBorrow(true)" class="mt-3 bg-[#4CAF50] text-white font-bold py-2 px-6 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                </div>
+                <div id="borrowResults"></div>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">What Is a Home Equity Loan?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                A home equity loan — often called a second mortgage — turns the equity you have built in your home
+                into a one-time lump sum, repaid in fixed monthly payments at a fixed rate over a set term, commonly
+                5 to 30 years. Because your home secures the loan, rates sit well below credit cards and personal
+                loans — but that security cuts both ways: miss payments and the lender can foreclose. The first
+                calculator above prices a specific loan, closing costs and true APR included; the second estimates
+                how much a lender is likely to let you borrow in the first place.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
+            </div>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The borrowing limit: CLTV, with a worked example</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Equity alone does not set your limit — the lender's combined loan-to-value cap does. Most lenders
+                stop at <strong>80% CLTV</strong>; stronger borrowers sometimes qualify at 85–90%. On a $600,000 home
+                with a $250,000 mortgage, an 80% cap gives $600,000 × 80% = $480,000 of total allowed debt, minus the
+                $250,000 already owed — <strong>$230,000</strong> of room, exactly what the calculator above returns.
+                Two more gates apply on top: most lenders cap home equity loans near $1,000,000 regardless of equity,
+                and approval also weighs your credit (scores under roughly 630 often fail) and your debt-to-income
+                ratio, which lenders generally want at or below 43% across <em>all</em> your debts — check it with our
+                <a href="debt-to-income.html" class="text-[#3F51B5] font-semibold hover:underline">debt-to-income calculator</a>.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Closing costs and why APR beats the rate</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Expect <strong>2–5% of the loan</strong> in closing costs: appraisal, origination, title search, document
+                and notary fees. They are either deducted from your proceeds or paid in cash at closing — and they
+                are exactly why two loans at the same rate can cost different amounts. The APR folds those costs
+                into one annualized figure: on the default loan above, $7,500 of closing costs lifts the true cost
+                from an 8.00% rate to an <strong>8.86% APR</strong>. Beware the flip side of convenience: "no-closing-cost"
+                loans simply move the charge into a higher rate or an early-payoff penalty. Compare offers on APR
+                and total cost, never on the headline rate alone — our
+                <a href="apr.html" class="text-[#3F51B5] font-semibold hover:underline">APR calculator</a> goes deeper.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Home equity loan vs HELOC vs cash-out refinance</h3>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-gray-50 text-gray-700">
+                        <tr><th class="py-2 px-2 border-b"></th><th class="py-2 px-2 border-b">Home Equity Loan</th><th class="py-2 px-2 border-b">HELOC</th><th class="py-2 px-2 border-b">Cash-Out Refinance</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b"><td class="py-1.5 px-2 font-semibold">You receive</td><td class="py-1.5 px-2">One lump sum</td><td class="py-1.5 px-2">A credit line to draw from</td><td class="py-1.5 px-2">Cash from a new, larger first mortgage</td></tr>
+                        <tr class="border-b"><td class="py-1.5 px-2 font-semibold">Rate</td><td class="py-1.5 px-2">Fixed</td><td class="py-1.5 px-2">Usually variable</td><td class="py-1.5 px-2">Fixed or adjustable</td></tr>
+                        <tr class="border-b"><td class="py-1.5 px-2 font-semibold">Payment</td><td class="py-1.5 px-2">Fixed, fully amortizing</td><td class="py-1.5 px-2">Interest-only during the draw period, then repayments</td><td class="py-1.5 px-2">One combined mortgage payment</td></tr>
+                        <tr><td class="py-1.5 px-2 font-semibold">Best for</td><td class="py-1.5 px-2">A known, one-time expense — a roof, a remodel, consolidating card debt</td><td class="py-1.5 px-2">Phased spending — tuition by semester, a staged renovation</td><td class="py-1.5 px-2">When today's mortgage rates beat your current one</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-gray-700 leading-7 mb-4">
+                One tax caution that shapes the choice for many borrowers: under current IRS rules, interest on
+                home-equity borrowing is generally deductible <strong>only</strong> when the money goes to buy, build, or
+                substantially improve the home itself. Interest on a loan used to consolidate credit cards usually
+                is not. Rules change and situations differ — confirm with the current IRS guidance or a tax
+                professional before counting on a deduction.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">How much can I borrow?</h4>
+                    <p class="text-gray-700">Up to your lender's CLTV cap minus what you already owe: home value × cap − mortgage balance. At 80% on a $600,000 home with a $250,000 mortgage, that is $230,000.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What closing costs should I expect?</h4>
+                    <p class="text-gray-700">Typically 2–5% of the loan — appraisal, origination, title, document and notary fees. On $150,000, budget roughly $3,000 to $7,500.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Home equity loan or HELOC?</h4>
+                    <p class="text-gray-700">Choose the loan for a fixed, known expense and payment certainty; choose a HELOC for flexible, phased draws — accepting that its variable rate can rise.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Can I lose my home?</h4>
+                    <p class="text-gray-700">Yes — the loan is secured by your home, so default can lead to foreclosure. Borrow only what you can repay comfortably, and keep a cash buffer.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. Borrowing limits, rates, and approval depend on the lender, your credit profile, and your home's appraised value.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="mortgage.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Mortgage Calculator</h3>
+                <p class="text-sm text-gray-600">Your first mortgage — payments, PMI, taxes and insurance.</p>
+            </a>
+            <a href="refinance.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Refinance Calculator</h3>
+                <p class="text-sm text-gray-600">Compare a cash-out refinance against your current loan.</p>
+            </a>
+            <a href="debt-to-income.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Debt-to-Income</h3>
+                <p class="text-sm text-gray-600">Lenders look at your DTI too — see yours before you apply.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateHomeEquity() {
-            const value = parseFloat(document.getElementById('heValue').value);
-            const balance = parseFloat(document.getElementById('heBalance').value);
-            const cltv = parseFloat(document.getElementById('heCLTV').value);
+        let chartInstance = null, costChartInstance = null;
+        const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-            if (isNaN(value) || isNaN(balance) || isNaN(cltv) || value <= balance) {
-                alert("Please enter valid numbers. Home value must be greater than mortgage balance.");
+        window.addEventListener('DOMContentLoaded', () => {
+            prefillFromURL();
+            calculateHEL();
+            calculateBorrow(false);
+        });
+
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+
+        function clearForm() {
+            ['amount'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('resultsArea').innerHTML = '';
+        }
+
+        function simulate(opts) {
+            const r = opts.rate / 100 / 12, n = opts.termMonths;
+            const pay = r === 0 ? opts.loan / n : opts.loan * r / (1 - Math.pow(1 + r, -n));
+            let bal = opts.loan, totalInterest = 0, months = 0;
+            const schedule = [], balances = [opts.loan];
+            while (bal > 0.005 && months < 1200) {
+                const interest = bal * r;
+                let principal = pay - interest;
+                if (principal > bal) principal = bal;
+                bal -= principal; totalInterest += interest;
+                const t = months + 1;
+                const d = new Date(opts.startYear, opts.startMonth - 1 + months);
+                schedule.push({ month: t, date: d, interest, principal, balance: Math.max(bal, 0) });
+                if (t % 12 === 0 || bal <= 0.005) balances.push(Math.max(bal, 0));
+                months = t;
+                if (bal <= 0.005) break;
+            }
+            const payoff = new Date(opts.startYear, opts.startMonth - 1 + months - 1);
+            return { pay, months, totalInterest, payoff, schedule, balances };
+        }
+
+        function solveAPR(netProceeds, pay, n) {
+            if (netProceeds <= 0 || pay <= 0) return 0;
+            let lo = 0.0000001, hi = 0.05;
+            for (let i = 0; i < 200; i++) {
+                const mid = (lo + hi) / 2;
+                const pv = pay * (1 - Math.pow(1 + mid, -n)) / mid;
+                if (pv > netProceeds) lo = mid; else hi = mid;
+            }
+            return (lo + hi) / 2 * 12 * 100;
+        }
+
+        function calculateHEL() {
+            const out = document.getElementById('resultsArea');
+            const amount = num('amount');
+            const rate = num('rate');
+            const termMonths = num('term_years') * 12;
+            const startMonth = parseInt(document.getElementById('start_month').value, 10);
+            const startYear = num('start_year') || 2026;
+            const includeCosts = document.getElementById('include_costs').checked;
+            const costs = includeCosts ? (document.getElementById('cost_unit').value === 'pct' ? amount * num('cost_value') / 100 : num('cost_value')) : 0;
+            const costMode = document.getElementById('cost_mode').value;
+
+            if (amount <= 0 || termMonths <= 0 || costs >= amount) {
+                out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a valid loan amount and term (closing costs must be below the loan amount).</div>';
                 return;
             }
 
-            // Current Equity
-            const currentEquity = value - balance;
+            const sim = simulate({ loan: amount, rate, termMonths, startYear, startMonth });
+            const netProceeds = amount - costs;
+            const apr = costs > 0 ? solveAPR(netProceeds, sim.pay, sim.months) : rate;
+            const totalCost = sim.totalInterest + costs;
+            const payoffStr = sim.payoff.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 
-            // Maximum total debt allowed
-            const maxTotalDebt = value * cltv;
+            const costRows = costs > 0 ? `
+                <p class="flex justify-between mb-2"><span>Closing Costs:</span> <span class="font-bold">${formatMoney(costs)} ${costMode === 'deducted' ? '(deducted from proceeds)' : '(paid upfront)'}</span></p>
+                <p class="flex justify-between mb-2"><span>Net Cash You Receive:</span> <span class="font-bold">${formatMoney(costMode === 'deducted' ? netProceeds : amount)}</span></p>
+                <p class="flex justify-between mb-2"><span>APR (incl. closing costs):</span> <span class="font-bold">${apr.toFixed(2)}%</span></p>
+                <p class="flex justify-between mb-2"><span>Total Cost of Credit (interest + costs):</span> <span class="font-bold">${formatMoney(totalCost)}</span></p>` : `
+                <p class="flex justify-between mb-2 text-gray-500"><span>Closing costs not included — tick the box to see the APR and total cost with fees.</span></p>`;
 
-            // Available Loan Amount
-            const availableLoan = maxTotalDebt - balance;
+            const fmtD = d => MONTH_NAMES[d.getMonth()] + ' ' + d.getFullYear();
+            const rowHTML = row => `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${row.month}</td><td class="py-1.5 px-2">${fmtD(row.date)}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.interest)}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.principal)}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.balance)}</td></tr>`;
+            const schedRows = sim.schedule.map(rowHTML).join('');
+            const yearMap = {};
+            sim.schedule.forEach(row => {
+                const y = Math.ceil(row.month / 12);
+                if (!yearMap[y]) yearMap[y] = { interest: 0, principal: 0, balance: row.balance, end: row.date };
+                yearMap[y].interest += row.interest; yearMap[y].principal += row.principal; yearMap[y].balance = row.balance; yearMap[y].end = row.date;
+            });
+            const yearRows = Object.keys(yearMap).map(y => {
+                const v = yearMap[y];
+                return `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${y}</td><td class="py-1.5 px-2">${fmtD(v.end)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.interest)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.principal)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.balance)}</td></tr>`;
+            }).join('');
 
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Monthly Pay</p>
+                    <p class="text-4xl font-bold">${formatMoney(sim.pay)}</p>
+                    <p class="text-sm opacity-90 mt-1">Fixed for all ${sim.months} payments · payoff ${payoffStr}</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Loan Amount:</span> <span class="font-bold">${formatMoney(amount)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total of ${sim.months} Loan Payments:</span> <span class="font-bold">${formatMoney(sim.pay * sim.months)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total Interest:</span> <span class="font-bold">${formatMoney(sim.totalInterest)}</span></p>
+                    ${costRows}
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="balChart"></canvas>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="costChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <h3 class="font-bold text-gray-800">Amortization Schedule</h3>
+                        <div class="flex gap-2 no-print">
+                            <button id="schedMonthlyBtn" onclick="setSchedView('m')" class="bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold">Monthly</button>
+                            <button id="schedYearlyBtn" onclick="setSchedView('y')" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold">Yearly</button>
+                        </div>
+                    </div>
+                    <div id="scheduleWrap" class="overflow-x-auto" style="max-height:26rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">#</th><th class="py-2 px-2 border-b">Date</th><th class="py-2 px-2 border-b text-right">Interest</th><th class="py-2 px-2 border-b text-right">Principal</th><th class="py-2 px-2 border-b text-right">Ending Balance</th></tr></thead>
+                            <tbody id="schedMonthly">${schedRows}</tbody>
+                            <tbody id="schedYearly" class="hidden">${yearRows}</tbody>
+                        </table>
+                    </div>
+                    <button id="schedToggle" onclick="toggleSchedule()" class="mt-3 bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">View Amortization Table</button>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                    <button onclick="downloadCSV()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">⬇ Download CSV</button>
+                </div>`;
 
-            document.getElementById('heCurrentEquity').textContent = formatter.format(currentEquity);
-            
-            if (availableLoan > 0) {
-                document.getElementById('heAvailableLoan').textContent = formatter.format(availableLoan);
-            } else {
-                document.getElementById('heAvailableLoan').textContent = "$0 (No equity available at this CLTV)";
-            }
-
-            document.getElementById('heResults').classList.remove('hidden');
+            window._helSchedule = sim.schedule;
+            window._helFmtD = fmtD;
+            drawCharts(sim.balances, { principal: amount, interest: sim.totalInterest, costs });
+            updateURL();
         }
+
+        let schedExpanded = false;
+        function toggleSchedule() {
+            const wrap = document.getElementById('scheduleWrap');
+            const btn = document.getElementById('schedToggle');
+            schedExpanded = !schedExpanded;
+            wrap.style.maxHeight = schedExpanded ? 'none' : '26rem';
+            btn.textContent = schedExpanded ? 'Show Less' : 'View Amortization Table';
+        }
+        function setSchedView(v) {
+            document.getElementById('schedMonthly').classList.toggle('hidden', v !== 'm');
+            document.getElementById('schedYearly').classList.toggle('hidden', v !== 'y');
+            const bm = document.getElementById('schedMonthlyBtn'), by = document.getElementById('schedYearlyBtn');
+            bm.className = v === 'm' ? 'bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold' : 'bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold';
+            by.className = v === 'y' ? 'bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold' : 'bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold';
+        }
+
+        function drawCharts(balances, totals) {
+            const cv = document.getElementById('balChart');
+            if (cv) {
+                const ctx = cv.getContext('2d');
+                if (chartInstance) chartInstance.destroy();
+                chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: balances.map((_, i) => i),
+                        datasets: [{ label: 'Loan Balance', data: balances.map(v => Math.round(v)), borderColor: '#3F51B5', backgroundColor: 'rgba(63,81,181,0.10)', fill: true, borderWidth: 3, tension: 0.15, pointRadius: 0 }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'top' }, title: { display: true, text: 'Loan Balance Over Time' } },
+                        scales: {
+                            x: { title: { display: true, text: 'Years' } },
+                            y: { beginAtZero: true, ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } }
+                        }
+                    }
+                });
+            }
+            const cc = document.getElementById('costChart');
+            if (cc) {
+                const ctx2 = cc.getContext('2d');
+                if (costChartInstance) costChartInstance.destroy();
+                const labels = ['Loan Amount', 'Interest'];
+                const data = [totals.principal, totals.interest];
+                const colors = ['#3F51B5', '#14B8A6'];
+                if (totals.costs > 0) { labels.push('Closing Costs'); data.push(totals.costs); colors.push('#F59E0B'); }
+                costChartInstance = new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: { labels, datasets: [{ data: data.map(v => Math.round(v)), backgroundColor: colors }] },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'right' },
+                            title: { display: true, text: 'Where Your Money Goes' },
+                            tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + formatMoney(c.parsed) } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function calculateBorrow(scroll) {
+            const box = document.getElementById('borrowResults');
+            const value = num('home_value'), bal = num('mort_balance'), cap = num('max_ltv');
+            if (value <= 0 || bal < 0 || cap <= 0) {
+                box.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a valid home value.</div>';
+                return;
+            }
+            const curLTV = bal / value * 100;
+            const maxBorrow = Math.max(value * cap / 100 - bal, 0);
+            const equity = value - bal;
+            const qualifies = bal < value * cap / 100;
+            const mortPct = Math.min(curLTV, 100);
+            const newPct = Math.min(maxBorrow / value * 100, 100 - mortPct);
+            const restPct = Math.max(100 - mortPct - newPct, 0);
+            const capNote = maxBorrow > 1000000 ? '<p class="text-xs text-amber-700 mt-2">Note: most lenders also cap home equity loans near $1,000,000 regardless of equity.</p>' : '';
+            box.innerHTML = `
+                <div class="bg-green-50 border border-green-200 rounded-xl p-4 text-sm h-full">
+                    ${qualifies
+                        ? `<p class="text-gray-700 mb-1">You may borrow up to</p>
+                           <p class="text-3xl font-bold text-green-700 mb-2">${formatMoney(maxBorrow)}</p>
+                           <button onclick="useAmount(${Math.round(maxBorrow)})" class="bg-[#3F51B5] text-white px-3 py-1.5 rounded-md text-sm font-semibold hover:bg-[#303F9F] transition no-print">Use this amount in the loan calculator ↑</button>`
+                        : `<p class="text-lg font-bold text-red-700 mb-2">You may not qualify for a home equity loan at a ${cap}% cap.</p>
+                           <p class="text-gray-700">Your mortgage balance already reaches the lender's limit.</p>`}
+                    <div class="mt-4">
+                        <p class="flex justify-between mb-1"><span>Current LTV:</span> <span class="font-bold">${curLTV.toFixed(1)}%</span></p>
+                        <p class="flex justify-between mb-1"><span>Total Equity:</span> <span class="font-bold">${formatMoney(equity)}</span></p>
+                        <p class="flex justify-between"><span>Combined LTV after borrowing the max:</span> <span class="font-bold">${cap}%</span></p>
+                    </div>
+                    <div class="flex w-full h-5 rounded-md overflow-hidden mt-3 border border-gray-300" title="Your home's value, split">
+                        <div style="width:${mortPct}%; background:#3F51B5;"></div>
+                        <div style="width:${newPct}%; background:#4CAF50;"></div>
+                        <div style="width:${restPct}%; background:#E5E7EB;"></div>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-gray-500 mt-1">
+                        <span>■ Mortgage owed</span><span>■ New loan room</span><span>■ Equity kept</span>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3">Credit and income still decide approval: scores under ~630 often fail, and lenders usually want total DTI at or below 43%.</p>
+                    ${capNote}
+                </div>`;
+            updateURL();
+        }
+
+        function useAmount(v) {
+            document.getElementById('amount').value = v;
+            calculateHEL();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function downloadCSV() {
+            const rows = window._helSchedule || [];
+            if (!rows.length) return;
+            let csv = 'Month,Date,Interest,Principal,Ending Balance\n';
+            rows.forEach(r => { csv += [r.month, window._helFmtD(r.date), r.interest.toFixed(2), r.principal.toFixed(2), r.balance.toFixed(2)].join(',') + '\n'; });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'home-equity-loan-amortization.csv';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        const PARAMS = [['amount', 'a'], ['rate', 'r'], ['term_years', 't'], ['start_month', 'sm'], ['start_year', 'sy'], ['include_costs', 'ic'], ['cost_value', 'cv'], ['cost_unit', 'cu'], ['cost_mode', 'cm'], ['home_value', 'hv'], ['mort_balance', 'mb'], ['max_ltv', 'ltv']];
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            PARAMS.forEach(([id, key]) => {
+                const el = document.getElementById(id);
+                p.set(key, el.type === 'checkbox' ? (el.checked ? '1' : '0') : el.value);
+            });
+            return p.toString();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => {
+                if (q.get(key) === null) return;
+                const el = document.getElementById(id);
+                if (el.type === 'checkbox') el.checked = q.get(key) === '1';
+                else el.value = q.get(key);
+            });
+        }
+
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
