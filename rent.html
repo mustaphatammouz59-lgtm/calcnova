@@ -3,115 +3,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rent Calculator - CalcNova</title>
+    <title>Rent Calculator - How Much Rent Can I Afford? - CalcNova</title>
+    <meta name="description" content="Free rent calculator: find out how much rent you can afford based on your income and debts, using the 28% and 36% rules landlords and lenders actually use.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/rent">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Rent Calculator - How Much Rent Can I Afford?">
+    <meta property="og:description" content="Estimate your affordable monthly rent from income and debts with the 28/36 rules and the landlord one-third rule.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/rent">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Rent Calculator - CalcNova">
+    <meta name="twitter:description" content="How much rent can you afford? Check with the 28/36 rules.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Rent Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/rent" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How much rent can I afford on an $80,000 salary?",
+                "acceptedAnswer": { "@type": "Answer", "text": "On $80,000 a year ($6,667/month gross), the 28% rule suggests keeping rent at or below about $1,867/month. The most you could stretch to is about $2,400/month (36% of income, before other debts), and many landlords will not approve rent above one-third of gross income, about $2,222/month." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is the 30% rule for rent?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The 30% rule says housing is affordable if it costs no more than 30% of gross income. Households spending more than that are considered cost-burdened. It is a useful guideline, but your debts and local prices matter too." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why do landlords ask for income of 3 times the rent?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Requiring gross monthly income of at least 3x the rent is the same as capping rent at one-third of income. Landlords use it as a quick screening rule to estimate whether a tenant can keep paying through a bad month." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 45%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { width: 55%; border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .section-title { font-weight: bold; font-size: 0.9rem; color: #1F2937; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.25rem;}
+        @media print {
+            nav, footer, .no-print, #calculator-form { display: none !important; }
+            #resultsArea { display: block !important; width: 100% !important; }
+        }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Rent</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Rent Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Rent Calculator</h1>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Rent Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Gross Income ($)</label>
-                        <input type="number" id="rentIncome" value="60000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Monthly Debt Payments ($)</label>
-                        <input type="number" id="rentDebts" value="300" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="input-group">
+                    <label>Your Pre-Tax Income</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="income" value="80000" class="w-2/3">
+                        <select id="incomeUnit" class="w-1/3 bg-gray-50">
+                            <option value="year" selected>/ year</option>
+                            <option value="month">/ month</option>
+                        </select>
                     </div>
                 </div>
-                <button onclick="calculateRent()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Affordability</button>
-
-                <div id="rentResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Max Recommended Rent (30% Rule)</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="maxRent">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Max Rent (36% Rule with Debts)</p>
-                            <p class="text-2xl font-bold text-gray-800" id="maxRentWithDebt">$0</p>
-                        </div>
+                <div class="input-group">
+                    <label>Monthly Debt Payments</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="debts" value="0" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">$/mo</span>
                     </div>
+                </div>
+                <p class="text-xs text-gray-500 leading-5 mt-2">Debts = the minimum amounts you must pay each month: car loans, student loans, credit cards, child support, personal loans.</p>
+
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateRent()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Much Rent Can I Afford?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Financial experts often recommend the 30% rule, which suggests you should spend no more than 30% of your gross monthly income on rent. However, if you have other debts, you should ensure your total debt (including rent) does not exceed 36% of your gross income. This calculator helps you find a safe rent range.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
+        <div class="md:w-3/5">
+            <div id="resultsArea"></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">How Much Rent Can I Afford?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Rent is the payment you make to a landlord for the temporary use of a home. A <em>lease</em> is the
+                contract behind it: the document that fixes the amount, the term, and the rules both sides agree to.
+                Before you sign one, the most important question is also the simplest &mdash; how much rent fits your
+                income without squeezing everything else? This calculator answers it the same way landlords and
+                lenders do, with three benchmarks.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The three rules behind the result</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>The 28% rule (recommended).</strong> Keep rent at or below 28% of your gross monthly income.
+                This is the front-end ratio from mortgage lending, and at this level rent leaves room for savings,
+                debts, and surprises.<br>
+                <strong>The 36% rule (maximum).</strong> Rent plus all your other monthly debts should stay under 36%
+                of gross income. This calculator subtracts your debts from that 36% to get the most rent you could
+                stretch to &mdash; treat it as a ceiling, not a goal.<br>
+                <strong>The landlord&rsquo;s one-third rule.</strong> Many landlords simply refuse applications where rent
+                exceeds one-third of gross income (equivalently, they want income of at least 3&times; the rent). Even
+                if your budget stretches further, this rule may decide which homes you can actually get.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                A related benchmark you will hear often is the <strong>30% rule</strong>: housing above 30% of income is
+                officially classed as a cost burden. All of these are guidelines, not laws &mdash; a renter with no car,
+                no debt, and cheap utilities can comfortably exceed them, while a renter with heavy debts may struggle
+                well below them. That is why your debts are an input above, not an afterthought.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The renting process, briefly</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                In quiet markets, finding a rental can be as simple as spotting a sign and calling the number. In
+                competitive cities, listings vanish in days: expect to monitor listing sites, view quickly, and apply
+                immediately &mdash; sometimes paying a broker a fee of about one month&rsquo;s rent. Applications typically ask
+                for ID, references, income and debt details, and consent to credit, background, and eviction-history
+                checks. Once approved, both sides sign the lease, and it becomes the binding rulebook for the tenancy:
+                read it before you sign, not after.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Costs and considerations beyond the rent</h3>
+            <ul class="list-disc pl-6 text-gray-700 leading-7 mb-4 space-y-1">
+                <li><strong>Upfront costs:</strong> security deposit (often one month), application fees, pet deposits, and renters insurance can add up before you move in.</li>
+                <li><strong>Utilities:</strong> water, gas, electricity, and internet may or may not be included &mdash; ask, and ask what the average bill looks like.</li>
+                <li><strong>Location:</strong> commute, safety, schools, transit, and the places you actually go every week.</li>
+                <li><strong>Quality and size:</strong> view in person, check appliances, water pressure, storage, and cell reception.</li>
+                <li><strong>The landlord:</strong> a responsive landlord is worth real money; a restrictive one can ban pets, guests, even nails in the wall.</li>
+            </ul>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Ways to pay less rent</h3>
+            <ul class="list-disc pl-6 text-gray-700 leading-7 mb-4 space-y-1">
+                <li><strong>Live with roommates</strong> &mdash; splitting a two-bedroom typically costs each person about 30% less than renting a one-bedroom alone.</li>
+                <li><strong>Negotiate</strong> &mdash; rent and lease terms are often flexible, especially for long leases or quick move-ins. The worst answer is no.</li>
+                <li><strong>Widen the map</strong> &mdash; a slightly longer commute can cut rent dramatically; price the trade-off honestly.</li>
+                <li><strong>Trade skills for rent</strong> &mdash; some landlords discount for maintenance, yard work, or managing small tasks.</li>
+                <li><strong>Check assistance programs</strong> &mdash; HUD public housing and Section 8 vouchers help qualifying low-income households, though waiting lists are long.</li>
+                <li><strong>Stay flexible at home</strong> &mdash; living with family while you save, if that option exists, is the fastest way to reset a housing budget.</li>
+            </ul>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Practical pointers</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Get every promise in writing. At move-in, walk through with the landlord, note and photograph existing
+                damage, and have both sides sign the condition list &mdash; that paperwork is your deposit&rsquo;s best defense.
+                During a fixed lease term, the landlord generally cannot raise your rent. Keep the place in good
+                condition, pay on time, and be decent to neighbors: leases are full of grey areas, and goodwill is the
+                cheapest currency in all of them. And when renting starts to feel like throwing money away, run the
+                comparison properly with our
+                <a href="house-affordability.html" class="text-[#3F51B5] font-semibold hover:underline">house affordability calculator</a> &mdash;
+                sometimes buying wins sooner than people expect, and sometimes renting is genuinely the smarter money move.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">How much rent can I afford on an $80,000 salary?</h4>
+                    <p class="text-gray-700">About $1,867/month by the 28% rule. You could stretch to $2,400/month (36%) with no other debts, but many landlords cap approvals at one-third of income &mdash; $2,222/month on this salary.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What is the 30% rule for rent?</h4>
+                    <p class="text-gray-700">Housing is considered affordable at or below 30% of gross income; above that, a household is officially &ldquo;cost-burdened.&rdquo; It is a guideline &mdash; your debts and other costs decide what is truly comfortable.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Why do landlords ask for income of 3 times the rent?</h4>
+                    <p class="text-gray-700">It is the same test as rent &le; one-third of income: a quick screen for whether a tenant can keep paying through a bad month. Strong savings or a co-signer can sometimes offset a near miss.</p>
+                </div>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only. Landlord requirements, local
+                laws, and typical ratios vary by market. Figures are based on gross (pre-tax) income, as landlords screen
+                on that basis.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="house-affordability.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">House Affordability</h3>
+                <p class="text-sm text-gray-600">Thinking of buying instead? See what home price your income supports.</p>
+            </a>
+            <a href="mortgage.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Mortgage Calculator</h3>
+                <p class="text-sm text-gray-600">Compare a mortgage payment with your rent, line by line.</p>
+            </a>
+            <a href="loan.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Loan Calculator</h3>
+                <p class="text-sm text-gray-600">Work out the debt payments that eat into your rent budget.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateRent() {
-            const income = parseFloat(document.getElementById('rentIncome').value);
-            const debts = parseFloat(document.getElementById('rentDebts').value);
+        window.addEventListener('DOMContentLoaded', () => {
+            prefillFromURL();
+            calculateRent();
+        });
 
-            if (isNaN(income) || isNaN(debts) || income <= 0) {
-                alert("Please enter valid numbers.");
+        function clearForm() {
+            document.getElementById('income').value = '';
+            document.getElementById('debts').value = '';
+            document.getElementById('resultsArea').innerHTML = '';
+        }
+
+        function calculateRent() {
+            const incomeRaw = parseFloat(document.getElementById('income').value);
+            const unit = document.getElementById('incomeUnit').value;
+            const debts = parseFloat(document.getElementById('debts').value) || 0;
+            const out = document.getElementById('resultsArea');
+            if (isNaN(incomeRaw) || incomeRaw <= 0) { out.innerHTML = ''; return; }
+
+            const annualIncome = unit === 'month' ? incomeRaw * 12 : incomeRaw;
+            const monthly = annualIncome / 12;
+
+            const recommended = monthly * 0.28;
+            const maxRent = monthly * 0.36 - debts;
+            const landlordLimit = monthly / 3;
+
+            if (maxRent <= 0) {
+                out.innerHTML = `
+                    <div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">
+                        <p class="font-bold mb-1">Your debts use up the whole housing budget</p>
+                        <p>Under the 36% rule, your monthly debts of ${formatMoney(debts)} already meet or exceed 36% of your gross income (${formatMoney(monthly * 0.36)}). Landlords using income ratios would not approve additional rent until those debts come down.</p>
+                    </div>`;
+                updateURL();
                 return;
             }
 
-            const monthlyIncome = income / 12;
-            
-            // 30% Rule (Housing only)
-            const maxRent30 = monthlyIncome * 0.30;
-            
-            // 36% Rule (Total debt including housing)
-            const maxTotalDebt = monthlyIncome * 0.36;
-            const maxRentWithDebt = maxTotalDebt - debts;
+            const recPct = Math.min(100, recommended / monthly * 100);
+            const maxPct = Math.min(100, maxRent / monthly * 100);
+            const stretched = maxRent < recommended;
 
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+            out.innerHTML = `
+                <div class="bg-[#4CAF50] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">You Can Afford Up To</p>
+                    <p class="text-4xl font-bold">${formatMoney(maxRent)}<span class="text-lg font-semibold"> / month</span></p>
+                    <p class="text-sm opacity-90 mt-1">Recommended: keep rent below <strong>${formatMoney(recommended)}</strong> per month</p>
+                </div>
 
-            document.getElementById('maxRent').textContent = formatter.format(maxRent30);
-            
-            if (maxRentWithDebt > 0) {
-                document.getElementById('maxRentWithDebt').textContent = formatter.format(maxRentWithDebt);
-            } else {
-                document.getElementById('maxRentWithDebt').textContent = "$0 (Debts too high)";
-            }
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <div class="relative h-4 rounded-full overflow-hidden" style="background: linear-gradient(to right, #4CAF50 0%, #4CAF50 28%, #F59E0B 28%, #F59E0B 36%, #EF4444 36%, #EF4444 100%);"></div>
+                    <div class="relative h-10 text-xs text-gray-600">
+                        <div class="absolute" style="left: ${recPct}%; transform: translateX(-50%);">
+                            <div class="w-0.5 h-2 bg-gray-700 mx-auto"></div>
+                            <div class="text-center whitespace-nowrap">Recommended<br><strong class="text-gray-800">${formatMoney(recommended)}</strong></div>
+                        </div>
+                        <div class="absolute" style="left: ${maxPct}%; transform: translateX(-50%);">
+                            <div class="w-0.5 h-2 bg-gray-700 mx-auto"></div>
+                            <div class="text-center whitespace-nowrap">Maximum<br><strong class="text-gray-800">${formatMoney(maxRent)}</strong></div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Bar shows rent as a share of your gross monthly income (${formatMoney(monthly)}). Green = within the 28% guideline, amber = up to the 36% ceiling, red = beyond it.</p>
+                    ${stretched ? `<p class="text-xs text-orange-600 mt-2 font-semibold">Note: your debts pull the 36% maximum below the 28% recommendation &mdash; the lower figure is the safer target.</p>` : ''}
+                </div>
 
-            document.getElementById('rentResults').classList.remove('hidden');
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Gross Monthly Income:</span> <span class="font-bold">${formatMoney(monthly)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Recommended Rent (28% rule):</span> <span class="font-bold text-green-600">${formatMoney(recommended)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Maximum Rent (36% minus debts):</span> <span class="font-bold">${formatMoney(maxRent)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Landlord One-Third Limit:</span> <span class="font-bold">${formatMoney(landlordLimit)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Your Monthly Debts:</span> <span class="font-bold">${formatMoney(debts)}</span></p>
+                    <p class="flex justify-between"><span>Rent Over a Year (at recommended):</span> <span class="font-bold">${formatMoney(recommended * 12)}</span></p>
+                </div>
+
+                <p class="text-sm text-gray-600 leading-6 mb-6">Some landlords may not accept applications with rent above one-third of gross income &mdash; that is <strong>${formatMoney(landlordLimit)}</strong> in your case, no matter how the other rules come out.</p>
+
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                    <a href="house-affordability.html" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🏠 Renting vs buying? Check affordability</a>
+                </div>`;
+            updateURL();
         }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            p.set('inc', document.getElementById('income').value);
+            p.set('unit', document.getElementById('incomeUnit').value);
+            p.set('debts', document.getElementById('debts').value);
+            return p.toString();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            if (q.get('inc') !== null) document.getElementById('income').value = q.get('inc');
+            if (q.get('unit') !== null) document.getElementById('incomeUnit').value = q.get('unit');
+            if (q.get('debts') !== null) document.getElementById('debts').value = q.get('debts');
+        }
+
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-                          </html>
+</html>
