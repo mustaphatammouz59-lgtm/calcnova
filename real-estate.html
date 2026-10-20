@@ -78,7 +78,7 @@
         <p class="text-gray-600 mb-8 max-w-3xl">Every property decision is a chain of calculations: what you can afford, what it costs each month, how fast you can own it outright. Start with the quick estimate below, then follow the path that matches your goal.</p>
 
         <!-- Quick estimator -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-10">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-6">
             <h2 class="text-xl font-bold text-gray-800 mb-1">30-Second Mortgage Estimate</h2>
             <p class="text-sm text-gray-500 mb-4">Principal &amp; interest only &mdash; the full calculator adds taxes, insurance, PMI and schedules.</p>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
@@ -106,6 +106,11 @@
                 </div>
                 <a href="#" id="q_link" class="bg-[#3F51B5] text-white px-4 py-2.5 rounded-md font-semibold hover:bg-blue-800 transition text-sm">Full Mortgage Breakdown &rarr;</a>
             </div>
+        </div>
+
+        <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mb-10">
+            <p class="font-medium">AdSense Space</p>
+            <p class="text-sm">(728x90 Leaderboard)</p>
         </div>
 
         <!-- Journeys -->
@@ -171,16 +176,16 @@
                 <p class="text-sm text-gray-600">Front-end and back-end DTI ratios checked against conventional, FHA and VA limits.</p>
                 <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
             </a>
-            <div class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 opacity-70">
-                <h3 class="font-bold text-gray-700 text-lg mb-1">Refinance Calculator</h3>
+            <a href="refinance.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h3 class="font-bold text-[#3F51B5] text-lg mb-1">Refinance Calculator</h3>
                 <p class="text-sm text-gray-600">Compare your current loan with a new one: break-even point and lifetime savings.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-gray-400 px-2 py-1 rounded">SOON</span>
-            </div>
-            <div class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 opacity-70">
-                <h3 class="font-bold text-gray-700 text-lg mb-1">Rent vs Buy Calculator</h3>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="rent-vs-buy.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h3 class="font-bold text-[#3F51B5] text-lg mb-1">Rent vs Buy Calculator</h3>
                 <p class="text-sm text-gray-600">Which leaves you wealthier after 5, 10 or 30 years — renting or owning?</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-gray-400 px-2 py-1 rounded">SOON</span>
-            </div>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
             <div class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 opacity-70">
                 <h3 class="font-bold text-gray-700 text-lg mb-1">Down Payment Calculator</h3>
                 <p class="text-sm text-gray-600">How long to save your down payment, and what each extra percent changes.</p>
@@ -229,6 +234,11 @@
                 tile, roofing, concrete, stairs and heating (BTU) &mdash; the measurement side of real estate.
             </p>
 
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
+            </div>
+
             <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
             <div class="space-y-4">
                 <div>
@@ -237,7 +247,7 @@
                 </div>
                 <div>
                     <h4 class="font-bold text-gray-800">How can I compare renting with buying?</h4>
-                    <p class="text-gray-700">Run the Rent Calculator for the rent your income carries, and House Affordability for the home price the same income supports. Compare the monthly figures and the equity a purchase builds. A dedicated Rent vs Buy calculator is coming soon.</p>
+                    <p class="text-gray-700">That is exactly what the <a href="rent-vs-buy.html" class="text-[#3F51B5] font-semibold hover:underline">Rent vs Buy Calculator</a> does: it compares net worth after the years you plan to stay — equity and appreciation on one side, rent plus an invested down payment on the other — and shows the year buying pulls ahead, if it does.</p>
                 </div>
                 <div>
                     <h4 class="font-bold text-gray-800">Which calculator shows my complete loan schedule?</h4>
@@ -275,4 +285,4 @@
         window.addEventListener('DOMContentLoaded', quickCalc);
     </script>
 </body>
-    </html>
+</html>
