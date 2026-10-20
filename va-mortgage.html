@@ -4,140 +4,908 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VA Mortgage Calculator - CalcNova</title>
+    <meta name="description" content="Free VA mortgage calculator: zero-down payments with the official funding fee (2.15% / 1.50% / 1.25% / 3.30%), disability exemption, extra payments, biweekly payoff, and a full amortization schedule. No PMI, ever.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/va-mortgage">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="VA Mortgage Calculator - CalcNova">
+    <meta property="og:description" content="VA payments with the funding fee from the official VA chart — financed or upfront — and zero mortgage insurance.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/va-mortgage">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="VA Mortgage Calculator - CalcNova">
+    <meta name="twitter:description" content="Zero down, no PMI, one funding fee. See the real VA payment.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "VA Mortgage Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/va-mortgage" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How much is the VA funding fee?",
+                "acceptedAnswer": { "@type": "Answer", "text": "For a purchase loan it depends on your down payment and whether you have used the benefit before: with less than 5% down it is 2.15% of the loan for first use and 3.30% for subsequent use; at 5–10% down it is 1.50% either way; at 10% or more down it is 1.25%. Streamline (IRRRL) and assumption loans pay a flat 0.50%." }
+            },
+            {
+                "@type": "Question",
+                "name": "Who is exempt from the VA funding fee?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Veterans receiving VA compensation for a service-connected disability, veterans who would receive compensation if not for retirement pay, and surviving spouses of veterans who died in service or from a service-connected disability are exempt — the fee is 0%. Purple Heart recipients on active duty are also exempt." }
+            },
+            {
+                "@type": "Question",
+                "name": "Do VA loans have PMI or mortgage insurance?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. VA loans never charge private mortgage insurance or any monthly mortgage insurance premium, at any down payment level — even 0% down. The one-time funding fee replaces it, which is a major long-term cost advantage over FHA and low-down-payment conventional loans." }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I use a VA loan more than once?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. VA entitlement can be reused — after a loan is paid off or in some cases on a second property — but subsequent use carries the higher 3.30% funding fee tier when you put down less than 5%." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .section-title { font-weight: bold; font-size: 0.9rem; color: #1F2937; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.25rem;}
+        .onetime-row { display: flex; gap: 0.25rem; margin-bottom: 0.35rem; }
+        .onetime-row input, .onetime-row select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.35rem; font-size: 0.8rem; min-width: 0; }
+        @media print {
+            nav, footer, .no-print, #calculator-form { display: none !important; }
+            #resultsArea { display: block !important; width: 100% !important; }
+            #scheduleWrap { max-height: none !important; overflow: visible !important; }
+        }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">VA Mortgage</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">VA Mortgage Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">VA Mortgage Calculator</h1>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">VA Mortgage Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Home Price ($)</label>
-                        <input type="number" id="vaPrice" value="350000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="section-title" style="margin-top:0;">Loan Details</div>
+                <div class="input-group">
+                    <label>Home Price</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="price" value="500000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Down Payment ($)</label>
-                        <input type="number" id="vaDown" value="0" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate (%)</label>
-                        <input type="number" id="vaRate" value="6.0" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
-                        <select id="vaYears" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="30">30 Years</option>
-                            <option value="15">15 Years</option>
+                </div>
+                <div class="input-group">
+                    <label>Down Payment</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="down_value" value="0" step="0.1" class="w-2/3">
+                        <select id="down_unit" class="w-1/3 bg-gray-50">
+                            <option value="pct" selected>%</option>
+                            <option value="usd">$</option>
                         </select>
                     </div>
                 </div>
-                <div class="mb-4">
-                    <label class="flex items-center space-x-2 text-sm text-gray-700">
-                        <input type="checkbox" id="vaFirstTime" class="form-checkbox h-4 w-4 text-[#3F51B5]">
-                        <span>First-time use of VA loan (Funding Fee is usually lower)</span>
+                <div class="input-group">
+                    <label>Loan Term</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="term_years" value="30" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Interest Rate</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="rate" value="7.3" step="0.001" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
+                </div>
+
+                <div class="section-title">VA Details</div>
+                <div class="input-group">
+                    <label>Eligibility</label>
+                    <select id="eligibility" class="w-[58%] bg-gray-50">
+                        <option value="veteran" selected>Active Duty / Veteran</option>
+                        <option value="guard">Reservist / National Guard</option>
+                        <option value="spouse">Surviving Spouse</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Loan Purpose</label>
+                    <select id="purpose" class="w-[58%] bg-gray-50">
+                        <option value="purchase" selected>Purchase / Construction</option>
+                        <option value="cashout">Cash-Out Refinance</option>
+                        <option value="irrrl">IRRRL (Streamline Refinance)</option>
+                        <option value="assumption">Loan Assumption</option>
+                        <option value="manufactured">Manufactured Home (not affixed)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Used VA Loan Before?</label>
+                    <select id="va_use" class="w-[58%] bg-gray-50">
+                        <option value="first" selected>No — first use</option>
+                        <option value="subsequent">Yes — subsequent use</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="exempt" class="w-4 h-4"> Funding fee exempt
                     </label>
                 </div>
-                <button onclick="calculateVA()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate VA Loan</button>
-
-                <div id="vaResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
-                    <p class="text-sm text-gray-500">Total Monthly Payment (P&I)</p>
-                    <p class="text-4xl font-bold text-[#14B8A6]" id="vaTotalPay">$0</p>
-                    <div class="grid grid-cols-1 gap-2 mt-4 text-sm text-gray-600">
-                        <div>Base Loan Amount: <span id="vaBaseLoan" class="font-bold">$0</span></div>
-                        <div>VA Funding Fee: <span id="vaFee" class="font-bold text-red-500">$0</span></div>
-                        <div>Total Loan Amount: <span id="vaTotalLoan" class="font-bold text-[#3F51B5]">$0</span></div>
+                <p class="text-xs text-gray-500 mb-2">Exemption: receiving VA compensation for a service-connected disability (10%+), or a qualifying surviving spouse — the fee is waived entirely.</p>
+                <div class="input-group">
+                    <label>VA Funding Fee</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="fee_pct" value="2.15" step="0.01" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">% of loan</span>
                     </div>
+                </div>
+                <p class="text-xs text-gray-500 mb-2" id="feeTierNote"></p>
+                <div class="input-group">
+                    <label>Funding Fee Paid</label>
+                    <select id="fee_mode" class="w-[58%] bg-gray-50">
+                        <option value="financed" selected>Financed into the loan</option>
+                        <option value="upfront">Paid upfront in cash</option>
+                    </select>
+                </div>
+
+                <div class="section-title">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="include_optional" checked class="w-4 h-4"> Include Taxes &amp; Costs Below
+                    </label>
+                </div>
+                <div id="optionalFields">
+                    <div class="input-group">
+                        <label>Property Taxes</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="tax_value" value="1.2" step="0.01" class="w-2/3">
+                            <select id="tax_unit" class="w-1/3 bg-gray-50">
+                                <option value="pct" selected>%</option>
+                                <option value="usd">$</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Home Insurance</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="insurance" value="2500" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">$/year</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>HOA Fee</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="hoa" value="0" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">$/year</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Other Costs</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="other" value="5000" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">$/year</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Start Date</label>
+                    <div class="w-[58%] flex gap-1">
+                        <select id="start_month" class="w-1/2 bg-gray-50">
+                            <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+                            <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+                            <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+                            <option value="10" selected>Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+                        </select>
+                        <input type="number" id="start_year" value="2026" class="w-1/2">
+                    </div>
+                </div>
+
+                <button type="button" id="moreOptionsBtn" onclick="toggleMoreOptions()" class="text-[#3F51B5] font-semibold text-sm mt-2">+ More Options</button>
+                <div id="moreOptions" class="hidden">
+                    <div class="section-title">Annual Tax &amp; Cost Increase</div>
+                    <div class="input-group">
+                        <label>Property Taxes Increase</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="tax_inc" value="0" step="0.1" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%/yr</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Home Insurance Increase</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="ins_inc" value="0" step="0.1" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%/yr</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>HOA Fee Increase</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="hoa_inc" value="0" step="0.1" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%/yr</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Other Costs Increase</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="other_inc" value="0" step="0.1" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%/yr</span>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Extra Payments</div>
+                    <div class="input-group">
+                        <label>Extra Monthly Pay</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="extra_monthly" value="0" class="flex-1 min-w-0">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label class="text-xs text-gray-500">from</label>
+                        <div class="w-[58%] flex gap-1">
+                            <select id="em_month" class="w-1/2 bg-gray-50">
+                                <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+                                <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+                                <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+                                <option value="10" selected>Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+                            </select>
+                            <input type="number" id="em_year" value="2026" class="w-1/2">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Extra Yearly Pay</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="extra_yearly" value="0" class="flex-1 min-w-0">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label class="text-xs text-gray-500">from</label>
+                        <div class="w-[58%] flex gap-1">
+                            <select id="ey_month" class="w-1/2 bg-gray-50">
+                                <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+                                <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+                                <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+                                <option value="10" selected>Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+                            </select>
+                            <input type="number" id="ey_year" value="2026" class="w-1/2">
+                        </div>
+                    </div>
+                    <p class="text-xs font-semibold text-gray-600 mt-2 mb-1">One-time payments (up to 11)</p>
+                    <div id="onetimeList"></div>
+                    <div class="input-group mt-3">
+                        <label class="flex items-center gap-2 cursor-pointer text-sm">
+                            <input type="checkbox" id="show_biweekly" checked class="w-4 h-4"> Show biweekly results
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateVA()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is a VA Loan?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A VA loan is a mortgage loan in the United States guaranteed by the U.S. Department of Veterans Affairs. These loans are available to veterans, service members, and surviving spouses. Key benefits include no down payment requirement (in most cases), no private mortgage insurance (PMI), and competitive interest rates. However, there is a VA Funding Fee to help offset the cost of the program to taxpayers.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
+        <div class="md:w-3/5">
+            <div id="resultsArea"></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">How VA Loans Work</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                A VA loan is a mortgage from a private lender, partly guaranteed by the U.S. Department of
+                Veterans Affairs. That guarantee is what unlocks the terms no other mainstream loan matches:
+                <strong>no down payment required</strong>, <strong>no mortgage insurance at any down payment</strong>,
+                and no prepayment penalty. Eligibility runs through your service record — most borrowers confirm it
+                with a Certificate of Eligibility (COE) — and the loan must be for a primary residence. The single
+                mandatory cost unique to VA loans is the <strong>funding fee</strong>, modeled exactly above.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The VA funding fee (official chart)</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The funding fee is a one-time charge, expressed as a percentage of the loan amount, that keeps the
+                program running for the next veteran. For purchase and construction loans it steps down as your
+                down payment grows — and jumps for repeat use at low down payments:
+            </p>
+            <div class="overflow-x-auto mb-2">
+                <table class="w-full text-sm text-left whitespace-nowrap">
+                    <thead class="bg-gray-50 text-gray-700">
+                        <tr><th class="py-2 px-2 border-b">Loan type</th><th class="py-2 px-2 border-b">Down payment</th><th class="py-2 px-2 border-b text-right">First use</th><th class="py-2 px-2 border-b text-right">Subsequent use</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b"><td class="py-1.5 px-2">Purchase / Construction</td><td class="py-1.5 px-2">Less than 5%</td><td class="py-1.5 px-2 text-right">2.15%</td><td class="py-1.5 px-2 text-right">3.30%</td></tr>
+                        <tr class="border-b"><td class="py-1.5 px-2">Purchase / Construction</td><td class="py-1.5 px-2">5% to 10%</td><td class="py-1.5 px-2 text-right">1.50%</td><td class="py-1.5 px-2 text-right">1.50%</td></tr>
+                        <tr class="border-b"><td class="py-1.5 px-2">Purchase / Construction</td><td class="py-1.5 px-2">10% or more</td><td class="py-1.5 px-2 text-right">1.25%</td><td class="py-1.5 px-2 text-right">1.25%</td></tr>
+                        <tr class="border-b"><td class="py-1.5 px-2">Cash-Out Refinance</td><td class="py-1.5 px-2">—</td><td class="py-1.5 px-2 text-right">2.15%</td><td class="py-1.5 px-2 text-right">3.30%</td></tr>
+                        <tr class="border-b"><td class="py-1.5 px-2">IRRRL (streamline refinance)</td><td class="py-1.5 px-2">—</td><td class="py-1.5 px-2 text-right">0.50%</td><td class="py-1.5 px-2 text-right">0.50%</td></tr>
+                        <tr class="border-b"><td class="py-1.5 px-2">Loan Assumption</td><td class="py-1.5 px-2">—</td><td class="py-1.5 px-2 text-right">0.50%</td><td class="py-1.5 px-2 text-right">0.50%</td></tr>
+                        <tr><td class="py-1.5 px-2">Manufactured Home (not permanently affixed)</td><td class="py-1.5 px-2">—</td><td class="py-1.5 px-2 text-right">1.00%</td><td class="py-1.5 px-2 text-right">1.00%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-gray-700 leading-7 mb-4">
+                The current chart is uniform across eligibility categories — active duty, Guard and Reserve, and
+                surviving spouses pay the same purchase rates; category decides entitlement, not the fee. Two
+                levers do move the fee: your down payment tier, and paying it in cash instead of financing it
+                (financing is allowed, but you then pay interest on the fee for the life of the loan — the results
+                above price that difference). And for many borrowers the fee is simply <strong>zero</strong>:
+                veterans receiving compensation for a service-connected disability, and surviving spouses of
+                veterans who died in service or from a service-connected disability, are exempt.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">No PMI — the quiet superpower</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Put 3.5% down on an <a href="fha-loan.html" class="text-[#3F51B5] font-semibold hover:underline">FHA loan</a>
+                and you pay mortgage insurance for the life of the loan; put under 20% down on a conventional loan
+                and PMI follows you until 80% LTV. A VA loan charges neither — ever. On the default loan above, the
+                one-time funding fee replaces roughly <strong>$32,500</strong> of conventional PMI. That is why,
+                for anyone with entitlement, VA is usually the cheapest low-down-payment path even after the fee,
+                and why comparing loans on rate alone misleads: compare total insurance-type costs, as the box
+                above does. Two more structural pluses: there is <strong>no VA loan limit</strong> for borrowers
+                with full entitlement (lenders set their own ceilings), and sellers may contribute up to 4% of the
+                price toward your closing costs. On the qualifying side, lenders lean on a 41% back-end
+                debt-to-income guideline plus a residual-income test rather than a hard cutoff — check your fit
+                with the <a href="house-affordability.html" class="text-[#3F51B5] font-semibold hover:underline">house affordability calculator</a>.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Prepayments</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Federal regulation (38 CFR §36.4314) guarantees the right to prepay a VA loan at any time, in whole
+                or in part, with no premium or fee. The extra-payment fields above are therefore pure upside:
+                every extra dollar goes to principal, shortens the term, and cuts total interest — with the largest
+                effect in the early years, when the balance (and the financed funding fee inside it) is highest.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">How much is the VA funding fee?</h4>
+                    <p class="text-gray-700">2.15% of the loan at under 5% down on first use (3.30% on subsequent use), dropping to 1.50% at 5–10% down and 1.25% at 10%+. IRRRL and assumption loans pay a flat 0.50%.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Who is exempt from the funding fee?</h4>
+                    <p class="text-gray-700">Veterans receiving compensation for a service-connected disability, and surviving spouses of veterans who died in service or from a service-connected disability, pay no funding fee at all.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Should I finance the funding fee or pay it in cash?</h4>
+                    <p class="text-gray-700">Financing preserves your cash but you pay interest on the fee for decades — on a $10,750 fee at 7.3%, roughly $15,800 of extra interest over 30 years. If the cash is available without draining your reserves, paying upfront is usually cheaper.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Can I use my VA loan benefit again?</h4>
+                    <p class="text-gray-700">Yes — entitlement is reusable. Just note the subsequent-use funding fee (3.30%) when putting down less than 5%.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. Funding fee rates follow the VA.gov chart effective April 7, 2023; eligibility, entitlement and lender
+                requirements vary by borrower and lender.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="fha-loan.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">FHA Loan</h3>
+                <p class="text-sm text-gray-600">3.5% down with upfront and annual mortgage insurance.</p>
+            </a>
+            <a href="mortgage.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Mortgage Calculator</h3>
+                <p class="text-sm text-gray-600">The conventional-loan equivalent, PMI included.</p>
+            </a>
+            <a href="house-affordability.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">House Affordability</h3>
+                <p class="text-sm text-gray-600">Check the VA 41% back-end DTI guideline against your income.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateVA() {
-            const price = parseFloat(document.getElementById('vaPrice').value);
-            const down = parseFloat(document.getElementById('vaDown').value);
-            const rate = parseFloat(document.getElementById('vaRate').value) / 100 / 12;
-            const years = parseInt(document.getElementById('vaYears').value);
-            const isFirstTime = document.getElementById('vaFirstTime').checked;
+        let chartInstance = null;
+        const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-            if (isNaN(price) || isNaN(down) || isNaN(rate) || isNaN(years) || price <= down) {
-                alert("Please enter valid numbers and ensure Price is greater than Down Payment.");
+        window.addEventListener('DOMContentLoaded', () => {
+            buildOneTimeRows();
+            ['price', 'down_value', 'down_unit', 'purpose', 'va_use', 'exempt'].forEach(id =>
+                document.getElementById(id).addEventListener('change', autoFee));
+            prefillFromURL();
+            autoFee();
+            calculateVA();
+        });
+
+        function toggleMoreOptions() {
+            const el = document.getElementById('moreOptions');
+            const btn = document.getElementById('moreOptionsBtn');
+            const open = el.classList.toggle('hidden') === false;
+            btn.textContent = open ? '– Fewer Options' : '+ More Options';
+        }
+
+        function buildOneTimeRows() {
+            const wrap = document.getElementById('onetimeList');
+            let html = '';
+            for (let i = 1; i <= 11; i++) {
+                html += `<div class="onetime-row">
+                    <span class="text-xs text-gray-500 w-6 flex items-center">#${i}</span>
+                    <input type="number" id="ot_amt_${i}" value="0" class="w-1/3" title="Amount">
+                    <select id="ot_month_${i}" class="w-1/3 bg-gray-50">
+                        ${MONTH_NAMES.map((m, idx) => `<option value="${idx + 1}"${idx === 9 ? ' selected' : ''}>${m}</option>`).join('')}
+                    </select>
+                    <input type="number" id="ot_year_${i}" value="2026" class="w-1/3" title="Year">
+                </div>`;
+            }
+            wrap.innerHTML = html;
+        }
+
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+
+        function feeFor(purpose, use, downPct, exempt) {
+            if (exempt) return 0;
+            if (purpose === 'irrrl' || purpose === 'assumption') return 0.50;
+            if (purpose === 'manufactured') return 1.00;
+            if (purpose === 'cashout') return use === 'subsequent' ? 3.30 : 2.15;
+            // purchase / construction tiers
+            if (downPct < 5) return use === 'subsequent' ? 3.30 : 2.15;
+            if (downPct < 10) return 1.50;
+            return 1.25;
+        }
+
+        function autoFee() {
+            const price = num('price'), dv = num('down_value');
+            if (price <= 0) return;
+            const downIsPct = document.getElementById('down_unit').value === 'pct';
+            const down = downIsPct ? price * dv / 100 : dv;
+            const downPct = down / price * 100;
+            const purpose = document.getElementById('purpose').value;
+            const use = document.getElementById('va_use').value;
+            const exempt = document.getElementById('exempt').checked;
+            const fee = feeFor(purpose, use, downPct, exempt);
+            document.getElementById('fee_pct').value = fee;
+            let note;
+            if (exempt) note = 'Fee waived — exemption applies (0%).';
+            else if (purpose === 'purchase') {
+                if (downPct < 5) note = `Lowest-down tier. Reaching 5% down drops the fee to 1.50% — on this price that saves about ${formatMoney(fee / 100 * (price - down) - 0.015 * price * 0.95)} in fee alone.`;
+                else if (downPct < 10) note = 'Mid tier. Reaching 10% down drops the fee to 1.25%.';
+                else note = 'Lowest purchase tier (10%+ down).';
+            } else if (purpose === 'cashout') note = 'Cash-out refinances pay the flat first/subsequent rate regardless of equity.';
+            else note = 'Flat rate for this loan type under the VA chart.';
+            document.getElementById('feeTierNote').textContent = 'Auto-set from the VA funding fee chart. ' + note + ' You can override it above.';
+        }
+
+        function clearForm() {
+            ['price', 'insurance', 'other'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('resultsArea').innerHTML = '';
+        }
+
+        function simulate(opts) {
+            const r = opts.rate / 100 / 12;
+            const n = opts.termMonths;
+            const pay = r === 0 ? opts.loan / n : opts.loan * r / (1 - Math.pow(1 + r, -n));
+            const startAbs = opts.startYear * 12 + (opts.startMonth - 1);
+            const emAbs = opts.emYear * 12 + (opts.emMonth - 1);
+            const eyAbs = opts.eyYear * 12 + (opts.eyMonth - 1);
+            let bal = opts.loan, totalInterest = 0, months = 0;
+            const schedule = [], balances = [opts.loan];
+            while (bal > 0.005 && months < 1200) {
+                const interest = bal * r;
+                let principal = pay - interest;
+                let extra = 0;
+                const abs = startAbs + months;
+                if (opts.extraMonthly > 0 && abs >= emAbs) extra += opts.extraMonthly;
+                if (opts.extraYearly > 0 && abs >= eyAbs && (abs - eyAbs) % 12 === 0) extra += opts.extraYearly;
+                opts.oneTimes.forEach(ot => { if (ot.amount > 0 && ot.rel === months) extra += ot.amount; });
+                if (principal + extra > bal) extra = Math.max(bal - principal, 0);
+                if (principal > bal) principal = bal;
+                bal -= (principal + extra);
+                totalInterest += interest;
+                const t = months + 1;
+                const d = new Date(opts.startYear, opts.startMonth - 1 + months);
+                schedule.push({ month: t, date: d, interest, principal: principal + extra, balance: Math.max(bal, 0) });
+                if (t % 12 === 0 || bal <= 0.005) balances.push(Math.max(bal, 0));
+                months = t;
+                if (bal <= 0.005) break;
+            }
+            const payoff = new Date(opts.startYear, opts.startMonth - 1 + months - 1);
+            return { pay, months, totalInterest, payoff, schedule, balances };
+        }
+
+        function biweekSim(opts) {
+            const rb = opts.rate / 100 / 26;
+            const half = opts.pay / 2;
+            let bal = opts.loan, periods = 0, totalInterest = 0;
+            while (bal > 0.005 && periods < 2600) {
+                const interest = bal * rb;
+                let principal = half - interest;
+                if (principal > bal) principal = bal;
+                if (principal <= 0) break;
+                bal -= principal; totalInterest += interest; periods++;
+            }
+            return { periods, monthsEq: periods * 12 / 26, totalInterest };
+        }
+
+        function calculateVA() {
+            const out = document.getElementById('resultsArea');
+            const price = num('price');
+            const downIsPct = document.getElementById('down_unit').value === 'pct';
+            const down = downIsPct ? price * num('down_value') / 100 : num('down_value');
+            const downPct = price > 0 ? down / price * 100 : 0;
+            const termMonths = num('term_years') * 12;
+            const rate = num('rate');
+            const feePct = num('fee_pct');
+            const feeMode = document.getElementById('fee_mode').value;
+            const exempt = document.getElementById('exempt').checked;
+            const includeOpt = document.getElementById('include_optional').checked;
+            const taxYr = !includeOpt ? 0 : (document.getElementById('tax_unit').value === 'pct' ? price * num('tax_value') / 100 : num('tax_value'));
+            const insYr = includeOpt ? num('insurance') : 0;
+            const hoaYr = includeOpt ? num('hoa') : 0;
+            const otherYr = includeOpt ? num('other') : 0;
+            const startMonth = parseInt(document.getElementById('start_month').value, 10);
+            const startYear = num('start_year') || 2026;
+
+            if (price <= 0 || down < 0 || down >= price || termMonths <= 0) {
+                out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a valid home price, a down payment below the price, and a loan term.</div>';
                 return;
             }
 
-            let baseLoan = price - down;
-            
-            // Calculate VA Funding Fee (Simplified Approximation)
-            // First time use with < 5% down: 2.3%. Subsequent use: 3.6%
-            // First time use with >= 5% down: 1.65%. Subsequent use: 1.65%
-            let feeRate = 0;
-            const downPct = down / price;
+            const base = price - down;
+            const fee = base * feePct / 100;
+            const loan = feeMode === 'financed' ? base + fee : base;
 
-            if (isFirstTime) {
-                feeRate = downPct >= 0.05 ? 0.0165 : 0.023;
-            } else {
-                feeRate = downPct >= 0.05 ? 0.0165 : 0.036;
+            const startAbs = startYear * 12 + (startMonth - 1);
+            const oneTimes = [];
+            for (let i = 1; i <= 11; i++) {
+                const amt = num('ot_amt_' + i);
+                if (amt > 0) {
+                    const otAbs = num('ot_year_' + i) * 12 + (parseInt(document.getElementById('ot_month_' + i).value, 10) - 1);
+                    oneTimes.push({ amount: amt, rel: otAbs - startAbs });
+                }
+            }
+            const opts = {
+                loan, rate, termMonths, startYear, startMonth,
+                extraMonthly: num('extra_monthly'), emYear: num('em_year') || startYear, emMonth: parseInt(document.getElementById('em_month').value, 10),
+                extraYearly: num('extra_yearly'), eyYear: num('ey_year') || startYear, eyMonth: parseInt(document.getElementById('ey_month').value, 10),
+                oneTimes
+            };
+            const sim = simulate(opts);
+            const baseOpts = Object.assign({}, opts, { extraMonthly: 0, extraYearly: 0, oneTimes: [] });
+            const baseSim = simulate(baseOpts);
+            const savedInterest = baseSim.totalInterest - sim.totalInterest;
+            const savedMonths = baseSim.months - sim.months;
+
+            // cost of financing the fee: interest on (base+fee) vs interest on base alone, base schedule
+            let feeInterest = 0;
+            if (feeMode === 'financed' && fee > 0) {
+                const noFeeSim = simulate(Object.assign({}, baseOpts, { loan: base }));
+                feeInterest = baseSim.totalInterest - noFeeSim.totalInterest;
             }
 
-            const fundingFee = baseLoan * feeRate;
-            const totalLoan = baseLoan + fundingFee;
-            const months = years * 12;
+            // conventional PMI comparator on the same base loan, 0.5%/yr until 80% LTV
+            const convPMI = (function () {
+                const r = rate / 100 / 12, n = termMonths;
+                const pay = r === 0 ? base / n : base * r / (1 - Math.pow(1 + r, -n));
+                const pmiMonthly = base * 0.005 / 12;
+                let bal = base, total = 0, m = 0;
+                while (bal > 0.005 && m < 1200) {
+                    if (bal / price > 0.80) total += pmiMonthly;
+                    const interest = bal * r; let principal = pay - interest;
+                    if (principal > bal) principal = bal;
+                    bal -= principal; m++;
+                }
+                return total;
+            })();
 
-            // Monthly Payment (P&I)
-            const monthlyPayment = totalLoan * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+            const years = sim.months / 12;
+            function growTotal(firstYr, incPct) {
+                if (firstYr <= 0) return 0;
+                let total = 0, cur = firstYr, remaining = years;
+                while (remaining > 0) {
+                    total += cur * Math.min(remaining, 1);
+                    cur *= (1 + incPct / 100);
+                    remaining -= 1;
+                }
+                return total;
+            }
+            const taxTotal = growTotal(taxYr, num('tax_inc'));
+            const insTotal = growTotal(insYr, num('ins_inc'));
+            const hoaTotal = growTotal(hoaYr, num('hoa_inc'));
+            const otherTotal = growTotal(otherYr, num('other_inc'));
+            const totalOOP = sim.pay * sim.months + (feeMode === 'upfront' ? fee : 0) + taxTotal + insTotal + hoaTotal + otherTotal;
+            const monthlyOOP = sim.pay + taxYr / 12 + insYr / 12 + hoaYr / 12 + otherYr / 12;
+            const payoffStr = sim.payoff.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+            let biHTML = '';
+            if (document.getElementById('show_biweekly').checked) {
+                const bw = biweekSim({ loan, rate, termMonths, pay: sim.pay });
+                const bwYears = (bw.monthsEq / 12).toFixed(1);
+                biHTML = `<div class="bg-blue-50 border border-blue-200 text-blue-900 p-4 rounded-xl text-sm mb-6">
+                    <strong>Biweekly payments:</strong> paying half the monthly amount every two weeks (${formatMoney(sim.pay / 2)}) pays the loan off in about
+                    <strong>${bwYears} years</strong> (${bw.periods} payments) instead of ${num('term_years')} — saving roughly <strong>${formatMoney(sim.totalInterest - bw.totalInterest)}</strong> in interest.
+                    Biweekly figures use the base schedule, without extra payments.</div>`;
+            }
 
-            document.getElementById('vaTotalPay').textContent = formatter.format(monthlyPayment);
-            document.getElementById('vaBaseLoan').textContent = formatter.format(baseLoan);
-            document.getElementById('vaFee').textContent = formatter.format(fundingFee);
-            document.getElementById('vaTotalLoan').textContent = formatter.format(totalLoan);
-            
-            document.getElementById('vaResults').classList.remove('hidden');
+            const feeBox = exempt || fee <= 0
+                ? `<div class="bg-green-50 border border-green-200 text-green-800 p-4 rounded-xl text-sm mb-6"><strong>Funding fee waived:</strong> with the exemption applied, the VA funding fee on this loan is <strong>$0</strong> — and there is no monthly mortgage insurance either. This loan carries neither charge.</div>`
+                : feeMode === 'financed'
+                ? `<div class="bg-amber-50 border border-amber-200 text-amber-900 p-4 rounded-xl text-sm mb-6"><strong>Financing the fee costs extra:</strong> the ${formatMoney(fee)} funding fee is inside the loan, so it accrues about <strong>${formatMoney(feeInterest)}</strong> of additional interest over the full schedule. Paying it in cash at closing would avoid that — if your reserves allow.</div>`
+                : `<div class="bg-green-50 border border-green-200 text-green-800 p-4 rounded-xl text-sm mb-6"><strong>Fee paid upfront:</strong> ${formatMoney(fee)} in cash at closing keeps it out of the loan — no interest is ever paid on it. Your cash to close rises by that amount.</div>`;
+
+            const extrasNote = (opts.extraMonthly > 0 || opts.extraYearly > 0 || opts.oneTimes.length) && savedMonths > 0
+                ? `<p class="flex justify-between mb-2 text-green-700"><span>Extra payments save:</span> <span class="font-bold">${formatMoney(Math.max(savedInterest, 0))} interest · ${savedMonths} months sooner</span></p>` : '';
+
+            const fmtD = d => MONTH_NAMES[d.getMonth()] + ' ' + d.getFullYear();
+            const rowHTML = row => `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${row.month}</td><td class="py-1.5 px-2">${fmtD(row.date)}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.interest)}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.principal)}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.balance)}</td></tr>`;
+            const schedRows = sim.schedule.map(rowHTML).join('');
+            const yearMap = {};
+            sim.schedule.forEach(row => {
+                const y = Math.ceil(row.month / 12);
+                if (!yearMap[y]) yearMap[y] = { interest: 0, principal: 0, balance: row.balance, end: row.date };
+                yearMap[y].interest += row.interest; yearMap[y].principal += row.principal; yearMap[y].balance = row.balance; yearMap[y].end = row.date;
+            });
+            const yearRows = Object.keys(yearMap).map(y => {
+                const v = yearMap[y];
+                return `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${y}</td><td class="py-1.5 px-2">${fmtD(v.end)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.interest)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.principal)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.balance)}</td></tr>`;
+            }).join('');
+
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Monthly Pay (Principal &amp; Interest)</p>
+                    <p class="text-4xl font-bold">${formatMoney(sim.pay)}</p>
+                    <p class="text-sm opacity-90 mt-1">Total monthly out-of-pocket incl. taxes &amp; costs: <strong>${formatMoney(monthlyOOP)}</strong> · <span class="bg-white text-[#3F51B5] font-bold px-2 py-0.5 rounded-full text-xs align-middle">NO PMI — EVER</span></p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 overflow-x-auto">
+                    <table class="w-full text-sm text-left whitespace-nowrap">
+                        <thead class="bg-gray-50 text-gray-700"><tr><th class="py-2 px-2 border-b"></th><th class="py-2 px-2 border-b text-right">Monthly</th><th class="py-2 px-2 border-b text-right">Total</th></tr></thead>
+                        <tbody>
+                            <tr class="bg-gray-50 font-semibold"><td class="py-1.5 px-2">Mortgage Payment (P&amp;I)</td><td class="py-1.5 px-2 text-right">${formatMoney(sim.pay)}</td><td class="py-1.5 px-2 text-right">${formatMoney(sim.pay * sim.months)}</td></tr>
+                            <tr class="border-b"><td class="py-1.5 px-2">Property Tax</td><td class="py-1.5 px-2 text-right">${formatMoney(taxYr / 12)}</td><td class="py-1.5 px-2 text-right">${formatMoney(taxTotal)}</td></tr>
+                            <tr class="border-b"><td class="py-1.5 px-2">Home Insurance</td><td class="py-1.5 px-2 text-right">${formatMoney(insYr / 12)}</td><td class="py-1.5 px-2 text-right">${formatMoney(insTotal)}</td></tr>
+                            <tr class="border-b"><td class="py-1.5 px-2">HOA Fee</td><td class="py-1.5 px-2 text-right">${formatMoney(hoaYr / 12)}</td><td class="py-1.5 px-2 text-right">${formatMoney(hoaTotal)}</td></tr>
+                            <tr class="border-b"><td class="py-1.5 px-2">Other Costs</td><td class="py-1.5 px-2 text-right">${formatMoney(otherYr / 12)}</td><td class="py-1.5 px-2 text-right">${formatMoney(otherTotal)}</td></tr>
+                            <tr class="bg-gray-50 font-semibold"><td class="py-1.5 px-2">Total Out-of-Pocket</td><td class="py-1.5 px-2 text-right">${formatMoney(monthlyOOP)}</td><td class="py-1.5 px-2 text-right">${formatMoney(totalOOP)}</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="mt-4 text-sm">
+                        <p class="flex justify-between mb-2"><span>House Price:</span> <span class="font-bold">${formatMoney(price)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Down Payment (${downPct.toFixed(1)}%):</span> <span class="font-bold">${formatMoney(down)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Base Loan Amount:</span> <span class="font-bold">${formatMoney(base)}</span></p>
+                        <p class="flex justify-between mb-2"><span>VA Funding Fee (${feePct}% of base loan):</span> <span class="font-bold">${formatMoney(fee)} ${feeMode === 'financed' ? '(financed)' : '(paid upfront)'}</span></p>
+                        <p class="flex justify-between mb-2"><span>Total Loan Amount:</span> <span class="font-bold">${formatMoney(loan)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Total Interest:</span> <span class="font-bold">${formatMoney(sim.totalInterest)}</span></p>
+                        ${extrasNote}
+                        <p class="flex justify-between"><span>Mortgage Payoff Date:</span> <span class="font-bold">${payoffStr} (${sim.months} payments)</span></p>
+                    </div>
+                </div>
+                ${feeBox}
+                ${biHTML}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <h3 class="font-bold text-gray-800 mb-2">VA funding fee vs conventional PMI</h3>
+                    <p class="text-gray-700">This VA loan's insurance-type cost is the one-time funding fee: <strong>${formatMoney(fee)}</strong>${feeMode === 'financed' && fee > 0 ? ` (plus about ${formatMoney(feeInterest)} of interest because it is financed)` : ''}.
+                    A conventional loan of the same size would instead charge PMI of roughly <strong>${formatMoney(convPMI)}</strong> (estimated at 0.5%/yr until 80% LTV) — and a low-down-payment FHA loan would charge even more, for longer.
+                    That gap is the core VA advantage, and it grows the less you put down.</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="balChart"></canvas>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="costChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <h3 class="font-bold text-gray-800">Amortization Schedule</h3>
+                        <div class="flex gap-2 no-print">
+                            <button id="schedMonthlyBtn" onclick="setSchedView('m')" class="bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold">Monthly</button>
+                            <button id="schedYearlyBtn" onclick="setSchedView('y')" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold">Yearly</button>
+                        </div>
+                    </div>
+                    <div id="scheduleWrap" class="overflow-x-auto" style="max-height:26rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">#</th><th class="py-2 px-2 border-b">Date</th><th class="py-2 px-2 border-b text-right">Interest</th><th class="py-2 px-2 border-b text-right">Principal</th><th class="py-2 px-2 border-b text-right">Ending Balance</th></tr></thead>
+                            <tbody id="schedMonthly">${schedRows}</tbody>
+                            <tbody id="schedYearly" class="hidden">${yearRows}</tbody>
+                        </table>
+                    </div>
+                    <button id="schedToggle" onclick="toggleSchedule()" class="mt-3 bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">View Amortization Table</button>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                    <button onclick="downloadCSV()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">⬇ Download CSV</button>
+                </div>`;
+
+            window._vaSchedule = sim.schedule;
+            window._vaFmtD = fmtD;
+            drawCharts(sim.balances, {
+                principal: base, fee: fee, interest: sim.totalInterest,
+                tax: taxTotal, ins: insTotal, hoa: hoaTotal, other: otherTotal
+            });
+            updateURL();
         }
+
+        let schedExpanded = false;
+        function toggleSchedule() {
+            const wrap = document.getElementById('scheduleWrap');
+            const btn = document.getElementById('schedToggle');
+            schedExpanded = !schedExpanded;
+            wrap.style.maxHeight = schedExpanded ? 'none' : '26rem';
+            btn.textContent = schedExpanded ? 'Show Less' : 'View Amortization Table';
+        }
+        function setSchedView(v) {
+            document.getElementById('schedMonthly').classList.toggle('hidden', v !== 'm');
+            document.getElementById('schedYearly').classList.toggle('hidden', v !== 'y');
+            const bm = document.getElementById('schedMonthlyBtn'), by = document.getElementById('schedYearlyBtn');
+            bm.className = v === 'm' ? 'bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold' : 'bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold';
+            by.className = v === 'y' ? 'bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold' : 'bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold';
+        }
+
+        let costChartInstance = null;
+        function drawCharts(balances, totals) {
+            const cv = document.getElementById('balChart');
+            if (cv) {
+                const ctx = cv.getContext('2d');
+                if (chartInstance) chartInstance.destroy();
+                chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: balances.map((_, i) => i),
+                        datasets: [{ label: 'Loan Balance', data: balances.map(v => Math.round(v)), borderColor: '#3F51B5', backgroundColor: 'rgba(63,81,181,0.10)', fill: true, borderWidth: 3, tension: 0.15, pointRadius: 0 }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'top' }, title: { display: true, text: 'Loan Balance Over Time' } },
+                        scales: {
+                            x: { title: { display: true, text: 'Years' } },
+                            y: { beginAtZero: true, ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } }
+                        }
+                    }
+                });
+            }
+            const cc = document.getElementById('costChart');
+            if (cc) {
+                const ctx2 = cc.getContext('2d');
+                if (costChartInstance) costChartInstance.destroy();
+                costChartInstance = new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Principal', 'Funding Fee', 'Interest', 'Property Tax', 'Home Insurance', 'HOA', 'Other Costs'],
+                        datasets: [{
+                            data: [totals.principal, totals.fee, totals.interest, totals.tax, totals.ins, totals.hoa, totals.other].map(v => Math.round(v)),
+                            backgroundColor: ['#3F51B5', '#F59E0B', '#14B8A6', '#910000', '#C21271', '#492970', '#9CA3AF']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'right' },
+                            title: { display: true, text: 'Where Your Money Goes' },
+                            tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + formatMoney(c.parsed) } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function downloadCSV() {
+            const rows = window._vaSchedule || [];
+            if (!rows.length) return;
+            let csv = 'Month,Date,Interest,Principal,Ending Balance\n';
+            rows.forEach(r => { csv += [r.month, window._vaFmtD(r.date), r.interest.toFixed(2), r.principal.toFixed(2), r.balance.toFixed(2)].join(',') + '\n'; });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'va-mortgage-amortization.csv';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        const PARAMS = [['price', 'p'], ['down_value', 'dv'], ['down_unit', 'du'], ['term_years', 't'], ['rate', 'r'], ['eligibility', 'el'], ['purpose', 'pu'], ['va_use', 'use'], ['exempt', 'ex'], ['fee_pct', 'fp'], ['fee_mode', 'fm'], ['include_optional', 'io'], ['tax_value', 'tv'], ['tax_unit', 'tu'], ['insurance', 'ins'], ['hoa', 'hoa'], ['other', 'oth'], ['start_month', 'sm'], ['start_year', 'sy'], ['tax_inc', 'ti'], ['ins_inc', 'ii'], ['hoa_inc', 'hi'], ['other_inc', 'oi'], ['extra_monthly', 'em'], ['em_month', 'emm'], ['em_year', 'emy'], ['extra_yearly', 'ey'], ['ey_month', 'eym'], ['ey_year', 'eyy'], ['show_biweekly', 'bw']];
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            PARAMS.forEach(([id, key]) => {
+                const el = document.getElementById(id);
+                p.set(key, el.type === 'checkbox' ? (el.checked ? '1' : '0') : el.value);
+            });
+            for (let i = 1; i <= 11; i++) {
+                const amt = num('ot_amt_' + i);
+                if (amt > 0) {
+                    p.set('ot' + i, amt);
+                    p.set('otm' + i, document.getElementById('ot_month_' + i).value);
+                    p.set('oty' + i, document.getElementById('ot_year_' + i).value);
+                }
+            }
+            return p.toString();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => {
+                if (q.get(key) === null) return;
+                const el = document.getElementById(id);
+                if (el.type === 'checkbox') el.checked = q.get(key) === '1';
+                else el.value = q.get(key);
+            });
+            for (let i = 1; i <= 11; i++) {
+                if (q.get('ot' + i) !== null) {
+                    document.getElementById('ot_amt_' + i).value = q.get('ot' + i);
+                    document.getElementById('ot_month_' + i).value = q.get('otm' + i) || '10';
+                    document.getElementById('ot_year_' + i).value = q.get('oty' + i) || '2026';
+                    const mo = document.getElementById('moreOptions');
+                    if (mo.classList.contains('hidden')) toggleMoreOptions();
+                }
+            }
+        }
+
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-</html>
+    </html>
