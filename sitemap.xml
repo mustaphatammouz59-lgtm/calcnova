@@ -1,33 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://calcnova.vercel.app/</loc>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://calcnova.vercel.app/financial.html</loc>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/financial</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://calcnova.vercel.app/mortgage.html</loc>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/mortgage</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://calcnova.vercel.app/loan.html</loc>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://calcnova.vercel.app/compound-interest.html</loc>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/loan</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://calcnova.vercel.app/auto-loan.html</loc>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/compound-interest</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://calcnova.vercel.app/salary.html</loc>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/house-affordability</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://calcnova.vercel.app/inflation.html</loc>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/amortization</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://calcnova.vercel.app/about.html</loc>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/mortgage-payoff</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://calcnova.vercel.app/privacy.html</loc>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/rent</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/debt-to-income</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/real-estate</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/refinance</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/rent-vs-buy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/rental-property</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/down-payment</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/fha-loan</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/apr</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://calcnova.mustaphatammouz59.workers.dev/va-mortgage</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 </urlset>
