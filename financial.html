@@ -4,167 +4,163 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial Calculators - CalcNova</title>
+    <meta name="description" content="Free financial calculators: mortgage payment, loan payoff, compound interest and more. Estimate payments, interest and total costs in seconds.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/financial">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .calc-card { transition: transform .15s ease, box-shadow .15s ease; }
+        .calc-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(63,81,181,.12); }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
     <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="text-[#14B8A6] font-bold">Financial</a>
-                <a href="health.html" class="hover:text-[#14B8A6] transition">Health</a>
-                <a href="#" class="hover:text-[#14B8A6] transition">Math</a>
-                <a href="#" class="hover:text-[#14B8A6] transition">Other</a>
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
     <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
         <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <span class="text-gray-800 font-medium">Financial Calculators</span>
     </div>
 
-    <!-- Main Layout -->
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-2">Financial Calculators</h1>
-            <p class="text-gray-600 mb-8">The following is a complete list of our financial calculators.</p>
+    <main class="container mx-auto px-4 py-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5] mb-2">Financial Calculators</h1>
+        <p class="text-gray-600 mb-8 max-w-2xl">Free tools to estimate loan payments, interest costs, and investment growth. Every calculation happens instantly in your browser.</p>
 
-            <!-- Category: Mortgage & Real Estate -->
-            <div class="mb-8">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Mortgage and Real Estate</h2>
-                <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 text-sm">
-                    <li><a href="mortgage.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Mortgage Calculator</a></li>
-                    <li><a href="amortization.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Amortization Calculator</a></li>
-                    <li><a href="mortgage-payoff.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Mortgage Payoff Calculator</a></li>
-                    <li><a href="house-affordability.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">House Affordability Calculator</a></li>
-                    <li><a href="rent.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Rent Calculator</a></li>
-                    <li><a href="debt-to-income.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Debt-to-Income Ratio Calculator</a></li>
-                    <li><a href="real-estate.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Real Estate Calculator</a></li>
-                    <li><a href="refinance.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Refinance Calculator</a></li>
-                    <li><a href="rental-property.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Rental Property Calculator</a></li>
-                    <li><a href="apr.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">APR Calculator</a></li>
-                    <li><a href="fha-loan.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">FHA Loan Calculator</a></li>
-                    <li><a href="va-mortgage.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">VA Mortgage Calculator</a></li>
-                    <li><a href="home-equity-loan.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Home Equity Loan Calculator</a></li>
-                    <li><a href="heloc.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">HELOC Calculator</a></li>
-                    <li><a href="down-payment.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Down Payment Calculator</a></li>
-                    <li><a href="rent-vs-buy.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Rent vs. Buy Calculator</a></li>
-                </ul>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
+            <a href="mortgage.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Mortgage Calculator</h2>
+                <p class="text-sm text-gray-600">Monthly payment with taxes, insurance, PMI, HOA, extra payments and full amortization schedule.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="loan.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Loan Calculator</h2>
+                <p class="text-sm text-gray-600">Monthly payments and total interest for personal, auto and student loans.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="compound-interest.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Compound Interest Calculator</h2>
+                <p class="text-sm text-gray-600">Project how savings and investments grow with compounding returns.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="house-affordability.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">House Affordability Calculator</h2>
+                <p class="text-sm text-gray-600">Find out how much house you can afford based on income and debts.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="amortization.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Amortization Calculator</h2>
+                <p class="text-sm text-gray-600">Full loan amortization schedule with extra payments, payoff date and CSV export.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <div class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 opacity-70">
+                <h2 class="font-bold text-gray-700 text-lg mb-1">Retirement Calculator</h2>
+                <p class="text-sm text-gray-600">Estimate how much to save each month to retire comfortably.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-gray-400 px-2 py-1 rounded">SOON</span>
             </div>
-
-            <!-- Category: Auto -->
-            <div class="mb-8">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Auto</h2>
-                <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 text-sm">
-                    <li><a href="auto-loan.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Auto Loan Calculator</a></li>
-                    <li><a href="cash-back.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Cash Back or Low Interest Calculator</a></li>
-                    <li><a href="auto-lease.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Auto Lease Calculator</a></li>
-                </ul>
-            </div>
-
-            <!-- Category: Investment -->
-            <div class="mb-8">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Investment</h2>
-                <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 text-sm">
-                    <li><a href="interest.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Interest Calculator</a></li>
-                    <li><a href="investment.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Investment Calculator</a></li>
-                    <li><a href="finance.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Finance Calculator</a></li>
-                    <li><a href="compound-interest.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Compound Interest Calculator</a></li>
-                    <li><a href="interest-rate.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Interest Rate Calculator</a></li>
-                    <li><a href="savings.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Savings Calculator</a></li>
-                    <li><a href="simple-interest.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Simple Interest Calculator</a></li>
-                    <li><a href="cd.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">CD Calculator</a></li>
-                    <li><a href="bond.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Bond Calculator</a></li>
-                    <li><a href="mutual-fund.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Mutual Fund Calculator</a></li>
-                    <li><a href="average-return.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Average Return Calculator</a></li>
-                    <li><a href="irr.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">IRR Calculator</a></li>
-                    <li><a href="roi.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">ROI Calculator</a></li>
-                    <li><a href="payback-period.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Payback Period Calculator</a></li>
-                    <li><a href="present-value.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Present Value Calculator</a></li>
-                    <li><a href="future-value.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Future Value Calculator</a></li>
-                </ul>
-            </div>
-
-            <!-- Category: Retirement -->
-            <div class="mb-8">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Retirement</h2>
-                <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 text-sm">
-                    <li><a href="retirement.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Retirement Calculator</a></li>
-                    <li><a href="401k.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">401K Calculator</a></li>
-                    <li><a href="pension.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Pension Calculator</a></li>
-                    <li><a href="social-security.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Social Security Calculator</a></li>
-                    <li><a href="annuity.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Annuity Calculator</a></li>
-                    <li><a href="annuity-payout.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Annuity Payout Calculator</a></li>
-                    <li><a href="roth-ira.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Roth IRA Calculator</a></li>
-                    <li><a href="ira.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">IRA Calculator</a></li>
-                    <li><a href="rmd.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">RMD Calculator</a></li>
-                </ul>
-            </div>
-
-            <!-- Category: Tax and Salary -->
-            <div class="mb-8">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Tax and Salary</h2>
-                <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 text-sm">
-                    <li><a href="income-tax.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Income Tax Calculator</a></li>
-                    <li><a href="salary.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Salary Calculator</a></li>
-                    <li><a href="marriage-tax.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Marriage Tax Calculator</a></li>
-                    <li><a href="estate-tax.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Estate Tax Calculator</a></li>
-                    <li><a href="take-home-paycheck.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Take-Home-Paycheck Calculator</a></li>
-                </ul>
-            </div>
-
-            <!-- Category: Other -->
-            <div class="mb-8">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Other</h2>
-                <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2 text-sm">
-                    <li><a href="loan.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Loan Calculator</a></li>
-                    <li><a href="payment.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Payment Calculator</a></li>
-                    <li><a href="currency.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Currency Calculator</a></li>
-                    <li><a href="inflation.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Inflation Calculator</a></li>
-                    <li><a href="sales-tax.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Sales Tax Calculator</a></li>
-                    <li><a href="credit-card.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Credit Card Calculator</a></li>
-                    <li><a href="credit-cards-payoff.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Credit Cards Payoff Calculator</a></li>
-                    <li><a href="debt-payoff.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Debt Payoff Calculator</a></li>
-                    <li><a href="debt-consolidation.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Debt Consolidation Calculator</a></li>
-                    <li><a href="repayment.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Repayment Calculator</a></li>
-                    <li><a href="student-loan.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Student Loan Calculator</a></li>
-                    <li><a href="college-cost.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">College Cost Calculator</a></li>
-                    <li><a href="vat.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">VAT Calculator</a></li>
-                    <li><a href="depreciation.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Depreciation Calculator</a></li>
-                    <li><a href="margin.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Margin Calculator</a></li>
-                    <li><a href="discount.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Discount Calculator</a></li>
-                    <li><a href="business-loan.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Business Loan Calculator</a></li>
-                    <li><a href="personal-loan.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Personal Loan Calculator</a></li>
-                    <li><a href="boat-loan.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Boat Loan Calculator</a></li>
-                    <li><a href="lease.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Lease Calculator</a></li>
-                    <li><a href="budget.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Budget Calculator</a></li>
-                    <li><a href="commission.html" class="text-[#3F51B5] hover:text-[#14B8A6] hover:underline">Commission Calculator</a></li>
-                </ul>
-            </div>
+            <a href="mortgage-payoff.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Mortgage Payoff Calculator</h2>
+                <p class="text-sm text-gray-600">See how extra payments shorten your mortgage and cut interest.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="rent.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Rent Calculator</h2>
+                <p class="text-sm text-gray-600">How much rent can you afford based on income and debts?</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="debt-to-income.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Debt-to-Income Calculator</h2>
+                <p class="text-sm text-gray-600">Your front-end and back-end DTI ratios, checked against lender limits.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="refinance.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Refinance Calculator</h2>
+                <p class="text-sm text-gray-600">Compare your current loan with a new one: break-even point and true lifetime savings.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="rent-vs-buy.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Rent vs Buy Calculator</h2>
+                <p class="text-sm text-gray-600">Which leaves you wealthier after the years you stay — renting and investing, or buying?</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="rental-property.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Rental Property Calculator</h2>
+                <p class="text-sm text-gray-600">Cash flow, cap rate, cash-on-cash return and IRR for an investment property.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="down-payment.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Down Payment Calculator</h2>
+                <p class="text-sm text-gray-600">How much you need, total cash to close, and how long it takes to save.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="fha-loan.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">FHA Loan Calculator</h2>
+                <p class="text-sm text-gray-600">FHA payments with upfront and annual MIP, real HUD tiers and duration rules.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="apr.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">APR Calculator</h2>
+                <p class="text-sm text-gray-600">The real APR of any loan or mortgage, with fees and points included.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="va-mortgage.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">VA Mortgage Calculator</h2>
+                <p class="text-sm text-gray-600">VA payments with the official funding-fee tiers — zero down, no PMI.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="home-equity-loan.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Home Equity Loan Calculator</h2>
+                <p class="text-sm text-gray-600">Fixed-rate second mortgage payments with closing costs and APR, plus how much you can borrow.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="heloc.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">HELOC Calculator</h2>
+                <p class="text-sm text-gray-600">Draw-period and repayment-period HELOC payments, with closing costs, annual fees and APR.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="auto-loan.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Auto Loan Calculator</h2>
+                <p class="text-sm text-gray-600">Car payments with state sales-tax rules, dealer fees and trade-in math — or work backwards from a monthly payment.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="cash-back-or-low-interest.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Cash Back or Low Interest Calculator</h2>
+                <p class="text-sm text-gray-600">Rebate or low rate on a car — which offer actually saves more, with the break-even rebate.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
+            <a href="auto-lease.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
+                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Auto Lease Calculator</h2>
+                <p class="text-sm text-gray-600">Lease payments from cap cost, money factor and residual — with a same-term lease vs. buy comparison.</p>
+                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
+            </a>
         </div>
 
-        <!-- Right Column: Sidebar -->
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-                <p class="text-sm">(300x250 Banner)</p>
-            </div>
-        </aside>
+        <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">About Our Financial Calculators</h2>
+            <p class="text-gray-700 leading-7">
+                Big financial decisions &mdash; buying a home, taking a loan, planning retirement &mdash; deserve clear numbers.
+                CalcNova&rsquo;s financial calculators turn confusing formulas into simple answers: what you pay each month,
+                how much goes to interest, and what the loan really costs over its lifetime. Start with our
+                <a href="mortgage.html" class="text-[#3F51B5] font-semibold hover:underline">mortgage calculator</a>
+                to see the full picture of homeownership costs.
+            </p>
+        </section>
     </main>
 
-    <!-- Footer -->
     <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 </body>
-    </html>
+</html>
