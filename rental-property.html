@@ -4,140 +4,607 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rental Property Calculator - CalcNova</title>
+    <meta name="description" content="Free rental property calculator: estimate cash flow, NOI, cap rate, cash-on-cash return and IRR for a rental or investment property over any holding period.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/rental-property">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Rental Property Calculator - CalcNova">
+    <meta property="og:description" content="Cash flow, cap rate, cash-on-cash return and IRR for any rental property, year by year.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/rental-property">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Rental Property Calculator - CalcNova">
+    <meta name="twitter:description" content="Run the numbers on a rental property before you buy it.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Rental Property Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/rental-property" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is a good cap rate for a rental property?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Cap rates vary by market and risk: roughly 4–6% in expensive, low-risk coastal markets and 8–12% in cheaper, higher-risk ones. A cap rate below your mortgage interest rate means leverage works against you in year one — the property's income yield is lower than the cost of the debt." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is cash-on-cash return?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Cash-on-cash return is the annual before-tax cash flow divided by the total cash you invested (down payment, closing costs and repairs). It measures how hard your actual dollars are working, unlike cap rate, which ignores financing." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is IRR for a rental property?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The internal rate of return is the annualized return on every dollar, for the time it is invested, including rent cash flows and the final sale after paying off the loan and selling costs. It accounts for the time value of money, which simple cash-flow metrics do not." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 45%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { width: 55%; border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .exp-row { display: flex; align-items: center; margin-bottom: 0.5rem; gap: 0.25rem; }
+        .exp-row label { width: 40%; font-size: 0.875rem; color: #374151; }
+        .exp-row input { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .exp-row input:focus { border-color: #3F51B5; }
+        .section-title { font-weight: bold; font-size: 0.9rem; color: #1F2937; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.25rem;}
+        @media print {
+            nav, footer, .no-print, #calculator-form { display: none !important; }
+            #resultsArea { display: block !important; width: 100% !important; }
+        }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Rental Property</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Rental Property Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Rental Property Calculator</h1>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Rental Property Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <h2 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Property Costs</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Purchase Price ($)</label>
-                        <input type="number" id="rpPrice" value="200000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="section-title" style="margin-top:0;">Purchase</div>
+                <div class="input-group">
+                    <label>Purchase Price</label>
+                    <div class="w-[55%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="price" value="200000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Down Payment ($)</label>
-                        <input type="number" id="rpDown" value="40000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                </div>
+                <div class="input-group">
+                    <label>Use a Loan?</label>
+                    <select id="use_loan" class="w-[55%] bg-gray-50" onchange="toggleLoan()">
+                        <option value="yes" selected>Yes</option>
+                        <option value="no">No — cash purchase</option>
+                    </select>
+                </div>
+                <div id="loan_fields">
+                    <div class="input-group">
+                        <label>Down Payment</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="down_pct" value="20" step="0.1" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Interest Rate</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="loan_rate" value="6" step="0.01" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Loan Term</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="loan_years" value="30" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Closing Costs</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="closing" value="6000" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">$</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Needs Repairs?</label>
+                    <select id="need_repairs" class="w-[55%] bg-gray-50" onchange="toggleRepairs()">
+                        <option value="no" selected>No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                </div>
+                <div id="repair_fields" class="hidden">
+                    <div class="input-group">
+                        <label>Repair Cost</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="repair_cost" value="20000" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">$</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Value After Repairs</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="arv" value="260000" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">$</span>
+                        </div>
                     </div>
                 </div>
 
-                <h2 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Income & Operating Expenses (Annual)</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Rental Income ($)</label>
-                        <input type="number" id="rpRent" value="24000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Operating Expenses (Tax, Ins, Maint.) ($)</label>
-                        <input type="number" id="rpExpenses" value="8000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                <div class="section-title">Income</div>
+                <div class="exp-row">
+                    <label>Monthly Rent</label>
+                    <input type="number" id="rent" value="2000" class="w-[30%]" title="Monthly rent in $">
+                    <input type="number" id="rent_inc" value="3" step="0.1" class="w-[30%]" title="Annual increase in %">
+                </div>
+                <div class="exp-row">
+                    <label>Other Monthly Income</label>
+                    <input type="number" id="other_inc" value="0" class="w-[30%]" title="Other monthly income in $">
+                    <input type="number" id="other_inc_inc" value="3" step="0.1" class="w-[30%]" title="Annual increase in %">
+                </div>
+                <p class="text-xs text-gray-400 mb-2">Second box on each row = annual increase %.</p>
+                <div class="input-group">
+                    <label>Vacancy Rate</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="vacancy" value="5" step="0.1" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
                     </div>
                 </div>
-                <button onclick="calculateRental()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Returns</button>
+                <div class="input-group">
+                    <label>Management Fee</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="mgmt" value="0" step="0.1" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">% of income</span>
+                    </div>
+                </div>
 
-                <div id="rpResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center mb-4">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Net Operating Income (NOI)</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="rpNOI">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Capitalization Rate (Cap Rate)</p>
-                            <p class="text-xl font-bold text-[#14B8A6]" id="rpCapRate">0%</p>
-                        </div>
+                <div class="section-title">Recurring Operating Expenses (per year)</div>
+                <div class="exp-row">
+                    <label>Property Tax</label>
+                    <input type="number" id="tax" value="3000" class="w-[30%]" title="Annual $">
+                    <input type="number" id="tax_inc" value="3" step="0.1" class="w-[30%]" title="Annual increase in %">
+                </div>
+                <div class="exp-row">
+                    <label>Insurance</label>
+                    <input type="number" id="ins" value="1200" class="w-[30%]" title="Annual $">
+                    <input type="number" id="ins_inc" value="3" step="0.1" class="w-[30%]" title="Annual increase in %">
+                </div>
+                <div class="exp-row">
+                    <label>HOA Fee</label>
+                    <input type="number" id="hoa" value="0" class="w-[30%]" title="Annual $">
+                    <input type="number" id="hoa_inc" value="3" step="0.1" class="w-[30%]" title="Annual increase in %">
+                </div>
+                <div class="exp-row">
+                    <label>Maintenance</label>
+                    <input type="number" id="maint" value="2000" class="w-[30%]" title="Annual $">
+                    <input type="number" id="maint_inc" value="3" step="0.1" class="w-[30%]" title="Annual increase in %">
+                </div>
+                <div class="exp-row">
+                    <label>Other Costs</label>
+                    <input type="number" id="other_cost" value="500" class="w-[30%]" title="Annual $">
+                    <input type="number" id="other_cost_inc" value="3" step="0.1" class="w-[30%]" title="Annual increase in %">
+                </div>
+
+                <div class="section-title">Sell</div>
+                <div class="input-group">
+                    <label>Know the Sell Price?</label>
+                    <select id="know_sell" class="w-[55%] bg-gray-50" onchange="toggleSell()">
+                        <option value="no" selected>No — use appreciation</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                </div>
+                <div class="input-group" id="appr_row">
+                    <label>Value Appreciation</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="appr" value="3" step="0.1" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%/yr</span>
                     </div>
-                    <div class="text-center bg-blue-50 p-4 rounded-lg border border-blue-200">
-                        <p class="text-sm text-gray-600">Cash on Cash Return (Based on Down Payment)</p>
-                        <p class="text-2xl font-bold text-green-600" id="rpCOC">0%</p>
+                </div>
+                <div class="input-group hidden" id="sellprice_row">
+                    <label>Sell Price</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="sell_price" value="400000" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">$</span>
                     </div>
+                </div>
+                <div class="input-group">
+                    <label>Holding Length</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="holding" value="20" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Cost to Sell</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="sell_cost" value="8" step="0.1" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">% of price</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateRental()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Understanding Rental Property Metrics</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Investors use specific metrics to evaluate rental properties. <strong>NOI</strong> is the income left after operating expenses (but before mortgage). <strong>Cap Rate</strong> measures the rate of return on the property based on its purchase price. <strong>Cash on Cash Return</strong> measures the annual return on the actual cash you invested (down payment).</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
+        <div class="md:w-3/5">
+            <div id="resultsArea"></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">How to Analyze a Rental Property</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                A rental property makes money four ways at once: monthly cash flow, loan principal paid down by the
+                tenant, appreciation, and tax advantages. No single number captures all of it, which is why serious
+                investors watch four metrics together. This calculator projects every year of the hold — income,
+                expenses, loan balance and value — and reports all four: <strong>NOI</strong>, <strong>cap rate</strong>,
+                <strong>cash-on-cash return</strong> and <strong>IRR</strong>.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The four numbers that matter</h3>
+            <ul class="list-disc pl-6 text-gray-700 leading-7 mb-4 space-y-1">
+                <li><strong>NOI (Net Operating Income):</strong> rent collected (after vacancy) minus operating expenses and management — before the mortgage. It is the property&rsquo;s own earning power, independent of how you financed it.</li>
+                <li><strong>Cap rate = NOI &divide; price:</strong> the unleveraged yield. Best for comparing properties against each other and against your mortgage rate: a cap rate below the loan rate means borrowing drags on returns in year one.</li>
+                <li><strong>Cash-on-cash return:</strong> annual cash flow after the mortgage, divided by the cash you actually put in (down payment + closing + repairs). This is the return on <em>your</em> dollars.</li>
+                <li><strong>IRR (Internal Rate of Return):</strong> the annualized return on every dollar for the time it is invested, including the sale at the end. It is the only one of the four that respects the time value of money, so it is the best single figure for comparing a rental against stocks or another property.</li>
+            </ul>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Two rules of thumb for a first pass</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The <strong>1% rule</strong> says monthly rent should be at least 1% of the total purchase cost (price plus
+                repairs): a $200,000 property should rent for $2,000 a month — exactly the default case above, which
+                is why it cash-flows. The <strong>50% rule</strong> estimates that operating expenses consume about half of
+                gross rent over time, leaving the other half for the mortgage and profit; if a deal only works when
+                expenses are assumed at 20%, it probably does not work. Use both rules to screen listings in
+                seconds, then run survivors through the full projection. (Flippers use a third: the 70% rule —
+                pay no more than 70% of after-repair value minus repair costs.)
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">What the spreadsheet leaves out</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Being a landlord is a job, not a coupon clip: finding and screening tenants, signing enforceable
+                leases, collecting rent, handling repairs and the occasional eviction. Management companies take
+                roughly 8–10% of rent to do it for you — model that with the management fee field before deciding
+                the deal is hands-off. And treat any multi-decade projection with humility: a recession, a special
+                assessment, a rent-control ordinance or one long vacancy lands harder than a tenth of a percent of
+                appreciation. Stress-test the deal with rent down 10% and vacancy up before you trust the IRR.
+                When you are ready to finance the purchase itself, the
+                <a href="mortgage.html" class="text-[#3F51B5] font-semibold hover:underline">mortgage calculator</a>
+                breaks down the loan in full.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">What is a good cap rate?</h4>
+                    <p class="text-gray-700">Roughly 4–6% in expensive, low-risk markets and 8–12% in cheaper, riskier ones. Below your mortgage rate, leverage hurts year-one returns; well above it, ask what risk the market is pricing in.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What is cash-on-cash return?</h4>
+                    <p class="text-gray-700">Annual cash flow after all expenses and the mortgage, divided by the total cash you invested up front. It measures the return on your actual dollars, unlike cap rate, which ignores financing.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Why does IRR differ from cash-on-cash?</h4>
+                    <p class="text-gray-700">Cash-on-cash looks at one year&rsquo;s rent only. IRR also counts principal paydown, appreciation and the sale proceeds, and discounts for time — a dollar in year 20 is worth less than a dollar in year 1.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute investment
+                or financial advice. Projections rest on your assumptions for rent growth, expenses, vacancy and appreciation;
+                actual results will differ. Taxes and depreciation are not modeled.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="mortgage.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Mortgage Calculator</h3>
+                <p class="text-sm text-gray-600">Full breakdown of the loan behind the property.</p>
+            </a>
+            <a href="rent-vs-buy.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Rent vs Buy</h3>
+                <p class="text-sm text-gray-600">The same net-worth math, from a homebuyer&rsquo;s side.</p>
+            </a>
+            <a href="house-affordability.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">House Affordability</h3>
+                <p class="text-sm text-gray-600">What a lender will let you borrow for the purchase.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateRental() {
-            const price = parseFloat(document.getElementById('rpPrice').value);
-            const down = parseFloat(document.getElementById('rpDown').value);
-            const rent = parseFloat(document.getElementById('rpRent').value);
-            const expenses = parseFloat(document.getElementById('rpExpenses').value);
+        let chartInstance = null;
 
-            if (isNaN(price) || isNaN(down) || isNaN(rent) || isNaN(expenses) || price <= 0) {
-                alert("Please enter valid numbers.");
+        window.addEventListener('DOMContentLoaded', () => {
+            prefillFromURL();
+            toggleLoan(); toggleRepairs(); toggleSell();
+            calculateRental();
+        });
+
+        function toggleLoan() { document.getElementById('loan_fields').classList.toggle('hidden', document.getElementById('use_loan').value === 'no'); }
+        function toggleRepairs() { document.getElementById('repair_fields').classList.toggle('hidden', document.getElementById('need_repairs').value !== 'yes'); }
+        function toggleSell() {
+            const yes = document.getElementById('know_sell').value === 'yes';
+            document.getElementById('sellprice_row').classList.toggle('hidden', !yes);
+            document.getElementById('appr_row').classList.toggle('hidden', yes);
+        }
+
+        function clearForm() {
+            ['price', 'rent'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('resultsArea').innerHTML = '';
+        }
+
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+
+        function npv(rate, flows) { let s = 0; for (let t = 0; t < flows.length; t++) s += flows[t] / Math.pow(1 + rate, t); return s; }
+
+        function irr(flows) {
+            // scan for a sign change of NPV, then bisect
+            let prevR = -0.95, prevV = npv(prevR, flows);
+            for (let r = -0.9; r <= 5.0001; r += 0.05) {
+                const v = npv(r, flows);
+                if (isFinite(v) && isFinite(prevV) && ((prevV > 0 && v < 0) || (prevV < 0 && v > 0))) {
+                    let lo = prevR, hi = r;
+                    for (let i = 0; i < 100; i++) {
+                        const mid = (lo + hi) / 2, mv = npv(mid, flows);
+                        if ((npv(lo, flows) > 0) === (mv > 0)) lo = mid; else hi = mid;
+                    }
+                    return (lo + hi) / 2;
+                }
+                prevR = r; prevV = v;
+            }
+            return null;
+        }
+
+        function calculateRental() {
+            const out = document.getElementById('resultsArea');
+            const price = num('price');
+            const useLoan = document.getElementById('use_loan').value === 'yes';
+            const downPct = num('down_pct'), loanRate = num('loan_rate'), loanYears = num('loan_years');
+            const closing = num('closing');
+            const repairs = document.getElementById('need_repairs').value === 'yes';
+            const repairCost = repairs ? num('repair_cost') : 0;
+            const arv = repairs ? num('arv') : 0;
+            const rent0 = num('rent'), rentInc = num('rent_inc'), oi0 = num('other_inc'), oiInc = num('other_inc_inc');
+            const vacancy = num('vacancy'), mgmtPct = num('mgmt');
+            const exp = [
+                { v: num('tax'), i: num('tax_inc') }, { v: num('ins'), i: num('ins_inc') },
+                { v: num('hoa'), i: num('hoa_inc') }, { v: num('maint'), i: num('maint_inc') },
+                { v: num('other_cost'), i: num('other_cost_inc') }
+            ];
+            const knowSell = document.getElementById('know_sell').value === 'yes';
+            const appr = num('appr'), sellPriceIn = num('sell_price');
+            const holding = Math.min(40, Math.max(1, Math.round(num('holding'))));
+            const sellCostPct = num('sell_cost');
+
+            if (price <= 0 || holding < 1 || (useLoan && loanYears <= 0)) {
+                out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a valid purchase price, loan term and holding length.</div>';
                 return;
             }
 
-            // Net Operating Income (NOI)
-            const noi = rent - expenses;
+            const down = useLoan ? price * downPct / 100 : price;
+            const loan = useLoan ? price - down : 0;
+            const cashIn = down + closing + repairCost;
+            const mr = loanRate / 100 / 12, nMonths = loanYears * 12;
+            const pay = loan === 0 ? 0 : (mr === 0 ? loan / nMonths : loan * (mr * Math.pow(1 + mr, nMonths)) / (Math.pow(1 + mr, nMonths) - 1));
+            const baseValue = repairs ? arv : price;
 
-            // Cap Rate = NOI / Purchase Price
-            const capRate = (noi / price) * 100;
-
-            // Cash on Cash Return = NOI / Total Cash Invested (Down Payment)
-            // Note: This is a simplified version assuming no mortgage for this specific calculation.
-            const cocReturn = (noi / down) * 100;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('rpNOI').textContent = formatter.format(noi);
-            document.getElementById('rpCapRate').textContent = capRate.toFixed(2) + "%";
-            
-            const cocEl = document.getElementById('rpCOC');
-            cocEl.textContent = cocReturn.toFixed(2) + "%";
-            
-            if (cocReturn > 8) {
-                cocEl.className = "text-2xl font-bold text-green-600";
-            } else if (cocReturn > 0) {
-                cocEl.className = "text-2xl font-bold text-yellow-600";
-            } else {
-                cocEl.className = "text-2xl font-bold text-red-600";
+            let balance = loan;
+            const flows = [-cashIn];
+            const rows = [];
+            let cumCF = 0, first = null;
+            for (let y = 1; y <= holding; y++) {
+                const grossRent = rent0 * 12 * Math.pow(1 + rentInc / 100, y - 1);
+                const grossOther = oi0 * 12 * Math.pow(1 + oiInc / 100, y - 1);
+                const effIncome = (grossRent + grossOther) * (1 - vacancy / 100);
+                const mgmtFee = effIncome * mgmtPct / 100;
+                const expTotal = exp.reduce((s, e) => s + e.v * Math.pow(1 + e.i / 100, y - 1), 0);
+                const noi = effIncome - mgmtFee - expTotal;
+                let debt = 0;
+                for (let m = 0; m < 12 && balance > 0; m++) {
+                    const it = balance * mr;
+                    const pr = Math.min(pay - it, balance);
+                    balance -= pr; debt += pay;
+                    if (balance <= 0.005) balance = 0;
+                }
+                const cf = noi - debt;
+                cumCF += cf;
+                const valueY = knowSell ? null : baseValue * Math.pow(1 + appr / 100, y);
+                flows.push(cf);
+                rows.push({ y, effIncome, expTotal: expTotal + mgmtFee, noi, debt, cf, cumCF, balance, valueY });
+                if (y === 1) first = { noi, cf, effIncome };
             }
 
-            document.getElementById('rpResults').classList.remove('hidden');
+            const sellValue = knowSell ? sellPriceIn : baseValue * Math.pow(1 + appr / 100, holding);
+            const netSale = sellValue * (1 - sellCostPct / 100) - balance;
+            flows[holding] += netSale;
+            const totalProfit = cumCF + netSale - cashIn;
+            const r = irr(flows);
+            const capRate = first.noi / price * 100;
+            const coc = cashIn > 0 ? first.cf / cashIn * 100 : 0;
+            const rule1 = rent0 / (price + repairCost) * 100; // monthly rent as % of total cost
+            const expRatio = (first.effIncome - 0) > 0 ? (rows[0].expTotal) / (rent0 * 12 + oi0 * 12) * 100 : 0;
+
+            const stat = (label, val, sub) => `<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-center">
+                <p class="text-xs text-gray-500 font-semibold uppercase tracking-wide">${label}</p>
+                <p class="text-2xl font-bold text-[#3F51B5] mt-1">${val}</p>
+                <p class="text-xs text-gray-500 mt-1">${sub}</p></div>`;
+
+            const tableRows = rows.map(rw => `<tr class="border-b hover:bg-gray-50">
+                <td class="py-1.5 px-2">${rw.y}</td>
+                <td class="py-1.5 px-2 text-right">${formatMoney(rw.effIncome)}</td>
+                <td class="py-1.5 px-2 text-right">${formatMoney(rw.expTotal)}</td>
+                <td class="py-1.5 px-2 text-right">${formatMoney(rw.noi)}</td>
+                <td class="py-1.5 px-2 text-right">${formatMoney(rw.debt)}</td>
+                <td class="py-1.5 px-2 text-right font-semibold ${rw.cf < 0 ? 'text-red-500' : 'text-green-600'}">${formatMoney(rw.cf)}</td>
+                <td class="py-1.5 px-2 text-right">${rw.valueY === null ? '—' : formatMoney(rw.valueY)}</td>
+                <td class="py-1.5 px-2 text-right">${formatMoney(rw.balance)}</td>
+                <td class="py-1.5 px-2 text-right">${rw.valueY === null ? '—' : formatMoney(rw.valueY - rw.balance)}</td>
+            </tr>`).join('');
+
+            out.innerHTML = `
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    ${stat('Cash Flow (Year 1)', formatMoney(first.cf) + '/yr', formatMoney(first.cf / 12) + ' per month')}
+                    ${stat('Cap Rate (Year 1)', capRate.toFixed(2) + '%', 'NOI ' + formatMoney(first.noi) + ' ÷ price')}
+                    ${stat('Cash-on-Cash (Year 1)', coc.toFixed(2) + '%', 'on ' + formatMoney(cashIn) + ' cash invested')}
+                    ${stat('IRR (' + holding + ' yrs)', r === null ? 'n/a' : (r * 100).toFixed(2) + '%', r === null ? 'never breaks even' : 'incl. sale in year ' + holding)}
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Cash Invested Upfront:</span> <span class="font-bold">${formatMoney(cashIn)}</span></p>
+                    <p class="text-xs text-gray-500 mb-3">${useLoan ? 'Down payment ' + formatMoney(down) + ' + closing ' + formatMoney(closing) : 'Full price ' + formatMoney(price) + ' + closing ' + formatMoney(closing)}${repairCost ? ' + repairs ' + formatMoney(repairCost) : ''}${useLoan ? ' · Loan ' + formatMoney(loan) + ' at ' + loanRate + '% → ' + formatMoney(pay) + '/mo' : ''}</p>
+                    <p class="flex justify-between mb-2"><span>Total Cash Flow over ${holding} years:</span> <span class="font-bold ${cumCF < 0 ? 'text-red-500' : ''}">${formatMoney(cumCF)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Sale in Year ${holding}:</span> <span class="font-bold">${formatMoney(sellValue)} &minus; ${sellCostPct}% costs &minus; balance ${formatMoney(balance)} = ${formatMoney(netSale)}</span></p>
+                    <p class="flex justify-between"><span>Total Profit (cash flow + sale &minus; cash in):</span> <span class="font-bold ${totalProfit < 0 ? 'text-red-500' : 'text-green-600'}">${formatMoney(totalProfit)}</span></p>
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        <span class="text-xs font-semibold px-2 py-1 rounded ${rule1 >= 1 ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">1% Rule: ${rule1.toFixed(2)}% ${rule1 >= 1 ? '✓ passes' : '— below 1%'}</span>
+                        <span class="text-xs font-semibold px-2 py-1 rounded ${expRatio <= 50 ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">Expenses = ${expRatio.toFixed(0)}% of gross income (50% rule benchmark)</span>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="cfChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 overflow-x-auto">
+                    <h3 class="font-bold text-gray-800 mb-3">Year-by-Year Projection</h3>
+                    <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                        <thead class="bg-gray-50 text-gray-700">
+                            <tr><th class="py-2 px-2 border-b">Year</th><th class="py-2 px-2 border-b text-right">Income*</th><th class="py-2 px-2 border-b text-right">Expenses†</th><th class="py-2 px-2 border-b text-right">NOI</th><th class="py-2 px-2 border-b text-right">Debt Service</th><th class="py-2 px-2 border-b text-right">Cash Flow</th><th class="py-2 px-2 border-b text-right">Value</th><th class="py-2 px-2 border-b text-right">Loan Balance</th><th class="py-2 px-2 border-b text-right">Equity</th></tr>
+                        </thead>
+                        <tbody>${tableRows}</tbody>
+                    </table>
+                    <p class="text-xs text-gray-500 mt-2">* After vacancy. † Operating expenses plus management fee; mortgage shown separately as debt service.</p>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="downloadCSV()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">⬇ Download CSV</button>
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                </div>`;
+
+            drawChart(rows);
+            updateURL();
+            window._rentalRows = rows; window._rentalMeta = { holding, cashIn, netSale, sellValue };
         }
+
+        function drawChart(rows) {
+            const ctx = document.getElementById('cfChart').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                data: {
+                    labels: rows.map(r => 'Yr ' + r.y),
+                    datasets: [
+                        { type: 'bar', label: 'Annual Cash Flow', data: rows.map(r => Math.round(r.cf)), backgroundColor: rows.map(r => r.cf < 0 ? 'rgba(239,68,68,0.6)' : 'rgba(76,175,80,0.6)') },
+                        { type: 'line', label: 'Cumulative Cash Flow', data: rows.map(r => Math.round(r.cumCF)), borderColor: '#3F51B5', borderWidth: 3, tension: 0.1, pointRadius: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'top' } },
+                    scales: { y: { ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } } }
+                }
+            });
+        }
+
+        function downloadCSV() {
+            const rows = window._rentalRows || [];
+            if (!rows.length) return;
+            let csv = 'Year,Income (after vacancy),Expenses + Mgmt,NOI,Debt Service,Cash Flow,Property Value,Loan Balance,Equity\n';
+            rows.forEach(r => { csv += [r.y, r.effIncome.toFixed(2), r.expTotal.toFixed(2), r.noi.toFixed(2), r.debt.toFixed(2), r.cf.toFixed(2), r.valueY === null ? '' : r.valueY.toFixed(2), r.balance.toFixed(2), r.valueY === null ? '' : (r.valueY - r.balance).toFixed(2)].join(',') + '\n'; });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob); a.download = 'rental-property-projection.csv'; a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        const PARAMS = [['price', 'p'], ['use_loan', 'ul'], ['down_pct', 'dp'], ['loan_rate', 'lr'], ['loan_years', 'ly'], ['closing', 'cl'], ['need_repairs', 'nr2'], ['repair_cost', 'rc'], ['arv', 'arv'], ['rent', 'rent'], ['rent_inc', 'ri'], ['other_inc', 'oi'], ['other_inc_inc', 'oii'], ['vacancy', 'vac'], ['mgmt', 'mg'], ['tax', 'tax'], ['tax_inc', 'taxi'], ['ins', 'ins'], ['ins_inc', 'insi'], ['hoa', 'hoa'], ['hoa_inc', 'hoai'], ['maint', 'mt'], ['maint_inc', 'mti'], ['other_cost', 'oc'], ['other_cost_inc', 'oci'], ['know_sell', 'ks'], ['appr', 'ap'], ['sell_price', 'sp'], ['holding', 'h'], ['sell_cost', 'sc']];
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            PARAMS.forEach(([id, key]) => { const el = document.getElementById(id); if (el) p.set(key, el.value); });
+            return p.toString();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => { if (q.get(key) !== null) { const el = document.getElementById(id); if (el) el.value = q.get(key); } });
+        }
+
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-</html>
+    </html>
