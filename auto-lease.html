@@ -4,76 +4,525 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto Lease Calculator - CalcNova</title>
+    <meta name="description" content="Free auto lease calculator: monthly lease payment from capitalized cost, money factor and residual value — plus a lease-vs-purchase comparison over the same term.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/auto-lease">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Auto Lease Calculator - CalcNova">
+    <meta property="og:description" content="Depreciation, finance charge and tax — the three parts of every lease payment, plus what buying instead would cost.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/auto-lease">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Auto Lease Calculator - CalcNova">
+    <meta name="twitter:description" content="Your lease payment broken into its three real parts, with a same-term purchase comparison.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Auto Lease Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/auto-lease" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is a money factor?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The money factor is a lease's interest rate written in a different costume. Multiply it by 2,400 to get the equivalent APR: a money factor of 0.00208 is a 4.99% APR. Lessors quote it because the lease finance charge is computed as (capitalized cost + residual value) × money factor, a formula that has no exact loan analogue." }
+            },
+            {
+                "@type": "Question",
+                "name": "How is a lease payment calculated?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Three parts: depreciation — (adjusted capitalized cost − residual value) divided by the term; a finance charge — (capitalized cost + residual value) × money factor; and sales tax on the sum of the two, in states that tax lease payments. Add the three and you have the monthly payment." }
+            },
+            {
+                "@type": "Question",
+                "name": "Is leasing cheaper than buying?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Per month, almost always — you finance only the depreciation, not the whole car, and in most states you pay sales tax only on the payments rather than the full price. Over many years, usually not: when the lease ends you own nothing, while a buyer who keeps a paid-off car drives nearly free. The comparison below prices both over the lease term, crediting the buyer with the car's end value." }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I negotiate a lease?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes — negotiate the car's price (the capitalized cost) exactly as if you were buying, ideally before mentioning the lease. The residual value is set by the financing company and is not negotiable, but the capitalized cost, and sometimes fees added to it, absolutely are. A lower capitalized cost lowers both the depreciation and the finance charge." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        @media print { nav, footer, .no-print, #calculator-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium"><a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a></div>
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
+            </div>
         </div>
     </nav>
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Auto Lease</span>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Auto Lease Calculator</span>
     </div>
+
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Auto Lease Calculator</h1>
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div><label class="block text-sm font-medium text-gray-700 mb-1">MSRP / Vehicle Price ($)</label><input type="number" id="leaseMSRP" value="35000" class="w-full border border-gray-300 rounded-md p-2 outline-none"></div>
-                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Negotiated Price ($)</label><input type="number" id="leasePrice" value="33000" class="w-full border border-gray-300 rounded-md p-2 outline-none"></div>
-                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Residual Value (%)</label><input type="number" id="leaseResidual" value="55" class="w-full border border-gray-300 rounded-md p-2 outline-none"></div>
-                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Lease Term (Months)</label><input type="number" id="leaseMonths" value="36" class="w-full border border-gray-300 rounded-md p-2 outline-none"></div>
-                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate (Money Factor APR) (%)</label><input type="number" id="leaseRate" value="5" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none"></div>
-                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Down Payment ($)</label><input type="number" id="leaseDown" value="2000" class="w-full border border-gray-300 rounded-md p-2 outline-none"></div>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Auto Lease Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
+
+            <div class="flex gap-2 mb-4">
+                <button id="modePriceBtn" onclick="setMode('price')" class="flex-1 bg-[#3F51B5] text-white font-bold py-2 rounded-md shadow-sm">By Total Price</button>
+                <button id="modePayBtn" onclick="setMode('pay')" class="flex-1 bg-white border border-gray-300 text-gray-700 font-bold py-2 rounded-md shadow-sm">By Monthly Payment</button>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="input-group" id="priceRow">
+                    <label>Auto Price</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="price" value="50000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
                 </div>
-                <button onclick="calculateLease()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Lease Payment</button>
-                <div id="leaseResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
-                    <p class="text-sm text-gray-500">Estimated Monthly Lease Payment</p>
-                    <p class="text-4xl font-bold text-[#14B8A6]" id="leaseMonthly">$0</p>
+                <div class="input-group hidden" id="payRow">
+                    <label>Monthly Pay</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="monthlypay" value="600" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Lease Term</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="term" value="36" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">months</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label style="width:42%;">
+                        <select id="ratetype" onchange="switchRateType()" class="w-full bg-gray-50">
+                            <option value="rate">Interest Rate (%)</option>
+                            <option value="mf" selected>Money Factor</option>
+                        </select>
+                    </label>
+                    <div class="w-[58%]">
+                        <input type="number" id="rateval" value="0.00208" step="0.00001" class="w-full">
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mb-2">Money factor × 2,400 = APR. Switching the type converts the value for you.</p>
+                <div class="input-group">
+                    <label>Down Payment</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="down" value="10000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Trade-in Value</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="tradein" value="0" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Sales Tax</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="saletax" value="7" step="0.1" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Residual Value</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="residual" value="24000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500">What the car will be worth at lease end — set by the financing company, not the dealer. Also your buyout price.</p>
+
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateLease()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Auto Leasing Works</h2>
-                <p class="text-gray-600 mb-4">When you lease a car, you are paying for the depreciation of the vehicle during the time you drive it, plus interest (rent charge). This calculator helps you estimate your monthly lease payment.</p>
+
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
-        <aside class="md:w-1/4"><div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4"><p>AdSense Space</p></div></aside>
-    </main>
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12"><div class="container mx-auto text-center px-4"><p class="text-sm">&copy; 2024 CalcNova.</p></div></footer>
-    <script>
-        function calculateLease() {
-            const msrp = parseFloat(document.getElementById('leaseMSRP').value);
-            const price = parseFloat(document.getElementById('leasePrice').value);
-            const residualPct = parseFloat(document.getElementById('leaseResidual').value) / 100;
-            const months = parseInt(document.getElementById('leaseMonths').value);
-            const rate = parseFloat(document.getElementById('leaseRate').value) / 100;
-            const down = parseFloat(document.getElementById('leaseDown').value);
 
-            if (isNaN(msrp) || isNaN(price) || isNaN(residualPct) || isNaN(months) || isNaN(rate) || isNaN(down)) {
-                alert("Please enter valid numbers.");
+        <div class="md:w-3/5">
+            <div id="resultsArea"></div>
+        </div>
+    </main>
+
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Leasing, Decoded: Three Numbers Build the Payment</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                A lease is a long-term rental with finance woven in: you pay for the slice of the car you use up
+                (its depreciation), rent on the money tied up in it, and tax on both. Everything else — the
+                capitalized cost, the money factor, the residual — is just the machinery that produces those three
+                numbers. A quick example with modest figures: a <strong>$36,000</strong> car, <strong>$3,000</strong> down,
+                no trade-in, a residual of <strong>$19,800</strong> after 36 months, a money factor of
+                <strong>0.00175</strong> (a 4.2% APR), and 6% tax. The adjusted capitalized cost is $33,000.
+                Depreciation: ($33,000 − $19,800) ÷ 36 = <strong>$366.67</strong>. Finance charge:
+                ($33,000 + $19,800) × 0.00175 = <strong>$92.40</strong>. Tax: ($366.67 + $92.40) × 6% =
+                <strong>$27.54</strong>. Payment: <strong>$486.61 a month</strong>. Once you can rebuild a quote this way,
+                no lease worksheet can hide anything from you.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
+            </div>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The four inputs, and who controls each</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Capitalized cost</strong> is the car's negotiated price — "cap cost" — plus any fees rolled in. You
+                control it exactly as a buyer does, which is why experienced lessees negotiate the price first, as
+                if buying, and mention the lease afterward. Down payments and trade-ins reduce it ("cap cost
+                reduction"). <strong>Residual value</strong> is the financing company's forecast of the car's worth at
+                lease end — and your guaranteed buyout price. The bank sets it; you cannot negotiate it, but you
+                can choose cars that hold value, since a high residual means less depreciation to pay for.
+                <strong>Money factor</strong> is the rate in disguise: multiply by 2,400 for the APR, and expect it to track
+                your credit — weaker credit, higher factor. <strong>Term</strong> is usually 24–48 months; staying inside
+                the factory warranty window is the quiet perk of the standard 36.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Mileage, wear, and the end-of-lease inspection</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Leases cap miles — typically 10,000–15,000 a year, 12,000 most often — and charge per mile over,
+                so a cheap payment on a low-mileage lease can become expensive for a long commuter; "high-mileage"
+                leases cost more monthly but beat paying penalties. Buying extra miles upfront is cheaper than
+                paying for them at turn-in, and buying the car at lease end erases the charge entirely. Wear and
+                tear is judged at inspection: <em>normal</em> — small dings and scuffs, minor stains, routine tire and
+                brake wear — costs you nothing. <em>Excessive</em> — broken or missing parts, frame or body damage,
+                dead electronics, bald mismatched tires — is billed to you. A wash, scratch buffing, replacing
+                small broken trim, and stain removal in the final week is money well spent; wear-and-tear
+                insurance exists for the anxious. The contract also obliges you to service the car on schedule,
+                with proof — skip it and penalties (and warranty trouble) follow.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Why lease — and the honest counterweights</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The case for leasing: a lower monthly payment and less cash down for the same new car; a car that
+                is always under warranty and in its most reliable years; in most states, sales tax only on the
+                payments you make rather than the whole price (on the defaults above, about $1,456 of lease tax
+                versus $3,500 to buy); an easy trial — love it and buy it at the preset residual, or hand back the
+                keys; and for businesses, lease payments are generally deductible as an operating expense, which
+                suits many self-employed drivers. The counterweights are just as real: at lease end you own
+                nothing — no equity, ever; the car is the lessor's property, so modifications are restricted;
+                mileage caps punish road trips and long commutes; and perpetual leasing means perpetual payments,
+                while a buyer eventually owns years of payment-free driving. Compare the same-term totals above —
+                but remember the comparison ends at the term; the buyer's advantage compounds in the years after.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Getting out early</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Life changes — a growing family, a longer commute, a tighter budget. The exits, in rough order of
+                cost: <strong>ask the lessor for relief</strong> — a few months' deferral is sometimes granted, with the
+                payments tacked on later. <strong>Transfer the lease</strong> — a swap service matches you with someone who
+                takes over the same payment for the remaining term, for a few hundred in transfer fees, where the
+                contract and state allow it. <strong>Buy the car out</strong> and then sell or keep it — sensible when the
+                buyout is near the car's market value; note the buyout mid-lease is usually the residual plus
+                remaining depreciation, not just the residual. And the plain <strong>early return</strong> — simplest, and
+                usually priciest: an early-termination fee plus the remaining depreciation the lessor hasn't
+                collected yet. Price the buyout against the car's real market value before choosing; in a strong
+                used-car market it occasionally wins outright.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">What is a money factor, in plain terms?</h4>
+                    <p class="text-gray-700">The lease's interest rate in disguise. Multiply by 2,400 to get the APR — 0.00208 ≈ 4.99%. Always convert it before comparing with a loan.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Is leasing cheaper than buying?</h4>
+                    <p class="text-gray-700">Monthly, yes; across a lifetime of driving, usually no — you never stop paying. The same-term comparison above shows the lease's edge while it lasts.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What happens at the end of the lease?</h4>
+                    <p class="text-gray-700">Return the car (after inspection, plus any mileage/wear charges), buy it at the residual value, or lease/buy something new. Three doors — the residual makes the buy-it price known from day one.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Should I put a big down payment on a lease?</h4>
+                    <p class="text-gray-700">Cautiously. It lowers the payment, but if the car is totaled or stolen early, that upfront cash is generally gone — the insurer settles with the lessor. Many advisors keep lease down payments small for exactly this reason.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. It assumes the down payment and trade-in reduce the capitalized cost, fees are included in the auto
+                price, and sales tax is charged on each monthly payment; a few states tax leases differently.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="auto-loan.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Auto Loan Calculator</h3>
+                <p class="text-sm text-gray-600">The purchase side — full schedule, tax and fees.</p>
+            </a>
+            <a href="cash-back-or-low-interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Cash Back or Low Interest</h3>
+                <p class="text-sm text-gray-600">Buying with a rebate-versus-rate choice?</p>
+            </a>
+            <a href="rent-vs-buy.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Rent vs. Buy</h3>
+                <p class="text-sm text-gray-600">The same rent-or-own question, for a home.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let chartInstance = null, mode = 'price';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            prefillFromURL();
+            calculateLease();
+        });
+
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+
+        function clearForm() {
+            document.getElementById('price').value = '';
+            document.getElementById('resultsArea').innerHTML = '';
+        }
+
+        function setMode(m) {
+            mode = m;
+            document.getElementById('priceRow').classList.toggle('hidden', m !== 'price');
+            document.getElementById('payRow').classList.toggle('hidden', m !== 'pay');
+            const bp = document.getElementById('modePriceBtn'), bm = document.getElementById('modePayBtn');
+            bp.className = m === 'price' ? 'flex-1 bg-[#3F51B5] text-white font-bold py-2 rounded-md shadow-sm' : 'flex-1 bg-white border border-gray-300 text-gray-700 font-bold py-2 rounded-md shadow-sm';
+            bm.className = m === 'pay' ? 'flex-1 bg-[#3F51B5] text-white font-bold py-2 rounded-md shadow-sm' : 'flex-1 bg-white border border-gray-300 text-gray-700 font-bold py-2 rounded-md shadow-sm';
+            calculateLease();
+        }
+
+        function switchRateType() {
+            const type = document.getElementById('ratetype').value;
+            const el = document.getElementById('rateval');
+            const v = parseFloat(el.value);
+            if (isNaN(v)) return;
+            if (type === 'mf') el.value = Math.round(100000 * v / 2400) / 100000;
+            else el.value = Math.round(v * 2400 * 1000) / 1000;
+        }
+
+        function getMF() {
+            const v = num('rateval');
+            return document.getElementById('ratetype').value === 'mf' ? v : v / 2400;
+        }
+
+        function calculateLease() {
+            const out = document.getElementById('resultsArea');
+            const term = Math.round(num('term'));
+            const down = num('down'), trade = num('tradein');
+            const taxPct = num('saletax'), residual = num('residual');
+            const mf = getMF();
+            const apr = mf * 2400;
+
+            if (term <= 0 || residual < 0) {
+                out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a valid lease term and residual value.</div>';
                 return;
             }
 
-            // Residual Value
-            const residualValue = msrp * residualPct;
+            let price;
+            if (mode === 'price') {
+                price = num('price');
+                if (price <= 0) {
+                    out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a valid auto price.</div>';
+                    return;
+                }
+            } else {
+                const M = num('monthlypay');
+                if (M <= 0) {
+                    out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a valid monthly payment.</div>';
+                    return;
+                }
+                const B = M / (1 + taxPct / 100);
+                const C = (B - residual * (mf - 1 / term)) / (1 / term + mf);
+                price = C + down + trade;
+                if (price <= 0 || C <= residual) {
+                    out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">That payment is too low for this residual value and term — try a higher payment or lower residual.</div>';
+                    return;
+                }
+            }
 
-            // Depreciation Fee
-            const depreciationFee = (price - down - residualValue) / months;
+            const capCost = price - down - trade;
+            if (capCost <= residual) {
+                out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">The adjusted capitalized cost must exceed the residual value — check the price, down payment, and residual.</div>';
+                return;
+            }
+            const dep = (capCost - residual) / term;
+            const fin = (capCost + residual) * mf;
+            const taxM = (dep + fin) * taxPct / 100;
+            const monthly = dep + fin + taxM;
+            const totalLeasePayments = monthly * term;
+            const totalLeaseCost = down + totalLeasePayments;
+            const totalTaxLease = taxM * term;
 
-            // Money Factor (Interest)
-            const moneyFactor = rate / 2400;
-            const financeFee = (price - down + residualValue) * moneyFactor;
+            // Purchase comparison over the same term, at the same rate
+            const taxBuy = taxPct / 100 * Math.max(price - trade, 0);
+            const loanBuy = price - down - trade;
+            const r = apr / 100 / 12;
+            const payBuy = loanBuy <= 0 ? 0 : (r === 0 ? loanBuy / term : loanBuy * r / (1 - Math.pow(1 + r, -term)));
+            const totalPaidBuy = payBuy * term;
+            const interestBuy = totalPaidBuy - loanBuy;
+            const upfrontBuy = down + taxBuy;
+            const netCostBuy = down + taxBuy + totalPaidBuy - residual;
+            const netCostLease = totalLeaseCost;
 
-            // Monthly Payment
-            const monthlyPayment = depreciationFee + financeFee;
+            const verdict = netCostLease <= netCostBuy
+                ? `<p class="text-sm text-gray-700">Over this ${term}-month term, <strong>leasing costs ${formatMoney(Math.abs(netCostBuy - netCostLease))} less</strong> than buying and selling at the residual value — mostly because lease tax is charged only on the payments. Keep the car longer than the term, though, and buying pulls ahead: the buyer keeps an asset, the lessee starts over.</p>`
+                : `<p class="text-sm text-gray-700">Over this ${term}-month term, <strong>buying costs ${formatMoney(Math.abs(netCostBuy - netCostLease))} less</strong> than leasing (selling at the residual value at the end) — and the gap grows every year you keep a paid-off car.</p>`;
 
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-            document.getElementById('leaseMonthly').textContent = formatter.format(monthlyPayment);
-            document.getElementById('leaseResults').classList.remove('hidden');
+            const bannerLabel = mode === 'price' ? 'Monthly Lease Payment' : 'Most Expensive Car This Payment Leases';
+            const bannerValue = mode === 'price' ? formatMoney(monthly) : formatMoney(price);
+
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">${bannerLabel}</p>
+                    <p class="text-4xl font-bold">${bannerValue}</p>
+                    ${mode === 'pay' ? `<p class="text-sm opacity-90 mt-1">at ${formatMoney(num('monthlypay'))}/month for ${term} months</p>` : `<p class="text-sm opacity-90 mt-1">for ${term} months · money factor ${mf.toFixed(5)} ≈ ${apr.toFixed(2)}% APR</p>`}
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-sm flex-1">
+                        <h3 class="font-bold text-[#3F51B5] mb-3">The Lease</h3>
+                        ${mode === 'pay' ? `<p class="flex justify-between mb-2"><span>Auto Price:</span> <span class="font-bold">${formatMoney(price)}</span></p>` : ''}
+                        <p class="flex justify-between mb-2"><span>Adjusted Capitalized Cost:</span> <span class="font-bold">${formatMoney(capCost)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Residual Value:</span> <span class="font-bold">${formatMoney(residual)} (${price > 0 ? (residual / price * 100).toFixed(0) : 0}% of price)</span></p>
+                        <p class="flex justify-between mb-2"><span>Monthly Depreciation:</span> <span class="font-bold">${formatMoney(dep)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Monthly Finance Charge:</span> <span class="font-bold">${formatMoney(fin)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Monthly Sales Tax:</span> <span class="font-bold">${formatMoney(taxM)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Total of ${term} Lease Payments:</span> <span class="font-bold">${formatMoney(totalLeasePayments)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Total Sales Tax (on payments):</span> <span class="font-bold">${formatMoney(totalTaxLease)}</span></p>
+                        <p class="flex justify-between"><span>Total Lease Cost (down + payments):</span> <span class="font-bold">${formatMoney(totalLeaseCost)}</span></p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-sm flex-1">
+                        <h3 class="font-bold text-[#3F51B5] mb-3">If Purchased Instead (same term &amp; rate)</h3>
+                        <p class="flex justify-between mb-2"><span>Total Loan Amount:</span> <span class="font-bold">${formatMoney(loanBuy)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Sales Tax (on price):</span> <span class="font-bold">${formatMoney(taxBuy)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Upfront Payment:</span> <span class="font-bold">${formatMoney(upfrontBuy)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Monthly Pay:</span> <span class="font-bold">${formatMoney(payBuy)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Total Loan Interest:</span> <span class="font-bold">${formatMoney(interestBuy)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Value at End of Term:</span> <span class="font-bold">${formatMoney(residual)}</span></p>
+                        <p class="flex justify-between"><span>Net Cost of Owning ${term} Months:</span> <span class="font-bold">${formatMoney(netCostBuy)}</span></p>
+                    </div>
+                </div>
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+                    <p class="font-bold text-gray-800 mb-1">Lease vs. buy over this term</p>
+                    ${verdict}
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="payChart"></canvas>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                </div>`;
+
+            const cv = document.getElementById('payChart');
+            if (cv) {
+                const ctx = cv.getContext('2d');
+                if (chartInstance) chartInstance.destroy();
+                chartInstance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: { labels: ['Depreciation', 'Finance Charge', 'Sales Tax'], datasets: [{ data: [Math.round(dep * 100) / 100, Math.round(fin * 100) / 100, Math.round(taxM * 100) / 100], backgroundColor: ['#3F51B5', '#14B8A6', '#F59E0B'] }] },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'right' },
+                            title: { display: true, text: 'What Your Monthly Lease Payment Is Made Of' },
+                            tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + formatMoney(c.parsed) + '/mo' } }
+                        }
+                    }
+                });
+            }
+            updateURL();
         }
+
+        const PARAMS = [['mode', 'md'], ['price', 'p'], ['monthlypay', 'mp'], ['term', 't'], ['ratetype', 'rt'], ['rateval', 'rv'], ['down', 'd'], ['tradein', 'ti'], ['saletax', 'sx'], ['residual', 'rs']];
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            PARAMS.forEach(([id, key]) => {
+                if (id === 'mode') { p.set(key, mode); return; }
+                p.set(key, document.getElementById(id).value);
+            });
+            return p.toString();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => {
+                if (q.get(key) === null) return;
+                if (id === 'mode') { if (q.get(key) === 'pay') setModeSilent('pay'); return; }
+                document.getElementById(id).value = q.get(key);
+            });
+        }
+
+        function setModeSilent(m) {
+            mode = m;
+            document.getElementById('priceRow').classList.toggle('hidden', m !== 'price');
+            document.getElementById('payRow').classList.toggle('hidden', m !== 'pay');
+            const bp = document.getElementById('modePriceBtn'), bm = document.getElementById('modePayBtn');
+            bp.className = m === 'price' ? 'flex-1 bg-[#3F51B5] text-white font-bold py-2 rounded-md shadow-sm' : 'flex-1 bg-white border border-gray-300 text-gray-700 font-bold py-2 rounded-md shadow-sm';
+            bm.className = m === 'pay' ? 'flex-1 bg-[#3F51B5] text-white font-bold py-2 rounded-md shadow-sm' : 'flex-1 bg-white border border-gray-300 text-gray-700 font-bold py-2 rounded-md shadow-sm';
+        }
+
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
