@@ -274,7 +274,7 @@
                 and get competing quotes. When a manufacturer offers <strong>either</strong> a cash rebate <strong>or</strong> a low
                 rate, there is no universal winner: the rebate cuts the amount financed immediately, the low rate
                 cuts every month's interest; the longer the term, the more the low rate is worth — run both
-                versions through this calculator and compare total cost. On term length, beware the 72- and
+                versions through the <a href="cash-back-or-low-interest.html" class="text-[#3F51B5] font-semibold hover:underline">cash back or low interest calculator</a> and compare total cost. On term length, beware the 72- and
                 84-month stretch: the payment drops, but cars depreciate fastest in their first years (often 10%+
                 the day you drive off), so long loans spend years underwater; the classic guardrail is
                 <strong>20/4/10</strong> — 20% down, four years maximum, all car costs under 10% of gross income. Paying
@@ -381,7 +381,7 @@
 
         function taxBasis(price, inc, trade, state) {
             let base = price;
-            if (!state || REBATE_NOT_TAXED.includes(state)) base -= inc;
+            if (REBATE_NOT_TAXED.includes(state)) base -= inc;
             if (!state || !NO_TRADE_REDUCTION.includes(state)) base -= trade;
             return Math.max(base, 0);
         }
@@ -389,7 +389,7 @@
         function taxAdjust(state, inc, trade) {
             // amount subtracted from price inside the tax basis (needed for the reverse solve)
             let adj = 0;
-            if (!state || REBATE_NOT_TAXED.includes(state)) adj += inc;
+            if (REBATE_NOT_TAXED.includes(state)) adj += inc;
             if (!state || !NO_TRADE_REDUCTION.includes(state)) adj += trade;
             return adj;
         }
@@ -673,4 +673,4 @@
         function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-                    </html>
+                            </html>
