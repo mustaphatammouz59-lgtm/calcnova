@@ -4,117 +4,664 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Down Payment Calculator - CalcNova</title>
+    <meta name="description" content="Free down payment calculator with three ways in: from the cash you have, from the home price, or from both — plus closing costs, PMI warnings and a savings plan for reaching your goal.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/down-payment">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Down Payment Calculator - CalcNova">
+    <meta property="og:description" content="Affordable home price from your cash, cash needed for a price, or the down payment percentage your cash buys — closing costs included.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/down-payment">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Down Payment Calculator - CalcNova">
+    <meta name="twitter:description" content="Three down payment calculators in one, plus a savings plan to get there.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Down Payment Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/down-payment" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How much down payment do I need for a house?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It depends on the loan: conventional loans allow as little as 3% down but charge PMI below 20%; FHA loans allow 3.5%; VA and USDA loans allow 0% for eligible buyers. On a $500,000 home that is $15,000 at 3%, $17,500 at 3.5%, or $100,000 at 20% — before closing costs." }
+            },
+            {
+                "@type": "Question",
+                "name": "Does the down payment include closing costs?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No — they are separate buckets of upfront cash. Closing costs (appraisal, title, origination, prepaid taxes and insurance) typically add roughly 2–5% of the price; this calculator uses 3% as a default. The cash you truly need at closing is down payment plus closing costs." }
+            },
+            {
+                "@type": "Question",
+                "name": "What happens if I put down less than 20%?",
+                "acceptedAnswer": { "@type": "Answer", "text": "On a conventional loan you will pay private mortgage insurance (PMI) — commonly around 0.5% of the loan per year — until your balance reaches 80% of the home's value. FHA loans charge mortgage insurance regardless of down payment size. A smaller down payment also means a larger loan and more total interest." }
+            },
+            {
+                "@type": "Question",
+                "name": "Can my down payment be a gift?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Often yes. FHA allows the entire down payment to come from a gift from family, an employer, or a charity, documented with a gift letter stating it is not a loan. Conventional loans also accept gifts, with rules that vary by loan type and down payment size." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .section-title { font-weight: bold; font-size: 0.9rem; color: #1F2937; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.25rem;}
+        @media print { nav, footer, .no-print { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Down Payment</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Down Payment Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Down Payment Calculator</h1>
+    <div class="container mx-auto px-4 pt-2 no-print">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Down Payment Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Three ways into the same question — <em>how much house, and how much cash?</em> Start from the cash you have
+            saved, from a home price you are eyeing, or from both together. Each calculator counts
+            <strong>closing costs</strong> as well as the down payment, because the cash you need at closing is always the two combined.
+        </p>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Home Price ($)</label>
-                        <input type="number" id="dpPrice" value="300000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+    <!-- ============ CALCULATOR 1 ============ -->
+    <section class="container mx-auto px-4 py-6">
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="md:w-2/5 no-print">
+                <h2 class="text-xl font-bold text-gray-800 mb-1">1 — Use the Upfront Cash Available</h2>
+                <p class="text-sm text-gray-600 mb-4">You know your cash and the percentage you want to put down. What home price can you afford?</p>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group">
+                        <label>Upfront Cash Available</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="cash1" value="100000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Down Payment (%)</label>
-                        <input type="number" id="dpPercent" value="20" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="input-group">
+                        <label>Down Payment</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="downpct1" value="20" step="0.1" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
                     </div>
+                    <div class="section-title">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="include1" class="w-4 h-4" checked> Include Closing Costs
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label>Closing Costs</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="cc1" value="3" step="0.1" class="w-2/3">
+                            <select id="ccunit1" class="w-1/3 bg-gray-50">
+                                <option value="pct" selected>%</option>
+                                <option value="usd">$</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Interest Rate</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="rate1" value="7.30" step="0.001" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Loan Term</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="term1" value="30" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
+                        </div>
+                    </div>
+                    <button onclick="calc1()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-4">Calculate</button>
                 </div>
-                <button onclick="calculateDownPayment()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Down Payment</button>
-
-                <div id="dpResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Required Down Payment</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="dpAmount">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Loan Amount Needed</p>
-                            <p class="text-2xl font-bold text-[#3F51B5]" id="dpLoanAmount">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">PMI Required?</p>
-                            <p class="text-xl font-bold text-red-500" id="dpPMI">Yes</p>
-                        </div>
-                    </div>
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Why is the Down Payment Important?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">The down payment is the portion of the home's purchase price you pay upfront. A higher down payment reduces the loan amount, which means you will pay less interest over time. Additionally, in the U.S., putting down at least 20% usually allows you to avoid paying Private Mortgage Insurance (PMI), which can save you hundreds of dollars a month.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="md:w-3/5">
+                <div id="results1"></div>
             </div>
         </div>
+    </section>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+    <!-- ============ CALCULATOR 2 ============ -->
+    <section class="container mx-auto px-4 py-6">
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="md:w-2/5 no-print">
+                <h2 class="text-xl font-bold text-gray-800 mb-1">2 — Use the Home Price</h2>
+                <p class="text-sm text-gray-600 mb-4">You know the price and the percentage. How much cash do you need at closing?</p>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group">
+                        <label>Home Price</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="price2" value="500000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Down Payment</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="downpct2" value="20" step="0.1" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <div class="section-title">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="include2" class="w-4 h-4" checked> Include Closing Costs
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label>Closing Costs</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="cc2" value="3" step="0.1" class="w-2/3">
+                            <select id="ccunit2" class="w-1/3 bg-gray-50">
+                                <option value="pct" selected>%</option>
+                                <option value="usd">$</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Interest Rate</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="rate2" value="7.30" step="0.001" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Loan Term</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="term2" value="30" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
+                        </div>
+                    </div>
+                    <button onclick="calc2()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-4">Calculate</button>
+                </div>
+            </div>
+            <div class="md:w-3/5">
+                <div id="results2"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CALCULATOR 3 ============ -->
+    <section class="container mx-auto px-4 py-6">
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="md:w-2/5 no-print">
+                <h2 class="text-xl font-bold text-gray-800 mb-1">3 — Use the Home Price and Upfront Cash</h2>
+                <p class="text-sm text-gray-600 mb-4">You know the price and your cash. What down payment percentage does that work out to?</p>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group">
+                        <label>Home Price</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="price3" value="500000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Upfront Cash Available</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="cash3" value="100000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="section-title">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="include3" class="w-4 h-4" checked> Include Closing Costs
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label>Closing Costs</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="cc3" value="3" step="0.1" class="w-2/3">
+                            <select id="ccunit3" class="w-1/3 bg-gray-50">
+                                <option value="pct" selected>%</option>
+                                <option value="usd">$</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Interest Rate</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="rate3" value="7.30" step="0.001" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Loan Term</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="term3" value="30" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
+                        </div>
+                    </div>
+                    <button onclick="calc3()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-4">Calculate</button>
+                </div>
+            </div>
+            <div class="md:w-3/5">
+                <div id="results3"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ SAVINGS PLAN ============ -->
+    <section class="container mx-auto px-4 py-6 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-2">4 — Save Up for It: The Savings Plan</h2>
+            <p class="text-gray-700 leading-7 mb-5">
+                Short of the cash you need? Set the target from any result above, add what you have already saved and
+                what you can set aside monthly, and see the month you get there — interest on your savings included.
+            </p>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="text-sm">
+                    <div class="input-group">
+                        <label>Cash Target</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="p_target" value="100000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Already Saved</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="p_saved" value="10000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Monthly Contribution</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="p_monthly" value="800" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Savings Account APY</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="p_apy" value="4" step="0.1" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <button onclick="calcPlan()" class="mt-3 bg-[#4CAF50] text-white font-bold py-2 px-6 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                </div>
+                <div id="planResults"></div>
+            </div>
+            <div class="mt-6">
+                <canvas id="planChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CONTENT ============ -->
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">What Is a Down Payment?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                A down payment is the slice of a home's price you pay yourself, in cash, at closing; the mortgage
+                covers the rest. It is usually quoted as a percentage of the price — on a $250,000 home, 3.5% is
+                $8,750 and 20% is $50,000 — and it does two jobs at once. It shrinks the loan you need, and it gives
+                you instant equity: a cushion that protects both you and the lender if prices dip. What first-time
+                buyers most often miss is that the down payment is only <em>part</em> of the cash due at closing,
+                which is why every calculator on this page adds closing costs on top.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
                 <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-        </aside>
-    </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Closing costs: the other 3%</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Beyond the down payment, closing day brings lender fees, an appraisal, title insurance, an
+                inspection, a survey, and prepaid property taxes and homeowners insurance. A serviceable rule of
+                thumb is <strong>about 3% of the price</strong> — the default in these calculators — though the realistic
+                range runs roughly 2–5% depending on your state and lender. On the second calculator's defaults
+                that is $15,000 on top of a $100,000 down payment: buyers who save exactly 20% and stop are
+                $15,000 short on the day it matters.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Different loans, different minimums</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Conventional loans</strong> (the Fannie Mae / Freddie Mac standard) go as low as 3% down for
+                qualified buyers, but below 20% you will pay <strong>private mortgage insurance (PMI)</strong> — around
+                0.5% of the loan per year in our estimate — until the balance falls to 80% of the value.
+                <strong>FHA loans</strong> allow 3.5% down with more forgiving credit, in exchange for an upfront premium
+                of 1.75% of the loan plus annual mortgage insurance — run the full numbers on our
+                <a href="fha-loan.html" class="text-[#3F51B5] font-semibold hover:underline">FHA loan calculator</a>.
+                <strong>VA loans</strong> (and USDA loans in eligible rural areas) allow <strong>zero down</strong> for eligible
+                buyers with no monthly mortgage insurance at all — see the
+                <a href="va-mortgage.html" class="text-[#3F51B5] font-semibold hover:underline">VA mortgage calculator</a>.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Bigger vs smaller: the honest trade-off</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                More down buys you a smaller loan, less lifetime interest, a lower payment, often a better rate —
+                and at 20%, no PMI. It also concentrates a large sum in a single illiquid asset: money in the
+                walls cannot pay off a 24% credit card, fund a renovation, or sit in an emergency fund, and if
+                home values fall early on, a large down payment falls with them. Less down preserves flexibility
+                and gets you in sooner — while prices and rents keep moving — at the cost of PMI and more interest.
+                There is no universal right answer; there is only the answer that survives contact with your
+                actual budget, which is what the three calculators above are for. Lenders, for their part, prefer
+                larger down payments because borrower cash at risk means fewer defaults.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Where down payment money comes from</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Savings</strong> is the classic route — ideally in a high-yield savings account or CD, where the money
+                earns something without market risk; the plan in section 4 above times that route for you.
+                <strong>Gift funds</strong> from family are widely accepted (FHA allows the entire down payment to be a
+                gift) with a signed gift letter. <strong>Down payment assistance</strong> — state and local grants and
+                forgivable loans, catalogued on HUD's website — helps need-based first-time buyers, though it
+                usually requires decent credit and documented income. A <strong>piggyback loan</strong> (the "80-10-10":
+                an 80% first mortgage, a 10% second loan, 10% cash) can dodge PMI when cash is short. Finally,
+                retirement accounts are a last resort with sharp edges: first-time buyers may withdraw up to
+                $10,000 from an IRA penalty-free for a home purchase, and 401(k) loans avoid tax but must be
+                repaid — typically within five years — and can complicate mortgage approval.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">How much do I need for a down payment?</h4>
+                    <p class="text-gray-700">From 0% (VA/USDA) and 3–3.5% (conventional/FHA minimums) up to 20% to skip PMI. On $500,000: $15,000 at 3%, $17,500 at 3.5%, $100,000 at 20% — plus closing costs.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Is the down payment the only cash I need?</h4>
+                    <p class="text-gray-700">No. Add closing costs — roughly 3% of the price as a planning figure — plus moving costs and a post-move reserve. The calculators here combine down payment and closing costs into the true cash figure.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What if I put down less than 20%?</h4>
+                    <p class="text-gray-700">Expect PMI on a conventional loan until you reach 80% loan-to-value, and a bigger loan with more interest overall. The third calculator shows your exact percentage and flags the PMI case.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Can the down payment be a gift?</h4>
+                    <p class="text-gray-700">Yes, in most programs — FHA allows it to be entirely gifted. Lenders require a gift letter confirming no repayment is expected.</p>
+                </div>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. Monthly payments shown are principal and interest only; taxes, insurance, and PMI are not included.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="mortgage.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Mortgage Calculator</h3>
+                <p class="text-sm text-gray-600">The full picture — taxes, insurance, PMI and amortization.</p>
+            </a>
+            <a href="house-affordability.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">House Affordability</h3>
+                <p class="text-sm text-gray-600">What price your income and debts can actually carry.</p>
+            </a>
+            <a href="fha-loan.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">FHA Loan Calculator</h3>
+                <p class="text-sm text-gray-600">The 3.5%-down route, with UFMIP and annual MIP priced in.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateDownPayment() {
-            const price = parseFloat(document.getElementById('dpPrice').value);
-            const percent = parseFloat(document.getElementById('dpPercent').value);
+        let planChartInstance = null;
 
-            if (isNaN(price) || isNaN(percent) || price <= 0 || percent < 0 || percent > 100) {
-                alert("Please enter valid numbers.");
+        window.addEventListener('DOMContentLoaded', () => {
+            prefillFromURL();
+            calc1(); calc2(); calc3(); calcPlan();
+        });
+
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+        function checked(id) { return document.getElementById(id).checked; }
+
+        function payFor(loan, ratePct, termYears) {
+            const r = ratePct / 100 / 12, n = termYears * 12;
+            if (loan <= 0 || n <= 0) return 0;
+            return r === 0 ? loan / n : loan * r / (1 - Math.pow(1 + r, -n));
+        }
+
+        function mortgageLink(price, downAmt, rate, term) {
+            const p = new URLSearchParams({ price: Math.round(price), down: Math.round(downAmt), downType: 'amount', rate: rate, term: term });
+            return 'mortgage.html?' + p.toString();
+        }
+
+        function splitBar(down, closing, loan) {
+            const total = down + closing + loan;
+            if (total <= 0) return '';
+            const d = down / total * 100, c = closing / total * 100, l = Math.max(100 - d - c, 0);
+            return `<div class="flex w-full h-5 rounded-md overflow-hidden mt-3 border border-gray-300">
+                        <div style="width:${d}%; background:#3F51B5;"></div>
+                        <div style="width:${c}%; background:#F59E0B;"></div>
+                        <div style="width:${l}%; background:#14B8A6;"></div>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-gray-500 mt-1">
+                        <span>■ Down payment</span><span>■ Closing costs</span><span>■ Loan</span>
+                    </div>`;
+        }
+
+        function pmiNote(pct) {
+            return pct < 20
+                ? `<div class="bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg text-sm mt-3">At ${pct.toFixed(1)}% down — below 20% — a conventional loan will most likely require <strong>PMI</strong> (private mortgage insurance) until the balance reaches 80% of the home's value.</div>`
+                : `<div class="bg-green-50 border border-green-200 text-green-800 p-3 rounded-lg text-sm mt-3">At ${pct.toFixed(1)}% down you reach the 20% mark — <strong>no PMI</strong> on a conventional loan.</div>`;
+        }
+
+        function resultShell(bannerLabel, bannerValue, rowsHTML, extraHTML, link) {
+            return `<div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                        <p class="text-sm opacity-90">${bannerLabel}</p>
+                        <p class="text-4xl font-bold">${bannerValue}</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-sm">
+                        ${rowsHTML}
+                        ${extraHTML || ''}
+                        <a href="${link}" class="inline-block mt-3 bg-[#3F51B5] text-white px-3 py-1.5 rounded-md text-sm font-semibold hover:bg-[#303F9F] transition no-print">Open in the Mortgage Calculator →</a>
+                    </div>`;
+        }
+
+        function closingFor(price, include, ccVal, unit) {
+            if (!include) return 0;
+            return unit === 'pct' ? price * ccVal / 100 : ccVal;
+        }
+
+        function calc1() {
+            const out = document.getElementById('results1');
+            const cash = num('cash1'), downPct = num('downpct1');
+            const include = checked('include1'), ccVal = num('cc1'), unit = document.getElementById('ccunit1').value;
+            const rate = num('rate1'), term = num('term1');
+            if (cash <= 0 || downPct <= 0 || downPct >= 100 || term <= 0) {
+                out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter valid cash, a down payment percentage below 100, and a term.</div>';
                 return;
             }
-
-            const dpAmount = price * (percent / 100);
-            const loanAmount = price - dpAmount;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('dpAmount').textContent = formatter.format(dpAmount);
-            document.getElementById('dpLoanAmount').textContent = formatter.format(loanAmount);
-
-            // PMI Logic
-            const pmiEl = document.getElementById('dpPMI');
-            if (percent < 20) {
-                pmiEl.textContent = "Yes (Required)";
-                pmiEl.className = "text-xl font-bold text-red-500";
-            } else {
-                pmiEl.textContent = "No (Avoided)";
-                pmiEl.className = "text-xl font-bold text-green-500";
-            }
-
-            document.getElementById('dpResults').classList.remove('hidden');
+            let price;
+            if (!include) price = cash / (downPct / 100);
+            else if (unit === 'pct') price = cash / ((downPct + ccVal) / 100);
+            else price = (cash - ccVal) / (downPct / 100);
+            if (price <= 0) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Closing costs in dollars must be below the cash available.</div>'; return; }
+            const down = price * downPct / 100;
+            const closing = closingFor(price, include, ccVal, unit);
+            const loan = price - down;
+            const monthly = payFor(loan, rate, term);
+            const rows = `
+                <p class="flex justify-between mb-2"><span>Down Payment (${downPct}%):</span> <span class="font-bold">${formatMoney(down)}</span></p>
+                <p class="flex justify-between mb-2"><span>Closing Costs:</span> <span class="font-bold">${formatMoney(closing)}</span></p>
+                <p class="flex justify-between mb-2"><span>Loan Amount:</span> <span class="font-bold">${formatMoney(loan)}</span></p>
+                <p class="flex justify-between mb-2"><span>Monthly Payment (P&amp;I):</span> <span class="font-bold">${formatMoney(monthly)}</span></p>
+                ${splitBar(down, closing, loan)}`;
+            out.innerHTML = resultShell('Affordable Home Price', formatMoney(price), rows, pmiNote(downPct), mortgageLink(price, down, rate, term));
+            updateURL();
         }
+
+        function calc2() {
+            const out = document.getElementById('results2');
+            const price = num('price2'), downPct = num('downpct2');
+            const include = checked('include2'), ccVal = num('cc2'), unit = document.getElementById('ccunit2').value;
+            const rate = num('rate2'), term = num('term2');
+            if (price <= 0 || downPct < 0 || downPct >= 100 || term <= 0) {
+                out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a valid price, down payment percentage and term.</div>';
+                return;
+            }
+            const down = price * downPct / 100;
+            const closing = closingFor(price, include, ccVal, unit);
+            const cashNeeded = down + closing;
+            const loan = price - down;
+            const monthly = payFor(loan, rate, term);
+            const rows = `
+                <p class="flex justify-between mb-2"><span>Down Payment (${downPct}%):</span> <span class="font-bold">${formatMoney(down)}</span></p>
+                <p class="flex justify-between mb-2"><span>Closing Costs:</span> <span class="font-bold">${formatMoney(closing)}</span></p>
+                <p class="flex justify-between mb-2"><span>Loan Amount:</span> <span class="font-bold">${formatMoney(loan)}</span></p>
+                <p class="flex justify-between mb-2"><span>Monthly Payment (P&amp;I):</span> <span class="font-bold">${formatMoney(monthly)}</span></p>
+                ${splitBar(down, closing, loan)}`;
+            out.innerHTML = resultShell('Cash Needed at Closing', formatMoney(cashNeeded), rows, pmiNote(downPct), mortgageLink(price, down, rate, term));
+            updateURL();
+        }
+
+        function calc3() {
+            const out = document.getElementById('results3');
+            const price = num('price3'), cash = num('cash3');
+            const include = checked('include3'), ccVal = num('cc3'), unit = document.getElementById('ccunit3').value;
+            const rate = num('rate3'), term = num('term3');
+            if (price <= 0 || cash <= 0 || term <= 0) {
+                out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a valid price, cash amount and term.</div>';
+                return;
+            }
+            const closing = closingFor(price, include, ccVal, unit);
+            const down = cash - closing;
+            if (down <= 0) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Your cash does not cover the closing costs alone — nothing is left for a down payment.</div>'; return; }
+            const downPct = down / price * 100;
+            const loan = price - down;
+            const monthly = payFor(loan, rate, term);
+            const rows = `
+                <p class="flex justify-between mb-2"><span>Down Payment:</span> <span class="font-bold">${formatMoney(down)}</span></p>
+                <p class="flex justify-between mb-2"><span>Closing Costs:</span> <span class="font-bold">${formatMoney(closing)}</span></p>
+                <p class="flex justify-between mb-2"><span>Loan Amount:</span> <span class="font-bold">${formatMoney(loan)}</span></p>
+                <p class="flex justify-between mb-2"><span>Monthly Payment (P&amp;I):</span> <span class="font-bold">${formatMoney(monthly)}</span></p>
+                ${splitBar(down, closing, loan)}`;
+            out.innerHTML = resultShell('Your Down Payment', downPct.toFixed(1) + '%', rows, pmiNote(downPct), mortgageLink(price, down, rate, term));
+            updateURL();
+        }
+
+        function calcPlan() {
+            const box = document.getElementById('planResults');
+            const target = num('p_target'), saved = num('p_saved'), monthly = num('p_monthly'), apy = num('p_apy');
+            if (target <= 0 || (monthly <= 0 && saved < target)) {
+                box.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Enter a target and either savings or a monthly contribution.</div>';
+                return;
+            }
+            const i = apy / 100 / 12;
+            let bal = saved, months = 0;
+            const yearly = [saved];
+            while (bal < target && months < 1200) {
+                bal = bal * (1 + i) + monthly;
+                months++;
+                if (months % 12 === 0) yearly.push(Math.round(bal));
+            }
+            if (bal >= target && months % 12 !== 0) yearly.push(Math.round(bal));
+            const contributed = saved + monthly * months;
+            const interestEarned = Math.max(bal - contributed, 0);
+            const goal = new Date(); goal.setMonth(goal.getMonth() + months);
+            const goalStr = goal.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            const pct = Math.min(saved / target * 100, 100);
+            box.innerHTML = `
+                <div class="bg-green-50 border border-green-200 rounded-xl p-4 text-sm h-full">
+                    <p class="text-gray-700 mb-1">You reach ${formatMoney(target)} in</p>
+                    <p class="text-3xl font-bold text-green-700 mb-2">${months} months <span class="text-base font-semibold text-gray-600">— by ${goalStr}</span></p>
+                    <p class="flex justify-between mb-1"><span>Saved so far:</span> <span class="font-bold">${pct.toFixed(0)}% of target</span></p>
+                    <div class="w-full h-4 bg-gray-200 rounded-md overflow-hidden my-2"><div style="width:${pct}%; background:#4CAF50; height:100%;"></div></div>
+                    <p class="flex justify-between mb-1"><span>You contribute:</span> <span class="font-bold">${formatMoney(contributed)}</span></p>
+                    <p class="flex justify-between"><span>Interest earned on the way:</span> <span class="font-bold">${formatMoney(interestEarned)}</span></p>
+                </div>`;
+            const cv = document.getElementById('planChart');
+            if (cv) {
+                const ctx = cv.getContext('2d');
+                if (planChartInstance) planChartInstance.destroy();
+                planChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: yearly.map((_, idx) => idx),
+                        datasets: [{ label: 'Savings Balance', data: yearly, borderColor: '#4CAF50', backgroundColor: 'rgba(76,175,80,0.10)', fill: true, borderWidth: 3, tension: 0.2, pointRadius: 0 }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'top' }, title: { display: true, text: 'Savings Growth Toward Your Target' } },
+                        scales: {
+                            x: { title: { display: true, text: 'Years' } },
+                            y: { beginAtZero: true, ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } }
+                        }
+                    }
+                });
+            }
+            updateURL();
+        }
+
+        const PARAMS = [
+            ['cash1', 'a1'], ['downpct1', 'd1'], ['include1', 'i1'], ['cc1', 'c1'], ['ccunit1', 'u1'], ['rate1', 'r1'], ['term1', 't1'],
+            ['price2', 'a2'], ['downpct2', 'd2'], ['include2', 'i2'], ['cc2', 'c2'], ['ccunit2', 'u2'], ['rate2', 'r2'], ['term2', 't2'],
+            ['price3', 'a3'], ['cash3', 'b3'], ['include3', 'i3'], ['cc3', 'c3'], ['ccunit3', 'u3'], ['rate3', 'r3'], ['term3', 't3'],
+            ['p_target', 'pt'], ['p_saved', 'ps'], ['p_monthly', 'pm'], ['p_apy', 'pa']
+        ];
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            PARAMS.forEach(([id, key]) => {
+                const el = document.getElementById(id);
+                p.set(key, el.type === 'checkbox' ? (el.checked ? '1' : '0') : el.value);
+            });
+            return p.toString();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => {
+                if (q.get(key) === null) return;
+                const el = document.getElementById(id);
+                if (el.type === 'checkbox') el.checked = q.get(key) === '1';
+                else el.value = q.get(key);
+            });
+        }
+
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-</html>
+                            </html>
