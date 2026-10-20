@@ -4,137 +4,719 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mortgage Payoff Calculator - CalcNova</title>
+    <meta name="description" content="Free mortgage payoff calculator: see how extra payments, biweekly payments or a lump sum pay off your mortgage earlier and how much interest you save.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/mortgage-payoff">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Mortgage Payoff Calculator - CalcNova">
+    <meta property="og:description" content="Compare payoff strategies: extra payments, biweekly payments or paying in full, with interest and time savings.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/mortgage-payoff">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mortgage Payoff Calculator - CalcNova">
+    <meta name="twitter:description" content="See how much interest and time extra mortgage payments can save you.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Mortgage Payoff Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/mortgage-payoff" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How much can extra mortgage payments save?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It depends on the balance, rate and remaining term, but the effect is large: an extra $500/month on a $372,217 balance at 6% with 25 years left pays the loan off 7 years and 9 months early and saves about $122,306 in interest." }
+            },
+            {
+                "@type": "Question",
+                "name": "How do biweekly payments pay off a mortgage faster?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Paying half the monthly payment every two weeks produces 26 half payments a year, which equals 13 full monthly payments. That one extra payment per year goes entirely to principal and typically shortens a 30-year mortgage by several years." }
+            },
+            {
+                "@type": "Question",
+                "name": "Should I pay off my mortgage early or invest?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Compare the mortgage rate with what the money could do elsewhere. Paying extra on the mortgage earns a guaranteed return equal to the interest rate. Higher-interest debts should usually be cleared first, and tax-advantaged retirement contributions often come before extra mortgage payments." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 45%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { width: 55%; border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .section-title { font-weight: bold; font-size: 0.9rem; color: #1F2937; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.25rem;}
+        .radio-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: #374151; margin-bottom: 0.35rem; }
+        @media print {
+            nav, footer, .no-print { display: none !important; }
+        }
+    </style>
 </head>
 <body class="text-gray-800">
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Mortgage Payoff</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Mortgage Payoff Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Mortgage Payoff Calculator</h1>
+    <main class="container mx-auto px-4 py-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5] mb-2">Mortgage Payoff Calculator</h1>
+        <p class="text-gray-600 mb-8 max-w-3xl">See how extra payments, biweekly payments, or a lump sum can pay off your mortgage years earlier &mdash; and exactly how much interest each strategy saves.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Loan Balance ($)</label>
-                        <input type="number" id="mpBalance" value="300000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate (%)</label>
-                        <input type="number" id="mpRate" value="6.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Remaining Term (Years)</label>
-                        <input type="number" id="mpYears" value="25" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Extra Monthly Payment ($)</label>
-                        <input type="number" id="mpExtra" value="200" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-                <button onclick="calculatePayoff()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Savings</button>
+        <!-- ============ MODE 1: remaining term known ============ -->
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">If You Know the Remaining Loan Term</h2>
+        <p class="text-gray-600 mb-4 max-w-3xl text-sm leading-6">Best for loans where you know the original amount, term and rate, and how much of the term is left. The calculator works out your current balance from the original schedule.</p>
 
-                <div id="mpResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Original Payoff Time</p>
-                            <p class="text-lg font-bold text-gray-800" id="mpOriginalTime">0 Years</p>
+        <div class="flex flex-col md:flex-row gap-8 mb-12">
+            <div class="md:w-2/5 no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div class="input-group">
+                        <label>Original Loan Amount</label>
+                        <div class="w-[55%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="a_amount" value="400000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                         </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">New Payoff Time</p>
-                            <p class="text-lg font-bold text-[#14B8A6]" id="mpNewTime">0 Years</p>
+                    </div>
+                    <div class="input-group">
+                        <label>Original Loan Term</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="a_termYears" value="30" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
                         </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Saved</p>
-                            <p class="text-lg font-bold text-green-600" id="mpSaved">$0</p>
+                    </div>
+                    <div class="input-group">
+                        <label>Interest Rate</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="a_rate" value="6" step="0.01" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
                         </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Remaining Term</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="a_remYears" value="25" class="w-1/3">
+                            <span class="w-1/6 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">yrs</span>
+                            <input type="number" id="a_remMonths" value="0" class="w-1/3">
+                            <span class="w-1/6 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">mos</span>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Repayment Options</div>
+                    <label class="radio-row"><input type="radio" name="aOption" value="extra" checked> Repayment with extra payments</label>
+                    <div class="pl-6 mb-2">
+                        <div class="input-group"><label>Extra per month</label><input type="number" id="a_extraMonth" value="500"></div>
+                        <div class="input-group"><label>Extra per year</label><input type="number" id="a_extraYear" value="0"></div>
+                        <div class="input-group"><label>Extra one-time</label><input type="number" id="a_extraOne" value="0"></div>
+                    </div>
+                    <label class="radio-row"><input type="radio" name="aOption" value="biweekly"> Biweekly repayment</label>
+                    <label class="radio-row"><input type="radio" name="aOption" value="together"> Pay back altogether (lump sum)</label>
+                    <label class="radio-row"><input type="radio" name="aOption" value="original"> Normal repayment</label>
+
+                    <div class="flex gap-2 mt-6">
+                        <button onclick="calculateMode1()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                        <button onclick="clearMode('a')" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                     </div>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How to Pay Off Your Mortgage Faster</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Making extra payments towards your mortgage principal can save you thousands of dollars in interest and shave years off your loan term. This calculator shows you exactly how much time and money you can save by adding a specific amount to your monthly payment.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="md:w-3/5">
+                <div id="a_results"></div>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+        <!-- ============ MODE 2: remaining term unknown ============ -->
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">If You Don't Know the Remaining Term</h2>
+        <p class="text-gray-600 mb-4 max-w-3xl text-sm leading-6">Use the unpaid balance, monthly payment and rate from your mortgage statement &mdash; the calculator derives the remaining term for you.</p>
+
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="md:w-2/5 no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <div class="input-group">
+                        <label>Unpaid Principal Balance</label>
+                        <div class="w-[55%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="b_balance" value="230000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Monthly Payment (P&amp;I)</label>
+                        <div class="w-[55%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="b_payment" value="1500" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Interest Rate</label>
+                        <div class="w-[55%] flex gap-1">
+                            <input type="number" id="b_rate" value="6" step="0.01" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Repayment Options</div>
+                    <label class="radio-row"><input type="radio" name="bOption" value="extra" checked> Repayment with extra payments</label>
+                    <div class="pl-6 mb-2">
+                        <div class="input-group"><label>Extra per month</label><input type="number" id="b_extraMonth" value="500"></div>
+                        <div class="input-group"><label>Extra per year</label><input type="number" id="b_extraYear" value="0"></div>
+                        <div class="input-group"><label>Extra one-time</label><input type="number" id="b_extraOne" value="0"></div>
+                    </div>
+                    <label class="radio-row"><input type="radio" name="bOption" value="biweekly"> Biweekly repayment</label>
+                    <label class="radio-row"><input type="radio" name="bOption" value="original"> Normal repayment</label>
+
+                    <div class="flex gap-2 mt-6">
+                        <button onclick="calculateMode2()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                        <button onclick="clearMode('b')" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
+                    </div>
+                </div>
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
+                </div>
             </div>
-        </aside>
+            <div class="md:w-3/5">
+                <div id="b_results"></div>
+            </div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Paying Off Your Mortgage Early</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Every mortgage payment splits into two parts: <strong>principal</strong>, the amount you borrowed, and
+                <strong>interest</strong>, the lender's charge for lending it, calculated each month on the balance that
+                remains. Early in the loan the balance is at its largest, so most of each payment is interest. As the
+                balance falls, interest shrinks and principal repayment accelerates. Anything that cuts the balance
+                sooner &mdash; extra payments, biweekly payments, or a lump sum &mdash; removes interest from every month
+                that follows, which is why early extra payments are worth so much more than late ones.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Strategy 1: Extra payments</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Extra payments go straight to principal on top of your scheduled payment. They can be monthly, yearly,
+                or a single one-time amount. The numbers are striking even for small amounts: on a $200,000, 30-year loan
+                at 5%, one extra payment of $1,000 today shortens the loan by about four months and saves roughly $3,400
+                in interest &mdash; and adding just $6 a month saves about $2,800. Scale that up and the savings reach six
+                figures, as the first calculator above shows. When you send extra money, tell your servicer to apply it
+                to principal, not to future payments.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Strategy 2: Biweekly payments</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Instead of one monthly payment, pay half the amount every two weeks. A year has 52 weeks, so you make
+                26 half payments &mdash; the equivalent of <strong>13 full monthly payments</strong> instead of 12. That one
+                extra payment per year goes entirely to principal and typically cuts several years off a 30-year
+                mortgage. The schedule lines up naturally with a biweekly paycheck, so many borrowers never feel the
+                extra payment at all. Check that your servicer applies the payments as they arrive rather than holding
+                partial payments until the full amount accumulates.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Strategy 3: Refinance to a shorter term</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Refinancing replaces your loan with a new one, ideally at a lower rate, a shorter term, or both. Shorter
+                terms carry lower rates and force faster principal repayment. For example, refinancing $200,000 with
+                20 years left from 5% into a new 20-year loan at 4% drops the payment from $1,319.91 to $1,211.96 and
+                saves about $25,908 in interest. The catch is closing costs, typically 2&ndash;5% of the loan, so compare
+                the break-even point against how long you plan to stay. Run the numbers on our
+                <a href="mortgage.html" class="text-[#3F51B5] font-semibold hover:underline">mortgage calculator</a> before deciding.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Watch out for prepayment penalties</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Some loans charge a fee for paying off early, because the lender loses years of expected interest income.
+                Penalties are usually a percentage of the outstanding balance or a slice of upcoming interest, and they
+                are largest in the first years of the loan. They have become uncommon, often expire after a few years,
+                and are prohibited outright on FHA loans, VA loans, and loans from federally chartered credit unions.
+                Still, read your loan documents or ask your lender before making a large extra payment.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">When paying off early is NOT the best move</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Every dollar sent to the mortgage is a dollar that cannot do something else. Mortgage rates are
+                relatively low, so extra payments earn a modest, guaranteed return equal to your rate. Before adding
+                extra payments, most households are better off: (1) clearing high-interest debt such as credit cards at
+                20%+, (2) capturing an employer's full 401(k) match and funding tax-advantaged accounts like an IRA,
+                and (3) holding a 3&ndash;6 month emergency fund &mdash; home equity is hard to borrow back in a job loss.
+                If those boxes are checked and you value the certainty of owning your home outright, extra payments are
+                an excellent low-risk use of spare cash. The examples in the calculators above let you compare the
+                trade-off with your own numbers.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">How much can extra mortgage payments save?</h4>
+                    <p class="text-gray-700">It depends on the balance, rate and remaining term, but the effect is large: an extra $500/month on a $372,217 balance at 6% with 25 years left pays the loan off 7 years and 9 months early and saves about $122,306 in interest.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">How do biweekly payments pay off a mortgage faster?</h4>
+                    <p class="text-gray-700">Paying half the monthly payment every two weeks produces 26 half payments a year, which equals 13 full monthly payments. That one extra payment per year goes entirely to principal and typically shortens a 30-year mortgage by several years.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Should I pay off my mortgage early or invest?</h4>
+                    <p class="text-gray-700">Compare the mortgage rate with what the money could do elsewhere. Extra mortgage payments earn a guaranteed return equal to the interest rate. Higher-interest debts should usually be cleared first, and tax-advantaged retirement contributions often come before extra mortgage payments.</p>
+                </div>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. Results ignore taxes, insurance, HOA dues and any prepayment penalties. Confirm payoff figures with
+                your loan servicer.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="mortgage.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Mortgage Calculator</h3>
+                <p class="text-sm text-gray-600">Full home-loan breakdown with taxes, insurance and PMI.</p>
+            </a>
+            <a href="amortization.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Amortization Calculator</h3>
+                <p class="text-sm text-gray-600">Complete month-by-month schedule for any loan.</p>
+            </a>
+            <a href="house-affordability.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">House Affordability</h3>
+                <p class="text-sm text-gray-600">How much house your income and debts can support.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculatePayoff() {
-            const balance = parseFloat(document.getElementById('mpBalance').value);
-            const rate = parseFloat(document.getElementById('mpRate').value) / 100 / 12;
-            const years = parseFloat(document.getElementById('mpYears').value);
-            const extra = parseFloat(document.getElementById('mpExtra').value);
+        const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        const S = {
+            a: { rows: [], monthly: true, startAbs: 0, chart: null },
+            b: { rows: [], monthly: true, startAbs: 0, chart: null }
+        };
 
-            if (isNaN(balance) || isNaN(rate) || isNaN(years) || isNaN(extra)) {
-                alert("Please enter valid numbers.");
-                return;
+        function simMonthly(balance, mr, pay, extras) {
+            let bal = balance, ti = 0, n = 0, total = 0;
+            const rows = [];
+            while (bal > 0.005 && n < 1200) {
+                const it = bal * mr;
+                let pr = pay - it;
+                if (pr < 0) pr = 0;
+                let ex = 0;
+                if (extras) {
+                    ex += extras.m || 0;
+                    if ((n + 1) % 12 === 0) ex += extras.y || 0;
+                    if (n === 0) ex += extras.o || 0;
+                }
+                const pp = Math.min(pr, bal);
+                const pe = Math.min(ex, bal - pp);
+                if (pp + pe <= 0) break;
+                bal -= pp + pe;
+                ti += it;
+                total += pp + pe + it;
+                n++;
+                rows.push({ month: n, payment: pp + pe + it, principal: pp + pe, interest: it, cumInterest: ti, balance: Math.max(bal, 0) });
             }
-
-            const originalMonths = years * 12;
-            const originalPayment = balance * (rate * Math.pow(1 + rate, originalMonths)) / (Math.pow(1 + rate, originalMonths) - 1);
-            const originalTotalCost = originalPayment * originalMonths;
-            const originalTotalInterest = originalTotalCost - balance;
-
-            let newBalance = balance;
-            let newMonths = 0;
-            const newMonthlyPayment = originalPayment + extra;
-
-            while (newBalance > 0 && newMonths < 1000) {
-                let interest = newBalance * rate;
-                let principal = newMonthlyPayment - interest;
-                newBalance -= principal;
-                newMonths++;
-            }
-
-            const newTotalCost = newMonthlyPayment * newMonths;
-            const newTotalInterest = newTotalCost - balance;
-            const interestSaved = originalTotalInterest - newTotalInterest;
-            const monthsSaved = originalMonths - newMonths;
-
-            const originalYearsStr = (originalMonths / 12).toFixed(1);
-            const newYearsStr = (newMonths / 12).toFixed(1);
-            const monthsSavedStr = monthsSaved > 12 ? (monthsSaved / 12).toFixed(1) + " Years" : monthsSaved + " Months";
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('mpOriginalTime').textContent = originalYearsStr + " Years";
-            document.getElementById('mpNewTime').textContent = newYearsStr + " Years (Save " + monthsSavedStr + ")";
-            document.getElementById('mpSaved').textContent = formatter.format(interestSaved);
-            document.getElementById('mpResults').classList.remove('hidden');
+            return { n, interest: ti, total, rows };
         }
+
+        function simBiweekly(balance, annualRatePct, monthlyPay) {
+            const pr = (annualRatePct / 100) / 26, half = monthlyPay / 2;
+            let bal = balance, ti = 0, periods = 0, total = 0;
+            const agg = {};
+            while (bal > 0.005 && periods < 1560) {
+                const it = bal * pr;
+                let pp = Math.min(half - it, bal);
+                if (pp < 0) pp = 0;
+                if (pp <= 0 && it >= half) break;
+                bal -= pp;
+                ti += it;
+                total += pp + it;
+                periods++;
+                const mIdx = Math.floor((periods - 1) * 12 / 26) + 1;
+                if (!agg[mIdx]) agg[mIdx] = { month: mIdx, payment: 0, principal: 0, interest: 0, cumInterest: 0, balance: 0 };
+                agg[mIdx].payment += pp + it;
+                agg[mIdx].principal += pp;
+                agg[mIdx].interest += it;
+                agg[mIdx].cumInterest = ti;
+                agg[mIdx].balance = Math.max(bal, 0);
+            }
+            const rows = Object.values(agg).sort((x, y) => x.month - y.month);
+            return { periods, monthsEq: periods * 12 / 26, interest: ti, total, rows };
+        }
+
+        function balanceAfter(P, mr, M, k) {
+            if (k <= 0) return P;
+            if (mr === 0) return P - M * k;
+            const f = Math.pow(1 + mr, k);
+            return P * f - M * ((f - 1) / mr);
+        }
+
+        function selectedOption(prefix) {
+            const el = document.querySelector(`input[name="${prefix}Option"]:checked`);
+            return el ? el.value : 'extra';
+        }
+
+        function readExtras(prefix) {
+            return {
+                m: parseFloat(document.getElementById(prefix + '_extraMonth').value) || 0,
+                y: parseFloat(document.getElementById(prefix + '_extraYear').value) || 0,
+                o: parseFloat(document.getElementById(prefix + '_extraOne').value) || 0
+            };
+        }
+
+        function buildScenario(balance, mr, annualRatePct, monthlyPay, option, extras) {
+            if (option === 'biweekly') {
+                const bw = simBiweekly(balance, annualRatePct, monthlyPay);
+                return { kind: 'biweekly', n: Math.round(bw.monthsEq), interest: bw.interest, total: bw.total, rows: bw.rows,
+                         monthlyLabel: formatMoney(monthlyPay / 2) + ' / 2 wks' };
+            }
+            if (option === 'extra') {
+                const s = simMonthly(balance, mr, monthlyPay, extras);
+                return { kind: 'extra', n: s.n, interest: s.interest, total: s.total, rows: s.rows,
+                         monthlyLabel: formatMoney(monthlyPay + (extras.m || 0)) };
+            }
+            if (option === 'together') {
+                return { kind: 'together', n: 0, interest: 0, total: balance, rows: [], monthlyLabel: '—' };
+            }
+            const s = simMonthly(balance, mr, monthlyPay, null);
+            return { kind: 'original', n: s.n, interest: s.interest, total: s.total, rows: s.rows, monthlyLabel: formatMoney(monthlyPay) };
+        }
+
+        function strategySentence(option, extras, durText) {
+            if (option === 'extra') {
+                let parts = [];
+                if (extras.m > 0) parts.push(formatMoney(extras.m) + ' per month');
+                if (extras.y > 0) parts.push(formatMoney(extras.y) + ' per year');
+                if (extras.o > 0) parts.push('a one-time ' + formatMoney(extras.o));
+                return 'By paying extra ' + (parts.length ? parts.join(', ') : '$0') + ' starting now, the loan will be paid off in ' + durText + '.';
+            }
+            if (option === 'biweekly') return 'By switching to biweekly payments starting now, the loan will be paid off in ' + durText + '.';
+            if (option === 'together') return 'Paying the loan off in full today ends it immediately.';
+            return 'With normal repayment, the loan will be paid off in ' + durText + '.';
+        }
+
+        function renderResults(prefix, ctx) {
+            const savings = ctx.origRemain.interest - ctx.scen.interest;
+            const timeSaved = ctx.origRemain.n - ctx.scen.n;
+            const showSavings = savings > 0.5 && ctx.scen.kind !== 'original';
+            const intBase = ctx.lifetimeOrigInterest ? ctx.lifetimeOrigInterest : ctx.origRemain.interest;
+            const pctInt = showSavings ? Math.round(savings / intBase * 100) : 0;
+            const pctTime = (showSavings && ctx.origRemain.n > 0) ? Math.round(timeSaved / ctx.origRemain.n * 100) : 0;
+
+            let bannerText = 'The remaining balance is <strong>' + formatMoney(ctx.balanceNow) + '</strong>. '
+                + strategySentence(ctx.scen.kind, ctx.extras, formatDuration(ctx.scen.n));
+            if (showSavings) {
+                bannerText += ' It is <strong>' + formatDuration(timeSaved) + ' earlier</strong>. This results in savings of <strong>' + formatMoney(savings) + '</strong> in interest.';
+            }
+
+            let savingsHTML = '';
+            if (showSavings) {
+                savingsHTML = `
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-[#E8F5E9] border border-green-300 rounded-xl p-4 text-center">
+                        <p class="text-xs text-green-800 uppercase font-semibold">Interest Savings</p>
+                        <p class="text-2xl font-bold text-green-700">${formatMoney(savings)}</p>
+                        <p class="text-xs text-gray-600 mt-1">Pay ${pctInt}% less interest</p>
+                    </div>
+                    <div class="bg-[#E8F5E9] border border-green-300 rounded-xl p-4 text-center">
+                        <p class="text-xs text-green-800 uppercase font-semibold">Time Savings</p>
+                        <p class="text-2xl font-bold text-green-700">${formatDuration(timeSaved)}</p>
+                        <p class="text-xs text-gray-600 mt-1">Payoff ${pctTime}% faster</p>
+                    </div>
+                </div>`;
+            }
+
+            const lifetimeRow = ctx.lifetimeOrigInterest
+                ? `<p class="flex justify-between mb-2"><span>Total interest (lifetime):</span> <span>${formatMoney(ctx.lifetimeOrigInterest)} &rarr; <strong>${formatMoney(ctx.pastInterest + ctx.scen.interest)}</strong></span></p>`
+                : '';
+
+            S[prefix].rows = ctx.scen.rows;
+            S[prefix].monthly = true;
+
+            document.getElementById(prefix + '_results').innerHTML = `
+                <div class="bg-[#4CAF50] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Payoff in</p>
+                    <p class="text-3xl font-bold">${formatDuration(ctx.scen.n)}</p>
+                </div>
+                <p class="text-sm text-gray-700 leading-6 mb-4">${bannerText}</p>
+                ${savingsHTML}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Monthly pay:</span> <span>${formatMoney(ctx.monthlyPay)} &rarr; <strong>${ctx.scen.monthlyLabel}</strong></span></p>
+                    <p class="flex justify-between mb-2"><span>Remaining payments:</span> <span>${formatMoney(ctx.origRemain.total)} &rarr; <strong>${formatMoney(ctx.scen.total)}</strong></span></p>
+                    <p class="flex justify-between mb-2"><span>Remaining interest:</span> <span>${formatMoney(ctx.origRemain.interest)} &rarr; <strong class="text-red-500">${formatMoney(ctx.scen.interest)}</strong></span></p>
+                    ${lifetimeRow}
+                    <p class="flex justify-between"><span>Payoff in:</span> <span>${formatDuration(ctx.origRemain.n)} &rarr; <strong>${formatDuration(ctx.scen.n)}</strong></span></p>
+                </div>
+                <div class="flex flex-wrap gap-2 mb-6 no-print">
+                    <button onclick="copyShareLink('${prefix}')" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                    ${ctx.scen.rows.length ? `<button onclick="downloadCSV('${prefix}')" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">⬇ Download Schedule (CSV)</button>` : ''}
+                </div>
+                ${ctx.scen.rows.length ? `
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="${prefix}_chart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-lg font-bold text-gray-800">Payoff Schedule</h3>
+                        <button onclick="toggleView('${prefix}')" id="${prefix}_toggleBtn" class="text-sm text-[#3F51B5] font-semibold hover:underline">Show Annual Schedule</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-left">
+                            <thead class="bg-gray-100 text-gray-700">
+                                <tr>
+                                    <th class="py-2 px-3 border-b">#</th>
+                                    <th class="py-2 px-3 border-b">Date</th>
+                                    <th class="py-2 px-3 border-b text-right">Payment</th>
+                                    <th class="py-2 px-3 border-b text-right">Principal</th>
+                                    <th class="py-2 px-3 border-b text-right">Interest</th>
+                                    <th class="py-2 px-3 border-b text-right">Total Interest</th>
+                                    <th class="py-2 px-3 border-b text-right">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="${prefix}_table"></tbody>
+                        </table>
+                    </div>
+                </div>` : ''}`;
+
+            if (ctx.scen.rows.length) {
+                drawChart(prefix, ctx);
+                renderTable(prefix);
+            }
+            try {
+                history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams());
+            } catch (e) {}
+        }
+
+        function drawChart(prefix, ctx) {
+            const el = document.getElementById(prefix + '_chart');
+            if (!el) return;
+            if (S[prefix].chart) S[prefix].chart.destroy();
+            const yearly = rows => {
+                const g = {};
+                rows.forEach(r => { const y = Math.ceil(r.month / 12); g[y] = r.balance; });
+                const out = [ctx.balanceNow];
+                const maxY = Math.max(...Object.keys(g).map(Number), 0);
+                for (let y = 1; y <= maxY; y++) out.push(g[y] !== undefined ? g[y] : 0);
+                return out;
+            };
+            const origPts = yearly(ctx.origRows);
+            const scenPts = yearly(ctx.scen.rows);
+            const len = Math.max(origPts.length, scenPts.length);
+            const labels = Array.from({ length: len }, (_, i) => i);
+            const pad = arr => { while (arr.length < len) arr.push(0); return arr; };
+            S[prefix].chart = new Chart(el.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'Original Balance', data: pad(origPts), borderColor: '#9CA3AF', borderWidth: 3, tension: 0.1, pointRadius: 0 },
+                        { label: 'Payoff Balance', data: pad(scenPts), borderColor: '#4CAF50', borderWidth: 3, tension: 0.1, pointRadius: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'top' } },
+                    scales: {
+                        x: { title: { display: true, text: 'Years from now' } },
+                        y: { beginAtZero: true, ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } }
+                    }
+                }
+            });
+        }
+
+        function renderTable(prefix) {
+            const st = S[prefix];
+            let html = '';
+            if (st.monthly) {
+                st.rows.forEach(r => {
+                    html += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-1 px-3">${r.month}</td><td class="py-1 px-3">${formatMonthYear(st.startAbs + r.month - 1)}</td><td class="py-1 px-3 text-right">${formatMoney(r.payment)}</td><td class="py-1 px-3 text-right text-green-600">${formatMoney(r.principal)}</td><td class="py-1 px-3 text-right text-red-500">${formatMoney(r.interest)}</td><td class="py-1 px-3 text-right">${formatMoney(r.cumInterest)}</td><td class="py-1 px-3 text-right font-semibold">${formatMoney(r.balance)}</td></tr>`;
+                });
+            } else {
+                const g = {};
+                st.rows.forEach(r => {
+                    const y = Math.ceil(r.month / 12);
+                    if (!g[y]) g[y] = { payment: 0, principal: 0, interest: 0, cumInterest: 0, balance: 0, lastMonth: 0 };
+                    g[y].payment += r.payment; g[y].principal += r.principal; g[y].interest += r.interest;
+                    g[y].cumInterest = r.cumInterest; g[y].balance = r.balance; g[y].lastMonth = r.month;
+                });
+                for (const y in g) {
+                    const d = g[y];
+                    html += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-2 px-3 font-medium">${y}</td><td class="py-2 px-3">${formatAbsMonth(st.startAbs + d.lastMonth - 1)}</td><td class="py-2 px-3 text-right">${formatMoney(d.payment)}</td><td class="py-2 px-3 text-right text-green-600">${formatMoney(d.principal)}</td><td class="py-2 px-3 text-right text-red-500">${formatMoney(d.interest)}</td><td class="py-2 px-3 text-right">${formatMoney(d.cumInterest)}</td><td class="py-2 px-3 text-right font-semibold">${formatMoney(d.balance)}</td></tr>`;
+                }
+            }
+            document.getElementById(prefix + '_table').innerHTML = html;
+        }
+
+        function toggleView(prefix) {
+            S[prefix].monthly = !S[prefix].monthly;
+            document.getElementById(prefix + '_toggleBtn').textContent = S[prefix].monthly ? 'Show Annual Schedule' : 'Show Monthly Schedule';
+            renderTable(prefix);
+        }
+
+        function calculateMode1() {
+            const P = parseFloat(document.getElementById('a_amount').value);
+            const termY = parseInt(document.getElementById('a_termYears').value) || 0;
+            const rate = parseFloat(document.getElementById('a_rate').value);
+            const remM = (parseInt(document.getElementById('a_remYears').value) || 0) * 12 + (parseInt(document.getElementById('a_remMonths').value) || 0);
+            const totalM = termY * 12;
+            const out = document.getElementById('a_results');
+            if (isNaN(P) || isNaN(rate) || P <= 0 || totalM <= 0) { out.innerHTML = errMsg('Please enter a valid loan amount, term and rate.'); return; }
+            if (remM <= 0 || remM > totalM) { out.innerHTML = errMsg('Remaining term must be between 1 month and the original term.'); return; }
+
+            const mr = (rate / 100) / 12;
+            const M = mr === 0 ? P / totalM : P * (mr * Math.pow(1 + mr, totalM)) / (Math.pow(1 + mr, totalM) - 1);
+            const elapsed = totalM - remM;
+            const balNow = balanceAfter(P, mr, M, elapsed);
+            const fullOrig = simMonthly(P, mr, M, null);
+            const pastInterest = fullOrig.rows.slice(0, elapsed).reduce((s, r) => s + r.interest, 0);
+            const origRemain = simMonthly(balNow, mr, M, null);
+            const option = selectedOption('a');
+            const extras = readExtras('a');
+            const scen = buildScenario(balNow, mr, rate, M, option, extras);
+
+            renderResults('a', {
+                balanceNow: balNow, monthlyPay: M,
+                origRemain: { n: origRemain.n, interest: origRemain.interest, total: origRemain.total },
+                origRows: origRemain.rows, scen, extras,
+                lifetimeOrigInterest: fullOrig.interest, pastInterest
+            });
+        }
+
+        function calculateMode2() {
+            const B = parseFloat(document.getElementById('b_balance').value);
+            const pay = parseFloat(document.getElementById('b_payment').value);
+            const rate = parseFloat(document.getElementById('b_rate').value);
+            const out = document.getElementById('b_results');
+            if (isNaN(B) || isNaN(pay) || isNaN(rate) || B <= 0 || pay <= 0) { out.innerHTML = errMsg('Please enter a valid balance, payment and rate.'); return; }
+            const mr = (rate / 100) / 12;
+            if (pay <= B * mr) { out.innerHTML = errMsg('Your monthly payment does not cover the monthly interest (' + formatMoney(B * mr) + '), so this loan would never be paid off.'); return; }
+
+            const origRemain = simMonthly(B, mr, pay, null);
+            const option = selectedOption('b');
+            const extras = readExtras('b');
+            const scen = buildScenario(B, mr, rate, pay, option, extras);
+
+            renderResults('b', {
+                balanceNow: B, monthlyPay: pay,
+                origRemain: { n: origRemain.n, interest: origRemain.interest, total: origRemain.total },
+                origRows: origRemain.rows, scen, extras,
+                lifetimeOrigInterest: null, pastInterest: 0
+            });
+        }
+
+        function errMsg(t) {
+            return '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">' + t + '</div>';
+        }
+
+        function clearMode(prefix) {
+            document.querySelectorAll(`[id^="${prefix}_"]`).forEach(el => { if (el.tagName === 'INPUT') el.value = ''; });
+            document.getElementById(prefix + '_results').innerHTML = '';
+        }
+
+        function buildShareParams() {
+            const v = id => { const e = document.getElementById(id); return e ? e.value : ''; };
+            const p = new URLSearchParams();
+            p.set('a_amt', v('a_amount')); p.set('a_term', v('a_termYears')); p.set('a_rate', v('a_rate'));
+            p.set('a_ry', v('a_remYears')); p.set('a_rm', v('a_remMonths')); p.set('a_opt', selectedOption('a'));
+            p.set('a_xm', v('a_extraMonth')); p.set('a_xy', v('a_extraYear')); p.set('a_xo', v('a_extraOne'));
+            p.set('b_bal', v('b_balance')); p.set('b_pay', v('b_payment')); p.set('b_rate', v('b_rate'));
+            p.set('b_opt', selectedOption('b'));
+            p.set('b_xm', v('b_extraMonth')); p.set('b_xy', v('b_extraYear')); p.set('b_xo', v('b_extraOne'));
+            return p.toString();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            const set = (id, key) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); };
+            set('a_amount', 'a_amt'); set('a_termYears', 'a_term'); set('a_rate', 'a_rate');
+            set('a_remYears', 'a_ry'); set('a_remMonths', 'a_rm');
+            set('a_extraMonth', 'a_xm'); set('a_extraYear', 'a_xy'); set('a_extraOne', 'a_xo');
+            set('b_balance', 'b_bal'); set('b_payment', 'b_pay'); set('b_rate', 'b_rate');
+            set('b_extraMonth', 'b_xm'); set('b_extraYear', 'b_xy'); set('b_extraOne', 'b_xo');
+            const setRadio = (name, key) => {
+                const val = q.get(key);
+                if (val) { const el = document.querySelector(`input[name="${name}"][value="${val}"]`); if (el) el.checked = true; }
+            };
+            setRadio('aOption', 'a_opt');
+            setRadio('bOption', 'b_opt');
+        }
+
+        function copyShareLink(prefix) {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+
+        function downloadCSV(prefix) {
+            const rows = S[prefix].rows;
+            if (!rows.length) return;
+            const out = [["Month", "Date", "Payment", "Principal", "Interest", "Total Interest", "Balance"]];
+            rows.forEach(r => out.push([r.month, formatMonthYear(S[prefix].startAbs + r.month - 1), r.payment.toFixed(2), r.principal.toFixed(2), r.interest.toFixed(2), r.cumInterest.toFixed(2), r.balance.toFixed(2)]));
+            const blob = new Blob([out.map(x => x.join(",")).join("\n")], { type: "text/csv;charset=utf-8;" });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "calcnova-mortgage-payoff-schedule.csv";
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        }
+
+        function formatDuration(m) {
+            m = Math.round(m);
+            const y = Math.floor(m / 12), r = m % 12;
+            if (y === 0) return r + (r === 1 ? " month" : " months");
+            if (r === 0) return y + (y === 1 ? " year" : " years");
+            return y + (y === 1 ? " year " : " years ") + r + (r === 1 ? " month" : " months");
+        }
+        function formatAbsMonth(abs) { return MONTH_NAMES[abs % 12] + " " + Math.floor(abs / 12); }
+        function formatMonthYear(abs) { return (abs % 12 + 1) + "/" + Math.floor(abs / 12); }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const now = new Date();
+            const abs = now.getFullYear() * 12 + now.getMonth();
+            S.a.startAbs = abs; S.b.startAbs = abs;
+            prefillFromURL();
+            calculateMode1();
+            calculateMode2();
+        });
     </script>
 </body>
 </html>
