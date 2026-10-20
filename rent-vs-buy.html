@@ -4,202 +4,515 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rent vs. Buy Calculator - CalcNova</title>
+    <meta name="description" content="Free rent vs. buy calculator: compares average monthly cost and net worth of renting vs. buying over 1–30 years, with taxes, fees, appreciation, investment returns and mortgage tax deductions modeled.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/rent-vs-buy">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Rent vs. Buy Calculator - CalcNova">
+    <meta property="og:description" content="Buying is cheaper after how many years? Average cost and net worth, year by year, with tax deductions included.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/rent-vs-buy">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Rent vs. Buy Calculator - CalcNova">
+    <meta name="twitter:description" content="The break-even year between renting and buying, computed with taxes, fees and opportunity cost.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Rent vs. Buy Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/rent-vs-buy" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How long do I need to stay for buying to beat renting?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It depends mostly on buying and selling costs, the mortgage rate, appreciation, and how fast rent rises. With this calculator's defaults ($500,000 home, $3,000 rent, 7.30% mortgage), buying's average monthly cost drops below renting's at about 5.5 years — but the buyer's net worth does not pull ahead until much later, because early payments are mostly interest and selling costs about 7% if you move." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why do the average-cost and net-worth answers differ?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Average cost measures what each option costs you per month while you live there; net worth measures what you would walk away with if you sold and settled up in that year. Buying can be cheaper per month while still leaving you behind on net worth in the early years, because the down payment is committed, equity builds slowly at first, and selling costs are charged the moment you leave." }
+            },
+            {
+                "@type": "Question",
+                "name": "Are taxes included in the rent vs. buy comparison?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. The buying side credits the mortgage interest and property tax deduction the way the IRS actually allows it: deductions only help to the extent they exceed your standard deduction (by filing status), property tax counts toward the $10,000 SALT cap, and interest is deductible on up to $750,000 of mortgage debt. The savings are valued at your marginal federal plus state rate." }
+            },
+            {
+                "@type": "Question",
+                "name": "What investment return should I use?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The return you would realistically earn on the money not spent on a down payment — the opportunity cost of buying. A conservative saver might use 3–4% (savings accounts, Treasuries); a long-term index investor might use 6–8%. The higher this number, the better renting looks, so test a range." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 52%; font-size: 0.83rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.35rem; outline: none; font-size: 0.875rem; width: 48%; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .col-title { font-weight: bold; font-size: 0.95rem; color: #3F51B5; margin-bottom: 0.75rem; border-bottom: 2px solid #E5E7EB; padding-bottom: 0.35rem; }
+        @media print { nav, footer, .no-print { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Rent vs. Buy</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Rent vs. Buy Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Rent vs. Buy Calculator</h1>
+    <div class="container mx-auto px-4 pt-2">
+        <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-[#3F51B5]">Rent vs. Buy Calculator</h1>
+            <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">Print</button>
+        </div>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Should you rent or buy? This calculator answers from a purely financial standpoint — interest, taxes,
+            fees, appreciation, the investment return on cash you do <em>not</em> spend, and the mortgage tax
+            deduction, all included — and shows both the <strong>average monthly cost</strong> and the
+            <strong>net worth</strong> of each path for every year you might stay.
+        </p>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <!-- Buying Column -->
-                    <div class="space-y-4 border-r-0 md:border-r border-gray-200 pr-0 md:pr-4">
-                        <h2 class="text-xl font-semibold text-[#3F51B5]">If You Buy</h2>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Home Price ($)</label>
-                            <input type="number" id="rbPrice" value="300000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Down Payment (%)</label>
-                            <input type="number" id="rbDownPct" value="20" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Mortgage Rate (%)</label>
-                            <input type="number" id="rbRate" value="6.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                        </div>
-                    </div>
-
-                    <!-- Renting Column -->
-                    <div class="space-y-4">
-                        <h2 class="text-xl font-semibold text-[#14B8A6]">If You Rent</h2>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Monthly Rent ($)</label>
-                            <input type="number" id="rbRent" value="1500" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                        </div>
+    <!-- ============ FORM ============ -->
+    <section class="container mx-auto px-4 py-6 no-print">
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+            <div class="grid md:grid-cols-3 gap-8 text-sm">
+                <div>
+                    <div class="col-title">Home Purchase</div>
+                    <div class="input-group"><label>Home Price</label><input type="number" id="price" value="500000"></div>
+                    <div class="input-group"><label>Down Payment %</label><input type="number" id="downpct" value="20" step="0.1"></div>
+                    <div class="input-group"><label>Interest Rate %</label><input type="number" id="rate" value="7.30" step="0.001"></div>
+                    <div class="input-group"><label>Loan Term (years)</label><input type="number" id="term" value="30"></div>
+                    <div class="input-group"><label>Buying Closing Costs %</label><input type="number" id="buyclose" value="2" step="0.1"></div>
+                    <div class="input-group"><label>Property Tax %/year</label><input type="number" id="taxrate" value="1.5" step="0.1"></div>
+                    <div class="input-group"><label>Property Tax Increase %/yr</label><input type="number" id="taxincr" value="3" step="0.1"></div>
+                    <div class="input-group"><label>Home Insurance $/year</label><input type="number" id="ins" value="2500"></div>
+                    <div class="input-group"><label>HOA Fee $/year</label><input type="number" id="hoa" value="0"></div>
+                    <div class="input-group"><label>Maintenance %/year of value</label><input type="number" id="maint" value="1.5" step="0.1"></div>
+                    <div class="input-group"><label>Home Value Appreciation %/yr</label><input type="number" id="appr" value="3" step="0.1"></div>
+                    <div class="input-group"><label>Cost/Insurance Increase %/yr</label><input type="number" id="costincr" value="3" step="0.1"></div>
+                    <div class="input-group"><label>Selling Closing Costs %</label><input type="number" id="sellclose" value="7" step="0.1"></div>
+                </div>
+                <div>
+                    <div class="col-title">Home Rent</div>
+                    <div class="input-group"><label>Monthly Rental Fee</label><input type="number" id="rent" value="3000"></div>
+                    <div class="input-group"><label>Rental Fee Increase %/yr</label><input type="number" id="rentincr" value="3" step="0.1"></div>
+                    <div class="input-group"><label>Renter's Insurance $/month</label><input type="number" id="rentins" value="15"></div>
+                    <div class="input-group"><label>Security Deposit</label><input type="number" id="deposit" value="3000"></div>
+                    <div class="input-group"><label>Upfront Cost (application etc.)</label><input type="number" id="upfront" value="100"></div>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mt-4 text-[13px] text-gray-600 leading-6">
+                        The renter is assumed to <strong>invest</strong> the cash the buyer spends upfront
+                        (down payment + buying closing costs), minus the deposit and upfront cost, and to invest
+                        any monthly amount by which buying costs more than renting — at your average investment
+                        return. That is the opportunity-cost side of renting, and it is why the answer is
+                        genuinely close.
                     </div>
                 </div>
-
-                <!-- Common Inputs -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 border-t pt-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Years You Plan to Stay</label>
-                        <input type="number" id="rbYears" value="7" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                <div>
+                    <div class="col-title">Your Information</div>
+                    <div class="input-group"><label>Average Investment Return %</label><input type="number" id="air" value="5" step="0.1"></div>
+                    <div class="input-group"><label>Marginal Federal Tax Rate %</label><input type="number" id="fed" value="25" step="0.1"></div>
+                    <div class="input-group"><label>Marginal State Tax Rate %</label><input type="number" id="state" value="0" step="0.1"></div>
+                    <div class="input-group">
+                        <label>Tax Filing Status</label>
+                        <select id="filing">
+                            <option value="15000">Single</option>
+                            <option value="30000" selected>Married filing jointly</option>
+                            <option value="15000">Married filing separately</option>
+                            <option value="22500">Head of household</option>
+                            <option value="30000">Qualifying widow(er)</option>
+                        </select>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Expected Home Appreciation (%)</label>
-                        <input type="number" id="rbAppreciation" value="3" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-
-                <button onclick="calculateRentVsBuy()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Compare Scenarios</button>
-
-                <div id="rbResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="text-center mb-4">
-                        <p class="text-lg font-bold text-gray-800" id="rbVerdict">Result</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border border-gray-200">
-                            <p class="text-sm text-gray-500">Net Cost of Buying</p>
-                            <p class="text-2xl font-bold text-[#3F51B5]" id="rbBuyCost">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border border-gray-200">
-                            <p class="text-sm text-gray-500">Net Cost of Renting</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="rbRentCost">$0</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Rent vs. Buy Dilemma</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Deciding whether to rent or buy a home is a major financial decision. Buying builds equity and protects against rising rents, but requires a large upfront down payment and maintenance costs. Renting offers flexibility and lower upfront costs, but builds no equity. This calculator uses a simplified model to compare the costs of both scenarios over time.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
+                    <p class="text-xs text-gray-500 mb-3">Filing status sets the 2025 standard deduction used in the tax calculation.</p>
+                    <div class="input-group"><label>How Long Will You Stay? (years)</label><input type="number" id="stay" value="10"></div>
+                    <button onclick="calculateRVB()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-3">Calculate</button>
+                    <button onclick="copyShareLink()" class="w-full bg-white border border-gray-300 text-gray-700 font-semibold py-2 rounded-md hover:bg-gray-50 transition mt-2">🔗 Copy Share Link</button>
                 </div>
             </div>
         </div>
+    </section>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
+    <!-- ============ RESULTS ============ -->
+    <section class="container mx-auto px-4 pb-6">
+        <div id="resultsArea"></div>
+    </section>
+
+    <!-- ============ CONTENT ============ -->
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Rent or Buy: What the Numbers Can and Cannot Tell You</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                This calculator judges the question the way an accountant would: identical households, identical
+                income, one buys and one rents an equivalent home, and every dollar of difference is accounted
+                for — including the ones people forget. The buyer forgets maintenance, selling costs, and the
+                return their down payment could have earned. The renter forgets that rent rises every year while
+                a fixed mortgage payment does not, and that a paid-off home eventually costs only taxes,
+                insurance, and upkeep. Both forget taxes: the buyer's mortgage interest and property tax are
+                deductible, but only beyond the standard deduction — which is exactly how the model above treats
+                them, SALT cap and all.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
                 <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-        </aside>
-    </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">How the comparison works</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Two measures, side by side in the table. <strong>Average monthly cost</strong> spreads each path's total
+                economic cost — every payment, tax, fee, and premium, minus what you would walk away with if you
+                sold (buyer) or minus nothing but the returned deposit (renter) — over the months you stay. It
+                answers "which is cheaper to live in?" <strong>Net worth</strong> answers the sterner question: "if I
+                settle up in year N, who is richer?" The buyer holds home equity (value minus selling costs minus
+                remaining balance); the renter holds the invested upfront cash plus every monthly saving,
+                compounded at your investment return. In the early years the two measures routinely disagree —
+                buying can be cheaper monthly while the buyer is still behind on net worth, because the down
+                payment is committed, equity builds slowly (early payments are mostly interest), and the 7%
+                selling cost is charged the moment you leave. Time is the buyer's ally on both measures, just
+                on different schedules.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">PITI: the four recurring costs of owning</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Ownership's monthly bill is <strong>PITI</strong> plus upkeep. <strong>Principal</strong> repays the loan and is the
+                only component that builds equity. <strong>Interest</strong> is the price of borrowing — deductible, within
+                limits, and front-loaded: in year one of the default loan, roughly $29,000 of the $32,900 paid is
+                interest. <strong>Taxes</strong> — property tax, typically 1–3% of value per year, levied by your city,
+                county, and school district, and usually rising. <strong>Insurance</strong> — homeowners coverage your
+                lender requires, plus PMI if you put down less than 20%. Beyond PITI sit the costs renters never
+                see: maintenance (budget the 1–1.5% of value per year used here), HOA dues, and the transaction
+                costs at both ends — a few percent to buy, around 7% to sell once commissions and fees are in.
+                Round-trip transaction costs near 9–10% of the home's value are the single biggest reason short
+                stays favor renting.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The levers that move the answer</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Staying length</strong> dominates everything — it amortizes those round-trip costs. Then:
+                <strong>appreciation</strong> (U.S. homes have averaged roughly 3–5% a year nationally, but Shiller's
+                long-run data puts real, inflation-adjusted appreciation near zero — a home is shelter first and
+                an investment second, and local markets diverge wildly); the <strong>mortgage rate</strong>, which decides
+                how much of each payment is interest; <strong>rent growth</strong>, which quietly makes renting worse
+                every year; and your <strong>investment return</strong>, the opportunity cost of equity — money locked
+                in walls cannot compound in markets. A senior holding Treasuries should model 3–4%; a young
+                index investor, more. Honest inputs, honestly varied, beat a single precise-looking answer:
+                run the calculator at pessimistic and optimistic settings and see whether the verdict flips.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Renting, briefly and fairly</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Renting buys flexibility: leases run months to a few years, the landlord owns every breakdown,
+                and your capital stays liquid and invested. Before signing: negotiate — terms are often softer
+                than the listing; get every promise in writing; photograph the unit's condition at move-in so
+                the deposit conversation at move-out has evidence; and know that federal law bars refusal based
+                on race, sex, religion, disability, national origin, or familial status, with many states adding
+                age, marital status, and sexual orientation. For the rent you can afford in the first place, use
+                our <a href="rent.html" class="text-[#3F51B5] font-semibold hover:underline">rent calculator</a>;
+                for whether the purchase itself fits your income, the
+                <a href="house-affordability.html" class="text-[#3F51B5] font-semibold hover:underline">house affordability calculator</a> —
+                and price the mortgage itself on the
+                <a href="mortgage.html" class="text-[#3F51B5] font-semibold hover:underline">mortgage calculator</a>.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">How long until buying wins, on these defaults?</h4>
+                    <p class="text-gray-700">On average monthly cost, about 5.5 years. On net worth, much later — early equity is thin and selling costs are heavy. Plan a stay well past both numbers before buying.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Why does net worth lag the monthly-cost answer?</h4>
+                    <p class="text-gray-700">Because settling up early charges the full ~7% selling cost and returns a balance barely reduced — most early payments were interest. Cheap to live in ≠ ahead if you leave.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Are taxes really included?</h4>
+                    <p class="text-gray-700">Yes — interest and property tax deductions valued only above your standard deduction, property tax under the $10,000 SALT cap, interest on up to $750,000 of debt, at your federal + state marginal rates.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What investment return should I enter?</h4>
+                    <p class="text-gray-700">What you'd truly earn on the unspent down payment: ~3–4% for cash-like holdings, 6–8% for a long-horizon index portfolio. Higher returns favor renting.</p>
+                </div>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                or tax advice. It assumes constant appreciation, rent growth, and investment returns, and a fixed mortgage
+                rate; real outcomes will differ. Standard deductions shown are the 2025 federal amounts by filing status.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="mortgage.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Mortgage Calculator</h3>
+                <p class="text-sm text-gray-600">The buying side in full — PITI, PMI, amortization.</p>
+            </a>
+            <a href="house-affordability.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">House Affordability</h3>
+                <p class="text-sm text-gray-600">Can you carry the purchase in the first place?</p>
+            </a>
+            <a href="rent.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Rent Calculator</h3>
+                <p class="text-sm text-gray-600">How much rent your income supports.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateRentVsBuy() {
-            // Inputs
-            const price = parseFloat(document.getElementById('rbPrice').value);
-            const downPct = parseFloat(document.getElementById('rbDownPct').value) / 100;
-            const rate = parseFloat(document.getElementById('rbRate').value) / 100 / 12;
-            const rent = parseFloat(document.getElementById('rbRent').value);
-            const years = parseFloat(document.getElementById('rbYears').value);
-            const appreciationRate = parseFloat(document.getElementById('rbAppreciation').value) / 100;
+        let chartInstance = null;
 
-            if (isNaN(price) || isNaN(downPct) || isNaN(rate) || isNaN(rent) || isNaN(years) || isNaN(appreciationRate)) {
-                alert("Please enter valid numbers.");
+        window.addEventListener('DOMContentLoaded', () => {
+            prefillFromURL();
+            calculateRVB();
+        });
+
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+
+        function simulate() {
+            const P = {
+                price: num('price'), downPct: num('downpct'), rate: num('rate'), termY: num('term'),
+                buyClosePct: num('buyclose'), taxRate: num('taxrate'), taxIncr: num('taxincr'),
+                ins: num('ins'), hoa: num('hoa'), maintPct: num('maint'), appr: num('appr'),
+                costIncr: num('costincr'), sellPct: num('sellclose'),
+                rent: num('rent'), rentIncr: num('rentincr'), rentIns: num('rentins'),
+                deposit: num('deposit'), upfrontRent: num('upfront'),
+                air: num('air'), fed: num('fed'), state: num('state'), stdDed: num('filing')
+            };
+            const r = P.rate / 100 / 12;
+            const loan = P.price * (1 - P.downPct / 100);
+            const n = P.termY * 12;
+            const pay = loan <= 0 ? 0 : (r === 0 ? loan / n : loan * r / (1 - Math.pow(1 + r, -n)));
+            const im = P.air / 100 / 12;
+            const upfrontBuy = P.price * P.downPct / 100 + P.price * P.buyClosePct / 100;
+            let bal = loan, D = upfrontBuy - P.upfrontRent - P.deposit;
+            let cumBuyOut = 0, cumRentOut = 0, cumTaxSave = 0, intYr = 0;
+            const years = [];
+            for (let m = 1; m <= 360; m++) {
+                const yr = Math.ceil(m / 12);
+                const interest = bal * r;
+                intYr += interest;
+                bal -= (pay - interest);
+                if (bal < 0) bal = 0;
+                const value = P.price * Math.pow(1 + P.appr / 100, (m - 1) / 12);
+                const tax_m = P.price * P.taxRate / 100 * Math.pow(1 + P.taxIncr / 100, yr - 1) / 12;
+                const ins_m = P.ins * Math.pow(1 + P.costIncr / 100, yr - 1) / 12;
+                const hoa_m = P.hoa * Math.pow(1 + P.costIncr / 100, yr - 1) / 12;
+                const maint_m = value * P.maintPct / 100 / 12;
+                const buyOut = pay + tax_m + ins_m + hoa_m + maint_m;
+                const rentOut = P.rent * Math.pow(1 + P.rentIncr / 100, yr - 1) + P.rentIns;
+                cumBuyOut += buyOut; cumRentOut += rentOut;
+                D *= (1 + im);
+                D += (buyOut - rentOut);
+                if (m % 12 === 0) {
+                    const taxYr = P.price * P.taxRate / 100 * Math.pow(1 + P.taxIncr / 100, yr - 1);
+                    const ded = intYr * Math.min(1, loan > 0 ? 750000 / loan : 1) + Math.min(taxYr, 10000);
+                    const taxSave = Math.max(0, ded - P.stdDed) * (P.fed + P.state) / 100;
+                    cumTaxSave += taxSave;
+                    D -= taxSave;
+                    intYr = 0;
+                    const valYr = P.price * Math.pow(1 + P.appr / 100, yr);
+                    const buyerNW = valYr - valYr * P.sellPct / 100 - bal;
+                    const renterNW = D + P.deposit;
+                    const buyAvg = (upfrontBuy + cumBuyOut - cumTaxSave - buyerNW) / (12 * yr);
+                    const rentAvg = (cumRentOut + P.upfrontRent + P.deposit * (Math.pow(1 + P.air / 100, yr) - 1)) / (12 * yr);
+                    years.push({ yr, buyerNW, renterNW, buyAvg, rentAvg, taxSaveCum: cumTaxSave });
+                }
+            }
+            return { P, pay, loan, upfrontBuy, years };
+        }
+
+        function calculateRVB() {
+            const out = document.getElementById('resultsArea');
+            const stayRaw = Math.round(num('stay'));
+            const stay = Math.min(Math.max(stayRaw || 10, 1), 30);
+            const { P, pay, years } = simulate();
+            if (P.price <= 0 || P.rent < 0) {
+                out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a valid home price and rent.</div>';
                 return;
             }
 
-            const months = years * 12;
-            const downPayment = price * downPct;
-            const loanAmount = price - downPayment;
-
-            // --- BUYING SCENARIO ---
-            // Monthly Mortgage Payment (P&I)
-            const monthlyMortgage = loanAmount * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
-            const totalMortgagePaid = monthlyMortgage * months;
-            
-            // Assume Property Taxes & Maintenance are approx 2% of home price annually
-            const annualPropCosts = price * 0.02;
-            const totalPropCosts = annualPropCosts * years;
-
-            // Closing costs (approx 3%)
-            const closingCosts = price * 0.03;
-
-            // Future Home Value
-            const futureHomeValue = price * Math.pow(1 + appreciationRate, years);
-            
-            // Remaining Loan Balance
-            let remainingBalance = loanAmount;
-            for(let i=0; i<months; i++) {
-                const interest = remainingBalance * rate;
-                const principal = monthlyMortgage - interest;
-                remainingBalance -= principal;
+            // average-cost crossover with linear interpolation
+            let verdictHTML;
+            let cross = null, crossFrac = null;
+            for (let i = 0; i < years.length; i++) {
+                if (years[i].buyAvg < years[i].rentAvg) { cross = years[i].yr; crossFrac = i === 0 ? 0 : (years[i - 1].buyAvg - years[i - 1].rentAvg) / ((years[i - 1].buyAvg - years[i - 1].rentAvg) - (years[i].buyAvg - years[i].rentAvg)); break; }
             }
-
-            // Net Cost of Buying = (All money spent) - (Money you get back from selling)
-            // Money spent = Down Payment + Total Mortgage Paid + Total Property Costs + Closing Costs
-            const totalSpentBuying = downPayment + totalMortgagePaid + totalPropCosts + closingCosts;
-            // Money back = Future Home Value - Remaining Loan Balance
-            const equityFromSale = futureHomeValue - remainingBalance;
-            
-            const netCostBuying = totalSpentBuying - equityFromSale;
-
-
-            // --- RENTING SCENARIO ---
-            // Assume rent increases by 3% every year
-            let totalRentPaid = 0;
-            let currentRent = rent;
-            for (let i = 0; i < years; i++) {
-                totalRentPaid += (currentRent * 12);
-                currentRent *= 1.03; // 3% annual rent increase
-            }
-            
-            // Assume renter invests the down payment + closing costs in the stock market (7% return)
-            const initialInvestment = downPayment + closingCosts;
-            const investmentReturnRate = 0.07;
-            const futureInvestmentValue = initialInvestment * Math.pow(1 + investmentReturnRate, years);
-            
-            // Net Cost of Renting = Total Rent Paid - Investment Growth
-            const netCostRenting = totalRentPaid - (futureInvestmentValue - initialInvestment);
-
-
-            // Output
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-            
-            document.getElementById('rbBuyCost').textContent = formatter.format(netCostBuying > 0 ? netCostBuying : 0);
-            document.getElementById('rbRentCost').textContent = formatter.format(netCostRenting > 0 ? netCostRenting : 0);
-
-            const verdictEl = document.getElementById('rbVerdict');
-            if (netCostBuying < netCostRenting) {
-                verdictEl.textContent = "Buying is financially better in this scenario.";
-                verdictEl.className = "text-lg font-bold text-green-600";
+            if (cross === 1) {
+                verdictHTML = `<span class="text-green-700 font-bold">Buying is cheaper</span> from the very first year on these numbers.`;
+            } else if (cross) {
+                const yrs = (cross - 1 + crossFrac).toFixed(1);
+                verdictHTML = `Buying is cheaper if you stay for <span class="text-green-700 font-bold">${yrs} years</span> or longer. Otherwise, renting is cheaper.`;
             } else {
-                verdictEl.textContent = "Renting is financially better in this scenario.";
-                verdictEl.className = "text-lg font-bold text-[#14B8A6]";
+                verdictHTML = `<span class="text-green-700 font-bold">Renting stays cheaper</span> at every horizon up to 30 years on these numbers.`;
             }
 
-            document.getElementById('rbResults').classList.remove('hidden');
+            const s = years[stay - 1];
+            const nwDiff = s.buyerNW - s.renterNW;
+            const stayWinner = nwDiff >= 0 ? 'Buying' : 'Renting';
+            const costWinner = s.buyAvg <= s.rentAvg ? 'Buying' : 'Renting';
+
+            const rows = years.map(y => {
+                const ahead = y.buyerNW >= y.renterNW;
+                const hl = y.yr === stay ? 'background:#FEF3C7;' : '';
+                return `<tr class="border-b hover:bg-gray-50" style="${hl}">
+                    <td class="py-1.5 px-2 font-semibold">${y.yr} Year${y.yr > 1 ? 's' : ''}</td>
+                    <td class="py-1.5 px-2 text-right">${formatMoney(y.buyAvg)}</td>
+                    <td class="py-1.5 px-2 text-right">${formatMoney(y.buyAvg * 12)}</td>
+                    <td class="py-1.5 px-2 text-right">${formatMoney(y.rentAvg)}</td>
+                    <td class="py-1.5 px-2 text-right">${formatMoney(y.rentAvg * 12)}</td>
+                    <td class="py-1.5 px-2 text-right">${formatMoney(y.buyerNW)}</td>
+                    <td class="py-1.5 px-2 text-right">${formatMoney(y.renterNW)}</td>
+                    <td class="py-1.5 px-2 text-center font-bold ${ahead ? 'text-[#3F51B5]' : 'text-green-600'}">${ahead ? 'Buy' : 'Rent'}</td>
+                </tr>`;
+            }).join('');
+
+            out.innerHTML = `
+                <div class="bg-white border border-gray-200 rounded-xl p-5 mb-6 text-center shadow-sm">
+                    <p class="text-lg md:text-xl">${verdictHTML}</p>
+                    <p class="text-sm text-gray-500 mt-1">Verdict by average monthly cost. Net worth below can disagree in the early years — see the year-by-year table.</p>
+                </div>
+                <div class="flex flex-col md:flex-row gap-6 mb-6">
+                    <div class="md:w-2/3 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <canvas id="nwChart"></canvas>
+                    </div>
+                    <div class="md:w-1/3 flex flex-col gap-6">
+                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm">
+                            <p class="font-bold text-gray-800 mb-2">If you stay ${stay} year${stay > 1 ? 's' : ''}:</p>
+                            <p class="flex justify-between mb-1"><span>Buyer net worth:</span> <span class="font-bold">${formatMoney(s.buyerNW)}</span></p>
+                            <p class="flex justify-between mb-1"><span>Renter net worth:</span> <span class="font-bold">${formatMoney(s.renterNW)}</span></p>
+                            <p class="flex justify-between mb-1"><span>Net worth edge:</span> <span class="font-bold">${stayWinner} by ${formatMoney(Math.abs(nwDiff))}</span></p>
+                            <p class="flex justify-between mb-1"><span>Avg monthly cost — buy:</span> <span class="font-bold">${formatMoney(s.buyAvg)}</span></p>
+                            <p class="flex justify-between mb-1"><span>Avg monthly cost — rent:</span> <span class="font-bold">${formatMoney(s.rentAvg)}</span></p>
+                            <p class="flex justify-between"><span>Cheaper per month:</span> <span class="font-bold">${costWinner}</span></p>
+                            <p class="text-xs text-gray-500 mt-3">Mortgage tax savings credited to the buyer over ${stay} years: ${formatMoney(s.taxSaveCum)} (deductions above the standard deduction, SALT-capped).</p>
+                        </div>
+                        <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 hidden md:block">
+                            <p class="font-medium">AdSense Space</p>
+                            <p class="text-sm">(300x250 Banner)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                    <h3 class="font-bold text-gray-800 mb-3">Average cost &amp; net worth by staying length</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700">
+                                <tr>
+                                    <th class="py-2 px-2 border-b" rowspan="2">Staying Length</th>
+                                    <th class="py-2 px-2 border-b text-center" colspan="2">Average Buying Cost</th>
+                                    <th class="py-2 px-2 border-b text-center" colspan="2">Average Renting Cost</th>
+                                    <th class="py-2 px-2 border-b text-right" rowspan="2">Buyer Net Worth</th>
+                                    <th class="py-2 px-2 border-b text-right" rowspan="2">Renter Net Worth</th>
+                                    <th class="py-2 px-2 border-b text-center" rowspan="2">Ahead</th>
+                                </tr>
+                                <tr>
+                                    <th class="py-1 px-2 border-b text-right">Monthly</th>
+                                    <th class="py-1 px-2 border-b text-right">Annual</th>
+                                    <th class="py-1 px-2 border-b text-right">Monthly</th>
+                                    <th class="py-1 px-2 border-b text-right">Annual</th>
+                                </tr>
+                            </thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-3">Highlighted row = your planned stay. "Ahead" is by net worth if you settled up that year (buyer sells, renter keeps investments + returned deposit).</p>
+                </div>`;
+
+            const cv = document.getElementById('nwChart');
+            if (cv) {
+                const ctx = cv.getContext('2d');
+                if (chartInstance) chartInstance.destroy();
+                chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: years.map(y => y.yr),
+                        datasets: [
+                            { label: 'Buyer Net Worth', data: years.map(y => Math.round(y.buyerNW)), borderColor: '#3F51B5', backgroundColor: 'rgba(63,81,181,0.08)', fill: true, borderWidth: 2.5, tension: 0.15, pointRadius: 0 },
+                            { label: 'Renter Net Worth', data: years.map(y => Math.round(y.renterNW)), borderColor: '#4CAF50', backgroundColor: 'rgba(76,175,80,0.08)', fill: true, borderWidth: 2.5, tension: 0.15, pointRadius: 0 }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'top' }, title: { display: true, text: 'Net Worth: Buying vs Renting & Investing' } },
+                        scales: {
+                            x: { title: { display: true, text: 'Years Stayed' } },
+                            y: { ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } }
+                        }
+                    }
+                });
+            }
+            updateURL();
         }
+
+        const PARAMS = [['price', 'p'], ['downpct', 'd'], ['rate', 'r'], ['term', 't'], ['buyclose', 'bc'], ['taxrate', 'tx'], ['taxincr', 'ti'], ['ins', 'in'], ['hoa', 'h'], ['maint', 'm'], ['appr', 'a'], ['costincr', 'ci'], ['sellclose', 'sc'], ['rent', 'rt'], ['rentincr', 'ri'], ['rentins', 'rn'], ['deposit', 'dp'], ['upfront', 'uf'], ['air', 'ar'], ['fed', 'fd'], ['state', 'st'], ['filing', 'fl'], ['stay', 'sy']];
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            PARAMS.forEach(([id, key]) => { p.set(key, document.getElementById(id).value); });
+            return p.toString();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); });
+        }
+
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-</html>
+    </html>
