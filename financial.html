@@ -4,17 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial Calculators - CalcNova</title>
-    <meta name="description" content="Free financial calculators: mortgage payment, loan payoff, compound interest and more. Estimate payments, interest and total costs in seconds.">
+    <meta name="description" content="Free financial calculators for mortgages, real estate, auto loans, investing, retirement, taxes and debt — each checked against published reference figures, with plain-English guides.">
     <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/financial">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Financial Calculators - CalcNova">
+    <meta property="og:description" content="Mortgage, auto, investment, retirement and tax calculators — the complete CalcNova financial library.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/financial">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Financial Calculators - CalcNova">
+    <meta name="twitter:description" content="Every CalcNova financial calculator, organized by what you are trying to do.">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Are these financial calculators free?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes — every calculator on CalcNova is free, needs no sign-up, and runs entirely in your browser. Your inputs are never sent to a server; share links carry them in the URL itself, and only if you choose to copy one." }
+            },
+            {
+                "@type": "Question",
+                "name": "How accurate are the results?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Each calculator's math is verified against published reference examples before release — mortgage, FHA, VA, HELOC and auto figures reproduce reference results to the cent. Real-world quotes can still differ: lenders round differently, fees vary, and tax rules change, so treat results as precise estimates for planning and comparison." }
+            },
+            {
+                "@type": "Question",
+                "name": "What does a calculator marked SOON mean?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It is on the published roadmap and not yet built. Rather than link to a page that does not exist, CalcNova labels it SOON — the list on this page is the full plan, and new calculators are added regularly, starting with the most searched ones." }
+            }
+        ]
+    }
+    </script>
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
-        .calc-card { transition: transform .15s ease, box-shadow .15s ease; }
-        .calc-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(63,81,181,.12); }
+        .cat-title { font-size: 1.05rem; font-weight: 800; color: #111827; margin: 1.4rem 0 0.5rem; padding-bottom: 0.3rem; border-bottom: 2px solid #E5E7EB; }
+        .calc-list div { padding: 0.22rem 0; }
+        .calc-list a { color: #3F51B5; font-size: 0.95rem; }
+        .calc-list a:hover { text-decoration: underline; }
+        .soon-item { color: #9CA3AF; font-size: 0.95rem; }
+        .soon-badge { font-size: 0.6rem; font-weight: 800; color: #92400E; background: #FEF3C7; border-radius: 0.25rem; padding: 0.1rem 0.35rem; margin-left: 0.4rem; vertical-align: middle; letter-spacing: 0.03em; }
+        @media print { nav, footer, .no-print { display: none !important; } }
     </style>
 </head>
 <body class="text-gray-800">
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
@@ -24,135 +70,204 @@
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
         <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <span class="text-gray-800 font-medium">Financial Calculators</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6">
-        <h1 class="text-3xl font-bold text-[#3F51B5] mb-2">Financial Calculators</h1>
-        <p class="text-gray-600 mb-8 max-w-2xl">Free tools to estimate loan payments, interest costs, and investment growth. Every calculation happens instantly in your browser.</p>
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Financial Calculators</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            The complete CalcNova financial library — mortgages and real estate, cars, investing, retirement,
+            taxes, and everyday loans and debt. Every calculator is free, runs in your browser, and is verified
+            against published reference figures before it goes live. Entries marked
+            <span class="soon-badge">SOON</span> are on the roadmap and are not links yet — we would rather show
+            you the plan than send you to a dead page.
+        </p>
+        <p class="text-sm text-gray-500 mt-2"><strong class="text-green-600">23 calculators live</strong> · 48 on the roadmap</p>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
-            <a href="mortgage.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Mortgage Calculator</h2>
-                <p class="text-sm text-gray-600">Monthly payment with taxes, insurance, PMI, HOA, extra payments and full amortization schedule.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="loan.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Loan Calculator</h2>
-                <p class="text-sm text-gray-600">Monthly payments and total interest for personal, auto and student loans.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="compound-interest.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Compound Interest Calculator</h2>
-                <p class="text-sm text-gray-600">Project how savings and investments grow with compounding returns.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="house-affordability.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">House Affordability Calculator</h2>
-                <p class="text-sm text-gray-600">Find out how much house you can afford based on income and debts.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="amortization.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Amortization Calculator</h2>
-                <p class="text-sm text-gray-600">Full loan amortization schedule with extra payments, payoff date and CSV export.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <div class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 opacity-70">
-                <h2 class="font-bold text-gray-700 text-lg mb-1">Retirement Calculator</h2>
-                <p class="text-sm text-gray-600">Estimate how much to save each month to retire comfortably.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-gray-400 px-2 py-1 rounded">SOON</span>
-            </div>
-            <a href="mortgage-payoff.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Mortgage Payoff Calculator</h2>
-                <p class="text-sm text-gray-600">See how extra payments shorten your mortgage and cut interest.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="rent.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Rent Calculator</h2>
-                <p class="text-sm text-gray-600">How much rent can you afford based on income and debts?</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="debt-to-income.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Debt-to-Income Calculator</h2>
-                <p class="text-sm text-gray-600">Your front-end and back-end DTI ratios, checked against lender limits.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="refinance.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Refinance Calculator</h2>
-                <p class="text-sm text-gray-600">Compare your current loan with a new one: break-even point and true lifetime savings.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="rent-vs-buy.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Rent vs Buy Calculator</h2>
-                <p class="text-sm text-gray-600">Which leaves you wealthier after the years you stay — renting and investing, or buying?</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="rental-property.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Rental Property Calculator</h2>
-                <p class="text-sm text-gray-600">Cash flow, cap rate, cash-on-cash return and IRR for an investment property.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="down-payment.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Down Payment Calculator</h2>
-                <p class="text-sm text-gray-600">How much you need, total cash to close, and how long it takes to save.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="fha-loan.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">FHA Loan Calculator</h2>
-                <p class="text-sm text-gray-600">FHA payments with upfront and annual MIP, real HUD tiers and duration rules.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="apr.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">APR Calculator</h2>
-                <p class="text-sm text-gray-600">The real APR of any loan or mortgage, with fees and points included.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="va-mortgage.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">VA Mortgage Calculator</h2>
-                <p class="text-sm text-gray-600">VA payments with the official funding-fee tiers — zero down, no PMI.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="home-equity-loan.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Home Equity Loan Calculator</h2>
-                <p class="text-sm text-gray-600">Fixed-rate second mortgage payments with closing costs and APR, plus how much you can borrow.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="heloc.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">HELOC Calculator</h2>
-                <p class="text-sm text-gray-600">Draw-period and repayment-period HELOC payments, with closing costs, annual fees and APR.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="auto-loan.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Auto Loan Calculator</h2>
-                <p class="text-sm text-gray-600">Car payments with state sales-tax rules, dealer fees and trade-in math — or work backwards from a monthly payment.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="cash-back-or-low-interest.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Cash Back or Low Interest Calculator</h2>
-                <p class="text-sm text-gray-600">Rebate or low rate on a car — which offer actually saves more, with the break-even rebate.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
-            <a href="auto-lease.html" class="calc-card bg-white p-5 rounded-xl shadow-sm border border-gray-100 block">
-                <h2 class="font-bold text-[#3F51B5] text-lg mb-1">Auto Lease Calculator</h2>
-                <p class="text-sm text-gray-600">Lease payments from cap cost, money factor and residual — with a same-term lease vs. buy comparison.</p>
-                <span class="inline-block mt-3 text-xs font-bold text-white bg-green-500 px-2 py-1 rounded">LIVE</span>
-            </a>
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">AdSense Space</p>
+            <p class="text-sm">(728x90 Leaderboard)</p>
         </div>
 
-        <section class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">About Our Financial Calculators</h2>
-            <p class="text-gray-700 leading-7">
-                Big financial decisions &mdash; buying a home, taking a loan, planning retirement &mdash; deserve clear numbers.
-                CalcNova&rsquo;s financial calculators turn confusing formulas into simple answers: what you pay each month,
-                how much goes to interest, and what the loan really costs over its lifetime. Start with our
-                <a href="mortgage.html" class="text-[#3F51B5] font-semibold hover:underline">mortgage calculator</a>
-                to see the full picture of homeownership costs.
-            </p>
-        </section>
+        <div class="max-w-md mb-2 no-print">
+            <input type="text" id="calcSearch" placeholder="🔍 Search calculators… (e.g. mortgage, ira, lease)" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 outline-none focus:border-[#3F51B5] shadow-sm">
+        </div>
+        <p id="noMatch" class="text-sm text-gray-500 hidden">No calculator matches that search yet — try a shorter word.</p>
+
+        <div class="grid md:grid-cols-2 gap-x-12">
+            <div>
+                <section class="cat-block">
+                    <h2 class="cat-title">Mortgage and Real Estate</h2>
+                    <div class="calc-list">
+                        <div><a href="mortgage.html">Mortgage Calculator</a></div>
+                        <div><a href="amortization.html">Amortization Calculator</a></div>
+                        <div><a href="mortgage-payoff.html">Mortgage Payoff Calculator</a></div>
+                        <div><a href="house-affordability.html">House Affordability Calculator</a></div>
+                        <div><a href="rent.html">Rent Calculator</a></div>
+                        <div><a href="debt-to-income.html">Debt-to-Income Ratio Calculator</a></div>
+                        <div><a href="real-estate.html">Real Estate Calculator</a></div>
+                        <div><a href="refinance.html">Refinance Calculator</a></div>
+                        <div><a href="rental-property.html">Rental Property Calculator</a></div>
+                        <div><a href="apr.html">APR Calculator</a></div>
+                        <div><a href="fha-loan.html">FHA Loan Calculator</a></div>
+                        <div><a href="va-mortgage.html">VA Mortgage Calculator</a></div>
+                        <div><a href="home-equity-loan.html">Home Equity Loan Calculator</a></div>
+                        <div><a href="heloc.html">HELOC Calculator</a></div>
+                        <div><a href="down-payment.html">Down Payment Calculator</a></div>
+                        <div><a href="rent-vs-buy.html">Rent vs. Buy Calculator</a></div>
+                    </div>
+                </section>
+
+                <section class="cat-block">
+                    <h2 class="cat-title">Auto</h2>
+                    <div class="calc-list">
+                        <div><a href="auto-loan.html">Auto Loan Calculator</a></div>
+                        <div><a href="cash-back-or-low-interest.html">Cash Back or Low Interest Calculator</a></div>
+                        <div><a href="auto-lease.html">Auto Lease Calculator</a></div>
+                    </div>
+                </section>
+
+                <section class="cat-block">
+                    <h2 class="cat-title">Investment</h2>
+                    <div class="calc-list">
+                        <div><span class="soon-item">Interest Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Investment Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Finance Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><a href="compound-interest.html">Compound Interest Calculator</a></div>
+                        <div><span class="soon-item">Interest Rate Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Savings Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Simple Interest Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">CD Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Bond Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Mutual Fund Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Average Return Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">IRR Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">ROI Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Payback Period Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Present Value Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Future Value Calculator</span><span class="soon-badge">SOON</span></div>
+                    </div>
+                </section>
+            </div>
+
+            <div>
+                <section class="cat-block">
+                    <h2 class="cat-title">Retirement</h2>
+                    <div class="calc-list">
+                        <div><span class="soon-item">Retirement Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">401K Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Pension Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Social Security Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Annuity Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Annuity Payout Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Roth IRA Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">IRA Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">RMD Calculator</span><span class="soon-badge">SOON</span></div>
+                    </div>
+                </section>
+
+                <section class="cat-block">
+                    <h2 class="cat-title">Tax and Salary</h2>
+                    <div class="calc-list">
+                        <div><span class="soon-item">Income Tax Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><a href="salary.html">Salary Calculator</a></div>
+                        <div><span class="soon-item">Marriage Tax Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Estate Tax Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Take-Home-Paycheck Calculator</span><span class="soon-badge">SOON</span></div>
+                    </div>
+                </section>
+
+                <section class="cat-block">
+                    <h2 class="cat-title">Other</h2>
+                    <div class="calc-list">
+                        <div><a href="loan.html">Loan Calculator</a></div>
+                        <div><span class="soon-item">Payment Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Currency Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><a href="inflation.html">Inflation Calculator</a></div>
+                        <div><span class="soon-item">Sales Tax Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Credit Card Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Credit Cards Payoff Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Debt Payoff Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Debt Consolidation Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Repayment Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Student Loan Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">College Cost Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">VAT Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Depreciation Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Margin Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Discount Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Business Loan Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Personal Loan Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Boat Loan Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Lease Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Budget Calculator</span><span class="soon-badge">SOON</span></div>
+                        <div><span class="soon-item">Commission Calculator</span><span class="soon-badge">SOON</span></div>
+                    </div>
+                </section>
+            </div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">How to Pick the Right Calculator</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Start from the decision, not the math. <strong>Buying a home?</strong> The chain runs
+                <a href="house-affordability.html" class="text-[#3F51B5] font-semibold hover:underline">house affordability</a> →
+                <a href="down-payment.html" class="text-[#3F51B5] font-semibold hover:underline">down payment</a> →
+                <a href="mortgage.html" class="text-[#3F51B5] font-semibold hover:underline">mortgage</a>, with the
+                <a href="real-estate.html" class="text-[#3F51B5] font-semibold hover:underline">real estate hub</a> collecting every
+                housing tool — including FHA, VA, refinance, and rent-vs-buy — in one place.
+                <strong>Buying a car?</strong> Price the loan on the
+                <a href="auto-loan.html" class="text-[#3F51B5] font-semibold hover:underline">auto loan calculator</a>, settle a
+                rebate-versus-rate offer with
+                <a href="cash-back-or-low-interest.html" class="text-[#3F51B5] font-semibold hover:underline">cash back or low interest</a>,
+                or weigh leasing on the
+                <a href="auto-lease.html" class="text-[#3F51B5] font-semibold hover:underline">auto lease calculator</a>.
+                <strong>Carrying debt?</strong> Check the ratio lenders see on the
+                <a href="debt-to-income.html" class="text-[#3F51B5] font-semibold hover:underline">debt-to-income calculator</a> and the
+                payoff path on the <a href="loan.html" class="text-[#3F51B5] font-semibold hover:underline">loan calculator</a>.
+                <strong>Growing money?</strong> The <a href="compound-interest.html" class="text-[#3F51B5] font-semibold hover:underline">compound interest calculator</a>
+                is the workhorse while the investment suite is being built.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
+            </div>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">A note on accuracy — and on SOON</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Every calculator here is built from the underlying formulas — amortization, annuity math, IRS and
+                HUD rules where they apply — and checked against published reference examples before release; where
+                a reference's own shortcut differs from the governing rule (it happens), the page follows the rule
+                and says so. Results are planning estimates: a lender's quote can differ by rounding, fees, and
+                the day's rates. As for the SOON entries: this page doubles as CalcNova's public roadmap. The
+                mortgage, real-estate, and auto sections are complete; investment and retirement tools are next,
+                in search-demand order. If a calculator you need is marked SOON, it is coming — the list above is
+                the order book.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Are these calculators free?</h4>
+                    <p class="text-gray-700">Yes — no sign-up, and everything runs in your browser. Nothing you type is sent to a server.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">How accurate are they?</h4>
+                    <p class="text-gray-700">Verified against published reference results to the cent before release. Treat them as precise planning estimates — final quotes still depend on your lender, fees, and current rates.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Why are some entries not links?</h4>
+                    <p class="text-gray-700">SOON means planned, not built. We label them instead of linking to pages that don't exist — no dead ends.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
         <div class="container mx-auto px-4 text-center">
             <div class="mb-3 space-x-4 text-sm">
                 <a href="index.html" class="hover:text-white">Home</a>
@@ -162,5 +277,22 @@
             <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        document.getElementById('calcSearch').addEventListener('input', function () {
+            const q = this.value.trim().toLowerCase();
+            let anyVisible = false;
+            document.querySelectorAll('.cat-block').forEach(block => {
+                let blockVisible = false;
+                block.querySelectorAll('.calc-list > div').forEach(item => {
+                    const match = !q || item.textContent.toLowerCase().includes(q);
+                    item.style.display = match ? '' : 'none';
+                    if (match) { blockVisible = true; anyVisible = true; }
+                });
+                block.style.display = blockVisible ? '' : 'none';
+            });
+            document.getElementById('noMatch').classList.toggle('hidden', anyVisible || !q);
+        });
+    </script>
 </body>
-</html>
+                </html>
