@@ -316,8 +316,8 @@
     <script>
         const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
         const S = {
-            a: { rows: [], monthly: true, startAbs: 0, chart: null },
-            b: { rows: [], monthly: true, startAbs: 0, chart: null }
+            a: { rows: [], monthly: true, expanded: false, startAbs: 0, chart: null },
+            b: { rows: [], monthly: true, expanded: false, startAbs: 0, chart: null }
         };
 
         function simMonthly(balance, mr, pay, extras) {
@@ -458,6 +458,7 @@
 
             S[prefix].rows = ctx.scen.rows;
             S[prefix].monthly = true;
+            S[prefix].expanded = false;
 
             document.getElementById(prefix + '_results').innerHTML = `
                 <div class="bg-[#4CAF50] text-white p-4 rounded-xl shadow-md text-center mb-4">
@@ -501,6 +502,10 @@
                             </thead>
                             <tbody id="${prefix}_table"></tbody>
                         </table>
+                    </div>
+                    <p id="${prefix}_tableNote" class="text-xs text-gray-500 mt-3"></p>
+                    <div class="text-center mt-2 no-print">
+                        <button onclick="toggleExpand('${prefix}')" id="${prefix}_expandBtn" class="bg-[#3F51B5] text-white px-4 py-2 rounded-md hover:bg-blue-800 transition text-sm font-semibold shadow-sm">View Amortization Table</button>
                     </div>
                 </div>` : ''}`;
 
@@ -552,10 +557,10 @@
 
         function renderTable(prefix) {
             const st = S[prefix];
-            let html = '';
+            const allRows = [];
             if (st.monthly) {
                 st.rows.forEach(r => {
-                    html += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-1 px-3">${r.month}</td><td class="py-1 px-3">${formatMonthYear(st.startAbs + r.month - 1)}</td><td class="py-1 px-3 text-right">${formatMoney(r.payment)}</td><td class="py-1 px-3 text-right text-green-600">${formatMoney(r.principal)}</td><td class="py-1 px-3 text-right text-red-500">${formatMoney(r.interest)}</td><td class="py-1 px-3 text-right">${formatMoney(r.cumInterest)}</td><td class="py-1 px-3 text-right font-semibold">${formatMoney(r.balance)}</td></tr>`;
+                    allRows.push(`<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-1 px-3">${r.month}</td><td class="py-1 px-3">${formatMonthYear(st.startAbs + r.month - 1)}</td><td class="py-1 px-3 text-right">${formatMoney(r.payment)}</td><td class="py-1 px-3 text-right text-green-600">${formatMoney(r.principal)}</td><td class="py-1 px-3 text-right text-red-500">${formatMoney(r.interest)}</td><td class="py-1 px-3 text-right">${formatMoney(r.cumInterest)}</td><td class="py-1 px-3 text-right font-semibold">${formatMoney(r.balance)}</td></tr>`);
                 });
             } else {
                 const g = {};
@@ -567,10 +572,29 @@
                 });
                 for (const y in g) {
                     const d = g[y];
-                    html += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-2 px-3 font-medium">${y}</td><td class="py-2 px-3">${formatAbsMonth(st.startAbs + d.lastMonth - 1)}</td><td class="py-2 px-3 text-right">${formatMoney(d.payment)}</td><td class="py-2 px-3 text-right text-green-600">${formatMoney(d.principal)}</td><td class="py-2 px-3 text-right text-red-500">${formatMoney(d.interest)}</td><td class="py-2 px-3 text-right">${formatMoney(d.cumInterest)}</td><td class="py-2 px-3 text-right font-semibold">${formatMoney(d.balance)}</td></tr>`;
+                    allRows.push(`<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-2 px-3 font-medium">${y}</td><td class="py-2 px-3">${formatAbsMonth(st.startAbs + d.lastMonth - 1)}</td><td class="py-2 px-3 text-right">${formatMoney(d.payment)}</td><td class="py-2 px-3 text-right text-green-600">${formatMoney(d.principal)}</td><td class="py-2 px-3 text-right text-red-500">${formatMoney(d.interest)}</td><td class="py-2 px-3 text-right">${formatMoney(d.cumInterest)}</td><td class="py-2 px-3 text-right font-semibold">${formatMoney(d.balance)}</td></tr>`);
                 }
             }
-            document.getElementById(prefix + '_table').innerHTML = html;
+            const LIMIT = 12;
+            const visible = st.expanded ? allRows : allRows.slice(0, LIMIT);
+            document.getElementById(prefix + '_table').innerHTML = visible.join('');
+            const note = document.getElementById(prefix + '_tableNote');
+            const btn = document.getElementById(prefix + '_expandBtn');
+            if (note && btn) {
+                if (allRows.length <= LIMIT) {
+                    note.textContent = '';
+                    btn.style.display = 'none';
+                } else {
+                    btn.style.display = '';
+                    btn.textContent = st.expanded ? 'Hide Amortization Table' : 'View Amortization Table';
+                    note.textContent = st.expanded ? '' : 'Showing the first ' + LIMIT + ' of ' + allRows.length + ' rows.';
+                }
+            }
+        }
+
+        function toggleExpand(prefix) {
+            S[prefix].expanded = !S[prefix].expanded;
+            renderTable(prefix);
         }
 
         function toggleView(prefix) {
