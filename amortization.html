@@ -4,136 +4,672 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amortization Calculator - CalcNova</title>
+    <meta name="description" content="Free amortization calculator: see your loan amortization schedule month by month, total interest, payoff date, and how extra payments shorten your loan.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/amortization">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Amortization Calculator - CalcNova">
+    <meta property="og:description" content="Generate a full loan amortization schedule with monthly and yearly views, extra payments, payoff date and interest savings.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/amortization">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Amortization Calculator - CalcNova">
+    <meta name="twitter:description" content="Generate a full loan amortization schedule with extra payments and payoff analysis.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Amortization Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/amortization" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is an amortization schedule?",
+                "acceptedAnswer": { "@type": "Answer", "text": "An amortization schedule is a complete table of loan payments showing, for every month, how much goes to interest, how much to principal, and the remaining balance until the loan is paid off." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why is so much of my early payment interest?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Interest is charged on the outstanding balance, which is largest at the start of the loan. As the balance falls, the interest portion shrinks and more of each fixed payment reduces principal." }
+            },
+            {
+                "@type": "Question",
+                "name": "How do extra payments affect an amortization schedule?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Extra payments reduce the principal directly, so every following month charges interest on a smaller balance. The loan ends earlier and total interest drops, often dramatically." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 45%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { width: 55%; border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .section-title { font-weight: bold; font-size: 0.9rem; color: #1F2937; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.25rem;}
+        .extra-payment-row { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+        .extra-payment-row input[type="number"] { width: 30%; text-align: center; padding: 0.25rem; border: 1px solid #D1D5DB; border-radius: 0.375rem;}
+        .extra-payment-row select, .extra-payment-row input[type="text"] { width: 25%; text-align: center; background-color: #F9FAFB; border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.25rem;}
+        .extra-payment-row span { width: 15%; text-align: center; font-size: 0.75rem; color: #6B7280; }
+        @media print {
+            nav, footer, .no-print, #calculator-form, #placeholderArea { display: none !important; }
+            #resultsArea { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            .md\:w-2\/5 { width: 100% !important; }
+            .md\:w-3\/5 { width: 100% !important; }
+        }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Amortization</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Amortization Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Amortization Calculator</h1>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Amortization Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Amount ($)</label>
-                        <input type="number" id="amAmount" value="200000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate (%)</label>
-                        <input type="number" id="amRate" value="6" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
-                        <input type="number" id="amYears" value="30" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="input-group">
+                    <label>Loan Amount</label>
+                    <div class="w-[55%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="loanAmount" value="100000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
                 </div>
-                <button onclick="calculateAmortization()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate</button>
-
-                <div id="amResults" class="hidden mt-6">
-                    <p class="text-lg font-bold text-[#14B8A6] mb-4">Monthly Payment: <span id="amMonthly">$0</span></p>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white border border-gray-200 text-sm">
-                            <thead class="bg-gray-100">
-                                <tr>
-                                    <th class="py-2 px-4 border-b text-left">Year</th>
-                                    <th class="py-2 px-4 border-b text-left">Interest Paid</th>
-                                    <th class="py-2 px-4 border-b text-left">Principal Paid</th>
-                                    <th class="py-2 px-4 border-b text-left">Balance</th>
-                                </tr>
-                            </thead>
-                            <tbody id="amTableBody">
-                                <!-- Rows will be inserted here -->
-                            </tbody>
-                        </table>
+                <div class="input-group">
+                    <label>Loan Term</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="termYears" value="10" class="w-1/2">
+                        <span class="w-1/4 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">yrs</span>
+                        <input type="number" id="termMonths" value="0" class="w-1/2">
+                        <span class="w-1/4 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">mos</span>
                     </div>
+                </div>
+                <div class="input-group">
+                    <label>Interest Rate</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="interestRate" value="5" step="0.01" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Start Date</label>
+                    <div class="w-[55%] flex gap-1">
+                        <select id="startMonth" class="w-1/2 bg-gray-50"></select>
+                        <input type="number" id="startYear" class="w-1/2">
+                    </div>
+                </div>
+
+                <div class="section-title">Extra Payments (Optional)</div>
+                <div class="extra-payment-row">
+                    <label class="text-sm text-gray-700 w-1/3">Extra Monthly</label>
+                    <input type="number" id="extraMonthly" value="0">
+                    <span>from</span>
+                    <select class="month-select"></select>
+                    <input type="text" class="year-input">
+                </div>
+                <div class="extra-payment-row">
+                    <label class="text-sm text-gray-700 w-1/3">Extra Yearly</label>
+                    <input type="number" id="extraYearly" value="0">
+                    <span>from</span>
+                    <select class="month-select"></select>
+                    <input type="text" class="year-input">
+                </div>
+                <div class="extra-payment-row">
+                    <label class="text-sm text-gray-700 w-1/3">Extra One-Time</label>
+                    <input type="number" id="extraOneTime" value="0">
+                    <span>in</span>
+                    <select class="month-select"></select>
+                    <input type="text" class="year-input">
+                </div>
+
+                <div class="text-center mt-2 mb-2">
+                    <a href="#" onclick="toggleAdditionalOneTime(event)" id="additionalBtn" class="text-[#3F51B5] text-sm hover:underline">+ More One-Time Payments</a>
+                </div>
+
+                <div id="additionalOneTimeDiv" class="hidden space-y-1">
+                    <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                    <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                    <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                    <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                    <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                    <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                    <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                    <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                    <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                    <div class="extra-payment-row"><label class="w-1/3"></label><input type="number" class="onetime-amt" value="0"><span>in</span><select class="month-select"></select><input type="text" class="year-input"></div>
+                </div>
+
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateAmortization()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is an Amortization Schedule?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">An amortization schedule is a complete table of periodic loan payments, showing the amount of principal and the amount of interest that comprise each payment until the loan is paid off at the end of its term.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+        <div class="md:w-3/5">
+            <div id="resultsArea" class="hidden"></div>
+            <div id="placeholderArea" class="hidden bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center text-gray-500">
+                <p class="text-xl font-semibold mb-2">Ready to calculate</p>
             </div>
-        </aside>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Amortization Calculator</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                An amortization schedule shows exactly where every loan payment goes. Enter any loan &mdash; mortgage,
+                auto, personal, or student &mdash; and this calculator builds the complete month-by-month table: payment,
+                principal, interest, cumulative interest, and remaining balance, plus your payoff date and the true
+                total cost of the loan.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">How amortization works</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                With a fixed-rate loan, your payment stays the same every month, but its composition changes constantly.
+                Each month, interest is charged on the current balance (annual rate &divide; 12 &times; balance). Whatever
+                is left of the payment reduces the principal. At the start of a $100,000 loan at 5%, the first payment of
+                $1,060.66 contains $416.67 of interest and only $643.99 of principal. By the final year, the split has
+                flipped: almost the entire payment is principal. This slow-then-fast balance decline is why the balance
+                curve bends downward more steeply near the end of the loan.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Reading your schedule</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The <strong>cumulative interest</strong> column is the one most borrowers never see &mdash; and the most
+                revealing. It shows the running total you have paid the lender for the privilege of borrowing. On long
+                loans it routinely exceeds the amount borrowed: a 30-year mortgage at 7% costs more in interest than the
+                original loan itself. Watching this column grow is often the motivation borrowers need to start making
+                extra payments or to choose a shorter term next time.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The power of extra payments</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Extra payments attack the principal directly, and every dollar removed early avoids interest for the
+                entire remaining life of the loan. On the example above, adding $100/month cuts about a year off the
+                10-year term and saves roughly $3,100 in interest. The effect grows with the rate and the term: on a
+                $320,000, 30-year mortgage at 7.26%, $100/month extra saves about $75,000 &mdash; and $200/month saves
+                six figures. Add an extra amount above and compare the
+                payoff dates &mdash; this calculator shows both scenarios side by side. For a home loan with taxes,
+                insurance and PMI, use our
+                <a href="mortgage.html" class="text-[#3F51B5] font-semibold hover:underline">mortgage calculator</a> instead.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">What is amortization? Two meanings</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The word is used in two related ways. In lending, amortization means repaying a debt through a series of
+                equal installments over a fixed period &mdash; the process this calculator models. In accounting, it means
+                spreading the cost of a long-lived asset across the years it is used, so that no single period absorbs the
+                full expense. The two ideas share one logic: a big amount, broken into smaller pieces over time.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Loans that are not amortized</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Not every debt follows a schedule like the one above. <strong>Credit cards</strong> are revolving debt: the
+                balance can rise and fall freely and the monthly amount repaid is up to the borrower, so there is no fixed
+                payoff path. <strong>Interest-only loans</strong> charge only interest for an initial period, leaving the
+                principal untouched until later. <strong>Balloon loans</strong> keep payments small for years and then demand
+                one large final payment of the remaining principal. An amortization schedule only applies to fully
+                amortizing, fixed-rate installment loans.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Amortization in accounting</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Businesses amortize the cost of <strong>intangible assets</strong> &mdash; things with value but no physical
+                form. Under Section 197 of the U.S. tax code, most intangibles acquired with a business are amortized evenly
+                over 15 years. Common examples include patents, copyrights, trademarks and trade names, non-compete
+                agreements, customer lists and relationships, licenses and permits, and franchises. One important exception:
+                goodwill and other intangibles with an indefinite life, or assets a business creates itself, may not be
+                amortized for tax purposes. Business <strong>startup costs</strong> follow a similar pattern &mdash; a limited
+                amount can be deducted in the first year, with the rest amortized over 15 years.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">What is an amortization schedule?</h4>
+                    <p class="text-gray-700">A complete table of loan payments showing, for every month, the interest portion, the principal portion, cumulative interest, and the remaining balance until payoff.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Why is so much of my early payment interest?</h4>
+                    <p class="text-gray-700">Interest is charged on the outstanding balance, which is at its largest at the start. As the balance declines, interest shrinks and principal repayment accelerates &mdash; even though the payment itself never changes.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Can I download my schedule?</h4>
+                    <p class="text-gray-700">Yes &mdash; use the &ldquo;Download Schedule (CSV)&rdquo; button above the results to save the full monthly table for Excel or Google Sheets, or copy the share link to revisit the exact same calculation later.</p>
+                </div>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. Actual payments may differ due to fees, exact payment dates, and lender rounding. Consult your lender
+                for the official amortization schedule of your loan.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="mortgage.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Mortgage Calculator</h3>
+                <p class="text-sm text-gray-600">Home loans with taxes, insurance, PMI and biweekly comparison.</p>
+            </a>
+            <a href="loan.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Loan Calculator</h3>
+                <p class="text-sm text-gray-600">Monthly payments and total interest for any loan.</p>
+            </a>
+            <a href="house-affordability.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">House Affordability</h3>
+                <p class="text-sm text-gray-600">How much house your income and debts can support.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+                <a href="about.html" class="hover:text-white">About</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateAmortization() {
-            const amount = parseFloat(document.getElementById('amAmount').value);
-            const rate = parseFloat(document.getElementById('amRate').value) / 100 / 12;
-            const years = parseInt(document.getElementById('amYears').value);
-            const months = years * 12;
+        const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        let pieChartInstance = null;
+        let lineChartInstance = null;
+        let currentScheduleData = [];
+        let isMonthlyView = true;
+        let scheduleStartAbs = 0;
 
-            if (isNaN(amount) || isNaN(rate) || isNaN(months)) {
-                alert("Please enter valid numbers.");
-                return;
+        window.addEventListener('DOMContentLoaded', () => {
+            const now = new Date();
+            const buildOptions = (sel, selectedIdx) => {
+                sel.innerHTML = '';
+                MONTH_NAMES.forEach((n, i) => {
+                    const o = document.createElement('option');
+                    o.text = n; o.value = i;
+                    if (i === selectedIdx) o.selected = true;
+                    sel.add(o);
+                });
+            };
+            buildOptions(document.getElementById('startMonth'), now.getMonth());
+            document.getElementById('startYear').value = now.getFullYear();
+            document.querySelectorAll('.month-select').forEach(s => buildOptions(s, now.getMonth()));
+            document.querySelectorAll('.year-input').forEach(inp => { inp.value = now.getFullYear(); });
+            prefillFromURL();
+            calculateAmortization();
+        });
+
+        function toggleAdditionalOneTime(event) {
+            event.preventDefault();
+            const div = document.getElementById('additionalOneTimeDiv');
+            const btn = document.getElementById('additionalBtn');
+            if (div.classList.contains('hidden')) {
+                div.classList.remove('hidden');
+                btn.textContent = "- Hide Below Inputs";
+            } else {
+                div.classList.add('hidden');
+                btn.textContent = "+ More One-Time Payments";
+            }
+        }
+
+        function clearForm() {
+            ['loanAmount','interestRate','extraMonthly','extraYearly','extraOneTime'].forEach(id => document.getElementById(id).value = '');
+            document.querySelectorAll('.onetime-amt').forEach(i => i.value = 0);
+            document.getElementById('resultsArea').classList.add('hidden');
+            document.getElementById('placeholderArea').classList.remove('hidden');
+        }
+
+        function absMonthOf(yearInput, monthSelect, fallbackYear) {
+            const y = parseInt(yearInput.value) || fallbackYear;
+            const m = parseInt(monthSelect.value);
+            return y * 12 + (isNaN(m) ? 0 : m);
+        }
+
+        function readExtras(startAbs, startYear) {
+            const extras = { mAmt: 0, mFrom: 1, yAmt: 0, yFrom: 1, oneTime: [] };
+            const readRow = inputId => {
+                const row = document.getElementById(inputId).closest('.extra-payment-row');
+                return absMonthOf(row.querySelector('.year-input'), row.querySelector('.month-select'), startYear);
+            };
+
+            const mAmt = parseFloat(document.getElementById('extraMonthly').value) || 0;
+            if (mAmt > 0) { extras.mAmt = mAmt; extras.mFrom = Math.max(1, readRow('extraMonthly') - startAbs + 1); }
+
+            const yAmt = parseFloat(document.getElementById('extraYearly').value) || 0;
+            if (yAmt > 0) { extras.yAmt = yAmt; extras.yFrom = Math.max(1, readRow('extraYearly') - startAbs + 1); }
+
+            const oAmt = parseFloat(document.getElementById('extraOneTime').value) || 0;
+            if (oAmt > 0) extras.oneTime.push({ amt: oAmt, at: Math.max(1, readRow('extraOneTime') - startAbs + 1) });
+
+            document.querySelectorAll('#additionalOneTimeDiv .extra-payment-row').forEach(row => {
+                const amt = parseFloat(row.querySelector('.onetime-amt').value) || 0;
+                if (amt > 0) {
+                    const atAbs = absMonthOf(row.querySelector('.year-input'), row.querySelector('.month-select'), startYear);
+                    extras.oneTime.push({ amt, at: Math.max(1, atAbs - startAbs + 1) });
+                }
+            });
+            return extras;
+        }
+
+        function runAmortization(principal, monthlyRate, totalMonths, monthlyPay, extras, startAbs) {
+            let bal = principal, totInt = 0, cumInt = 0, n = 0;
+            const rows = [];
+            for (let i = 1; i <= totalMonths; i++) {
+                if (bal <= 0.005) break;
+                const interest = bal * monthlyRate;
+                let princ = monthlyPay - interest;
+                if (princ < 0) princ = 0;
+                let extra = 0;
+                if (extras) {
+                    if (extras.mAmt > 0 && i >= extras.mFrom) extra += extras.mAmt;
+                    if (extras.yAmt > 0 && i >= extras.yFrom && ((startAbs + i - 1 - (startAbs + extras.yFrom - 1)) % 12 === 0)) extra += extras.yAmt;
+                    for (const o of extras.oneTime) if (o.at === i) extra += o.amt;
+                }
+                let payPrinc = Math.min(princ, bal);
+                let payExtra = Math.min(extra, bal - payPrinc);
+                bal -= payPrinc + payExtra;
+                cumInt += interest;
+                totInt = cumInt;
+                n = i;
+                rows.push({
+                    month: i, payment: payPrinc + payExtra + interest,
+                    principal: payPrinc + payExtra, extra: payExtra,
+                    interest, cumInterest: cumInt, balance: Math.max(bal, 0)
+                });
+            }
+            return { n, totInt, rows };
+        }
+
+        function calculateAmortization() {
+            const principal = parseFloat(document.getElementById('loanAmount').value);
+            const rate = parseFloat(document.getElementById('interestRate').value);
+            const years = parseInt(document.getElementById('termYears').value) || 0;
+            const months = parseInt(document.getElementById('termMonths').value) || 0;
+
+            const totalMonths = years * 12 + months;
+            if (isNaN(principal) || isNaN(rate) || principal <= 0 || totalMonths <= 0) return;
+
+            const startYear = parseInt(document.getElementById('startYear').value) || new Date().getFullYear();
+            const startAbs = startYear * 12 + parseInt(document.getElementById('startMonth').value);
+            scheduleStartAbs = startAbs;
+
+            const extras = readExtras(startAbs, startYear);
+            const hasExtras = extras.mAmt > 0 || extras.yAmt > 0 || extras.oneTime.length > 0;
+
+            const monthlyRate = (rate / 100) / 12;
+            const monthlyPay = monthlyRate === 0
+                ? principal / totalMonths
+                : principal * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+
+            const base = runAmortization(principal, monthlyRate, totalMonths, monthlyPay, null, startAbs);
+            const sched = hasExtras ? runAmortization(principal, monthlyRate, totalMonths, monthlyPay, extras, startAbs) : base;
+            currentScheduleData = sched.rows;
+
+            let savingsHTML = "";
+            if (hasExtras && base.totInt - sched.totInt > 0.5) {
+                savingsHTML = `
+                <div class="bg-[#E8F5E9] border border-green-300 text-green-900 p-4 rounded-xl shadow-sm mb-6 text-sm">
+                    <p class="font-bold text-base mb-1">Extra payments payoff summary</p>
+                    <p>Without extra payments: payoff in <strong>${formatDuration(base.n)}</strong> with <strong>${formatMoney(base.totInt)}</strong> total interest.</p>
+                    <p>With your extra payments: payoff in <strong>${formatDuration(sched.n)}</strong> with <strong>${formatMoney(sched.totInt)}</strong> total interest.</p>
+                    <p class="mt-1">You save <strong class="text-green-700">${formatMoney(base.totInt - sched.totInt)}</strong> in interest and finish <strong class="text-green-700">${formatDuration(base.n - sched.n)}</strong> early.</p>
+                </div>`;
             }
 
-            const monthlyPayment = amount * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
-            
-            let balance = amount;
-            let tableHTML = "";
-            let yearlyInterest = 0;
-            let yearlyPrincipal = 0;
+            document.getElementById('resultsArea').innerHTML = `
+                <div class="bg-[#4CAF50] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Monthly Payment</p>
+                    <p class="text-4xl font-bold">${formatMoney(monthlyPay)}</p>
+                </div>
+                <div class="flex flex-wrap gap-2 mb-6 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                    <button onclick="downloadCSV()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">⬇ Download Schedule (CSV)</button>
+                </div>
+                ${savingsHTML}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Loan Amount:</span> <span class="font-bold">${formatMoney(principal)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total Interest:</span> <span class="font-bold text-red-500">${formatMoney(sched.totInt)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total Cost of Loan:</span> <span class="font-bold">${formatMoney(principal + sched.totInt)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Number of Payments:</span> <span class="font-bold">${sched.n}</span></p>
+                    <p class="flex justify-between mb-2"><span>Payoff Date:</span> <span class="font-bold">${formatAbsMonth(startAbs + sched.n - 1)}</span></p>
+                </div>
+                <div class="grid grid-cols-1 gap-4 mb-6">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-lg font-bold text-gray-800">Amortization Schedule</h3>
+                        <button onclick="toggleScheduleView()" id="scheduleToggleBtn" class="text-sm text-[#3F51B5] font-semibold hover:underline">Show Annual Schedule</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-left">
+                            <thead class="bg-gray-100 text-gray-700 sticky top-0">
+                                <tr>
+                                    <th class="py-2 px-3 border-b">#</th>
+                                    <th class="py-2 px-3 border-b">Date</th>
+                                    <th class="py-2 px-3 border-b text-right">Payment</th>
+                                    <th class="py-2 px-3 border-b text-right">Principal</th>
+                                    <th class="py-2 px-3 border-b text-right">Interest</th>
+                                    <th class="py-2 px-3 border-b text-right">Total Interest</th>
+                                    <th class="py-2 px-3 border-b text-right">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody id="amortizationTable"></tbody>
+                        </table>
+                    </div>
+                </div>`;
 
-            for (let i = 1; i <= months; i++) {
-                let interest = balance * rate;
-                let principal = monthlyPayment - interest;
-                balance -= principal;
-                
-                yearlyInterest += interest;
-                yearlyPrincipal += principal;
+            document.getElementById('placeholderArea').classList.add('hidden');
+            document.getElementById('resultsArea').classList.remove('hidden');
 
-                if (i % 12 === 0 || i === months) {
-                    const yearNum = Math.ceil(i / 12);
-                    tableHTML += `<tr>
-                        <td class="py-2 px-4 border-b">${yearNum}</td>
-                        <td class="py-2 px-4 border-b text-red-500">$${yearlyInterest.toFixed(2)}</td>
-                        <td class="py-2 px-4 border-b text-green-600">$${yearlyPrincipal.toFixed(2)}</td>
-                        <td class="py-2 px-4 border-b">$${balance < 0 ? 0 : balance.toFixed(2)}</td>
-                    </tr>`;
-                    yearlyInterest = 0;
-                    yearlyPrincipal = 0;
+            drawPie(principal, sched.totInt);
+            drawLine(sched.rows, principal);
+            isMonthlyView = true;
+            renderTable();
+
+            try {
+                history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams());
+            } catch (e) {}
+        }
+
+        function renderTable() {
+            let html = "";
+            if (isMonthlyView) {
+                currentScheduleData.forEach(r => {
+                    html += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-1 px-3">${r.month}</td><td class="py-1 px-3">${formatMonthYear(scheduleStartAbs + r.month - 1)}</td><td class="py-1 px-3 text-right">${formatMoney(r.payment)}</td><td class="py-1 px-3 text-right text-green-600">${formatMoney(r.principal)}</td><td class="py-1 px-3 text-right text-red-500">${formatMoney(r.interest)}</td><td class="py-1 px-3 text-right">${formatMoney(r.cumInterest)}</td><td class="py-1 px-3 text-right font-semibold">${formatMoney(r.balance)}</td></tr>`;
+                });
+            } else {
+                const g = {};
+                currentScheduleData.forEach(r => {
+                    const y = Math.ceil(r.month / 12);
+                    if (!g[y]) g[y] = { payment: 0, principal: 0, interest: 0, cumInterest: 0, balance: 0, lastMonth: 0 };
+                    g[y].payment += r.payment; g[y].principal += r.principal; g[y].interest += r.interest;
+                    g[y].cumInterest = r.cumInterest; g[y].balance = r.balance; g[y].lastMonth = r.month;
+                });
+                for (const y in g) {
+                    const d = g[y];
+                    html += `<tr class="border-b hover:bg-gray-50 text-sm"><td class="py-2 px-3 font-medium">${y}</td><td class="py-2 px-3">${formatAbsMonth(scheduleStartAbs + d.lastMonth - 1)}</td><td class="py-2 px-3 text-right">${formatMoney(d.payment)}</td><td class="py-2 px-3 text-right text-green-600">${formatMoney(d.principal)}</td><td class="py-2 px-3 text-right text-red-500">${formatMoney(d.interest)}</td><td class="py-2 px-3 text-right">${formatMoney(d.cumInterest)}</td><td class="py-2 px-3 text-right font-semibold">${formatMoney(d.balance)}</td></tr>`;
                 }
             }
-
-            document.getElementById('amMonthly').textContent = '$' + monthlyPayment.toFixed(2);
-            document.getElementById('amTableBody').innerHTML = tableHTML;
-            document.getElementById('amResults').classList.remove('hidden');
+            document.getElementById('amortizationTable').innerHTML = html;
         }
+
+        function toggleScheduleView() {
+            isMonthlyView = !isMonthlyView;
+            document.getElementById('scheduleToggleBtn').textContent = isMonthlyView ? "Show Annual Schedule" : "Show Monthly Schedule";
+            renderTable();
+        }
+
+        function drawPie(principal, interest) {
+            const ctx = document.getElementById('pieChart').getContext('2d');
+            if (pieChartInstance) pieChartInstance.destroy();
+            pieChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: { labels: ['Principal', 'Interest'], datasets: [{ data: [principal, interest], backgroundColor: ['#3F51B5', '#EF4444'] }] },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        function drawLine(rows, principal) {
+            const ctx = document.getElementById('lineChart').getContext('2d');
+            if (lineChartInstance) lineChartInstance.destroy();
+            const labels = ["0"], balanceData = [principal], interestData = [0], paymentData = [0];
+            const g = {};
+            rows.forEach(r => {
+                const y = Math.ceil(r.month / 12);
+                if (!g[y]) g[y] = { pay: 0, balance: 0, cum: 0 };
+                g[y].pay += r.payment; g[y].balance = r.balance; g[y].cum = r.cumInterest;
+            });
+            let cumPay = 0;
+            for (const y in g) {
+                labels.push(y);
+                cumPay += g[y].pay;
+                balanceData.push(g[y].balance);
+                interestData.push(g[y].cum);
+                paymentData.push(cumPay);
+            }
+            lineChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'Balance', data: balanceData, borderColor: '#3B82F6', borderWidth: 3, tension: 0.1, pointRadius: 0 },
+                        { label: 'Interest', data: interestData, borderColor: '#84CC16', borderWidth: 3, tension: 0.1, pointRadius: 0 },
+                        { label: 'Payment', data: paymentData, borderColor: '#991B1B', borderWidth: 3, tension: 0.1, pointRadius: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'top' } },
+                    scales: {
+                        x: { title: { display: true, text: 'Year' } },
+                        y: { beginAtZero: true, ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } }
+                    }
+                }
+            });
+        }
+
+        function buildShareParams() {
+            const v = id => document.getElementById(id).value;
+            const p = new URLSearchParams();
+            p.set('amt', v('loanAmount'));
+            p.set('rate', v('interestRate'));
+            p.set('yrs', v('termYears'));
+            p.set('mos', v('termMonths'));
+            p.set('sm', v('startMonth'));
+            p.set('sy', v('startYear'));
+            if (parseFloat(v('extraMonthly')) > 0) p.set('xm', v('extraMonthly'));
+            if (parseFloat(v('extraYearly')) > 0) p.set('xy', v('extraYearly'));
+            return p.toString();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (!q.get('amt') && !q.get('rate')) return;
+            const set = (id, key) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); };
+            set('loanAmount', 'amt');
+            set('interestRate', 'rate');
+            set('termYears', 'yrs');
+            set('termMonths', 'mos');
+            set('startMonth', 'sm');
+            set('startYear', 'sy');
+            set('extraMonthly', 'xm');
+            set('extraYearly', 'xy');
+        }
+
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const done = btn => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            const btn = window.event && window.event.target ? window.event.target : null;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(() => done(btn)).catch(() => fallbackCopy(url, btn, done));
+            } else {
+                fallbackCopy(url, btn, done);
+            }
+        }
+
+        function fallbackCopy(text, btn, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta);
+            done(btn);
+        }
+
+        function downloadCSV() {
+            if (!currentScheduleData.length) return;
+            const rows = [["Month", "Date", "Payment", "Principal", "Interest", "Total Interest", "Balance"]];
+            currentScheduleData.forEach(r => {
+                rows.push([
+                    r.month,
+                    formatMonthYear(scheduleStartAbs + r.month - 1),
+                    r.payment.toFixed(2), r.principal.toFixed(2),
+                    r.interest.toFixed(2), r.cumInterest.toFixed(2), r.balance.toFixed(2)
+                ]);
+            });
+            const blob = new Blob([rows.map(x => x.join(",")).join("\n")], { type: "text/csv;charset=utf-8;" });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "calcnova-amortization-schedule.csv";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        }
+
+        function formatDuration(m) {
+            const y = Math.floor(m / 12), r = m % 12;
+            if (y === 0) return r + (r === 1 ? " month" : " months");
+            if (r === 0) return y + (y === 1 ? " year" : " years");
+            return y + (y === 1 ? " year " : " years ") + r + (r === 1 ? " month" : " months");
+        }
+        function formatAbsMonth(abs) { return MONTH_NAMES[abs % 12] + " " + Math.floor(abs / 12); }
+        function formatMonthYear(abs) { return (abs % 12 + 1) + "/" + Math.floor(abs / 12); }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
