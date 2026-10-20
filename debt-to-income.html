@@ -3,107 +3,496 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debt-to-Income Ratio Calculator - CalcNova</title>
+    <title>Debt-to-Income (DTI) Ratio Calculator - CalcNova</title>
+    <meta name="description" content="Free debt-to-income ratio calculator: compute your front-end and back-end DTI, see how lenders judge it, and check conventional, FHA and VA limits.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/debt-to-income">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Debt-to-Income (DTI) Ratio Calculator - CalcNova">
+    <meta property="og:description" content="Find your front-end and back-end DTI ratios and compare them with lender limits for conventional, FHA and VA loans.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/debt-to-income">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Debt-to-Income (DTI) Ratio Calculator - CalcNova">
+    <meta name="twitter:description" content="Compute your front-end and back-end DTI ratios in seconds.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Debt-to-Income Ratio Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/debt-to-income" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is a good debt-to-income ratio?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Lenders generally view a back-end DTI of 36% or less as healthy, and 20% or less as excellent. Between 36% and 43% is workable for some loan programs such as FHA. Above 50%, at least half of gross income goes to debt payments, which most lenders consider too risky." }
+            },
+            {
+                "@type": "Question",
+                "name": "What DTI do I need to qualify for a mortgage?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Conventional loans typically use a 28% front-end and 36% back-end limit. FHA loans allow 31% front-end and 43% back-end. VA loans use a single 41% back-end limit. Some lenders approve higher ratios with strong credit and cash reserves." }
+            },
+            {
+                "@type": "Question",
+                "name": "Does DTI affect my credit score?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Not directly. DTI is not part of your credit report or score, because credit bureaus do not know your income. It still decides many loan approvals. It is also different from credit utilization, which compares card balances with credit limits and does affect your score." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 45%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { width: 55%; border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .section-title { font-weight: bold; font-size: 0.9rem; color: #1F2937; margin-top: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.25rem;}
+        @media print {
+            nav, footer, .no-print, #calculator-form { display: none !important; }
+            #resultsArea { display: block !important; width: 100% !important; }
+        }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Debt-to-Income Ratio</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Debt-to-Income Ratio Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Debt-to-Income Ratio Calculator</h1>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Debt-to-Income Ratio Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Gross Monthly Income ($)</label>
-                        <input type="number" id="dtiIncome" value="5000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Total Monthly Debt Payments ($)</label>
-                        <input type="number" id="dtiDebts" value="1500" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="section-title" style="margin-top:0;">Income (Before Tax)</div>
+                <div class="input-group">
+                    <label>Salary &amp; Earned Income</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="inc_salary" value="60000" class="w-2/3">
+                        <select id="inc_salary_per" class="w-1/3 bg-gray-50"><option value="m">/mo</option><option value="y" selected>/yr</option></select>
                     </div>
                 </div>
-                <button onclick="calculateDTI()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate DTI</button>
+                <div class="input-group">
+                    <label>Pension &amp; Social Security</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="inc_pension" value="0" class="w-2/3">
+                        <select id="inc_pension_per" class="w-1/3 bg-gray-50"><option value="m">/mo</option><option value="y" selected>/yr</option></select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Investment &amp; Savings</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="inc_investment" value="0" class="w-2/3">
+                        <select id="inc_investment_per" class="w-1/3 bg-gray-50"><option value="m">/mo</option><option value="y" selected>/yr</option></select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Other Income</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="inc_other" value="0" class="w-2/3">
+                        <select id="inc_other_per" class="w-1/3 bg-gray-50"><option value="m">/mo</option><option value="y" selected>/yr</option></select>
+                    </div>
+                </div>
 
-                <div id="dtiResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
-                    <p class="text-sm text-gray-500">Your Debt-to-Income Ratio</p>
-                    <p class="text-4xl font-bold text-[#14B8A6]" id="dtiScore">0%</p>
-                    <p class="text-lg font-semibold mt-2" id="dtiStatus">Status</p>
+                <div class="section-title">Housing Costs</div>
+                <div class="input-group">
+                    <label>Rent</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="h_rent" value="1200" class="w-2/3">
+                        <select id="h_rent_per" class="w-1/3 bg-gray-50"><option value="m" selected>/mo</option><option value="y">/yr</option></select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Mortgage Payment</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="h_mortgage" value="0" class="w-2/3">
+                        <select id="h_mortgage_per" class="w-1/3 bg-gray-50"><option value="m" selected>/mo</option><option value="y">/yr</option></select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Property Tax</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="h_tax" value="0" class="w-2/3">
+                        <select id="h_tax_per" class="w-1/3 bg-gray-50"><option value="m">/mo</option><option value="y" selected>/yr</option></select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>HOA Fees</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="h_hoa" value="0" class="w-2/3">
+                        <select id="h_hoa_per" class="w-1/3 bg-gray-50"><option value="m" selected>/mo</option><option value="y">/yr</option></select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Homeowner Insurance</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="h_insurance" value="0" class="w-2/3">
+                        <select id="h_insurance_per" class="w-1/3 bg-gray-50"><option value="m">/mo</option><option value="y" selected>/yr</option></select>
+                    </div>
+                </div>
+
+                <div class="section-title">Other Monthly Debts</div>
+                <div class="input-group">
+                    <label>Credit Cards (minimums)</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="d_cards" value="200" class="w-2/3">
+                        <select id="d_cards_per" class="w-1/3 bg-gray-50"><option value="m" selected>/mo</option><option value="y">/yr</option></select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Student Loan</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="d_student" value="0" class="w-2/3">
+                        <select id="d_student_per" class="w-1/3 bg-gray-50"><option value="m" selected>/mo</option><option value="y">/yr</option></select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Auto Loan</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="d_auto" value="250" class="w-2/3">
+                        <select id="d_auto_per" class="w-1/3 bg-gray-50"><option value="m" selected>/mo</option><option value="y">/yr</option></select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Other Loans &amp; Liabilities</label>
+                    <div class="w-[55%] flex gap-1">
+                        <input type="number" id="d_other" value="0" class="w-2/3">
+                        <select id="d_other_per" class="w-1/3 bg-gray-50"><option value="m" selected>/mo</option><option value="y">/yr</option></select>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateDTI()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is Debt-to-Income (DTI) Ratio?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Your debt-to-income (DTI) ratio is the percentage of your gross monthly income that goes toward paying your monthly debts. Lenders use this ratio to determine your ability to manage monthly payments and repay borrowed money. A lower DTI is generally better.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
+        <div class="md:w-3/5">
+            <div id="resultsArea"></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">What Is a Debt-to-Income Ratio?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Your debt-to-income ratio (DTI) is the share of your gross income that goes to debt payments each
+                month, written as a percentage. If you earn $5,000 a month before tax and your rent, card minimums and
+                car payment add up to $1,650, your DTI is 33%. With no debt at all, it is 0%. Lenders compute this
+                number on nearly every loan application &mdash; mortgages, auto loans, personal loans, even many credit
+                cards &mdash; because it answers their core question: after your existing obligations, is there room in
+                your income to repay one more?
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                Do not confuse DTI with <strong>credit utilization</strong>, the share of your credit-card limits you are
+                using. Utilization is computed from your credit reports and affects your credit score. DTI is computed
+                from your income, which bureaus never see &mdash; so DTI itself never appears on a credit report, yet it
+                still decides approvals every day.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Front-end vs back-end: the two DTIs</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The <strong>front-end ratio</strong> counts housing only: rent or mortgage principal and interest, plus
+                property tax, homeowner insurance, and HOA dues, divided by gross monthly income. Conventional mortgage
+                lenders cap it at <strong>28%</strong>. The <strong>back-end ratio</strong> adds everything else &mdash; car
+                loans, student loans, credit-card minimums, child support, personal loans. It is the number people
+                usually mean by &ldquo;DTI,&rdquo; and the conventional cap is <strong>36%</strong>. Government programs are
+                looser: FHA allows 31% front-end and 43% back-end, while VA loans use a single 41% back-end limit.
+                This calculator reports both ratios and checks them against all three programs.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">What counts as a &ldquo;debt&rdquo;?</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Lenders count required monthly payments on money you owe: housing costs, installment loans, and the
+                <em>minimum</em> payments on revolving accounts like credit cards (not the full balance, and not what you
+                usually pay). Everyday bills that are not debts &mdash; utilities, groceries, insurance premiums for your
+                car, subscriptions, taxes you pay directly &mdash; are normally excluded, even though they obviously matter
+                to your real budget. Keep that gap in mind: a &ldquo;good&rdquo; DTI can still feel tight if your non-debt
+                spending is high.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">How lenders read your number</h3>
+            <ul class="list-disc pl-6 text-gray-700 leading-7 mb-4 space-y-1">
+                <li><strong>20% or less:</strong> excellent. Payments are a small slice of income; approvals and pricing are easiest here.</li>
+                <li><strong>21&ndash;36%:</strong> healthy and manageable &mdash; inside the conventional back-end limit used for most mortgages.</li>
+                <li><strong>37&ndash;43%:</strong> elevated. You may still qualify (FHA allows up to 43%), but lenders look harder at credit and reserves.</li>
+                <li><strong>44&ndash;49%:</strong> high. Most mainstream programs are closed or expensive at this level.</li>
+                <li><strong>50% or more:</strong> severe &mdash; half or more of gross income is committed to debt before food, tax, or savings.</li>
+            </ul>
+            <p class="text-gray-700 leading-7 mb-4">
+                These are guidelines, not walls: a borrower with a high income, a long stable job history, and large
+                cash reserves can be approved above them, because what remains after debts (residual income) is what
+                actually pays the bills.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">How to lower your DTI</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The ratio has only two moving parts, so every strategy works one of them. <strong>Raise the denominator:</strong>
+                overtime, a raise, a second income stream, or documenting income you already have (rental, alimony,
+                side work) all lift gross income. <strong>Shrink the numerator:</strong> pay down the debts whose payments are
+                largest relative to their balance &mdash; clearing a $250/month car loan removes that whole $250 from your
+                DTI the month it ends, whatever the balance was. Refinancing or consolidating high-interest balances
+                into a lower payment helps too, as long as it does not tempt new spending; our
+                <a href="loan.html" class="text-[#3F51B5] font-semibold hover:underline">loan calculator</a> can model the
+                new payment. Avoid opening fresh credit right before a mortgage application, since the new minimum
+                payment counts against you immediately. When your DTI is where you want it, see what it buys with the
+                <a href="house-affordability.html" class="text-[#3F51B5] font-semibold hover:underline">house affordability calculator</a>.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">What is a good debt-to-income ratio?</h4>
+                    <p class="text-gray-700">A back-end DTI of 36% or less is considered healthy by most lenders, and 20% or less is excellent. FHA loans allow up to 43%. Above 50%, half your gross income goes to debt, which most lenders treat as too risky.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What DTI do I need to qualify for a mortgage?</h4>
+                    <p class="text-gray-700">Conventional loans typically cap the front-end ratio at 28% and back-end at 36%. FHA allows 31/43, and VA uses a 41% back-end limit only. Strong credit and reserves sometimes stretch these caps.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Does DTI affect my credit score?</h4>
+                    <p class="text-gray-700">Not directly &mdash; credit bureaus do not know your income, so DTI is not in your report or score. It still decides loan approvals. Credit utilization, a different ratio, does affect your score.</p>
+                </div>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only. Lender DTI definitions and
+                limits vary by program and institution, and some include or exclude specific obligations. Confirm the
+                exact calculation with your lender before applying.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="house-affordability.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">House Affordability</h3>
+                <p class="text-sm text-gray-600">Turn your DTI into a maximum home price.</p>
+            </a>
+            <a href="rent.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Rent Calculator</h3>
+                <p class="text-sm text-gray-600">How much rent your income and debts allow.</p>
+            </a>
+            <a href="mortgage.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Mortgage Calculator</h3>
+                <p class="text-sm text-gray-600">Full mortgage payment breakdown and schedule.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateDTI() {
-            const income = parseFloat(document.getElementById('dtiIncome').value);
-            const debts = parseFloat(document.getElementById('dtiDebts').value);
+        const FIELDS = ['inc_salary', 'inc_pension', 'inc_investment', 'inc_other',
+            'h_rent', 'h_mortgage', 'h_tax', 'h_hoa', 'h_insurance',
+            'd_cards', 'd_student', 'd_auto', 'd_other'];
 
-            if (isNaN(income) || isNaN(debts) || income <= 0) {
-                alert("Please enter valid numbers.");
+        window.addEventListener('DOMContentLoaded', () => {
+            prefillFromURL();
+            calculateDTI();
+        });
+
+        function monthlyVal(id) {
+            const v = parseFloat(document.getElementById(id).value) || 0;
+            const per = document.getElementById(id + '_per').value;
+            return per === 'y' ? v / 12 : v;
+        }
+
+        function clearForm() {
+            FIELDS.forEach(id => document.getElementById(id).value = '');
+            document.getElementById('resultsArea').innerHTML = '';
+        }
+
+        function verdict(back) {
+            if (back <= 20) return { text: 'Excellent', cls: 'bg-green-500', note: 'Payments are a small slice of your income. Lenders view this range very favorably.' };
+            if (back <= 36) return { text: 'Healthy', cls: 'bg-green-500', note: 'Within the conventional 36% back-end limit used for most mortgages.' };
+            if (back <= 43) return { text: 'Elevated', cls: 'bg-amber-500', note: 'Above the conventional 36% limit, but within the FHA ceiling of 43%. Lenders will look more closely at credit and reserves.' };
+            if (back <= 50) return { text: 'High', cls: 'bg-orange-500', note: 'Most mainstream loan programs are closed or expensive in this range.' };
+            return { text: 'Severe', cls: 'bg-red-500', note: 'Half or more of your gross income goes to debt payments. Reducing balances should be the priority.' };
+        }
+
+        function programRow(name, frontLimit, backLimit, front, back) {
+            const frontOk = frontLimit === null || front <= frontLimit;
+            const backOk = back <= backLimit;
+            const chip = ok => ok
+                ? '<span class="inline-block text-xs font-bold text-white bg-green-500 px-2 py-0.5 rounded">PASS</span>'
+                : '<span class="inline-block text-xs font-bold text-white bg-red-500 px-2 py-0.5 rounded">OVER</span>';
+            return `<tr class="border-b hover:bg-gray-50"><td class="py-2 px-3 font-medium">${name}</td>
+                <td class="py-2 px-3 text-center">${frontLimit === null ? '—' : frontLimit + '%'} ${chip(frontOk)}</td>
+                <td class="py-2 px-3 text-center">${backLimit}% ${chip(backOk)}</td></tr>`;
+        }
+
+        function labelStyle(pct) {
+            if (pct <= 16) return 'left: 0; text-align: left;';
+            if (pct >= 84) return 'right: 0; text-align: right;';
+            return 'left: ' + pct + '%; transform: translateX(-50%); text-align: center;';
+        }
+
+        function calculateDTI() {
+            const out = document.getElementById('resultsArea');
+            const income = ['inc_salary', 'inc_pension', 'inc_investment', 'inc_other'].reduce((s, id) => s + monthlyVal(id), 0);
+            const housing = ['h_rent', 'h_mortgage', 'h_tax', 'h_hoa', 'h_insurance'].reduce((s, id) => s + monthlyVal(id), 0);
+            const otherDebts = ['d_cards', 'd_student', 'd_auto', 'd_other'].reduce((s, id) => s + monthlyVal(id), 0);
+            const totalDebts = housing + otherDebts;
+
+            if (income <= 0) {
+                out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Enter at least one income source to compute your ratios.</div>';
                 return;
             }
 
-            const dti = (debts / income) * 100;
-            let status = "";
-            const scoreEl = document.getElementById('dtiScore');
-            const statusEl = document.getElementById('dtiStatus');
+            const front = housing / income * 100;
+            const back = totalDebts / income * 100;
+            const v = verdict(back);
+            const SCALE = 60; // gauge shows 0-60%
+            const pos = Math.min(100, back / SCALE * 100);
+            const zone = p => (p / SCALE * 100).toFixed(1);
 
-            if (dti <= 36) {
-                status = "Excellent (Good chance of loan approval)";
-                scoreEl.className = "text-4xl font-bold text-green-500";
-            } else if (dti <= 43) {
-                status = "Acceptable (May require extra scrutiny)";
-                scoreEl.className = "text-4xl font-bold text-yellow-500";
+            const limit36 = income * 0.36;
+            let headroomHTML;
+            if (totalDebts <= limit36) {
+                headroomHTML = `<p class="flex justify-between mb-2"><span>Room for More Debt (to 36%):</span> <span class="font-bold text-green-600">${formatMoney(limit36 - totalDebts)}/mo</span></p>`;
             } else {
-                status = "Poor (High risk, loan approval unlikely)";
-                scoreEl.className = "text-4xl font-bold text-red-500";
+                const cutNeeded = totalDebts - limit36;
+                const incomeNeeded = totalDebts / 0.36 - income;
+                headroomHTML = `<p class="flex justify-between mb-2"><span>To Reach 36%:</span> <span class="font-bold text-red-500">cut ${formatMoney(cutNeeded)}/mo of payments</span></p>
+                <p class="flex justify-between mb-2"><span>...or Add Income of:</span> <span class="font-bold">${formatMoney(incomeNeeded)}/mo</span></p>`;
             }
 
-            scoreEl.textContent = dti.toFixed(1) + "%";
-            statusEl.textContent = status;
-            document.getElementById('dtiResults').classList.remove('hidden');
+            const affordLink = `house-affordability.html?inc=${Math.round(income * 12)}&debts=${Math.round(otherDebts)}`;
+
+            out.innerHTML = `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-center">
+                        <p class="text-xs text-gray-500 uppercase font-semibold">Front-End Ratio (Housing)</p>
+                        <p class="text-4xl font-bold text-[#3F51B5]">${front.toFixed(1)}%</p>
+                        <p class="text-xs text-gray-500 mt-1">Conventional limit: 28%</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border-2 border-[#3F51B5] p-4 text-center">
+                        <p class="text-xs text-gray-500 uppercase font-semibold">Back-End Ratio (Total DTI)</p>
+                        <p class="text-4xl font-bold text-gray-800">${back.toFixed(1)}%</p>
+                        <p class="mt-1"><span class="inline-block text-xs font-bold text-white ${v.cls} px-2 py-0.5 rounded">${v.text}</span></p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <div class="relative h-4 rounded-full overflow-hidden" style="background: linear-gradient(to right, #4CAF50 0%, #4CAF50 ${zone(20)}%, #84CC16 ${zone(20)}%, #84CC16 ${zone(36)}%, #F59E0B ${zone(36)}%, #F59E0B ${zone(43)}%, #F97316 ${zone(43)}%, #F97316 ${zone(50)}%, #EF4444 ${zone(50)}%, #EF4444 100%);"></div>
+                    <div class="relative h-3">
+                        <div class="absolute top-0 w-0.5 h-2.5 bg-gray-800" style="left: ${pos}%; transform: translateX(-50%);"></div>
+                    </div>
+                    <div class="relative h-6 text-xs text-gray-600">
+                        <div class="absolute whitespace-nowrap" style="${labelStyle(pos)}">Your back-end DTI: <strong class="text-gray-800">${back.toFixed(1)}%</strong></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Scale 0&ndash;60%: green &le;20%, light green to the 36% conventional limit, amber to the 43% FHA limit, orange to 50%, red beyond.</p>
+                    <p class="text-sm text-gray-700 mt-2">${v.note}</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Gross Monthly Income:</span> <span class="font-bold">${formatMoney(income)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Housing Costs:</span> <span class="font-bold">${formatMoney(housing)}/mo</span></p>
+                    <p class="flex justify-between mb-2"><span>Other Debts:</span> <span class="font-bold">${formatMoney(otherDebts)}/mo</span></p>
+                    <p class="flex justify-between mb-2"><span>All Debt Payments:</span> <span class="font-bold">${formatMoney(totalDebts)}/mo</span></p>
+                    ${headroomHTML}
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Would You Qualify? (ratio check only)</h3>
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-700">
+                            <tr><th class="py-2 px-3 border-b">Program</th><th class="py-2 px-3 border-b text-center">Front-End</th><th class="py-2 px-3 border-b text-center">Back-End</th></tr>
+                        </thead>
+                        <tbody>
+                            ${programRow('Conventional', 28, 36, front, back)}
+                            ${programRow('FHA Loan', 31, 43, front, back)}
+                            ${programRow('VA Loan', null, 41, front, back)}
+                        </tbody>
+                    </table>
+                    <p class="text-xs text-gray-500 mt-2">Ratio check only &mdash; real approvals also weigh credit, reserves, and employment.</p>
+                </div>
+
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                    <a href="${affordLink}" class="bg-[#3F51B5] text-white px-3 py-1.5 rounded-md hover:bg-blue-800 text-sm font-semibold shadow-sm">See What House You Can Afford &rarr;</a>
+                </div>`;
+            updateURL();
         }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            FIELDS.forEach(id => {
+                p.set(id, document.getElementById(id).value);
+                p.set(id + '_per', document.getElementById(id + '_per').value);
+            });
+            return p.toString();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            FIELDS.forEach(id => {
+                if (q.get(id) !== null) document.getElementById(id).value = q.get(id);
+                if (q.get(id + '_per') !== null) document.getElementById(id + '_per').value = q.get(id + '_per');
+            });
+        }
+
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
