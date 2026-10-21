@@ -4,103 +4,422 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interest Rate Calculator - CalcNova</title>
+    <meta name="description" content="Find the real interest rate on a loan when you only know the amount, the term, and the monthly payment — the car-dealer scenario. Plus total interest and a full amortization schedule.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/interest-rate">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Interest Rate Calculator - CalcNova">
+    <meta property="og:description" content="The dealer gave you a payment, not a rate? Enter loan amount, term and monthly payment — get the true interest rate and total interest cost.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/interest-rate">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Interest Rate Calculator - CalcNova">
+    <meta name="twitter:description" content="Solve for the hidden rate behind any fixed monthly payment.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Interest Rate Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/interest-rate" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How is the rate calculated from a monthly payment?",
+                "acceptedAnswer": { "@type": "Answer", "text": "There is no tidy formula that isolates the rate — the payment equation PMT = P·i / (1 − (1+i)^−n) has the rate on both sides. The calculator solves it numerically (bisection): it tries rates, computes the payment each would produce, and zooms in until the payment matches yours to the cent, then annualizes the monthly rate (×12). That is exactly what financial calculators and lender software do." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why does it say no solution?",
+                "acceptedAnswer": { "@type": "Answer", "text": "If the total of all payments is less than the loan amount, no positive rate — in fact no rate at all in the usual sense — can produce that payment on that loan: the payments don't even return the principal. Check for a typo, and remember the loan amount should exclude your down payment and include anything rolled into the financing." }
+            },
+            {
+                "@type": "Question",
+                "name": "Is this the same as APR?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Close, but not identical. This tool finds the note rate implied by the payment. APR goes further and folds financed fees (origination, admin, rolled-in charges) into the cost, so on a fee-heavy loan the APR is higher than this rate. Use the APR Calculator when fees are part of the deal." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is a real interest rate?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The nominal rate minus inflation, approximately. A loan at 6% while inflation runs 3% costs about 3% in purchasing-power terms — and a savings account paying 4% during 5% inflation has a real rate of about −1%: the balance grows while its buying power shrinks." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        @media print {
+            nav, footer, .no-print, #calculator-form { display: none !important; }
+            #scheduleWrap { max-height: none !important; overflow: visible !important; }
+        }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Interest Rate</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Interest Rate Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Interest Rate Calculator</h1>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Interest Rate Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">Dealers love quoting a monthly payment and a total price — and leaving the rate out. If you know the amount financed, the term, and the payment, the rate is fully determined. This calculator backs it out.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Initial Amount / Principal ($)</label>
-                        <input type="number" id="irPrincipal" value="10000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Final Amount ($)</label>
-                        <input type="number" id="irFinal" value="15000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Time (Years)</label>
-                        <input type="number" id="irYears" value="5" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="input-group">
+                    <label>Loan Amount</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="amount" value="32000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
                 </div>
-                <button onclick="calculateInterestRate()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Interest Rate</button>
-
-                <div id="irResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
-                    <p class="text-sm text-gray-500">Estimated Annual Interest Rate</p>
-                    <p class="text-4xl font-bold text-[#14B8A6]" id="irRateResult">0%</p>
-                    <p class="text-sm text-gray-500 mt-2">(Assuming Compound Interest)</p>
+                <div class="input-group">
+                    <label>Loan Term</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="termYears" value="3" class="w-1/3" title="Years">
+                        <span class="flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md px-1 w-1/6">yrs</span>
+                        <input type="number" id="termMonths" value="0" class="w-1/3" title="Months">
+                        <span class="flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md px-1 w-1/6">mos</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Monthly Payment</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="payment" value="960" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateRate()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How to Calculate Interest Rate</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Sometimes you know how much you started with, how much you ended up with, and how long it took, but you don't know the interest rate. This calculator uses the compound interest formula to reverse-engineer the annual interest rate based on these three variables.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
+        <div class="md:w-3/5">
+            <div id="resultsArea"></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">What an Interest Rate Is — and Why Yours Is What It Is</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                An interest rate is the price of using someone else's money, quoted as a percentage of the principal:
+                borrow $100 at 8% for a year and you owe $108 at the end of it. Borrowers hunt for low rates
+                (cheaper money), lenders and investors hunt for high ones (better pay for parting with theirs), and
+                nearly every formal transaction in finance has one inside it — mortgages, credit cards, business
+                loans, retirement funds, even the early-payment discount a supplier offers on an invoice. Rates are
+                usually stated per year, and in modern lending they almost always <em>compound</em>: interest is charged
+                on principal plus interest already accrued. The simple-interest cousin survives mainly in textbooks;
+                the <a href="compound-interest.html" class="text-[#3F51B5] font-semibold hover:underline">compound interest calculator</a>
+                shows how the two diverge. One more distinction this page relies on: a <strong>fixed</strong> rate holds for the
+                life of the loan, while a <strong>variable</strong> rate floats with an index — this tool recovers the fixed rate
+                implied by a level payment.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Rate vs APR</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The rate this calculator finds is the loan's note rate. The <strong>APR</strong> you'll see in advertisements is a
+                broader measure: it folds in financed fees — the admin and origination charges car dealers roll
+                into the loan instead of collecting upfront — so two loans with identical rates can carry quite
+                different APRs, and the APR is the fairer comparison when fees differ. (Its mirror image on the
+                deposit side is APY, the effective yield on savings and CDs.) When fees are part of your deal,
+                run the numbers through the <a href="apr.html" class="text-[#3F51B5] font-semibold hover:underline">APR calculator</a> as well.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The forces you can't control</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Central banks and inflation.</strong> In most developed economies, rates orbit the policy rate set by the
+                central bank, whose main job is keeping inflation near a few percent a year — in the U.S., the
+                Federal Reserve's FOMC meets up to eight times a year to move it. Because inflation eats a
+                lender's return, sustained inflation and higher rates travel together. <strong>Economic activity.</strong> Cheap
+                money invites borrowing — expansions, homes, cars — which creates jobs and confidence; expensive
+                money does the reverse, so central banks cut rates in slow economies and raise them in overheating
+                ones. <strong>Unemployment</strong> moves inversely with rates for the same reason: joblessness suppresses
+                spending, so policy leans cheap — until unemployment gets low enough to stoke wage inflation
+                instead. <strong>Supply and demand for credit.</strong> When everyone wants to borrow, lenders raise the price;
+                when borrowers vanish, they discount to entice them — within the limits of reserve requirements
+                and how much they may lend at all.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The lever you do control: your credit</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                In the U.S., your credit score (300–850; the average sits near 700, and 750+ is excellent) is the
+                lender's shorthand for your risk, and it prices your rate directly. Scores are built the slow way —
+                on-time payments, low credit utilization, a long clean history — and dented by missed payments,
+                maxed cards, and bankruptcies. Risky borrowers are either declined or charged rates that compensate
+                the lender for expected defaults; a card issuer can even raise your rate after missed payments.
+                Around that central fact, several moves reliably help:
+            </p>
+            <ul class="list-disc pl-6 text-gray-700 leading-7 mb-4 space-y-2">
+                <li><strong>Offer collateral.</strong> Secured loans (the lender can take the asset) price lower than unsecured ones, because default hurts them less.</li>
+                <li><strong>Shorten the term, raise the down payment.</strong> Both shrink the lender's exposure — long terms and thin down payments are read as risk and charged for.</li>
+                <li><strong>Don't apply everywhere at once.</strong> Each hard inquiry can knock a few points off your score, and a flurry of them reads as desperation.</li>
+                <li><strong>Borrow when money is cheap.</strong> You can't set policy rates, but you can wait for them — refinancing exists precisely for this.</li>
+                <li><strong>Shop and negotiate.</strong> Rates differ by lender; a competing offer is a legitimate bargaining chip. Just compare total costs and conditions, not the headline rate alone.</li>
+            </ul>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Nominal vs real: the inflation adjustment</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The rate on your contract is the <em>nominal</em> rate. The <em>real</em> rate — what you earn or pay in
+                purchasing-power terms — is approximately <strong>nominal − inflation</strong>. At 6% interest with 3% inflation,
+                money grows about 3% in real terms; a savings account paying less than inflation has a negative
+                real rate, growing in dollars while shrinking in what those dollars buy. The
+                <a href="inflation.html" class="text-[#3F51B5] font-semibold hover:underline">inflation calculator</a> puts numbers on that side of the ledger.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">How does it find the rate without a formula?</h4>
+                    <p class="text-gray-700">By solving numerically — guessing rates and checking which one reproduces your payment, zooming in to the cent. The rate hides on both sides of the payment equation, so iteration is the standard method, not a shortcut.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">It says no solution?</h4>
+                    <p class="text-gray-700">Your payments total less than the loan amount — they don't even repay principal. Recheck the amount financed (exclude the down payment, include rolled-in fees and taxes).</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Is the solved rate my APR?</h4>
+                    <p class="text-gray-700">It's the note rate. APR also counts financed fees, so it runs higher when fees exist — see the APR calculator.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Can it handle variable-rate loans?</h4>
+                    <p class="text-gray-700">No single rate describes a variable loan. The result is best read as the fixed rate that would produce the same payment over the term — useful for comparisons, not a description of a floating contract.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. The solved rate assumes a fixed rate and level monthly payments for the full term.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="apr.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">APR Calculator</h3>
+                <p class="text-sm text-gray-600">The rate plus financed fees — the true cost of the loan.</p>
+            </a>
+            <a href="interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Interest Calculator</h3>
+                <p class="text-sm text-gray-600">Interest earned on investments, with tax and inflation.</p>
+            </a>
+            <a href="compound-interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Compound Interest Calculator</h3>
+                <p class="text-sm text-gray-600">Convert rates between compounding frequencies.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateInterestRate() {
-            const principal = parseFloat(document.getElementById('irPrincipal').value);
-            const finalAmount = parseFloat(document.getElementById('irFinal').value);
-            const years = parseFloat(document.getElementById('irYears').value);
+        let chartInstance = null, lineChartInstance = null;
 
-            if (isNaN(principal) || isNaN(finalAmount) || isNaN(years) || principal <= 0 || years <= 0) {
-                alert("Please enter valid numbers. Principal and Years must be greater than 0.");
-                return;
-            }
+        window.addEventListener('DOMContentLoaded', () => { prefillFromURL(); calculateRate(); });
 
-            if (finalAmount <= principal) {
-                alert("Final amount must be greater than the initial principal to have a positive interest rate.");
-                return;
-            }
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
 
-            // Formula for Compound Interest Rate: r = (Final / Principal)^(1/n) - 1
-            const rate = Math.pow((finalAmount / principal), (1 / years)) - 1;
-            const ratePercentage = rate * 100;
-
-            document.getElementById('irRateResult').textContent = ratePercentage.toFixed(2) + "%";
-            document.getElementById('irResults').classList.remove('hidden');
+        function clearForm() {
+            document.getElementById('amount').value = '';
+            document.getElementById('resultsArea').innerHTML = '';
         }
+
+        function pmtAt(P, i, n) {
+            if (Math.abs(i) < 1e-12) return P / n;
+            return P * i / (1 - Math.pow(1 + i, -n));
+        }
+
+        function calculateRate() {
+            const out = document.getElementById('resultsArea');
+            const P = num('amount'), pay = num('payment');
+            const n = Math.round(num('termYears')) * 12 + Math.round(num('termMonths'));
+            const fail = msg => { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">' + msg + '</div>'; };
+            if (P <= 0) return fail('Please enter a loan amount greater than zero.');
+            if (n <= 0) return fail('Please enter a loan term of at least 1 month.');
+            if (pay <= 0) return fail('Please enter a monthly payment greater than zero.');
+            if (pay * n < P) return fail('No solution: ' + n + ' payments of ' + formatMoney(pay) + ' total ' + formatMoney(pay * n) + ', which is less than the ' + formatMoney(P) + ' loan — the payments never repay the principal, so no interest rate fits. Check the amount financed (it should exclude your down payment).');
+            let i = 0;
+            if (Math.abs(pay * n - P) > 0.005) {
+                let lo = 0, hi = 0.05;
+                while (pmtAt(P, hi, n) < pay && hi < 10) hi *= 2;
+                for (let k = 0; k < 200; k++) { const m = (lo + hi) / 2; if (pmtAt(P, m, n) < pay) lo = m; else hi = m; }
+                i = (lo + hi) / 2;
+            }
+            const annual = i * 12 * 100;
+            const totalPaid = pay * n, totalInt = totalPaid - P;
+
+            let bal = P, cumInt = 0;
+            const rows = [], labels = [0], balSeries = [P], intSeries = [0], paySeries = [0];
+            for (let m = 1; m <= n; m++) {
+                const interest = bal * i;
+                const principal = pay - interest;
+                bal -= principal; cumInt += interest;
+                if (m === n) bal = 0;
+                rows.push({ m, interest, principal, bal });
+                labels.push(m); balSeries.push(Math.max(0, bal)); intSeries.push(cumInt); paySeries.push(pay * m);
+            }
+            const schedRows = rows.map(r =>
+                `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${r.m}</td><td class="py-1.5 px-2 text-right">${formatMoney(pay)}</td><td class="py-1.5 px-2 text-right">${formatMoney(r.principal)}</td><td class="py-1.5 px-2 text-right">${formatMoney(r.interest)}</td><td class="py-1.5 px-2 text-right">${formatMoney(r.bal)}</td></tr>`
+            ).join('');
+
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Interest Rate</p>
+                    <p class="text-4xl font-bold">${annual.toFixed(3)}%</p>
+                    <p class="text-sm opacity-90 mt-1">per year · ${(i * 100).toFixed(4)}% per month · fixed, compounded monthly</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Total of ${n} monthly payments:</span> <span class="font-bold">${formatMoney(totalPaid)}</span></p>
+                    <p class="flex justify-between"><span>Total interest paid:</span> <span class="font-bold">${formatMoney(totalInt)}</span></p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="lineChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Amortization Schedule</h3>
+                    <div id="scheduleWrap" class="overflow-x-auto" style="max-height:26rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">Month</th><th class="py-2 px-2 border-b text-right">Payment</th><th class="py-2 px-2 border-b text-right">Principal</th><th class="py-2 px-2 border-b text-right">Interest</th><th class="py-2 px-2 border-b text-right">Balance</th></tr></thead>
+                            <tbody>${schedRows}</tbody>
+                        </table>
+                    </div>
+                    <button id="schedToggle" onclick="toggleSchedule()" class="mt-3 bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">View Full Schedule</button>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                    <button onclick="downloadCSV()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">⬇ Download CSV</button>
+                </div>`;
+
+            window._rateRows = rows.map(r => ({ m: r.m, pay, principal: r.principal, interest: r.interest, bal: r.bal }));
+
+            const pc = document.getElementById('pieChart');
+            if (pc) {
+                if (chartInstance) chartInstance.destroy();
+                chartInstance = new Chart(pc.getContext('2d'), {
+                    type: 'doughnut',
+                    data: { labels: ['Principal', 'Interest'], datasets: [{ data: [Math.round(P), Math.round(totalInt)], backgroundColor: ['#3F51B5', '#14B8A6'] }] },
+                    options: { responsive: true, plugins: { legend: { position: 'right' }, title: { display: true, text: 'Payment Breakdown' }, tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + formatMoney(c.parsed) } } } }
+                });
+            }
+            const lc = document.getElementById('lineChart');
+            if (lc) {
+                if (lineChartInstance) lineChartInstance.destroy();
+                lineChartInstance = new Chart(lc.getContext('2d'), {
+                    type: 'line',
+                    data: { labels, datasets: [
+                        { label: 'Balance', data: balSeries, borderColor: '#3F51B5', backgroundColor: '#3F51B5', tension: 0.15, pointRadius: 1 },
+                        { label: 'Cumulative Payments', data: paySeries, borderColor: '#DC2626', backgroundColor: '#DC2626', tension: 0.15, pointRadius: 1 },
+                        { label: 'Cumulative Interest', data: intSeries, borderColor: '#14B8A6', backgroundColor: '#14B8A6', tension: 0.15, pointRadius: 1 }
+                    ]},
+                    options: { responsive: true, interaction: { mode: 'index', intersect: false }, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Loan Amortization Graph' }, tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': ' + formatMoney(c.parsed.y) } } }, scales: { x: { title: { display: true, text: 'Month' } }, y: { ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } } } }
+                });
+            }
+            updateURL();
+        }
+
+        let schedExpanded = false;
+        function toggleSchedule() {
+            const wrap = document.getElementById('scheduleWrap');
+            const btn = document.getElementById('schedToggle');
+            schedExpanded = !schedExpanded;
+            wrap.style.maxHeight = schedExpanded ? 'none' : '26rem';
+            btn.textContent = schedExpanded ? 'Show Less' : 'View Full Schedule';
+        }
+
+        function downloadCSV() {
+            const rows = window._rateRows || [];
+            if (!rows.length) return;
+            let csv = 'Month,Payment,Principal,Interest,Balance\n';
+            rows.forEach(r => { csv += [r.m, r.pay.toFixed(2), r.principal.toFixed(2), r.interest.toFixed(2), r.bal.toFixed(2)].join(',') + '\n'; });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'interest-rate-schedule.csv';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        const PARAMS = [['amount', 'a'], ['termYears', 'y'], ['termMonths', 'm'], ['payment', 'p']];
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            PARAMS.forEach(([id, key]) => { p.set(key, document.getElementById(id).value); });
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); });
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-</html>
+            </html>
