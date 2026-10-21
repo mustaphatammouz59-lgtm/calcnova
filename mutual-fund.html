@@ -4,141 +4,425 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mutual Fund Calculator - CalcNova</title>
+    <meta name="description" content="Estimate a mutual fund's ending value and net return after the fees that actually matter: front-end sales charge, deferred sales charge, and operating expenses — plus the net IRR.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/mutual-fund">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Mutual Fund Calculator - CalcNova">
+    <meta property="og:description" content="What a mutual fund really nets you after loads and expenses — ending value, total fees, and net IRR.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/mutual-fund">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mutual Fund Calculator - CalcNova">
+    <meta name="twitter:description" content="Mutual fund growth with sales charges and operating expenses fully accounted.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Mutual Fund Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/mutual-fund" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is a front-end load?",
+                "acceptedAnswer": { "@type": "Answer", "text": "A sales charge taken off the top when you buy. At a 5% load, a $20,000 purchase puts only $19,000 to work — $1,000 goes to the seller as commission. In this calculator the charge applies to the initial investment and to every contribution, which is how most load funds apply it." }
+            },
+            {
+                "@type": "Question",
+                "name": "How is a deferred (back-end) sales charge calculated?",
+                "acceptedAnswer": { "@type": "Answer", "text": "As a percentage of the lesser of what you put in or what the holding is worth at redemption. Invest $20,000 at a 5% deferred charge: if it grows to $30,000, the fee is 5% of the original $20,000 ($1,000, you receive $29,000); if it falls to $10,000, the fee is 5% of $10,000 ($500, you receive $9,500). Many funds shrink this charge each year you hold (a CDSC schedule) until it reaches zero." }
+            },
+            {
+                "@type": "Question",
+                "name": "What does Net IRR mean here?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The internal rate of return of your actual cash flows — money out when you invest and contribute, money in at the ending value — after every fee. It is the single annualized number that honestly summarizes a fund with irregular contributions, which is why a 5% headline return with a 2% load and 0.5% expenses nets an IRR of about 3.84% over five years at the defaults." }
+            },
+            {
+                "@type": "Question",
+                "name": "How are operating expenses charged in this calculator?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The way funds charge them in reality: continuously, on the fund's balance. The growth engine credits the net rate (return minus expense ratio), and the reported expense total is accumulated monthly on the average balance — the same average-daily-balance principle funds use." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        @media print { nav, footer, .no-print, #calculator-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Mutual Fund</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Mutual Fund Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Mutual Fund Calculator</h1>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Mutual Fund Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">Estimate a fund's ending balance and <strong>net</strong> return — after the sales charges and operating expenses that headline returns leave out — plus the net internal rate of return (IRR) of your cash flows.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Initial Investment ($)</label>
-                        <input type="number" id="mfInitial" value="10000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Monthly SIP (Contribution) ($)</label>
-                        <input type="number" id="mfMonthly" value="500" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Expected Annual Return (%)</label>
-                        <input type="number" id="mfReturn" value="10" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Expense Ratio (%)</label>
-                        <input type="number" id="mfExpense" value="1.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Investment Duration (Years)</label>
-                        <input type="number" id="mfYears" value="15" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="input-group">
+                    <label>Initial Investment</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="initial" value="20000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
                 </div>
-                <button onclick="calculateMutualFund()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Future Value</button>
-
-                <div id="mfResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Invested</p>
-                            <p class="text-xl font-bold text-gray-800" id="mfInvested">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Estimated Returns</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="mfReturns">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Total Value</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="mfTotal">$0</p>
-                        </div>
+                <div class="input-group">
+                    <label>Annual Contribution</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="annual" value="0" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
+                </div>
+                <div class="input-group">
+                    <label>Monthly Contribution</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="monthly" value="1000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Rate of Return</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="ret" value="5" step="0.01" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%/year</span>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 -mt-1 mb-2">The fund's expected return <em>before</em> fees and charges.</p>
+                <div class="input-group">
+                    <label>Holding Length</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="years" value="5" class="w-1/2">
+                        <span class="w-1/2 flex items-center bg-gray-50 border border-gray-300 rounded-md px-2">years</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label></label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="months" value="0" class="w-1/2">
+                        <span class="w-1/2 flex items-center bg-gray-50 border border-gray-300 rounded-md px-2">months</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Sales Charge (front-end)</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="load" value="2" step="0.01" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 -mt-1 mb-2">Charged upfront on the initial investment and each contribution; it reduces what actually gets invested.</p>
+                <div class="input-group">
+                    <label>Deferred Sales Charge</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="deferred" value="0" step="0.01" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 -mt-1 mb-2">Charged at redemption on the lesser of total principal or ending value. Enter the rate that applies at your holding length (CDSC schedules decline over time).</p>
+                <div class="input-group">
+                    <label>Operating Expenses</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="expense" value="0.5" step="0.01" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%/year</span>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 -mt-1">The expense ratio — management, 12b-1 and administrative costs, charged continuously on the balance.</p>
+
+                <div class="flex gap-2 mt-5">
+                    <button onclick="calculateFund()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Why Expense Ratios Matter</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Mutual funds charge an annual fee called the "expense ratio" to cover management and administrative costs. Even a seemingly small fee (like 1.5%) can significantly eat into your returns over a long period. This calculator subtracts the expense ratio from your expected annual return to give you a more realistic "net return" figure.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
+        <div class="md:w-3/5">
+            <div id="resultsArea"></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Mutual Funds and the Fees That Eat Them</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                A mutual fund pools money from many investors to buy stocks, bonds or other securities; each
+                investor owns shares representing a proportional slice of everything the fund holds. Once per
+                trading day the fund strikes its net asset value (NAV) — total assets divided by shares
+                outstanding — and that day's buys and sells execute at that price. Funds organize around stated
+                objectives (growth, income, capital preservation, blends) and sort by what they hold (money market,
+                bond, stock, hybrid), by management style (passive index trackers versus active managers trying to
+                beat a benchmark), and by structure (open-end, closed-end, unit investment trusts). The appeal is
+                real — diversification, low minimums, simplicity, liquidity, professional management — and the
+                scale matches: mutual funds are the largest category of investment fund in the world, holding tens
+                of trillions of dollars, more than half of it in the United States, much of it inside retirement
+                accounts.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">One-time fees: loads</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Many funds charge a sales load — a commission for buying or selling. A <strong>front-end load</strong> comes off
+                the top at purchase: invest $20,000 in a fund with a 5% front-end charge and $1,000 goes to the
+                seller; only $19,000 buys shares. A <strong>deferred sales charge</strong> (back-end load) waits until you redeem,
+                and is figured on the <em>lesser</em> of your original investment or the value at redemption: $20,000
+                grown to $30,000 at a 5% deferred charge pays 5% of $20,000 — $1,000 — and you receive $29,000; if
+                it shrank to $10,000 instead, the fee is $500 and you receive $9,500. To reward patience, many
+                deferred charges follow a CDSC schedule, stepping down each year held — say 5% falling 1% a year,
+                so selling after three years costs 2% — and eventually reaching zero. Funds normally levy one load
+                or the other, rarely both, and <strong>no-load funds</strong> levy neither. Smaller one-time items also exist:
+                purchase, redemption, exchange and account fees.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Ongoing fees: the expense ratio</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                While you hold the fund, it charges for existing: management fees, distribution and service
+                (12b-1) fees in the U.S., and administrative costs, bundled and quoted as the <strong>expense ratio</strong> — an
+                annual percentage skimmed continuously from the fund's assets, which is why this calculator nets it
+                against the return and tallies it on the average balance. The level depends on the fund's
+                ambitions: active management costs more than indexing, expense ratios rarely exceed about 2% even
+                for active funds, and passive index funds run at 0.1% or less. The arithmetic is unforgiving — a 1%
+                annual drag doesn't cost 1% of your ending wealth over decades, it costs far more, because every
+                skimmed dollar stops compounding. That is why the honest summary of a fund is never its headline
+                return: it is the <strong>net IRR</strong> of your actual cash flows after every charge, which is the number this
+                calculator leads with alongside the ending value.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Why is my net IRR below the fund's return minus expenses?</h4>
+                    <p class="text-gray-700">Because the front-end load also takes its cut before compounding starts, and because IRR weights early dollars more heavily — exactly the dollars the load hits hardest. Try setting the load to 0 and watch the IRR climb toward return − expenses.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Does the sales charge apply to contributions too?</h4>
+                    <p class="text-gray-700">Yes, in this calculator and in most load funds: every purchase is a purchase. At the defaults, 2% of $80,000 of total purchases is the $1,600 shown.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">My fund's deferred charge declines yearly — which number do I enter?</h4>
+                    <p class="text-gray-700">The rate in force at the end of your holding period (after the CDSC steps down). The calculator applies that single rate at redemption, on the lesser of principal or ending value.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Where's the general IRR tool?</h4>
+                    <p class="text-gray-700">For arbitrary cash-flow series — projects, rentals, irregular investments — that's the IRR calculator on our roadmap; this page bakes IRR into the fund's own cash flows.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. Real fund returns vary over time; a constant return is a modeling assumption, not a forecast.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="investment.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Investment Calculator</h3>
+                <p class="text-sm text-gray-600">Fee-free growth and solver tabs for comparison.</p>
+            </a>
+            <a href="bond.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Bond Calculator</h3>
+                <p class="text-sm text-gray-600">Price and yield of the funds' other main holding.</p>
+            </a>
+            <a href="cd.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">CD Calculator</h3>
+                <p class="text-sm text-gray-600">The insured, fixed-rate alternative.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateMutualFund() {
-            const initial = parseFloat(document.getElementById('mfInitial').value);
-            const monthly = parseFloat(document.getElementById('mfMonthly').value);
-            const expectedReturn = parseFloat(document.getElementById('mfReturn').value) / 100;
-            const expenseRatio = parseFloat(document.getElementById('mfExpense').value) / 100;
-            const years = parseFloat(document.getElementById('mfYears').value);
+        let chartInstance = null;
 
-            if (isNaN(initial) || isNaN(monthly) || isNaN(expectedReturn) || isNaN(expenseRatio) || isNaN(years)) {
-                alert("Please enter valid numbers.");
-                return;
-            }
+        window.addEventListener('DOMContentLoaded', () => { prefillFromURL(); calculateFund(); });
 
-            // Net Return = Expected Return - Expense Ratio
-            const netReturn = expectedReturn - expenseRatio;
-            
-            if (netReturn <= 0) {
-                alert("Expense ratio is too high compared to expected return.");
-                return;
-            }
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
 
-            const months = years * 12;
-            const monthlyRate = netReturn / 12;
-
-            // Future Value of Initial Investment
-            const fvInitial = initial * Math.pow(1 + monthlyRate, months);
-
-            // Future Value of Monthly SIPs (Annuity)
-            const fvSIPs = monthly * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
-
-            const totalValue = fvInitial + fvSIPs;
-            const totalInvested = initial + (monthly * months);
-            const estimatedReturns = totalValue - totalInvested;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('mfInvested').textContent = formatter.format(totalInvested);
-            document.getElementById('mfReturns').textContent = formatter.format(estimatedReturns);
-            document.getElementById('mfTotal').textContent = formatter.format(totalValue);
-
-            document.getElementById('mfResults').classList.remove('hidden');
+        function clearForm() {
+            document.getElementById('initial').value = '';
+            document.getElementById('resultsArea').innerHTML = '';
         }
+
+        function effMonthly(annualPct) { return Math.pow(1 + annualPct / 100, 1 / 12) - 1; }
+
+        function calculateFund() {
+            const out = document.getElementById('resultsArea');
+            const P0 = num('initial'), A = num('annual'), M = num('monthly');
+            const ret = num('ret'), load = num('load'), deferred = num('deferred'), expense = num('expense');
+            const months = Math.round(num('years') * 12 + num('months'));
+            if (months <= 0 || (P0 <= 0 && A <= 0 && M <= 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter an investment or contributions and a holding length of at least one month.</div>'; return; }
+
+            const rmNet = effMonthly(ret - expense);
+            const em = effMonthly(expense);
+            const flows = [{ t: 0, amt: -P0 }];
+            let bal = P0 * (1 - load / 100);
+            let totContrib = 0, totExp = 0;
+            const yearMap = {};
+            const noteYear = (m, contrib, expAmt, endBal) => {
+                const y = Math.ceil(m / 12);
+                if (!yearMap[y]) yearMap[y] = { contrib: 0, exp: 0, end: endBal };
+                yearMap[y].contrib += contrib; yearMap[y].exp += expAmt; yearMap[y].end = endBal;
+            };
+            for (let m = 1; m <= months; m++) {
+                const open = bal;
+                bal += bal * rmNet;
+                const expAmt = (open + bal) / 2 * em;   // average-balance expense accounting
+                totExp += expAmt;
+                let contrib = M;
+                if (m % 12 === 0) contrib += A;
+                bal += contrib * (1 - load / 100);
+                if (contrib !== 0) flows.push({ t: m, amt: -contrib });
+                totContrib += contrib;
+                noteYear(m, contrib, expAmt, bal);
+            }
+            const grossEnd = bal;
+            const totalPrincipal = P0 + totContrib;
+            const salesCharge = load / 100 * totalPrincipal;
+            const deferredCharge = deferred / 100 * Math.min(totalPrincipal, grossEnd);
+            const ending = grossEnd - deferredCharge;
+            const netReturn = ending - totalPrincipal;
+            const totalFees = salesCharge + deferredCharge + totExp;
+
+            flows.push({ t: months, amt: ending });
+            // monthly IRR by bisection -> effective annual
+            const npv = i => flows.reduce((s, f) => s + f.amt / Math.pow(1 + i, f.t), 0);
+            let irrAnnual = null;
+            if (npv(0) > 0 || ending > 0) {
+                let lo = -0.09, hi = 1;
+                if (npv(lo) * npv(hi) < 0) {
+                    for (let k = 0; k < 200; k++) { const mid = (lo + hi) / 2; (npv(mid) > 0) ? lo = mid : hi = mid; }
+                    irrAnnual = (Math.pow(1 + (lo + hi) / 2, 12) - 1) * 100;
+                }
+            }
+
+            const yearRows = Object.keys(yearMap).map(y => {
+                const v = yearMap[y];
+                return `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${y}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.contrib)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.exp)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.end)}</td></tr>`;
+            }).join('');
+
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Ending Value</p>
+                    <p class="text-4xl font-bold">${formatMoney(ending)}</p>
+                    <p class="text-sm opacity-90 mt-1">Net IRR: <strong>${irrAnnual === null ? '—' : irrAnnual.toFixed(3) + '% per year'}</strong> (headline return: ${ret}%)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Ending Value:</span> <span class="font-bold">${formatMoney(ending)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total Principal:</span> <span class="font-bold">${formatMoney(totalPrincipal)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total Contributions:</span> <span class="font-bold">${formatMoney(totContrib)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Net Return:</span> <span class="font-bold">${formatMoney(netReturn)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Net IRR:</span> <span class="font-bold">${irrAnnual === null ? '—' : irrAnnual.toFixed(3) + '% per year'}</span></p>
+                    <p class="flex justify-between mb-2 text-gray-600"><span>Sales Charge (front-end):</span> <span class="font-bold">${formatMoney(salesCharge)}</span></p>
+                    ${deferredCharge > 0 ? '<p class="flex justify-between mb-2 text-gray-600"><span>Deferred Sales Charge:</span> <span class="font-bold">' + formatMoney(deferredCharge) + '</span></p>' : ''}
+                    <p class="flex justify-between mb-2 text-gray-600"><span>Operating Expenses:</span> <span class="font-bold">${formatMoney(totExp)}</span></p>
+                    <p class="flex justify-between border-t pt-2"><span>Total Charges and Fees:</span> <span class="font-bold">${formatMoney(totalFees)}</span></p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Yearly Breakdown</h3>
+                    <div class="overflow-x-auto" style="max-height:20rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">Year</th><th class="py-2 px-2 border-b text-right">Contributions</th><th class="py-2 px-2 border-b text-right">Operating Expenses</th><th class="py-2 px-2 border-b text-right">Ending Value</th></tr></thead>
+                            <tbody>${yearRows}</tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                </div>`;
+
+            const pc = document.getElementById('pieChart');
+            if (pc) {
+                if (chartInstance) chartInstance.destroy();
+                chartInstance = new Chart(pc.getContext('2d'), {
+                    type: 'doughnut',
+                    data: { labels: ['Initial Investment', 'Total Contributions', 'Fees and Charges', 'Net Return'], datasets: [{ data: [Math.round(P0), Math.round(totContrib), Math.round(totalFees), Math.round(Math.max(netReturn, 0))], backgroundColor: ['#3F51B5', '#14B8A6', '#DC2626', '#38BDF8'] }] },
+                    options: { responsive: true, plugins: { legend: { position: 'right' }, title: { display: true, text: 'Where the Gross Ending Value Comes From' }, tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + formatMoney(c.parsed) } } } }
+                });
+            }
+            updateURL();
+        }
+
+        const PARAMS = [['initial', 'i'], ['annual', 'a'], ['monthly', 'm'], ['ret', 'r'], ['years', 'y'], ['months', 'mo'], ['load', 'l'], ['deferred', 'd'], ['expense', 'e']];
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            PARAMS.forEach(([id, key]) => { p.set(key, document.getElementById(id).value); });
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); });
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-      </html>
+        </html>
