@@ -4,120 +4,571 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bond Calculator - CalcNova</title>
+    <meta name="description" content="Compute any bond parameter — price, face value, yield to maturity, coupon, or time to maturity — plus clean price, dirty price and accrued interest for bonds traded between coupon dates, with all four day-count conventions.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/bond">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Bond Calculator - CalcNova">
+    <meta property="og:description" content="Bond pricing both ways: on the coupon date, and between coupon dates with accrued interest and day-count conventions.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/bond">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Bond Calculator - CalcNova">
+    <meta name="twitter:description" content="Price, yield, clean/dirty price and accrued interest for fixed-rate coupon bonds.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Bond Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/bond" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is the difference between clean price and dirty price?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The clean price is the quoted market price of the bond excluding interest accrued since the last coupon. The dirty price (invoice price) is what the buyer actually pays: clean price plus accrued interest, compensating the seller for holding the bond part-way through the coupon period. Dirty = clean + accrued, always." }
+            },
+            {
+                "@type": "Question",
+                "name": "Is the yield here yield to maturity or current yield?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The solver's yield is the yield to maturity — the discount rate that makes the present value of all remaining coupons plus face value equal the price. The results also show the current yield (annual coupon ÷ price) for comparison; the two are equal only when the bond trades exactly at par." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why does day-count convention matter?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Accrued interest depends on how days are counted. 30/360 pretends every month has 30 days (U.S. corporate and municipal bonds); Actual/360 and Actual/365 count real days over a fixed year; Actual/Actual (U.S. Treasuries) counts real days over the real period. The differences are small — at most a few days of interest — but they decide real money on large trades." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why is the price below face value when yield exceeds the coupon rate?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Because the bond's fixed coupons are worth less than what new money can earn. The market discounts the price until the bond's total return — coupons plus the pull back to face value at maturity — matches the required yield. Coupon above yield produces the mirror image: a premium price above par." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .input-group input:disabled { background: #EEF2FF; color: #3F51B5; font-weight: 700; }
+        .formula { text-align: center; font-size: 1.05rem; font-weight: 600; color: #1F2937; background: #F3F4F6; border-radius: 0.5rem; padding: 0.75rem; margin: 0.75rem 0; }
+        @media print { nav, footer, .no-print, .calc-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Bond</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Bond Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Bond Calculator</h1>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Face Value ($)</label>
-                        <input type="number" id="bondFace" value="1000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Coupon Rate (%)</label>
-                        <input type="number" id="bondCoupon" value="5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Years to Maturity</label>
-                        <input type="number" id="bondYears" value="10" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Yield to Maturity (Market Rate) (%)</label>
-                        <input type="number" id="bondYield" value="6" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="md:w-2/5 calc-form no-print">
+                <div class="flex justify-between items-center mb-4">
+                    <h1 class="text-2xl font-bold text-[#3F51B5]">Bond Calculator</h1>
+                    <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
                 </div>
-                <button onclick="calculateBond()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Bond Price</button>
+                <p class="text-gray-600 text-sm mb-4">Enter any four values and solve for the fifth — for a bond issued or traded <strong>on a coupon date</strong>. The yield is the yield to maturity. (Trades between coupon dates? Use the second calculator below.)</p>
 
-                <div id="bondResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
-                    <p class="text-sm text-gray-500">Estimated Bond Price (Present Value)</p>
-                    <p class="text-4xl font-bold text-[#14B8A6]" id="bondPrice">$0</p>
-                    <p class="text-sm text-gray-500 mt-2">Annual Coupon Payment</p>
-                    <p class="text-xl font-bold text-[#3F51B5]" id="bondAnnualCoupon">$0</p>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                    <div class="input-group">
+                        <label>Solve for</label>
+                        <select id="solveFor" class="w-[58%] bg-indigo-50 font-semibold" onchange="applySolveFor()">
+                            <option value="price" selected>Price</option>
+                            <option value="face">Face value</option>
+                            <option value="yield">Yield</option>
+                            <option value="coupon">Annual coupon</option>
+                            <option value="years">Time to maturity</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Price</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="aPrice" value="" step="any" placeholder="—" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Face Value</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="aFace" value="100" step="any" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Yield (to maturity)</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="aYield" value="6" step="any" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Time to Maturity</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="aYears" value="3" step="any" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Annual Coupon</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="aCoupon" value="5" step="any" class="flex-1 min-w-0">
+                            <select id="aCouponUnit" class="w-16 bg-gray-50" onchange="couponUnitChange('a')">
+                                <option value="p" selected>%</option>
+                                <option value="d">$</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Coupon Frequency</label>
+                        <select id="aFreq" class="w-[58%] bg-gray-50">
+                            <option value="1" selected>Annually</option>
+                            <option value="2">Semiannually</option>
+                            <option value="4">Quarterly</option>
+                            <option value="12">Monthly</option>
+                        </select>
+                    </div>
+                    <button onclick="calculateBond1()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-4">Calculate</button>
+                </div>
+
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Bond Pricing Works</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A bond's price is the present value of its future cash flows (coupon payments and the return of the face value at maturity), discounted at the current market yield. If the market yield is higher than the coupon rate, the bond trades at a discount. If the yield is lower, it trades at a premium.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="md:w-3/5">
+                <div id="resultsArea1"></div>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+        <hr class="my-10 border-gray-200">
+
+        <h2 class="text-2xl font-bold text-[#3F51B5] mb-2">Bond Pricing Calculator — Between Coupon Dates</h2>
+        <p class="text-gray-600 text-sm mb-6 max-w-3xl">Most bonds trade between coupon dates, so the buyer owes the seller interest accrued since the last coupon. This calculator gives the <strong>dirty price</strong> (what changes hands), the <strong>clean price</strong> (the quoted price), the <strong>accrued interest</strong>, and the accrued days under your chosen day-count convention.</p>
+
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="md:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                    <div class="input-group">
+                        <label>Face Value</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="bFace" value="100" step="any" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Yield (to maturity)</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="bYield" value="6" step="any" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Annual Coupon</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="bCoupon" value="5" step="any" class="flex-1 min-w-0">
+                            <select id="bCouponUnit" class="w-16 bg-gray-50" onchange="couponUnitChange('b')">
+                                <option value="p" selected>%</option>
+                                <option value="d">$</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Coupon Frequency</label>
+                        <select id="bFreq" class="w-[58%] bg-gray-50">
+                            <option value="1" selected>Annually</option>
+                            <option value="2">Semiannually</option>
+                            <option value="4">Quarterly</option>
+                            <option value="12">Monthly</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Maturity Date</label>
+                        <input type="date" id="bMaturity" value="2029-10-18" class="w-[58%]">
+                    </div>
+                    <div class="input-group">
+                        <label>Settlement Date</label>
+                        <input type="date" id="bSettlement" value="2026-10-21" class="w-[58%]">
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-sm text-gray-700 font-semibold mb-1">Day-count convention:</p>
+                        <label class="flex items-center gap-2 text-sm py-0.5"><input type="radio" name="dc" value="b" checked> 30/360 (bond basis)</label>
+                        <label class="flex items-center gap-2 text-sm py-0.5"><input type="radio" name="dc" value="c"> Actual/360</label>
+                        <label class="flex items-center gap-2 text-sm py-0.5"><input type="radio" name="dc" value="n"> Actual/365</label>
+                        <label class="flex items-center gap-2 text-sm py-0.5"><input type="radio" name="dc" value="a"> Actual/Actual</label>
+                    </div>
+                    <button onclick="calculateBond2()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-4">Calculate</button>
+                </div>
             </div>
-        </aside>
+
+            <div class="md:w-3/5">
+                <div id="resultsArea2"></div>
+            </div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Bonds, From the Ground Up</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                A bond is a loan dressed as a security: an investor lends money to a borrower — usually a government
+                or a company — which promises fixed interest payments and the principal back at the end. Issuers
+                raise funds without selling ownership; investors get a contract instead of a hope. Types track the
+                borrower: government bonds, municipal bonds, corporate bonds, and high-yield ("junk") bonds for
+                shakier borrowers. Against stocks, bonds are the lower-risk shelf — but "bond" spans U.S.
+                Treasuries (about as safe as lending gets) to junk paper whose yield is high precisely because
+                repayment isn't certain. Both calculators on this page handle <strong>fixed-rate coupon bonds</strong>, the
+                majority of the market; neither models credit quality, supply and demand, call features or other
+                real-world price movers.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The anatomy of a bond</h3>
+            <ol class="list-decimal pl-6 text-gray-700 leading-7 mb-4 space-y-2">
+                <li><strong>Face value (par):</strong> what the issuer repays at maturity — and the base every coupon is computed on.</li>
+                <li><strong>Maturity date:</strong> when the principal comes due. Terms run from under a year to 30+ years; "time to maturity" is whatever is left.</li>
+                <li><strong>Coupon rate:</strong> the fixed annual interest rate on face value, typically paid annually or semiannually (floating and zero-coupon variants exist; these tools assume fixed).</li>
+                <li><strong>Coupon frequency:</strong> how often interest is paid — annual, semiannual, quarterly, monthly.</li>
+                <li><strong>Yield:</strong> the return if held to maturity — in these calculators, the yield to maturity: the single discount rate that equates the price to all remaining cash flows. (The related <em>current yield</em>, annual coupon ÷ price, ignores the pull to par; both appear in the results.)</li>
+                <li><strong>Price:</strong> what the bond trades for — the present value of its coupons plus face, bent by credit risk, duration and the current rate environment.</li>
+            </ol>
+            <p class="text-gray-700 leading-7 mb-4">
+                Around that core sit the issuer's identity, call and put options, credit ratings, covenants and
+                liquidity — all live influences on real prices that no closed-form calculator captures.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Pricing a bond</h3>
+            <div class="formula">Price = C × [1 − (1+r)<sup>−N</sup>] / r &nbsp;+&nbsp; F × (1+r)<sup>−N</sup></div>
+            <p class="text-gray-700 leading-7 mb-4">
+                where C is the coupon per period, N the number of periods to maturity, r the yield per period, and
+                F the face value. Every future payment is discounted back at the required yield and summed. Worked
+                example: face $1,000, coupon 5% paid semiannually, 10 years to maturity, required yield 6%. Then C
+                = $25, N = 20, r = 3% per period — and the price comes to <strong>$925.61</strong>. Below par, exactly as expected:
+                the market demands 6%, the bond pays 5%, so the price falls until the discount itself supplies the
+                missing return. Flip the numbers (coupon above yield) and the price rises above par by the same
+                logic.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Clean price, dirty price, accrued interest</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The first calculator assumes trades happen on coupon dates. Real trades don't. Between coupons,
+                interest accrues daily to whoever holds the bond — so a mid-period buyer compensates the seller for
+                the days the seller held it. That slice is the <strong>accrued interest</strong>: coupon per period × (days since
+                last coupon ÷ days in the period, under the bond's day-count rule). Markets quote the <strong>clean price</strong> —
+                the bond's value excluding accrued interest — because it compares cleanly across bonds and dates.
+                But the check the buyer writes is the <strong>dirty price</strong> (invoice price):
+            </p>
+            <div class="formula">Dirty price = Clean price + Accrued interest</div>
+            <p class="text-gray-700 leading-7 mb-4">
+                At the defaults of the second calculator — settling three days after an annual coupon — accrued
+                interest is just $0.0417 on a $100 bond, moving the dirty price to $97.3743 against a clean
+                $97.3326. Small numbers, real money at institutional size.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Day-count conventions</h3>
+            <ul class="list-disc pl-6 text-gray-700 leading-7 mb-4 space-y-2">
+                <li><strong>30/360 (bond basis):</strong> every month counts 30 days, the year 360. Standardizes the calendar so accrued interest is hand-computable; the U.S. convention for corporate, agency and municipal bonds.</li>
+                <li><strong>Actual/360:</strong> real days in the numerator, a 360-day year below. Common in money markets — commercial paper, short-term CDs.</li>
+                <li><strong>Actual/365:</strong> real days over a fixed 365 (leap years usually ignored). Seen in some non-U.S. government bonds and swaps.</li>
+                <li><strong>Actual/Actual:</strong> real days over the real coupon period — the most precise, and the U.S. Treasury convention.</li>
+            </ul>
+            <p class="text-gray-700 leading-7 mb-4">
+                Convention choice moves accrued interest by a little — up to roughly six days' worth in extreme
+                cases — which is why the second calculator lets you switch and compare.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Why do bond prices move opposite to interest rates?</h4>
+                    <p class="text-gray-700">The coupons are fixed. When new bonds pay more, an old bond's lower coupons must be compensated by a lower price — and vice versa. The discounting formula above is that mechanism, exactly.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Can this price a zero-coupon bond?</h4>
+                    <p class="text-gray-700">Yes — set the coupon to 0. The price becomes face value discounted over the full term, which is the whole economics of a zero.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What about floating-rate or callable bonds?</h4>
+                    <p class="text-gray-700">Out of scope — their cash flows aren't fixed in advance, so they need spread and option models rather than a closed-form price.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. Bond prices also depend on credit quality, liquidity, tax status and market conditions not modeled here.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="investment.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Investment Calculator</h3>
+                <p class="text-sm text-gray-600">Growth of a portfolio with contributions.</p>
+            </a>
+            <a href="interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Interest Calculator</h3>
+                <p class="text-sm text-gray-600">Compound growth, tax and inflation.</p>
+            </a>
+            <a href="loan.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Loan Calculator</h3>
+                <p class="text-sm text-gray-600">The borrower's side of the same math.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateBond() {
-            const face = parseFloat(document.getElementById('bondFace').value);
-            const couponRate = parseFloat(document.getElementById('bondCoupon').value) / 100;
-            const years = parseFloat(document.getElementById('bondYears').value);
-            const yieldRate = parseFloat(document.getElementById('bondYield').value) / 100;
+        window.addEventListener('DOMContentLoaded', () => { prefillFromURL(); applySolveFor(false); calculateBond1(); calculateBond2(); });
 
-            if (isNaN(face) || isNaN(couponRate) || isNaN(years) || isNaN(yieldRate) || face <= 0 || years <= 0) {
-                alert("Please enter valid numbers.");
-                return;
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? NaN : v; }
+        function fmt4(x) { return '$' + x.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 }); }
+        function fmt2(x) { return '$' + x.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+        function couponUnitChange(prefix) {
+            const unit = document.getElementById(prefix + 'CouponUnit').value;
+            const face = num(prefix + 'Face'), el = document.getElementById(prefix + 'Coupon');
+            const cur = parseFloat(el.value);
+            if (isNaN(face) || isNaN(cur) || face <= 0) return;
+            if (unit === 'd') el.value = Math.round(face * cur) / 100;
+            else el.value = Math.round(100000 * cur / face) / 1000;
+        }
+
+        function priceFromParts(F, yldPct, coupAnnualDollars, years, f) {
+            const r = yldPct / 100 / f, C = coupAnnualDollars / f, N = years * f;
+            if (Math.abs(r) < 1e-12) return C * N + F;
+            const v = Math.pow(1 + r, -N);
+            return C * (1 - v) / r + F * v;
+        }
+
+        function applySolveFor(recalc) {
+            const target = document.getElementById('solveFor').value;
+            const map = { price: 'aPrice', face: 'aFace', yield: 'aYield', coupon: 'aCoupon', years: 'aYears' };
+            Object.values(map).forEach(id => { document.getElementById(id).disabled = false; });
+            document.getElementById(map[target]).disabled = true;
+            if (recalc !== false) calculateBond1();
+        }
+
+        function calculateBond1() {
+            const out = document.getElementById('resultsArea1');
+            const target = document.getElementById('solveFor').value;
+            const f = parseInt(document.getElementById('aFreq').value, 10);
+            let P = num('aPrice'), F = num('aFace'), Y = num('aYield'), YRS = num('aYears');
+            const coupVal = num('aCoupon'), coupUnit = document.getElementById('aCouponUnit').value;
+            const fail = m => { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">' + m + '</div>'; };
+            let coupDollars = coupUnit === 'd' ? coupVal : (isNaN(F) ? NaN : F * coupVal / 100);
+
+            if (target !== 'face' && !(F > 0)) return fail('Please enter a face value greater than zero.');
+            if (target !== 'price' && !(P > 0)) return fail('Please enter a price greater than zero to solve from.');
+            if (target !== 'years' && !(YRS > 0)) return fail('Please enter a time to maturity greater than zero.');
+            if (isNaN(coupVal) || coupVal < 0) return fail('Please enter an annual coupon of zero or more.');
+
+            let solvedSentence = '';
+            if (target === 'price') {
+                if (isNaN(Y)) return fail('Please enter a yield.');
+                P = priceFromParts(F, Y, coupDollars, YRS, f);
+                document.getElementById('aPrice').value = P.toFixed(4);
+                solvedSentence = `Given the face value, yield, time to maturity, and annual coupon, the price is: <strong>${fmt4(P)}</strong>`;
+            } else if (target === 'face') {
+                if (coupUnit === 'p') {
+                    const r = Y / 100 / f, v = Math.pow(1 + r, -YRS * f);
+                    // bracket per $1 of face: per-period coupon annuity + discounted face
+                    const cp = coupVal / 100 / f;
+                    const b2 = Math.abs(r) < 1e-12 ? cp * YRS * f + 1 : cp * (1 - v) / r + v;
+                    F = P / b2;
+                } else {
+                    const r = Y / 100 / f, C = coupDollars / f, N = YRS * f, v = Math.pow(1 + r, -N);
+                    F = Math.abs(r) < 1e-12 ? P - C * N : (P - C * (1 - v) / r) / v;
+                }
+                document.getElementById('aFace').value = F.toFixed(2);
+                coupDollars = coupUnit === 'd' ? coupVal : F * coupVal / 100;
+                solvedSentence = `Given the price, yield, time to maturity, and annual coupon, the face value is: <strong>${fmt4(F)}</strong>`;
+            } else if (target === 'yield') {
+                let lo = -50, hi = 1000, mid = 0;
+                for (let i = 0; i < 300; i++) { mid = (lo + hi) / 2; if (priceFromParts(F, mid, coupDollars, YRS, f) > P) lo = mid; else hi = mid; }
+                Y = mid;
+                document.getElementById('aYield').value = Y.toFixed(4);
+                solvedSentence = `Given the price, face value, time to maturity, and annual coupon, the yield to maturity is: <strong>${Y.toFixed(4)}%</strong>`;
+            } else if (target === 'coupon') {
+                const r = Y / 100 / f, N = YRS * f, v = Math.pow(1 + r, -N);
+                const Cper = Math.abs(r) < 1e-12 ? (P - F) / N : (P - F * v) * r / (1 - v);
+                coupDollars = Cper * f;
+                const asPct = coupDollars / F * 100;
+                document.getElementById('aCoupon').value = coupUnit === 'd' ? coupDollars.toFixed(2) : asPct.toFixed(4);
+                solvedSentence = `Given the price, face value, yield, and time to maturity, the annual coupon is: <strong>${asPct.toFixed(4)}% (${fmt2(coupDollars)} per year)</strong>`;
+            } else if (target === 'years') {
+                const r = Y / 100 / f, C = coupDollars / f;
+                if (Math.abs(r) < 1e-12) {
+                    if (C <= 0) return fail('With a 0% yield and no coupon, price always equals face — term cannot be solved.');
+                    YRS = (P - F) / C / f;
+                } else {
+                    const vN = (P - C / r) / (F - C / r);
+                    if (vN <= 0) return fail('No positive term produces this price at the given yield and coupon.');
+                    YRS = -Math.log(vN) / Math.log(1 + r) / f;
+                }
+                if (!(YRS > 0)) return fail('The inputs imply a non-positive term. Check price, coupon and yield.');
+                document.getElementById('aYears').value = YRS.toFixed(4);
+                solvedSentence = `Given the price, face value, yield, and annual coupon, the time to maturity is: <strong>${YRS.toFixed(4)} years</strong>`;
             }
 
-            const annualCoupon = face * couponRate;
-            
-            // Present Value of Coupons (Annuity)
-            // Formula: C * [1 - (1 + r)^-n] / r
-            let pvCoupons = 0;
-            if (yieldRate > 0) {
-                pvCoupons = annualCoupon * ((1 - Math.pow(1 + yieldRate, -years)) / yieldRate);
-            } else {
-                pvCoupons = annualCoupon * years;
-            }
+            const coupPer = coupDollars / f;
+            const curYield = P > 0 ? coupDollars / P * 100 : 0;
+            const premium = P > F + 0.005 ? 'Premium (price above par)' : (P < F - 0.005 ? 'Discount (price below par)' : 'At par');
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md mb-4">
+                    <p class="text-base leading-7">${solvedSentence}</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Price:</span> <span class="font-bold">${fmt4(P)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Face Value:</span> <span class="font-bold">${fmt2(F)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Yield to Maturity:</span> <span class="font-bold">${Y.toFixed(4)}%</span></p>
+                    <p class="flex justify-between mb-2"><span>Current Yield:</span> <span class="font-bold">${curYield.toFixed(4)}%</span></p>
+                    <p class="flex justify-between mb-2"><span>Coupon per Period:</span> <span class="font-bold">${fmt2(coupPer)}</span></p>
+                    <p class="flex justify-between"><span>Trading at:</span> <span class="font-bold">${premium}</span></p>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                </div>`;
+            updateURL();
+        }
 
-            // Present Value of Face Value
-            // Formula: F / (1 + r)^n
-            const pvFace = face / Math.pow(1 + yieldRate, years);
+        // ---------- Calculator 2: between coupon dates ----------
+        function parseDate(id) {
+            const s = document.getElementById(id).value;
+            const p = s.split('-').map(Number);
+            return { y: p[0], m: p[1], d: p[2] };
+        }
+        function daysInMonth(y, m) { return new Date(Date.UTC(y, m, 0)).getUTCDate(); }
+        function addMonths(date, months) {
+            let y = date.y, m = date.m + months;
+            while (m > 12) { m -= 12; y++; }
+            while (m < 1) { m += 12; y--; }
+            return { y, m, d: Math.min(date.d, daysInMonth(y, m)) };
+        }
+        function cmpDate(a, b) { return (a.y - b.y) || (a.m - b.m) || (a.d - b.d); }
+        function actualDays(a, b) { return Math.round((Date.UTC(b.y, b.m - 1, b.d) - Date.UTC(a.y, a.m - 1, a.d)) / 86400000); }
+        function days360(a, b) {
+            let d1 = a.d, d2 = b.d;
+            if (d1 === 31) d1 = 30;
+            if (d2 === 31 && d1 >= 30) d2 = 30;
+            return 360 * (b.y - a.y) + 30 * (b.m - a.m) + (d2 - d1);
+        }
 
-            const bondPrice = pvCoupons + pvFace;
+        function calculateBond2() {
+            const out = document.getElementById('resultsArea2');
+            const F = num('bFace'), Y = num('bYield');
+            const f = parseInt(document.getElementById('bFreq').value, 10);
+            const coupVal = num('bCoupon'), coupUnit = document.getElementById('bCouponUnit').value;
+            const maturity = parseDate('bMaturity'), settlement = parseDate('bSettlement');
+            const dc = document.querySelector('input[name="dc"]:checked').value;
+            const fail = m => { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">' + m + '</div>'; };
+            if (!(F > 0) || isNaN(Y) || isNaN(coupVal)) return fail('Please complete the bond fields above.');
+            if (cmpDate(settlement, maturity) >= 0) return fail('Settlement must be before the maturity date.');
+            const coupDollars = coupUnit === 'd' ? coupVal : F * coupVal / 100;
+            const coupPer = coupDollars / f;
+            const stepMonths = 12 / f;
 
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+            // walk coupon dates back from maturity to find last/next coupon around settlement
+            let next = { ...maturity }, last = null, periodsFromLast = 0;
+            let cursor = { ...maturity };
+            while (cmpDate(cursor, settlement) > 0) { last = cursor; cursor = addMonths(cursor, -stepMonths); periodsFromLast++; }
+            last = cursor;
+            const nextCoupon = addMonths(last, stepMonths);
+            const N = periodsFromLast; // coupons remaining counted from last coupon date
 
-            document.getElementById('bondPrice').textContent = formatter.format(bondPrice);
-            document.getElementById('bondAnnualCoupon').textContent = formatter.format(annualCoupon);
+            // days accrued + period basis per convention
+            let dAcc, dBasis;
+            if (dc === 'b') { dAcc = days360(last, settlement); dBasis = 360 / f; }
+            else if (dc === 'c') { dAcc = actualDays(last, settlement); dBasis = 360 / f; }
+            else if (dc === 'n') { dAcc = actualDays(last, settlement); dBasis = 365 / f; }
+            else { dAcc = actualDays(last, settlement); dBasis = actualDays(last, nextCoupon); }
+            const w = dBasis > 0 ? dAcc / dBasis : 0;
 
-            document.getElementById('bondResults').classList.remove('hidden');
+            const r = Y / 100 / f;
+            let priceAtLast;
+            if (Math.abs(r) < 1e-12) priceAtLast = coupPer * N + F;
+            else { const v = Math.pow(1 + r, -N); priceAtLast = coupPer * (1 - v) / r + F * v; }
+            const dirty = priceAtLast * Math.pow(1 + r, w);
+            const accrued = coupPer * w;
+            const clean = dirty - accrued;
+
+            out.innerHTML = `
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <h3 class="font-bold text-gray-800 mb-3">Results</h3>
+                    <p class="flex justify-between mb-2"><span>Dirty Price (invoice):</span> <span class="font-bold">${fmt4(dirty)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Clean Price (quoted):</span> <span class="font-bold">${fmt4(clean)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Accrued Interest:</span> <span class="font-bold">${fmt4(accrued)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Interest Accrued Days:</span> <span class="font-bold">${dAcc}</span></p>
+                    <p class="flex justify-between text-gray-500"><span>Last coupon: ${last.y}-${String(last.m).padStart(2, '0')}-${String(last.d).padStart(2, '0')} · Next coupon: ${nextCoupon.y}-${String(nextCoupon.m).padStart(2, '0')}-${String(nextCoupon.d).padStart(2, '0')} · Coupons remaining: ${N}</span></p>
+                </div>`;
+            updateURL();
+        }
+
+        const PARAMS = [['solveFor', 'sf'], ['aPrice', 'ap'], ['aFace', 'af'], ['aYield', 'ay'], ['aYears', 'ayr'], ['aCoupon', 'ac'], ['aCouponUnit', 'acu'], ['aFreq', 'afq'], ['bFace', 'bf'], ['bYield', 'by'], ['bCoupon', 'bc'], ['bCouponUnit', 'bcu'], ['bFreq', 'bfq'], ['bMaturity', 'bm'], ['bSettlement', 'bs']];
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            PARAMS.forEach(([id, key]) => { const el = document.getElementById(id); if (el) p.set(key, el.value); });
+            p.set('dc', document.querySelector('input[name="dc"]:checked').value);
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => { if (q.get(key) !== null) { const el = document.getElementById(id); if (el) el.value = q.get(key); } });
+            if (q.get('dc')) { const r = document.querySelector('input[name="dc"][value="' + q.get('dc') + '"]'); if (r) r.checked = true; }
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
         }
     </script>
 </body>
