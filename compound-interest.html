@@ -4,122 +4,480 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compound Interest Calculator - CalcNova</title>
+    <meta name="description" content="Convert an interest rate between compounding frequencies (APR to APY and back, including continuous), then project real growth with contributions — formulas, the Rule of 72, and the history of compounding.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/compound-interest">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Compound Interest Calculator - CalcNova">
+    <meta property="og:description" content="Convert rates between compounding periods — 6% compounded monthly is 6.16778% annually — and project how a balance actually grows.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/compound-interest">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Compound Interest Calculator - CalcNova">
+    <meta name="twitter:description" content="APR ↔ APY converter for every compounding frequency, plus a growth projector with contributions.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Compound Interest Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/compound-interest" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is the difference between APR and APY?",
+                "acceptedAnswer": { "@type": "Answer", "text": "APR is the nominal rate — the stated rate before compounding within the year, usually quoted with monthly compounding. APY is the effective annual rate: what you actually earn or pay after compounding does its work. A 6% APR compounded monthly is a 6.16778% APY. U.S. law makes deposit accounts advertise APY and loans advertise APR, which is not a coincidence: each side quotes the number that flatters it." }
+            },
+            {
+                "@type": "Question",
+                "name": "Does compounding frequency matter much?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Less and less as it gets finer. On $1,000 at 6% for two years: annual compounding gives $1,123.60, daily gives $1,127.49, and continuous — the mathematical limit — gives $1,127.50. The jump from annual to monthly is real money on large balances; the jump from daily to continuous is a cent. Frequency matters most when rates and principals are large." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is the Rule of 72?",
+                "acceptedAnswer": { "@type": "Answer", "text": "A shortcut: divide 72 by the annual return (as a percent) to estimate the years needed to double your money. At 8%, about 9 years; at 6%, about 12. It is an approximation — most accurate between roughly 6% and 10% — meant for quick estimates, not contracts." }
+            },
+            {
+                "@type": "Question",
+                "name": "Is compound interest good or bad?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It is a double-edged sword, and which edge you get depends on which side of the loan you stand. Savers and investors earn interest on interest, which is how small early deposits become retirements. Borrowers pay it: a credit-card balance left to compound monthly grows the same exponential way, against them." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .formula { text-align: center; font-size: 1.15rem; font-weight: 600; color: #1F2937; background: #F3F4F6; border-radius: 0.5rem; padding: 0.75rem; margin: 0.75rem 0; }
+        @media print { nav, footer, .no-print { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Compound Interest</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Compound Interest Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Compound Interest Calculator</h1>
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="md:w-2/5 no-print">
+                <div class="flex justify-between items-center mb-4">
+                    <h1 class="text-2xl font-bold text-[#3F51B5]">Compound Interest Calculator</h1>
+                    <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+                </div>
+                <p class="text-gray-600 text-sm mb-4">First job of this page: <strong>convert a rate between compounding frequencies</strong>. A rate means nothing until you know how often it compounds — 6% compounded monthly and 6% compounded annually are different rates wearing the same number.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Initial Principal ($)</label>
-                        <input type="number" id="principal" value="5000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                    <div class="input-group">
+                        <label>Input Interest</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="convRate" value="6" step="any" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
-                        <input type="number" id="ciRate" value="7" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="input-group">
+                        <label>Compound</label>
+                        <select id="convIn" class="w-[58%] bg-gray-50"></select>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Time (Years)</label>
-                        <input type="number" id="ciYears" value="10" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="text-center text-3xl font-bold text-gray-400 my-2">=</div>
+                    <div class="input-group">
+                        <label>Output Compound</label>
+                        <select id="convOut" class="w-[58%] bg-gray-50"></select>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Compound Frequency</label>
-                        <select id="ciFrequency" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="1">Annually</option>
-                            <option value="12" selected>Monthly</option>
-                            <option value="365">Daily</option>
-                        </select>
+                    <div class="flex gap-2 mt-5">
+                        <button onclick="calculateConv()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Convert</button>
+                        <button onclick="swapConv()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">⇅ Swap</button>
                     </div>
                 </div>
-                <button onclick="calculateCI()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate</button>
 
-                <div id="ciResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Future Value</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="futureValue">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Earned</p>
-                            <p class="text-2xl font-bold text-gray-800" id="interestEarned">$0</p>
-                        </div>
-                    </div>
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
                 </div>
             </div>
 
-            <!-- SEO Content -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is Compound Interest?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Compound interest is the interest on a loan or deposit calculated based on both the initial principal and the accumulated interest from previous periods. It is often referred to as "interest on interest" and will make a sum grow at a faster rate than simple interest.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="md:w-3/5">
+                <div id="convResults"></div>
             </div>
         </div>
 
-        <!-- Sidebar -->
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-                <p class="text-sm">(300x250 Banner)</p>
+        <div class="flex flex-col md:flex-row gap-8 mt-10 border-t pt-8">
+            <div class="md:w-2/5 no-print">
+                <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Growth Projector</h2>
+                <p class="text-gray-600 text-sm mb-4">Second job: what a balance actually becomes. Add a starting amount, monthly contributions, and time. (For taxes on interest and inflation adjustments, use the <a href="interest.html" class="text-[#3F51B5] font-semibold hover:underline">Interest Calculator</a>.)</p>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                    <div class="input-group">
+                        <label>Initial Investment</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="initial" value="10000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Monthly Contribution</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="monthly" value="500" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Annual Interest Rate</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="rate" value="7" step="0.01" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Years to Grow</label>
+                        <input type="number" id="years" value="20" class="w-[58%]">
+                    </div>
+                    <div class="input-group">
+                        <label>Compound</label>
+                        <select id="freq" class="w-[58%] bg-gray-50">
+                            <option value="365">Daily</option>
+                            <option value="12" selected>Monthly</option>
+                            <option value="4">Quarterly</option>
+                            <option value="2">Semi-annually</option>
+                            <option value="1">Annually</option>
+                        </select>
+                    </div>
+                    <button onclick="calculateGrowth()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-4">Calculate Growth</button>
+                </div>
             </div>
-        </aside>
+            <div class="md:w-3/5">
+                <div id="growthResults"></div>
+            </div>
+        </div>
     </main>
 
-    <!-- Footer (تم إصلاحه بالكامل) -->
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">What Compound Interest Is</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Interest is the price of using someone else's money, paid as a percentage of the principal. It comes
+                in two species. <strong>Simple interest</strong> is charged only on the original principal: borrow $100 at 10%
+                simple for two years and the interest is $100 × 10% × 2 = <strong>$20</strong>, end of story. <strong>Compound
+                interest</strong> is charged on principal <em>plus accumulated interest</em>: the same $100 at 10% compounded
+                annually earns $10 in year one (balance $110), then $110 × 10% = $11 in year two — <strong>$21</strong> total.
+                One extra dollar sounds trivial. It is the seed of everything below.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <p class="text-gray-700 leading-7 mb-4">
+                Because each period's interest joins the principal, growth is exponential — a snowball, not a
+                staircase. Start early and the effect is startling: $1,000 invested at 20 in a fund returning the
+                stock market's long-run ~10% becomes <strong>$72,890</strong> by age 65 — about 73× the deposit, from nothing but
+                time. The same sword cuts the other way for borrowers: a card balance left to compound monthly
+                grows on exactly the same curve, against its owner. Compounding rewards whoever owns the balance
+                and punishes whoever owes it.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Frequency: why the converter exists</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Interest can compound on any schedule, and the schedule changes the true rate. A 10% rate
+                compounded <em>semiannually</em> charges 5% each half-year: $5 on $100 in the first half, then
+                ($100 + $5) × 5% = $5.25 in the second — $10.25 for the year, identical to <strong>10.25%</strong> compounded
+                annually. In practice, savings accounts and CDs usually compound annually, while mortgages, home
+                equity loans and credit cards compound monthly. And note the marketing asymmetry: the more often a
+                rate compounds, the <em>smaller</em> the stated number can be for the same true cost — which is why a 6%
+                mortgage is quoted as 6% (0.5% a month) rather than as the <strong>6.17%</strong> it totals to over a year. The
+                converter at the top of this page translates any rate between annually, semiannually, quarterly,
+                monthly, semimonthly, biweekly, weekly, daily and continuous compounding.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The formulas</h3>
+            <p class="text-gray-700 leading-7 mb-2">With one compounding period, growth is just:</p>
+            <div class="formula">A<sub>t</sub> = A<sub>0</sub>(1 + r)<sup>n</sup></div>
+            <p class="text-gray-700 leading-7 mb-4">
+                where A<sub>0</sub> is the principal, A<sub>t</sub> the amount after time t, r the rate per period, and n the number of
+                periods. Example: $1,000 at 6% compounded annually for two years → $1,000 × (1.06)<sup>2</sup> = <strong>$1,123.60</strong>.
+                For n compounding periods per year over t years:
+            </p>
+            <div class="formula">A<sub>t</sub> = A<sub>0</sub> × (1 + r/n)<sup>nt</sup></div>
+            <p class="text-gray-700 leading-7 mb-4">
+                Same $1,000 at 6% compounded <em>daily</em>: the daily rate is 6% ÷ 365 = 0.0164384%, and the formula gives
+                $1,000 × (1.000164384)<sup>730</sup> = <strong>$1,127.49</strong>. Push n toward infinity and compounding becomes
+                <em>continuous</em>:
+            </p>
+            <div class="formula">A<sub>t</sub> = A<sub>0</sub> · e<sup>rt</sup></div>
+            <p class="text-gray-700 leading-7 mb-4">
+                $1,000 × e<sup>0.12</sup> = <strong>$1,127.50</strong>. Daily compounding already lands within a cent of the theoretical
+                maximum — past monthly, extra frequency buys diminishing gains, especially on small principals.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The Rule of 72</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Divide 72 by the annual return (in percent, not decimal — use 8, not 0.08) and you get roughly how
+                many years money takes to double: at 8%, about <strong>9 years</strong>; at 6%, about 12; at 10%, about 7. It is a
+                mental shortcut, most accurate in the 6–10% range — excellent for judging whether a pitch is
+                plausible, useless as a contract term.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">A short history of compounding</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Compounding is older than coinage's widespread use: Babylonian and Sumerian texts from roughly
+                4,400 years ago already apply it, in a distinctive form — interest accrued at 20% of principal
+                until the accumulated interest equaled the principal, and only then was it folded in. Later
+                civilizations were ambivalent: Roman law condemned compound interest, and Christian and Islamic
+                traditions both treated it as usury, a sin. Practice outran doctrine anyway — lenders compounded
+                through the medieval period, and the printing of compound interest tables in the 1600s made it
+                routine. Its mathematical soul arrived in 1683, when Jacob Bernoulli, studying exactly this
+                problem, noticed that ever-finer compounding approaches a limit: the constant e ≈ 2.71828, which
+                Leonhard Euler later named. Every "continuously compounded" option in the converter above is
+                Bernoulli's limit, still working.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">APR vs APY — which is bigger?</h4>
+                    <p class="text-gray-700">APY. It includes intra-year compounding; APR doesn't. 6% compounded monthly (APR-style) = 6.16778% APY. Deposits must advertise APY, loans APR — each industry quotes its flattering number.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Is daily compounding worth chasing?</h4>
+                    <p class="text-gray-700">Barely. At 6% on $1,000 over two years, daily beats annual by $3.89 and loses to continuous by 1 cent. On a $400,000 mortgage balance the frequency matters; on a small savings account, the rate itself matters far more.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Where do I calculate growth with taxes or inflation?</h4>
+                    <p class="text-gray-700">The <a href="interest.html" class="text-[#3F51B5] font-semibold hover:underline">Interest Calculator</a> — same compounding engine, with tax skimmed as interest accrues and a buying-power result after inflation.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Why do lenders quote monthly-compounded rates?</h4>
+                    <p class="text-gray-700">Because they look smaller. 6% compounded monthly and 6.17% compounded annually cost the same; the first number wins the advertisement.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. Projections assume a constant rate of return.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Interest Calculator</h3>
+                <p class="text-sm text-gray-600">Full growth runs with tax and inflation included.</p>
+            </a>
+            <a href="investment.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Investment Calculator</h3>
+                <p class="text-sm text-gray-600">Solve for the contribution, rate, start, or time.</p>
+            </a>
+            <a href="finance.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Finance Calculator</h3>
+                <p class="text-sm text-gray-600">The five TVM keys: N, I/Y, PV, PMT, FV.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateCI() {
-            const p = parseFloat(document.getElementById('principal').value);
-            const r = parseFloat(document.getElementById('ciRate').value) / 100;
-            const t = parseFloat(document.getElementById('ciYears').value);
-            const n = parseFloat(document.getElementById('ciFrequency').value);
+        const FREQS = [
+            { v: 1, label: 'Annually (APY)' },
+            { v: 2, label: 'Semiannually' },
+            { v: 4, label: 'Quarterly' },
+            { v: 12, label: 'Monthly (APR)' },
+            { v: 24, label: 'Semimonthly' },
+            { v: 26, label: 'Biweekly' },
+            { v: 52, label: 'Weekly' },
+            { v: 365, label: 'Daily' },
+            { v: 0, label: 'Continuously' }
+        ];
+        let growthChartInstance = null;
 
-            if (isNaN(p) || isNaN(r) || isNaN(t) || isNaN(n)) {
-                alert("Please enter valid numbers.");
-                return;
-            }
+        window.addEventListener('DOMContentLoaded', () => {
+            const inSel = document.getElementById('convIn'), outSel = document.getElementById('convOut');
+            FREQS.forEach(f => {
+                inSel.add(new Option(f.label, f.v));
+                outSel.add(new Option(f.label, f.v));
+            });
+            inSel.value = '12'; outSel.value = '1';
+            prefillFromURL();
+            calculateConv();
+            calculateGrowth();
+        });
 
-            const amount = p * Math.pow((1 + (r / n)), (n * t));
-            const interest = amount - p;
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
 
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('futureValue').textContent = formatter.format(amount);
-            document.getElementById('interestEarned').textContent = formatter.format(interest);
-
-            document.getElementById('ciResults').classList.remove('hidden');
+        function toEAR(ratePct, f) {
+            const r = ratePct / 100;
+            if (f === 0) return Math.exp(r) - 1;
+            return Math.pow(1 + r / f, f) - 1;
         }
+        function fromEAR(ear, f) {
+            if (f === 0) return Math.log(1 + ear) * 100;
+            return f * (Math.pow(1 + ear, 1 / f) - 1) * 100;
+        }
+        function freqLabel(v) { const f = FREQS.find(x => x.v === v); return f ? f.label : v; }
+
+        function swapConv() {
+            const a = document.getElementById('convIn'), b = document.getElementById('convOut');
+            const t = a.value; a.value = b.value; b.value = t;
+            calculateConv();
+        }
+
+        function calculateConv() {
+            const out = document.getElementById('convResults');
+            const rate = num('convRate');
+            const fIn = parseInt(document.getElementById('convIn').value, 10);
+            const fOut = parseInt(document.getElementById('convOut').value, 10);
+            const ear = toEAR(rate, fIn);
+            const converted = fromEAR(ear, fOut);
+
+            const rows = FREQS.map(f => {
+                const val = fromEAR(ear, f.v);
+                const hl = f.v === fOut ? 'bg-green-50 font-bold' : (f.v === fIn ? 'bg-indigo-50' : '');
+                const tag = f.v === fIn && f.v === fOut ? ' <span class="text-xs text-gray-500">(input = output)</span>' : (f.v === fIn ? ' <span class="text-xs text-gray-500">(input)</span>' : (f.v === fOut ? ' <span class="text-xs text-green-700">(output)</span>' : ''));
+                return `<tr class="border-b ${hl}"><td class="py-1.5 px-2">${f.label}${tag}</td><td class="py-1.5 px-2 text-right">${val.toFixed(5)}%</td></tr>`;
+            }).join('');
+
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">${rate}% compounded ${freqLabel(fIn).toLowerCase()} equals</p>
+                    <p class="text-4xl font-bold">${converted.toFixed(5)}%</p>
+                    <p class="text-sm opacity-90 mt-1">compounded ${freqLabel(fOut).toLowerCase()} · effective annual rate (APY): ${(ear * 100).toFixed(5)}%</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm">The same rate at every frequency</h3>
+                    <table class="w-full text-sm"><tbody>${rows}</tbody></table>
+                    <p class="text-xs text-gray-500 mt-3">All nine rates above are the same rate — each grows $1 by exactly the same amount in one year. Only the quoting convention changes.</p>
+                </div>`;
+            updateURL();
+        }
+
+        function calculateGrowth() {
+            const out = document.getElementById('growthResults');
+            const P = num('initial'), C = num('monthly'), rate = num('rate'), years = Math.round(num('years'));
+            const freq = parseInt(document.getElementById('freq').value, 10);
+            if (years <= 0) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter at least 1 year.</div>'; return; }
+            const rm = Math.pow(1 + (rate / 100) / freq, freq / 12) - 1;
+            let bal = P, totInt = 0;
+            const yearRows = [], labels = [], principalSeries = [], totalSeries = [];
+            for (let y = 1; y <= years; y++) {
+                for (let m = 0; m < 12; m++) { const it = bal * rm; bal += it + C; totInt += it; }
+                yearRows.push({ y, dep: P + C * 12 * y, interest: totInt, bal });
+                labels.push(y); principalSeries.push(Math.round(P + C * 12 * y)); totalSeries.push(Math.round(bal));
+            }
+            const totC = C * 12 * years;
+            const rowsHtml = yearRows.map(r =>
+                `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${r.y}</td><td class="py-1.5 px-2 text-right">${formatMoney(r.dep)}</td><td class="py-1.5 px-2 text-right">${formatMoney(r.interest)}</td><td class="py-1.5 px-2 text-right">${formatMoney(r.bal)}</td></tr>`
+            ).join('');
+            out.innerHTML = `
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Future Value:</span> <span class="font-bold">${formatMoney(bal)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total Contributions:</span> <span class="font-bold">${formatMoney(P + totC)}</span></p>
+                    <p class="flex justify-between"><span>Total Interest Earned:</span> <span class="font-bold">${formatMoney(totInt)}</span></p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="growthChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Growth by Year</h3>
+                    <div class="overflow-x-auto" style="max-height:20rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">Year</th><th class="py-2 px-2 border-b text-right">Contributed</th><th class="py-2 px-2 border-b text-right">Interest (cum.)</th><th class="py-2 px-2 border-b text-right">Balance</th></tr></thead>
+                            <tbody>${rowsHtml}</tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                </div>`;
+            const gc = document.getElementById('growthChart');
+            if (gc) {
+                if (growthChartInstance) growthChartInstance.destroy();
+                growthChartInstance = new Chart(gc.getContext('2d'), {
+                    type: 'line',
+                    data: { labels, datasets: [
+                        { label: 'Balance', data: totalSeries, borderColor: '#3F51B5', backgroundColor: 'rgba(63,81,181,0.12)', fill: true, tension: 0.2, pointRadius: 2 },
+                        { label: 'Contributed', data: principalSeries, borderColor: '#14B8A6', backgroundColor: '#14B8A6', fill: false, tension: 0.2, pointRadius: 2 }
+                    ]},
+                    options: { responsive: true, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Growth Over Time' }, tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': ' + formatMoney(c.parsed.y) } } }, scales: { y: { ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } } } }
+                });
+            }
+            updateURL();
+        }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            p.set('cr', document.getElementById('convRate').value);
+            p.set('cin', document.getElementById('convIn').value);
+            p.set('cout', document.getElementById('convOut').value);
+            p.set('gi', document.getElementById('initial').value);
+            p.set('gm', document.getElementById('monthly').value);
+            p.set('gr', document.getElementById('rate').value);
+            p.set('gy', document.getElementById('years').value);
+            p.set('gf', document.getElementById('freq').value);
+            return p.toString();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            const map = { cr: 'convRate', cin: 'convIn', cout: 'convOut', gi: 'initial', gm: 'monthly', gr: 'rate', gy: 'years', gf: 'freq' };
+            Object.keys(map).forEach(k => { if (q.get(k) !== null) document.getElementById(map[k]).value = q.get(k); });
+        }
+
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-</html>
+                                                                         </html>
