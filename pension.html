@@ -4,121 +4,404 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pension Calculator - CalcNova</title>
+    <meta name="description" content="Optimize pension decisions: lump sum vs monthly pension, single-life vs joint-and-survivor payouts, and whether working longer for a bigger pension pays off — compared in present-value terms.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/pension">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Pension Calculator - CalcNova">
+    <meta property="og:description" content="Lump sum or monthly? Single or joint? Retire now or later? Pension choices, priced.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/pension">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pension Calculator - CalcNova">
+    <meta name="twitter:description" content="Compare pension payout options in present-value terms.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Pension Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/pension" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Should I take the lump sum or the monthly pension?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It hinges on longevity and investment skill. The monthly pension is guaranteed income for life, immune to market swings — but it usually dies with you (or your spouse). The lump sum is flexible, can be rolled into an IRA to preserve tax deferral, and anything left can pass to heirs; it also suits shorter life expectancies. The break-even test: invest the lump sum at your expected return and draw the pension's monthly amount — if the money outlasts you, the lump sum wins; if it runs dry while you'd still be alive, the pension does." }
+            },
+            {
+                "@type": "Question",
+                "name": "Single-life or joint-and-survivor — which is better?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Single-life pays the most per month but stops at your death. Joint-and-survivor pays less but continues for your spouse's life, usually at a survivor benefit ratio of 50%, 66%, 75%, or 100% of the joint amount. The longer your spouse is likely to outlive you (and the fewer other resources they would have), the more the joint option is worth — the calculator shows the break-even: how many years your spouse must outlive you before the joint payout's present value overtakes the single-life one." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is a pension's commuted value?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The lump-sum present value of the future pension payments — what the stream of monthly checks is worth as a single amount today. Pension lump-sum offers are essentially the plan's commuted-value calculation, done with the plan's own mortality and interest assumptions, which is why two plans can offer very different lump sums for similar monthly benefits." }
+            },
+            {
+                "@type": "Question",
+                "name": "Do pensions keep up with inflation?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Public pensions and Social Security usually have a cost-of-living adjustment (COLA); most private pensions do not, which quietly halves a fixed check's purchasing power in about 24 years at 3% inflation. If your pension has no COLA, enter 0% — and note how much the break-evens move." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 46%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .sect { font-weight: 700; color: #3F51B5; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; margin: 0.9rem 0 0.4rem; }
+        @media print { nav, footer, .no-print, .calc-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Pension</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Pension Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Pension Calculator</h1>
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-2">
+            <h1 class="text-2xl font-bold text-[#3F51B5]">Pension Calculator</h1>
+            <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">Print</button>
+        </div>
+        <p class="text-gray-600 text-sm mb-8 max-w-3xl">Pension policies vary by organization, and the big decisions made before retirement usually cannot be reversed. These three calculations evaluate the most common situations — in present-value terms, so the timing of money counts, not just its total.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Average Final Salary ($)</label>
-                        <input type="number" id="penSalary" value="60000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Years of Service</label>
-                        <input type="number" id="penYears" value="25" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Accrual Rate per Year (%)</label>
-                        <p class="text-xs text-gray-500 mb-1">Typical rate is 1.5% to 2.5%</p>
-                        <input type="number" id="penAccrual" value="2" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Years in Retirement</label>
-                        <input type="number" id="penRetireYears" value="20" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
+        <h2 class="text-xl font-bold text-gray-800 mb-2">1 · Lump Sum Payout or Monthly Pension Income?</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">Take the money once, or receive it as periodic payments until death? We invest the lump sum at your return and draw the pension's income from it: how long it lasts is the break-even.</p>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group"><label>Your retirement age</label><input type="number" id="aRetAge" value="65" class="w-[54%]"></div>
+                    <p class="sect">Option 1: Lump Sum Payment</p>
+                    <div class="input-group"><label>Lump sum amount</label><input type="number" id="aLump" value="800000" class="w-[54%]"></div>
+                    <div class="input-group"><label>Your investment return /yr</label><div class="w-[54%] flex gap-1"><input type="number" id="aRet" value="5" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <p class="sect">Option 2: Monthly Pension Payment</p>
+                    <div class="input-group"><label>Monthly pension income</label><input type="number" id="aMonthly" value="5000" class="w-[54%]"></div>
+                    <div class="input-group"><label>Cost-of-living adjustment /yr</label><div class="w-[54%] flex gap-1"><input type="number" id="aCola" value="3.5" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <button onclick="calculateLump()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-2">Calculate</button>
                 </div>
-                <button onclick="calculatePension()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Pension</button>
-
-                <div id="penResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Annual Pension Benefit</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="penAnnual">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Monthly Pension Benefit</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="penMonthly">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Lifetime Payout</p>
-                            <p class="text-xl font-bold text-gray-800" id="penTotal">$0</p>
-                        </div>
-                    </div>
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden lg:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Defined Benefit Pensions Work</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A defined benefit pension plan promises a specific monthly payment in retirement. The amount is usually calculated using a formula that takes into account your years of service and your average salary during your final years of employment. The "accrual rate" is the percentage of your final salary you earn for each year of service.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
-            </div>
+            <div class="lg:w-3/5"><div id="resultsLump"></div></div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+        <hr class="my-10 border-gray-200">
+
+        <h2 class="text-xl font-bold text-gray-800 mb-2">2 · Single-Life or Joint-and-Survivor Payout?</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">Single-life pays more per month but stops at your death. Joint-and-survivor pays less, but your spouse keeps receiving it for the rest of their life.</p>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group"><label>Your retirement age</label><input type="number" id="bRetAge" value="65" class="w-[54%]"></div>
+                    <div class="input-group"><label>Your life expectancy</label><input type="number" id="bLife" value="77" class="w-[54%]"></div>
+                    <div class="input-group"><label>Spouse's age when you retire</label><input type="number" id="bSpAge" value="62" class="w-[54%]"></div>
+                    <div class="input-group"><label>Spouse's life expectancy</label><input type="number" id="bSpLife" value="82" class="w-[54%]"></div>
+                    <div class="input-group"><label>Single-life pension /mo</label><input type="number" id="bSingle" value="5000" class="w-[54%]"></div>
+                    <div class="input-group"><label>Joint survivor pension /mo</label><input type="number" id="bJoint" value="3000" class="w-[54%]"></div>
+                    <div class="input-group"><label>Your investment return /yr</label><div class="w-[54%] flex gap-1"><input type="number" id="bRet" value="5" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Cost-of-living adjustment /yr</label><div class="w-[54%] flex gap-1"><input type="number" id="bCola" value="3.5" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <button onclick="calculateJoint()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-2">Calculate</button>
+                </div>
             </div>
-        </aside>
+            <div class="lg:w-3/5"><div id="resultsJoint"></div></div>
+        </div>
+
+        <hr class="my-10 border-gray-200">
+
+        <h2 class="text-xl font-bold text-gray-800 mb-2">3 · Should You Work Longer for a Better Pension?</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">Postponing retirement can buy a permanently larger pension — at the cost of the payments you give up meanwhile. The break-even age tells you who wins, and by when you must live for it to pay.</p>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <p class="sect" style="margin-top:0;">Pension Option 1</p>
+                    <div class="input-group"><label>Retirement age</label><input type="number" id="cAge1" value="60" class="w-[54%]"></div>
+                    <div class="input-group"><label>Monthly pension income</label><input type="number" id="cAmt1" value="2500" class="w-[54%]"></div>
+                    <p class="sect">Pension Option 2 (Work Longer)</p>
+                    <div class="input-group"><label>Retirement age</label><input type="number" id="cAge2" value="65" class="w-[54%]"></div>
+                    <div class="input-group"><label>Monthly pension income</label><input type="number" id="cAmt2" value="3800" class="w-[54%]"></div>
+                    <p class="sect">Other Information</p>
+                    <div class="input-group"><label>Your investment return /yr</label><div class="w-[54%] flex gap-1"><input type="number" id="cRet" value="5" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Cost-of-living adjustment /yr</label><div class="w-[54%] flex gap-1"><input type="number" id="cCola" value="3.5" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <button onclick="calculateWork()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-2">Calculate</button>
+                </div>
+            </div>
+            <div class="lg:w-3/5"><div id="resultsWork"></div></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Pensions, Defined-Benefit Plans, and the Payout Decisions</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Traditionally, a pension is a fund employers contribute to as an employee benefit; at retirement the
+                money is drawn from the pot or sold to an insurance company and distributed as periodic payments
+                until death (a life annuity). In the U.S. the tax treatment is the attraction — preferential
+                treatment for money placed in and for its earnings. These three calculators are designed mainly
+                for the <strong>defined-benefit (DB) plan</strong>: the employer <em>guarantees</em> a defined amount at
+                retirement regardless of investment performance, employees may or may not contribute alongside,
+                U.S. DB plans carry no contribution limits — and the employer bears the whole obligation, which
+                survives buyouts and restructurings, though it may mean little if the sponsor fails outright.
+                The benefit itself is usually a formula of age, earnings history, and years of service: work
+                longer and earn more, and the projected benefit rises. The most common DB plan in the U.S. is
+                Social Security — designed, remember, to replace only about 40% of a worker's income.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <p class="text-gray-700 leading-7 mb-4">
+                The <strong>defined-contribution (DC) plan</strong> inverts the deal: the employer contributes defined
+                <em>amounts</em> (most often a match up to a percentage of income, occasionally by years of service),
+                the payout depends entirely on contributions plus investment performance, and there is no
+                guaranteed benefit if assets fall. In exchange, participants control the investments and the
+                account is portable between employers — which is why DC plans (401(k)s, IRAs, Roth IRAs) became
+                the dominant private-sector design, and why tenure matters far less to them than to DB plans.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Why DB fell and DC rose</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Too much of a DB plan's success rides on volatile factors: employees quitting or being fired,
+                and the sponsor staying solvent for decades — the Pension Benefit Guaranty Corporation insures
+                failed private pensions, but only up to limits, which is one reason surviving DB plans cluster in
+                the public sector, where the sponsor rarely goes under. Extracting full value also demands
+                staying ~25 years with one employer, increasingly rare; plans can be "frozen," halting further
+                accruals, often under pressure from rising healthcare costs and longevity or unfavorable
+                interest rates; and DB plans simply cost more to administer. The golden age of the private DB
+                pension is, by most accounts, over.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Lump sum vs monthly, single vs joint</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Most DB plans offer the choice priced in calculator 1: the monthly benefit (possibly guaranteed
+                for life, an obligation of the employer and untouched by market volatility — but impossible to
+                bequeath beyond a spouse) or the lump sum, whose technical name is the <strong>commuted value</strong> —
+                the present value of the payment stream. The lump sum's flexibility cuts both ways: it can be
+                rolled into an IRA (preserving tax deferral, and leaving anything unspent to heirs, which pension
+                payments generally cannot do), but it can also simply be spent. Shorter life expectancy tilts
+                toward the lump sum; a long life in good health tilts toward the checks. Calculator 2 prices the
+                second fork: single-life pays the most and stops at death (a guarantee period of five or ten
+                years, if offered, softens that at a lower rate); joint-and-survivor insures the spouse for
+                their lifetime at a reduced amount, continuing after the first death at the chosen <strong>survivor
+                benefit ratio</strong> — commonly 50%, 66%, 75%, or 100% (so a $1,000 joint pension at a 50% ratio
+                becomes $500 for the survivor). In calculator 2 the joint amount you enter is treated as
+                continuing in full; if your plan applies a survivor ratio, enter the amount your spouse would
+                actually receive after your death to model the later years precisely, or weigh the difference
+                qualitatively.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The COLA footnote</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                A cost-of-living adjustment keeps payouts' buying power intact as prices rise. It's standard in
+                Social Security and common in public pensions; most private pensions have none (an overfunded
+                plan — assets above obligations — may afford one if beneficiaries press for it; an underfunded
+                plan usually cannot). All three calculators accept your plan's actual COLA; enter 0 if it has
+                none, which is the honest default for much of the private sector.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Why compare in present value instead of total dollars?</h4>
+                    <p class="text-gray-700">Because a dollar at 65 is worth more than a dollar at 90. Totals systematically flatter whichever option pays latest — joint pensions and delayed retirement almost always "win" on totals while sometimes losing in present value. Both figures are shown; the verdict follows present value, discounted at your investment return.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Can I change my mind after choosing?</h4>
+                    <p class="text-gray-700">Almost never — payout elections are typically irrevocable once payments begin, which is exactly why these comparisons are worth doing slowly, with your plan's real figures, before you sign.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: These calculators provide estimates for educational purposes only and do not constitute financial
+                advice. Comparisons discount monthly payments (assumed end-of-month) at the stated investment return using an
+                effective monthly rate; pension payments grow once a year by the COLA. Calculator 2 treats the joint amount
+                as continuing unchanged to the survivor. Real plans differ in guarantees, ratios, and tax treatment.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="401k.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">401(k) Calculator</h3>
+                <p class="text-sm text-gray-600">The defined-contribution counterpart.</p>
+            </a>
+            <a href="retirement.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Retirement Calculator</h3>
+                <p class="text-sm text-gray-600">Place the pension inside the full plan.</p>
+            </a>
+            <a href="present-value.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Present Value Calculator</h3>
+                <p class="text-sm text-gray-600">The discounting engine behind commuted value.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculatePension() {
-            const salary = parseFloat(document.getElementById('penSalary').value);
-            const years = parseFloat(document.getElementById('penYears').value);
-            const accrual = parseFloat(document.getElementById('penAccrual').value) / 100;
-            const retireYears = parseFloat(document.getElementById('penRetireYears').value);
+        window.addEventListener('DOMContentLoaded', () => { prefillFromURL(); calculateLump(); calculateJoint(); calculateWork(); });
 
-            if (isNaN(salary) || isNaN(years) || isNaN(accrual) || isNaN(retireYears) || salary <= 0) {
-                alert("Please enter valid numbers.");
-                return;
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? NaN : v; }
+
+        // PV and total of a monthly stream; payments grow by cola once a year; discounted at effective monthly rate from r.
+        function stream(monthly, cola, r, delayMonths, months) {
+            const im = Math.pow(1 + r, 1 / 12) - 1;
+            let pv = 0, total = 0;
+            for (let m = 0; m < months; m++) {
+                const pay = monthly * Math.pow(1 + cola, Math.floor(m / 12));
+                pv += pay / Math.pow(1 + im, delayMonths + m + 1);
+                total += pay;
             }
-
-            // Annual Pension = Final Salary * Years of Service * Accrual Rate
-            const annualPension = salary * years * accrual;
-            const monthlyPension = annualPension / 12;
-            const totalPayout = annualPension * retireYears;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('penAnnual').textContent = formatter.format(annualPension);
-            document.getElementById('penMonthly').textContent = formatter.format(monthlyPension);
-            document.getElementById('penTotal').textContent = formatter.format(totalPayout);
-
-            document.getElementById('penResults').classList.remove('hidden');
+            return { pv, total };
         }
+
+        function calculateLump() {
+            const out = document.getElementById('resultsLump');
+            const retAge = num('aRetAge'), lump = num('aLump'), monthly = num('aMonthly');
+            const r = (num('aRet') || 0) / 100, cola = (num('aCola') || 0) / 100;
+            if (!(lump > 0) || !(monthly > 0) || !(retAge > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a lump sum, a monthly pension, and a retirement age.</div>'; return; }
+            const im = Math.pow(1 + r, 1 / 12) - 1;
+            let bal = lump, months = 0, lastPay = 0;
+            while (bal > 0 && months < 1200) {
+                const pay = monthly * Math.pow(1 + cola, Math.floor(months / 12));
+                const grown = bal * (1 + im);
+                if (grown >= pay) { bal = grown - pay; months++; } else { lastPay = grown; months++; bal = 0; }
+            }
+            const never = bal > 0;
+            const yrs = months / 12;
+            const breakAge = retAge + yrs;
+            const horizons = [15, 20, 25, 30].map(h => {
+                const s = stream(monthly, cola, r, 0, h * 12);
+                return `<p class="flex justify-between mb-2"><span>Pension value if you live to ${retAge + h}:</span> <span class="font-bold">${formatMoney(s.pv)}</span></p>`;
+            }).join('');
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Break-Even</p>
+                    <p class="text-4xl font-bold">${never ? 'Lump sum never runs out' : 'Age ' + breakAge.toFixed(1)}</p>
+                    <p class="text-sm opacity-90 mt-1">${never ? 'At this return the lump sum pays the pension income indefinitely.' : `Invested at your return, the lump sum pays the pension's income for ${months} months (${yrs.toFixed(2)} years). Live longer than that and the monthly pension wins; shorter, and the lump sum leaves more.`}</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Lump sum:</span> <span class="font-bold">${formatMoney(lump)}</span></p>
+                    ${horizons}
+                    <p class="text-gray-600 mt-2">Compare each horizon's pension value with the lump sum: above ${formatMoney(lump)}, the pension is worth more by that age.</p>
+                </div>`;
+            updateURL();
+        }
+
+        function calculateJoint() {
+            const out = document.getElementById('resultsJoint');
+            const retAge = num('bRetAge'), life = num('bLife'), spAge = num('bSpAge'), spLife = num('bSpLife');
+            const single = num('bSingle'), joint = num('bJoint');
+            const r = (num('bRet') || 0) / 100, cola = (num('bCola') || 0) / 100;
+            const yourYears = life - retAge, spYears = spLife - spAge;
+            if (!(yourYears > 0) || !(spYears > 0) || !(single > 0) || !(joint > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please check the ages, life expectancies, and pension amounts.</div>'; return; }
+            const s = stream(single, cola, r, 0, Math.round(yourYears * 12));
+            const jMonths = Math.round(Math.max(yourYears, spYears) * 12);
+            const j = stream(joint, cola, r, 0, jMonths);
+            let breakExtra = null;
+            for (let extra = 0; extra <= 50; extra++) {
+                const jj = stream(joint, cola, r, 0, Math.round((yourYears + extra) * 12));
+                if (jj.pv >= s.pv) { breakExtra = extra; break; }
+            }
+            const spOutlives = Math.max(spYears - yourYears, 0);
+            const winner = j.pv >= s.pv;
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">In Present Value</p>
+                    <p class="text-4xl font-bold">${winner ? 'Joint-and-Survivor Wins' : 'Single-Life Wins'}</p>
+                    <p class="text-sm opacity-90 mt-1">by ${formatMoney(Math.abs(j.pv - s.pv))} under the life expectancies entered</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Single-life (${yourYears} years of payments):</span> <span class="font-bold">PV ${formatMoney(s.pv)} · total ${formatMoney(s.total)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Joint-and-survivor (${(jMonths / 12).toFixed(1)} years, until the second death):</span> <span class="font-bold">PV ${formatMoney(j.pv)} · total ${formatMoney(j.total)}</span></p>
+                    <p class="flex justify-between"><span>Spouse outlives you by (per the ages entered):</span> <span class="font-bold">${spOutlives.toFixed(1)} years</span></p>
+                    ${breakExtra !== null ? `<p class="text-gray-700 mt-2">Break-even: the joint option pulls ahead in present value if your spouse lives at least <strong>${breakExtra} year(s)</strong> beyond you. Totals favor joint sooner — its checks run longer — but those late dollars are worth less today.</p>` : '<p class="text-gray-700 mt-2">The joint option does not catch up in present value even if your spouse outlives you by 50 years.</p>'}
+                </div>`;
+            updateURL();
+        }
+
+        function calculateWork() {
+            const out = document.getElementById('resultsWork');
+            const age1 = num('cAge1'), amt1 = num('cAmt1'), age2 = num('cAge2'), amt2 = num('cAmt2');
+            const r = (num('cRet') || 0) / 100, cola = (num('cCola') || 0) / 100;
+            if (!(age2 > age1) || !(amt1 > 0) || !(amt2 > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Option 2 must start later than option 1, with positive pension amounts.</div>'; return; }
+            const im = Math.pow(1 + r, 1 / 12) - 1;
+            const delay = Math.round((age2 - age1) * 12);
+            let pv1 = 0, pv2 = 0, cross = null;
+            for (let m = 0; m < 60 * 12; m++) {
+                pv1 += amt1 * Math.pow(1 + cola, Math.floor(m / 12)) / Math.pow(1 + im, m + 1);
+                if (m >= delay) pv2 += amt2 * Math.pow(1 + cola, Math.floor((m - delay) / 12)) / Math.pow(1 + im, m + 1);
+                if (cross === null && m >= delay && pv2 >= pv1) cross = age1 + (m + 1) / 12;
+            }
+            const horizons = [80, 85, 90, 95].filter(A => A > age2).map(A => {
+                const a = stream(amt1, cola, r, 0, Math.round((A - age1) * 12));
+                const b = stream(amt2, cola, r, delay, Math.round((A - age2) * 12));
+                return `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${A}</td><td class="py-1.5 px-2 text-right">${formatMoney(a.pv)}</td><td class="py-1.5 px-2 text-right">${formatMoney(b.pv)}</td><td class="py-1.5 px-2 text-right font-semibold">${b.pv >= a.pv ? 'Option 2' : 'Option 1'}</td></tr>`;
+            }).join('');
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Working Longer Pays Off If You Live Past</p>
+                    <p class="text-4xl font-bold">${cross !== null ? 'Age ' + cross.toFixed(1) : 'Never (within 60 years)'}</p>
+                    <p class="text-sm opacity-90 mt-1">cumulative present value of option 2 overtakes option 1 at that age</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Present Value of All Payments Received by Age (discounted to age ${age1})</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700"><tr><th class="py-2 px-2 border-b">Live to</th><th class="py-2 px-2 border-b text-right">Option 1 (retire ${age1})</th><th class="py-2 px-2 border-b text-right">Option 2 (retire ${age2})</th><th class="py-2 px-2 border-b text-right">Ahead</th></tr></thead>
+                            <tbody>${horizons}</tbody>
+                        </table>
+                    </div>
+                    <p class="text-gray-600 mt-2 text-sm">Option 2 also means ${age2 - age1} more years of salary and ${age2 - age1} fewer years of retirement — value those years honestly alongside the money.</p>
+                </div>`;
+            updateURL();
+        }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            ['aRetAge','aLump','aRet','aMonthly','aCola','bRetAge','bLife','bSpAge','bSpLife','bSingle','bJoint','bRet','bCola','cAge1','cAmt1','cAge2','cAmt2','cRet','cCola'].forEach(id => p.set(id, document.getElementById(id).value));
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            [...q.keys()].forEach(k => { const el = document.getElementById(k); if (el) el.value = q.get(k); });
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
