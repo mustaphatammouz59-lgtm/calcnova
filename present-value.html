@@ -4,103 +4,376 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Present Value Calculator - CalcNova</title>
+    <meta name="description" content="Find the present value of a future amount or of a stream of periodic deposits (annuity) — with FV, total interest, and the full accumulation schedule.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/present-value">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Present Value Calculator - CalcNova">
+    <meta property="og:description" content="What a future sum or a stream of payments is worth today.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/present-value">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Present Value Calculator - CalcNova">
+    <meta name="twitter:description" content="Present value of a lump sum or an annuity, with schedule.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Present Value Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/present-value" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is present value?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The value today of a sum of money that will exist at a future date, found by discounting it at a given rate: PV = FV / (1 + r)^N. $1,000 due in 10 years at 6% is worth $558.39 today, because $558.39 invested at 6% grows into exactly $1,000." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is the difference between PV and NPV?",
+                "acceptedAnswer": { "@type": "Answer", "text": "PV values a single sum or stream. NPV (net present value) nets ALL of a project's inflows and outflows in present-value terms — including the initial cost — so a positive NPV means the project returns more than the discount rate. NPV is the workhorse of capital budgeting; PV is the building block inside it." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why does the number of periods change the answer so much?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Because discounting compounds just as growth does. Each additional period divides by another (1 + r). At 6%, money 10 years out keeps 55.8 cents of value per dollar; at 30 years, only 17.4 cents. Time is the exponent, so it dominates the rate in the long run." }
+            },
+            {
+                "@type": "Question",
+                "name": "Beginning vs end of period — which should I choose?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Match the real payment timing. Rent, leases, and insurance premiums are paid at the beginning (an annuity due, worth more); loan payments and most bond coupons land at the end (an ordinary annuity). Beginning-mode payments each earn one extra period of interest, so their PV and FV are exactly (1 + r) times the end-mode values." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .formula { text-align: center; font-size: 1.05rem; font-weight: 600; color: #1F2937; background: #F3F4F6; border-radius: 0.5rem; padding: 0.75rem; margin: 0.75rem 0; }
+        canvas.donut { max-width: 220px; width: 100%; height: auto; display: block; margin: 0 auto; }
+        @media print { nav, footer, .no-print, .calc-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Present Value</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Present Value Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Present Value Calculator</h1>
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-2">
+            <h1 class="text-2xl font-bold text-[#3F51B5]">Present Value Calculator</h1>
+            <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">Print</button>
+        </div>
+        <p class="text-gray-600 text-sm mb-8 max-w-3xl">What is future money worth today? Discount a single future amount, or a stream of periodic deposits, back to the present — the mirror image of compounding.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Future Value ($)</label>
-                        <input type="number" id="pvFuture" value="20000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">1 · Present Value of Future Money</h2>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group">
+                        <label>Future Value (FV)</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="fFV" value="1000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
-                        <input type="number" id="pvRate" value="5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="input-group">
+                        <label>Number of Periods (N)</label>
+                        <input type="number" id="fN" value="10" class="w-[58%]">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Time (Years)</label>
-                        <input type="number" id="pvYears" value="10" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="input-group">
+                        <label>Interest Rate (I/Y)</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="fRate" value="6" step="any" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
                     </div>
+                    <button onclick="calculateFuture()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-3">Calculate</button>
                 </div>
-                <button onclick="calculatePV()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Present Value</button>
-
-                <div id="pvResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
-                    <p class="text-sm text-gray-500">Present Value (What it is worth today)</p>
-                    <p class="text-4xl font-bold text-[#14B8A6]" id="pvAmount">$0</p>
-                    <p class="text-sm text-gray-500 mt-2">Total Interest Difference</p>
-                    <p class="text-xl font-bold text-[#3F51B5]" id="pvDifference">$0</p>
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden lg:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is Present Value?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Present Value (PV) is the current value of a future sum of money or stream of cash flows given a specified rate of return. Future cash flows are discounted at the discount rate, and the higher the discount rate, the lower the present value of the future cash flows. It answers the question: "Would you rather have $10,000 today or $15,000 in 5 years?"</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="lg:w-3/5">
+                <div id="resultsFuture"></div>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+        <hr class="my-10 border-gray-200">
+
+        <h2 class="text-xl font-bold text-gray-800 mb-4">2 · Present Value of Periodical Deposits</h2>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group">
+                        <label>Number of Periods (N)</label>
+                        <input type="number" id="aN" value="10" class="w-[58%]">
+                    </div>
+                    <div class="input-group">
+                        <label>Interest Rate (I/Y)</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="aRate" value="6" step="any" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Periodic Deposit (PMT)</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="aPMT" value="100" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>PMT Timing</label>
+                        <div class="w-[58%] flex gap-1">
+                            <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="aWhen" value="end" checked class="mr-1"> End</label>
+                            <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="aWhen" value="beginning" class="mr-1"> Beginning</label>
+                        </div>
+                    </div>
+                    <p class="text-gray-500 text-xs">PMT made at the chosen point of each compound period.</p>
+                    <button onclick="calculateAnnuity()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-3">Calculate</button>
+                </div>
             </div>
-        </aside>
+            <div class="lg:w-3/5">
+                <div id="resultsAnnuity"></div>
+            </div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Present Value, Net Present Value, and the Time Value of Money</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Present value (PV)</strong> is the worth, in today's dollars, of a sum that will exist later — the
+                difference between the two figures being the interest that sum would earn, compounded, in the
+                meantime. The operation is division where compounding was multiplication:
+            </p>
+            <div class="formula">PV = FV ÷ (1 + r)<sup>N</sup> &nbsp;·&nbsp; $1,000 ÷ 1.06<sup>10</sup> = $558.39</div>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <p class="text-gray-700 leading-7 mb-4">
+                For a stream of equal deposits the same discounting is applied payment by payment and summed:
+                PV = PMT × [1 − (1 + r)<sup>−N</sup>] ÷ r — $736.01 for ten deposits of $100 at 6%. Those deposits grow to
+                $1,318.08, and notice the cast of characters: the future value is mostly principal ($1,000, 76%) with
+                $318.08 of interest — while the present value is smaller than the principal alone, because even the
+                deposits themselves are future money being discounted.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">PV vs NPV</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Keep PV distinct from its famous relative. <strong>Net present value</strong> combines <em>all</em> of a project's
+                inflows and outflows — the purchase price, the running costs, the salvage — each discounted, into
+                one net figure; "net" is doing the same work it does in net income. PV values a sum or a stream;
+                NPV renders a verdict on a whole undertaking, and it anchors practical work from capital
+                expenditure appraisals to depreciation schedules. A positive NPV means the undertaking beats the
+                discount rate; negative, it falls short of it.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Why PV runs finance</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                PV is one of the five keys of the <strong>time value of money</strong> (PV, FV, I/Y, N, PMT) — the backbone of
+                finance. There could be no mortgages, auto loans, or credit cards without it: every loan is just a
+                present value (the amount advanced today) exchanged for a stream of future payments, priced so the
+                two sides are worth the same. Choosing the discount rate <em>is</em> choosing the price of time — which
+                is why a single percentage point, compounded over decades, moves valuations more than almost any
+                forecast of the cash flows themselves. To run the film forward instead, use the Future Value
+                Calculator; for the full five-key machine, the Finance Calculator.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Can present value exceed future value?</h4>
+                    <p class="text-gray-700">Only with a negative interest rate — which has genuinely occurred for some government bonds. At any positive rate, PV is always the smaller number; the gap between them is exactly the interest.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What's a sensible discount rate for personal decisions?</h4>
+                    <p class="text-gray-700">Your opportunity cost: the return you'd expect from the realistic alternative use of the money — a savings yield for safety-first comparisons, a long-run portfolio return for investment choices, or the interest rate on debt you could pay off instead (a guaranteed return).</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial advice.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="finance.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Finance Calculator</h3>
+                <p class="text-sm text-gray-600">All five TVM keys in one machine.</p>
+            </a>
+            <a href="investment.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Investment Calculator</h3>
+                <p class="text-sm text-gray-600">Solve for any piece of a growing investment.</p>
+            </a>
+            <a href="payback-period.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Payback Period Calculator</h3>
+                <p class="text-sm text-gray-600">Discounted payback uses these same PV mechanics.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculatePV() {
-            const futureValue = parseFloat(document.getElementById('pvFuture').value);
-            const rate = parseFloat(document.getElementById('pvRate').value) / 100;
-            const years = parseFloat(document.getElementById('pvYears').value);
+        window.addEventListener('DOMContentLoaded', () => { prefillFromURL(); calculateFuture(); calculateAnnuity(); });
 
-            if (isNaN(futureValue) || isNaN(rate) || isNaN(years) || futureValue <= 0 || years <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? NaN : v; }
 
-            // Present Value Formula: PV = FV / (1 + r)^t
-            const presentValue = futureValue / Math.pow(1 + rate, years);
-            const difference = futureValue - presentValue;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('pvAmount').textContent = formatter.format(presentValue);
-            document.getElementById('pvDifference').textContent = formatter.format(difference);
-
-            document.getElementById('pvResults').classList.remove('hidden');
+        function calculateFuture() {
+            const out = document.getElementById('resultsFuture');
+            const FV = num('fFV'), N = num('fN'), rPct = num('fRate');
+            if (isNaN(FV) || !(N >= 0) || isNaN(rPct)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a future value, a number of periods, and an interest rate.</div>'; return; }
+            const r = rPct / 100;
+            const PV = FV / Math.pow(1 + r, N);
+            const interest = FV - PV;
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Present Value</p>
+                    <p class="text-4xl font-bold">${formatMoney(PV)}</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Future Value:</span> <span class="font-bold">${formatMoney(FV)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total Interest (the discount):</span> <span class="font-bold">${formatMoney(interest)}</span></p>
+                    <p class="flex justify-between"><span>Value kept per $1:</span> <span class="font-bold">${N === 0 || FV === 0 ? '—' : (PV / FV * 100).toFixed(1) + '%'}</span></p>
+                </div>`;
+            updateURL();
         }
+
+        function calculateAnnuity() {
+            const out = document.getElementById('resultsAnnuity');
+            const N = Math.round(num('aN')), rPct = num('aRate'), PMT = num('aPMT');
+            const when = document.querySelector('input[name="aWhen"]:checked').value;
+            if (!(N > 0) || isNaN(rPct) || isNaN(PMT)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter periods, a rate, and a periodic deposit.</div>'; return; }
+            const r = rPct / 100;
+            let PV, FV;
+            if (r === 0) { PV = PMT * N; FV = PMT * N; }
+            else {
+                const f = Math.pow(1 + r, N);
+                FV = PMT * (f - 1) / r * (when === 'beginning' ? (1 + r) : 1);
+                PV = PMT * (1 - 1 / f) / r * (when === 'beginning' ? (1 + r) : 1);
+            }
+            const principal = PMT * N;
+            const interest = FV - principal;
+            let bal = 0, cumDep = 0, rows = '';
+            for (let t = 1; t <= N; t++) {
+                let intr;
+                if (when === 'beginning') { bal += PMT; cumDep += PMT; intr = bal * r; bal += intr; }
+                else { intr = bal * r; bal += intr + PMT; cumDep += PMT; }
+                rows += `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${t}</td><td class="py-1.5 px-2 text-right">${formatMoney(cumDep)}</td><td class="py-1.5 px-2 text-right">${formatMoney(intr)}</td><td class="py-1.5 px-2 text-right">${formatMoney(bal)}</td></tr>`;
+            }
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Present Value</p>
+                    <p class="text-4xl font-bold">${formatMoney(PV)}</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <div class="text-sm">
+                        <p class="flex justify-between mb-2"><span>FV (Future Value):</span> <span class="font-bold">${formatMoney(FV)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Total Principal:</span> <span class="font-bold">${formatMoney(principal)}</span></p>
+                        <p class="flex justify-between"><span>Total Interest:</span> <span class="font-bold">${formatMoney(interest)}</span></p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mt-4 items-center">
+                        <canvas id="pvDonut" class="donut" width="220" height="220" role="img" aria-label="Principal versus interest chart"></canvas>
+                        <div class="text-sm space-y-2" id="pvLegend"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Accumulation Schedule</h3>
+                    <div class="overflow-x-auto" style="max-height:22rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">Period</th><th class="py-2 px-2 border-b text-right">Deposits (cum.)</th><th class="py-2 px-2 border-b text-right">Interest</th><th class="py-2 px-2 border-b text-right">End Balance</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>
+                </div>`;
+            drawDonut('pvDonut', [
+                { label: 'Principal', value: principal, color: '#2b7ddb' },
+                { label: 'Interest', value: Math.max(interest, 0), color: '#8bbc21' }
+            ], 'pvLegend');
+            updateURL();
+        }
+
+        function drawDonut(id, parts, legendId) {
+            const cv = document.getElementById(id); if (!cv) return;
+            const ctx = cv.getContext('2d');
+            const total = parts.reduce((s, p) => s + p.value, 0) || 1;
+            const cx = 110, cy = 110, R = 100, rIn = 58;
+            ctx.clearRect(0, 0, 220, 220);
+            let ang = -Math.PI / 2;
+            parts.forEach(p => {
+                const sweep = p.value / total * Math.PI * 2;
+                ctx.beginPath(); ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, R, ang, ang + sweep); ctx.closePath();
+                ctx.fillStyle = p.color; ctx.fill();
+                ang += sweep;
+            });
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath(); ctx.arc(cx, cy, rIn, 0, Math.PI * 2); ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(cx, cy, rIn - 1, 0, Math.PI * 2); ctx.fill();
+            document.getElementById(legendId).innerHTML = parts.map(p => `
+                <p class="flex items-center"><span class="inline-block w-3.5 h-3.5 rounded-sm mr-2" style="background:${p.color}"></span>${p.label}: <strong class="ml-1">${formatMoney(p.value)} (${(p.value / total * 100).toFixed(0)}%)</strong></p>`).join('');
+        }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            p.set('fv', document.getElementById('fFV').value);
+            p.set('fn', document.getElementById('fN').value);
+            p.set('fr', document.getElementById('fRate').value);
+            p.set('an', document.getElementById('aN').value);
+            p.set('ar', document.getElementById('aRate').value);
+            p.set('ap', document.getElementById('aPMT').value);
+            p.set('aw', document.querySelector('input[name="aWhen"]:checked').value);
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            const set = (id, key) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); };
+            set('fFV', 'fv'); set('fN', 'fn'); set('fRate', 'fr');
+            set('aN', 'an'); set('aRate', 'ar'); set('aPMT', 'ap');
+            if (q.get('aw')) { const el = document.querySelector(`input[name="aWhen"][value="${q.get('aw')}"]`); if (el) el.checked = true; }
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
