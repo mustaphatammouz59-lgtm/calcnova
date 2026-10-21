@@ -4,133 +4,476 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Annuity Payout Calculator - CalcNova</title>
+    <meta name="description" content="Find the annuity payout amount for a fixed payout length, or how long a fund lasts at a fixed payment — six payout frequencies, balance chart and yearly schedule.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/annuity-payout">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Annuity Payout Calculator - CalcNova">
+    <meta property="og:description" content="The payout phase, both directions: name the years and get the payment, or name the payment and get the years.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/annuity-payout">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Annuity Payout Calculator - CalcNova">
+    <meta name="twitter:description" content="Fixed-length and fixed-payment annuity payouts with balance chart and schedule.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Annuity Payout Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/annuity-payout" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How is the annuity payout amount calculated?",
+                "acceptedAnswer": { "@type": "Answer", "text": "With the amortization formula PMT = P × i ÷ (1 − (1 + i)^−n), where i is the effective rate per payout period, (1 + annual rate)^(1/f) − 1 for f payouts a year. A $500,000 annuity at 6% paid monthly over 10 years (120 payments) yields $5,511.20 a month, $661,344.16 in total, of which $161,344.16 is interest." }
+            },
+            {
+                "@type": "Question",
+                "name": "How long will a fixed payment last?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Until the balance, growing at the periodic rate and shrinking by each payment, reaches zero. On a $500,000 annuity at 6%, a $5,000 monthly payment lasts 138 payments — 11 years 6 months — with a smaller final payment of $1,820.63, paying out $686,820.63 in total." }
+            },
+            {
+                "@type": "Question",
+                "name": "What if my payment is smaller than the interest?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The fund never runs out — it is a perpetuity. The threshold is the first period's interest: on $500,000 at 6% paid monthly, any payment of $2,433.78 or less only skims interest (or less) and leaves the principal untouched forever." }
+            },
+            {
+                "@type": "Question",
+                "name": "How are annuity payouts taxed?",
+                "acceptedAnswer": { "@type": "Answer", "text": "A qualified annuity (inside an IRA or 401(k)) is taxed in full as ordinary income when paid out. In a non-qualified annuity only the earnings are taxable; withdrawals are treated as earnings-first (LIFO) for contracts bought after August 13, 1982, and amounts taken before age 59½ generally also face a 10% IRS penalty on the earnings." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .formula { text-align: center; font-size: 1.05rem; font-weight: 600; color: #1F2937; background: #F3F4F6; border-radius: 0.5rem; padding: 0.75rem; margin: 0.75rem 0; }
+        canvas.donut { max-width: 220px; width: 100%; height: auto; display: block; margin: 0 auto; }
+        canvas.chart { width: 100%; height: auto; display: block; }
+        @media print { nav, footer, .no-print, .calc-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Annuity Payout</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Annuity Payout Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Annuity Payout Calculator</h1>
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-2">
+            <h1 class="text-2xl font-bold text-[#3F51B5]">Annuity Payout Calculator</h1>
+            <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">Print</button>
+        </div>
+        <p class="text-gray-600 text-sm mb-8 max-w-3xl">Estimate the payout amount for a <strong>fixed payout length</strong>, or the length a fund can last at a <strong>fixed payment amount</strong>. For the accumulation phase that builds the balance up, use the Annuity Calculator.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Total Annuity Balance ($)</label>
-                        <input type="number" id="apBalance" value="250000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group">
+                        <label>Mode</label>
+                        <div class="w-[58%] flex gap-1">
+                            <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="pMode" value="length" checked class="mr-1" onchange="toggleMode()"> Fix Length</label>
+                            <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="pMode" value="payment" class="mr-1" onchange="toggleMode()"> Fix Payment</label>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
-                        <input type="number" id="apRate" value="5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="input-group">
+                        <label>Starting Principal</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="pPrincipal" value="500000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Payout Period (Years)</label>
-                        <input type="number" id="apYears" value="20" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="input-group">
+                        <label>Interest / Return Rate</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="pRate" value="6" step="any" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Payment Frequency</label>
-                        <select id="apFreq" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="12" selected>Monthly</option>
-                            <option value="4">Quarterly</option>
+                    <div class="input-group" id="rowYears">
+                        <label>Years to Payout</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="pYears" value="10" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
+                        </div>
+                    </div>
+                    <div class="input-group" id="rowAmount" style="display:none;">
+                        <label>Payout Amount</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="pAmount" value="5000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Payout Frequency</label>
+                        <select id="pFreq" class="w-[58%]">
                             <option value="1">Annually</option>
+                            <option value="2">Semiannually</option>
+                            <option value="4">Quarterly</option>
+                            <option value="12" selected>Monthly</option>
+                            <option value="24">Semimonthly</option>
+                            <option value="26">Biweekly</option>
                         </select>
                     </div>
+                    <button onclick="calculate()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-3">Calculate</button>
                 </div>
-                <button onclick="calculateAnnuityPayout()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Payout Amount</button>
-
-                <div id="apResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Payment per Period</p>
-                            <p class="text-3xl font-bold text-[#14B8A6]" id="apPayment">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Payout over Term</p>
-                            <p class="text-xl font-bold text-gray-800" id="apTotalPayout">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Earned</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="apTotalInterest">$0</p>
-                        </div>
-                    </div>
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden lg:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Understanding Annuity Payouts</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">When you convert a lump sum of money into an annuity, the insurance company or financial institution calculates how much they can pay you regularly so that the balance reaches exactly zero at the end of your chosen payout period. This calculation uses the Present Value of an Annuity formula.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="lg:w-3/5">
+                <div id="results"></div>
             </div>
         </div>
-
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">The Payout Phase, From Both Directions</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                An annuity lives in three acts: accumulation, the one-way door of annuitization, and payout. This calculator
+                works the third act, and it works it in both directions. <strong>Fix Length</strong> asks: given the balance, the return,
+                and a chosen number of years, what payment exactly empties the fund on schedule? <strong>Fix Payment</strong> asks the
+                mirror question: given the payment you want, how long before the fund is gone? The two questions share one
+                engine — the balance earns the periodic rate, then pays — run forward until it hits zero or the term ends.
+            </p>
+            <div class="formula">PMT = P × i ÷ (1 − (1 + i)<sup>−n</sup>) &nbsp;·&nbsp; defaults: $5,511.20 a month for 10 years</div>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <p class="text-gray-700 leading-7 mb-4">
+                One technical choice shapes every figure on this page: the rate per period is the <em>effective</em> rate,
+                (1 + annual rate)<sup>1/f</sup> − 1, so a 6% year paid monthly is 0.4868% a month — not the 0.5% you would get by
+                simply dividing. Twelve effective months compound back to exactly 6%; twelve nominal halves overshoot to
+                6.17%, and would pay $5,551.03 instead of $5,511.20 on the defaults. The balance chart tells the second story:
+                early payments are mostly interest (year 1 earns $28,200.44 while the balance falls by only $37,933.98), late
+                payments are mostly principal, and the interest line flattens as the balance it feeds on shrinks.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The two risks, one per tab</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Fixed length and fixed payment fail in opposite directions, and choosing between them means choosing which
+                failure you fear. Stretch a fixed length too long and the payment may be too small to live on; pick one too
+                short and the income stops while you are still very much alive — though with period-certain payouts, at least
+                any balance left at death passes to your heirs. Fix the payment too high and the same outliving risk returns
+                in disguise; fix it too low and you may die with a large balance unspent. There is also a floor worth knowing:
+                a payment that does not exceed the interest never touches principal at all. On the defaults that threshold is
+                <strong>$2,433.78 a month</strong> — at or below it, the $500,000 lasts literally forever.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Payout options this calculator does not model</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Real contracts offer more than the two fixed options above. A <strong>life-only</strong> payout pays until death, sized by
+                life expectancy — die early and the remaining value stays with the insurer; outlive the table and you come
+                out ahead. <strong>Joint and survivor</strong> extends the payments over two lives for a smaller amount, and <strong>life with
+                period certain</strong> bolts a guaranteed minimum term onto a life payout for a designated beneficiary. At the
+                other extreme, a <strong>lump sum</strong> withdraws everything at once — no penalty after 59½, but the whole earnings
+                portion lands in one tax year, which is rarely the tax-smart move. Every one of these choices, once annuitized,
+                is irrevocable, which is precisely why the arithmetic above deserves a careful hour before the signature.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Qualified vs. non-qualified</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                A <strong>qualified</strong> annuity sits inside a tax-advantaged plan — an IRA, 401(k), 403(b), SEP or similar — and was
+                bought with pre-tax money: contributions may have lowered taxable income going in, and every dollar paid out
+                is taxed as ordinary income. A <strong>non-qualified</strong> annuity is bought with after-tax dollars, so only its earnings
+                are taxed, and it carries no required minimum distributions and no contribution limit. Annuity-specific
+                features, such as a guaranteed death benefit that pays beneficiaries regardless of market falls, can ride
+                along inside either wrapper.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Taxes, penalties and the escape hatches</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Earnings are never taxed while they accumulate — only when money comes out. For a non-qualified contract bought
+                after August 13, 1982, withdrawals are taxed <em>earnings-first</em> (LIFO): every withdrawal is fully taxable income
+                until the earnings are exhausted and only principal remains. Anything taken before age 59½ generally adds a
+                10% IRS early-withdrawal penalty on the earnings. Contracts soften this with free-withdrawal provisions (a
+                slice of the value each year without surrender charges) and hardship exceptions — disability, terminal
+                illness, major medical emergencies, and in some contracts long-term care — but the default assumption should
+                be that annuity money is locked until retirement age.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Moving contracts: 1035 exchanges</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                A stale contract is not a life sentence. Under Internal Revenue Code §1035, an annuity can be exchanged for
+                another annuity (or one with long-term care benefits) tax-free, and life insurance or endowment contracts can
+                be exchanged into annuities as well — though never the reverse. Partial exchanges are allowed too, with the
+                basis split pro-rata: half of a $50,000 contract with a $40,000 basis becomes a second contract worth $25,000
+                with a $20,000 basis, which turns a later $10,000 withdrawal from fully taxable into only $5,000 taxable. The
+                catch: take no distributions from either contract for 180 days after a partial exchange, or the IRS may unwind
+                the treatment. The owner, insured and annuitant must be the same people on both contracts, and despite the
+                tax code allowing partial exchanges, not every insurer offers them.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Does the payout frequency change the total interest?</h4>
+                    <p class="text-gray-700">Yes, modestly. More frequent payments drain the balance sooner, so less interest accrues: on the defaults the 10-year total is $679,339.79 paid annually, $664,568.51 quarterly, $661,344.16 monthly and $660,479.63 biweekly — the same principal leaving by different doors.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What happens to money left over in a fixed-length payout?</h4>
+                    <p class="text-gray-700">A fixed-length (period certain) payout is not life-contingent: if the annuitant dies before the term ends, the remaining payments or balance pass to their beneficiaries or heirs. That is the structural difference from a life-only payout, where the insurer keeps what is left.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial or tax advice. Annuity contracts vary; guarantees depend on the issuing insurer's claims-paying ability.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="annuity.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Annuity Calculator</h3>
+                <p class="text-sm text-gray-600">The accumulation phase: build the balance this page pays out.</p>
+            </a>
+            <a href="retirement.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Retirement Calculator</h3>
+                <p class="text-sm text-gray-600">How long a whole retirement fund lasts, withdrawals included.</p>
+            </a>
+            <a href="present-value.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Present Value Calculator</h3>
+                <p class="text-sm text-gray-600">What a stream of fixed payments is worth as one sum today.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateAnnuityPayout() {
-            const balance = parseFloat(document.getElementById('apBalance').value);
-            const annualRate = parseFloat(document.getElementById('apRate').value) / 100;
-            const years = parseFloat(document.getElementById('apYears').value);
-            const freq = parseInt(document.getElementById('apFreq').value);
+        window.addEventListener('DOMContentLoaded', () => { prefillFromURL(); toggleMode(); calculate(); });
 
-            if (isNaN(balance) || isNaN(annualRate) || isNaN(years) || isNaN(freq) || balance <= 0 || years <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? NaN : v; }
+
+        const FREQ = {
+            1: { name: 'Annually', adverb: 'annually', unit: 'year', units: 'years' },
+            2: { name: 'Semiannually', adverb: 'semiannually', unit: 'half-year', units: 'half-years' },
+            4: { name: 'Quarterly', adverb: 'quarterly', unit: 'quarter', units: 'quarters' },
+            12: { name: 'Monthly', adverb: 'monthly', unit: 'month', units: 'months' },
+            24: { name: 'Semimonthly', adverb: 'semimonthly', unit: 'half-month', units: 'half-months' },
+            26: { name: 'Biweekly', adverb: 'biweekly', unit: 'two-week period', units: 'two-week periods' }
+        };
+
+        function payoutSim(P, rPct, f, pmt, maxPeriods) {
+            const i = Math.pow(1 + rPct / 100, 1 / f) - 1;
+            let bal = P, totalPaid = 0, totalInt = 0, count = 0, lastPay = 0;
+            const years = [{ y: 0, beg: P, pay: 0, intr: 0, end: P, cumInt: 0 }];
+            let cur = null;
+            while (bal > 1e-9 && count < maxPeriods) {
+                const intr = bal * i;
+                const pay = Math.min(pmt, bal + intr);
+                const yIdx = Math.floor(count / f) + 1;
+                if (!cur || cur.y !== yIdx) { cur = { y: yIdx, beg: bal, pay: 0, intr: 0, end: bal, cumInt: 0 }; years.push(cur); }
+                bal = bal + intr - pay;
+                cur.pay += pay; cur.intr += intr; cur.end = bal;
+                totalPaid += pay; totalInt += intr; lastPay = pay; count++;
+                cur.cumInt = totalInt;
             }
-
-            const periods = years * freq;
-            const ratePerPeriod = annualRate / freq;
-
-            // Payment Formula for an Ordinary Annuity: PMT = PV * [r / (1 - (1 + r)^-n)]
-            let payment = 0;
-            if (ratePerPeriod > 0) {
-                payment = balance * (ratePerPeriod / (1 - Math.pow(1 + ratePerPeriod, -periods)));
-            } else {
-                payment = balance / periods;
-            }
-
-            const totalPayout = payment * periods;
-            const totalInterest = totalPayout - balance;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('apPayment').textContent = formatter.format(payment);
-            document.getElementById('apTotalPayout').textContent = formatter.format(totalPayout);
-            document.getElementById('apTotalInterest').textContent = formatter.format(totalInterest);
-
-            document.getElementById('apResults').classList.remove('hidden');
+            return { end: bal, totalPaid, totalInt, count, lastPay, years, i, depleted: bal <= 1e-9 };
         }
+
+        function durationText(count, f) {
+            const info = FREQ[f];
+            const yrs = Math.floor(count / f), rem = count % f;
+            let s = '';
+            if (yrs > 0) s += yrs + (yrs === 1 ? ' year' : ' years');
+            if (rem > 0) s += (s ? ' ' : '') + rem + ' ' + (rem === 1 ? info.unit : info.units);
+            return s || '0 ' + info.units;
+        }
+
+        function calculate() {
+            const out = document.getElementById('results');
+            const P = num('pPrincipal'), rPct = num('pRate');
+            const f = parseInt(document.getElementById('pFreq').value);
+            const mode = document.querySelector('input[name="pMode"]:checked').value;
+            const info = FREQ[f];
+            if (isNaN(P) || !(P > 0) || isNaN(rPct)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a starting principal and an interest/return rate.</div>'; return; }
+            const i = Math.pow(1 + rPct / 100, 1 / f) - 1;
+            let headline = '', stats = '', s = null, pmt = 0, forever = false;
+            if (mode === 'length') {
+                const yearsIn = Math.round(num('pYears'));
+                if (!(yearsIn > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter the years to payout.</div>'; return; }
+                const n = yearsIn * f;
+                pmt = i === 0 ? P / n : P * i / (1 - Math.pow(1 + i, -n));
+                s = payoutSim(P, rPct, f, pmt, n);
+                headline = `<p class="text-sm opacity-90">You can withdraw</p><p class="text-4xl font-bold">${formatMoney(pmt)}</p><p class="text-sm opacity-90">${info.adverb}, for ${yearsIn} ${yearsIn === 1 ? 'year' : 'years'}</p>`;
+                stats = `<p class="flex justify-between mb-2"><span>Total of ${n} payments:</span> <span class="font-bold">${formatMoney(s.totalPaid)}</span></p>
+                         <p class="flex justify-between"><span>Total interest / return:</span> <span class="font-bold">${formatMoney(s.totalInt)}</span></p>`;
+            } else {
+                pmt = num('pAmount');
+                if (isNaN(pmt) || !(pmt > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a payout amount.</div>'; return; }
+                forever = i > 0 && pmt <= P * i;
+                if (forever) {
+                    headline = `<p class="text-sm opacity-90">At ${formatMoney(pmt)} ${info.adverb}, the fund</p><p class="text-4xl font-bold">Never runs out</p><p class="text-sm opacity-90">the payment does not exceed the interest it earns</p>`;
+                    stats = `<p class="flex justify-between mb-2"><span>Interest earned per ${info.unit}:</span> <span class="font-bold">${formatMoney(P * i)}</span></p>
+                             <p class="flex justify-between"><span>Your payment:</span> <span class="font-bold">${formatMoney(pmt)}</span></p>
+                             <p class="text-gray-600 mt-2">The balance stays at ${formatMoney(P)} forever — raise the payment above ${formatMoney(P * i)} to start drawing the principal down.</p>`;
+                    s = { years: [{ y: 0, beg: P, pay: 0, intr: 0, end: P, cumInt: 0 }], totalPaid: P, totalInt: 0 };
+                } else {
+                    s = payoutSim(P, rPct, f, pmt, f * 1000);
+                    headline = `<p class="text-sm opacity-90">The fund can last</p><p class="text-4xl font-bold">${durationText(s.count, f)}</p><p class="text-sm opacity-90">${s.count} ${info.adverb} payments of ${formatMoney(pmt)}${s.lastPay < pmt ? ' (final payment ' + formatMoney(s.lastPay) + ')' : ''}</p>`;
+                    stats = `<p class="flex justify-between mb-2"><span>Total paid out:</span> <span class="font-bold">${formatMoney(s.totalPaid)}</span></p>
+                             <p class="flex justify-between"><span>Total interest / return:</span> <span class="font-bold">${formatMoney(s.totalInt)}</span></p>`;
+                }
+            }
+            const yRows = s.years.slice(1).map(r => `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${r.y}</td><td class="py-1.5 px-2 text-right">${formatMoney(r.beg)}</td><td class="py-1.5 px-2 text-right">${formatMoney(r.pay)}</td><td class="py-1.5 px-2 text-right">${formatMoney(r.intr)}</td><td class="py-1.5 px-2 text-right">${formatMoney(r.end)}</td></tr>`).join('');
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">${headline}</div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <div class="text-sm">${stats}</div>
+                    ${forever ? '' : `<div class="grid grid-cols-2 gap-3 mt-4 items-center">
+                        <canvas id="poDonut" class="donut" width="220" height="220" role="img" aria-label="Principal versus interest paid out"></canvas>
+                        <div class="text-sm space-y-2" id="poLegend"></div>
+                    </div>`}
+                </div>
+                ${forever ? '' : `<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Annuity Balances</h3>
+                    <canvas id="poChart" class="chart" width="640" height="300" role="img" aria-label="Balance and cumulative interest by year"></canvas>
+                    <div class="flex flex-wrap gap-4 text-xs mt-2 text-gray-600">
+                        <span><span class="inline-block w-3 h-3 rounded-sm mr-1" style="background:#2b7ddb"></span>Balance</span>
+                        <span><span class="inline-block w-3 h-3 rounded-sm mr-1" style="background:#8bbc21"></span>Interest/return (cumulative)</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Yearly Balances</h3>
+                    <div class="overflow-x-auto" style="max-height:22rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">Year</th><th class="py-2 px-2 border-b text-right">Beginning Balance</th><th class="py-2 px-2 border-b text-right">Payments</th><th class="py-2 px-2 border-b text-right">Interest/Return</th><th class="py-2 px-2 border-b text-right">Ending Balance</th></tr></thead>
+                            <tbody>${yRows}</tbody>
+                        </table>
+                    </div>
+                </div>`}`;
+            if (!forever) {
+                drawDonut('poDonut', [
+                    { label: 'Starting principal', value: P, color: '#2b7ddb' },
+                    { label: 'Interest/return', value: s.totalInt, color: '#8bbc21' }
+                ], 'poLegend');
+                drawLines('poChart', s.years);
+            }
+            updateURL();
+        }
+
+        function toggleMode() {
+            const mode = document.querySelector('input[name="pMode"]:checked').value;
+            document.getElementById('rowYears').style.display = mode === 'length' ? 'flex' : 'none';
+            document.getElementById('rowAmount').style.display = mode === 'payment' ? 'flex' : 'none';
+        }
+
+        function drawLines(id, years) {
+            const cv = document.getElementById(id); if (!cv) return;
+            const ctx = cv.getContext('2d');
+            const W = 640, H = 300, padL = 64, padB = 26, padT = 10;
+            const iw = W - padL - 8, ih = H - padB - padT;
+            const maxV = Math.max(...years.map(r => Math.max(r.end, r.cumInt)), 1);
+            const maxY = years[years.length - 1].y || 1;
+            ctx.clearRect(0, 0, W, H);
+            ctx.font = '11px Inter, sans-serif'; ctx.fillStyle = '#6B7280'; ctx.strokeStyle = '#E5E7EB';
+            for (let g = 0; g <= 4; g++) {
+                const v = maxV * g / 4, y = padT + ih - ih * g / 4;
+                ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - 8, y); ctx.stroke();
+                ctx.textAlign = 'right'; ctx.fillText(shortMoney(v), padL - 6, y + 4);
+            }
+            const series = [[r => r.end, '#2b7ddb'], [r => r.cumInt, '#8bbc21']];
+            series.forEach(([get, color]) => {
+                ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+                years.forEach((r, idx) => {
+                    const x = padL + iw * (r.y / maxY), y = padT + ih - (get(r) / maxV) * ih;
+                    if (idx === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                });
+                ctx.stroke(); ctx.lineWidth = 1;
+            });
+            ctx.fillStyle = '#6B7280'; ctx.strokeStyle = '#E5E7EB'; ctx.textAlign = 'center';
+            [0, Math.round(maxY / 2), maxY].forEach(yv => {
+                const x = padL + iw * (yv / maxY);
+                ctx.fillText(yv, x, H - 8);
+            });
+            ctx.fillStyle = '#374151'; ctx.fillText('Year', padL + iw / 2, H - 8 + 0);
+        }
+        function shortMoney(v) {
+            if (v >= 1000) return '$' + (v / 1000).toFixed(v >= 10000 ? 0 : 1).replace(/\.0$/, '') + 'K';
+            return '$' + Math.round(v);
+        }
+
+        function drawDonut(id, parts, legendId) {
+            const cv = document.getElementById(id); if (!cv) return;
+            const ctx = cv.getContext('2d');
+            const total = parts.reduce((s, p) => s + p.value, 0) || 1;
+            const cx = 110, cy = 110, R = 100, rIn = 58;
+            ctx.clearRect(0, 0, 220, 220);
+            let ang = -Math.PI / 2;
+            parts.forEach(p => {
+                const sweep = p.value / total * Math.PI * 2;
+                ctx.beginPath(); ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, R, ang, ang + sweep); ctx.closePath();
+                ctx.fillStyle = p.color; ctx.fill();
+                ang += sweep;
+            });
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath(); ctx.arc(cx, cy, rIn, 0, Math.PI * 2); ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(cx, cy, rIn - 1, 0, Math.PI * 2); ctx.fill();
+            document.getElementById(legendId).innerHTML = parts.map(p => `
+                <p class="flex items-center"><span class="inline-block w-3.5 h-3.5 rounded-sm mr-2" style="background:${p.color}"></span>${p.label}: <strong class="ml-1">${formatMoney(p.value)} (${(p.value / total * 100).toFixed(0)}%)</strong></p>`).join('');
+        }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            p.set('p', document.getElementById('pPrincipal').value);
+            p.set('r', document.getElementById('pRate').value);
+            p.set('mode', document.querySelector('input[name="pMode"]:checked').value);
+            p.set('y', document.getElementById('pYears').value);
+            p.set('a', document.getElementById('pAmount').value);
+            p.set('f', document.getElementById('pFreq').value);
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            const set = (id, key) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); };
+            set('pPrincipal', 'p'); set('pRate', 'r'); set('pYears', 'y'); set('pAmount', 'a'); set('pFreq', 'f');
+            if (q.get('mode')) { const el = document.querySelector(`input[name="pMode"][value="${q.get('mode')}"]`); if (el) el.checked = true; }
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
