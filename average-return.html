@@ -4,134 +4,406 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Average Return Calculator - CalcNova</title>
+    <meta name="description" content="Find the average annual return of an account from its starting balance, ending balance and dated deposits and withdrawals — or chain several holding-period returns into a cumulative and average annual return.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/average-return">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Average Return Calculator - CalcNova">
+    <meta property="og:description" content="Money-weighted average return from real cash flows, and chained holding-period returns — both with the time value of money accounted for.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/average-return">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Average Return Calculator - CalcNova">
+    <meta name="twitter:description" content="Average return from cash flows, or cumulative return across holding periods.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Average Return Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/average-return" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How does the cash-flow calculator find the average return?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It solves for the single annual rate that grows the starting balance — plus every deposit, minus every withdrawal, each compounded for exactly the time it was in the account — into the ending balance. That is the money-weighted return (the same family as XIRR): it credits the account for when money arrived, not just how much." }
+            },
+            {
+                "@type": "Question",
+                "name": "In the second calculator, is each return annual or for the whole holding period?",
+                "acceptedAnswer": { "@type": "Answer", "text": "For the whole holding period next to it. The calculator chains them — (1+r₁)(1+r₂)(1+r₃) − 1 — into the cumulative return, then annualizes geometrically over the total holding time to get the average annual return. If you know an annual return instead, convert it first: a 6% annual return over 2 years is a period return of 1.06² − 1 = 12.36%." }
+            },
+            {
+                "@type": "Question",
+                "name": "How is this different from the average rate of return (ARR)?",
+                "acceptedAnswer": { "@type": "Answer", "text": "ARR simply averages cash flows over an investment's life and ignores the time value of money — a dollar in year ten counts the same as a dollar today. Both calculators here account for timing (the first by dated cash flows, the second by compounding chained returns), so they are stricter measures. ARR is still useful as a quick companion metric for large decisions." }
+            },
+            {
+                "@type": "Question",
+                "name": "Cumulative return vs average annual return — which should I quote?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Cumulative return says how much was gained in total, ignoring time — good for 'what did this make me?' Average annual return normalizes by time — good for comparing two investments held for different lengths. Quoting only the cumulative figure for a long holding flatters it; quoting only the annual figure hides the total. Professionals show both, as this page does." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .fld { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; width: 100%; }
+        .fld:focus { border-color: #3F51B5; }
+        @media print { nav, footer, .no-print, .calc-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Average Return</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Average Return Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Average Return Calculator</h1>
+    <main class="container mx-auto px-4 py-6">
+        <h1 class="text-2xl font-bold text-[#3F51B5] mb-2">Average Return Calculator</h1>
+        <p class="text-gray-600 text-sm mb-8 max-w-3xl">Two ways to average a return. The first works from an account's real cash flows; the second chains several holding-period returns. Both account for the time value of money.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <p class="text-sm text-gray-600 mb-4">Enter your annual returns (in %) separated by commas. For example: <strong>10, -5, 15, 8, -2</strong></p>
-                
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Annual Returns (%)</label>
-                    <input type="text" id="arReturns" value="10, -5, 15, 8, -2" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                </div>
-                
-                <button onclick="calculateAverageReturn()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Returns</button>
+        <h2 class="text-xl font-bold text-gray-800 mb-2">1 · Average Return Based on Cash Flow</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">The average annual return of an entire account, from its starting and ending balances and the dates and amounts of deposits and withdrawals in between.</p>
 
-                <div id="arResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Arithmetic Mean (Simple)</p>
-                            <p class="text-2xl font-bold text-[#3F51B5]" id="arArithmetic">0%</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Geometric Mean (True Return)</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="arGeometric">0%</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Growth</p>
-                            <p class="text-xl font-bold text-gray-800" id="arTotalGrowth">0%</p>
-                        </div>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-1/2 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="grid grid-cols-12 gap-2 mb-2 font-bold text-gray-700">
+                        <span class="col-span-4">Activity</span><span class="col-span-4">Amount</span><span class="col-span-4">Date</span>
                     </div>
+                    <div class="grid grid-cols-12 gap-2 mb-2 items-center">
+                        <span class="col-span-4">Starting Balance</span>
+                        <span class="col-span-4"><input type="number" id="cfStart" value="5600" class="fld"></span>
+                        <span class="col-span-4"><input type="date" id="cfStartDate" value="2023-01-01" class="fld"></span>
+                    </div>
+                    <div class="grid grid-cols-12 gap-2 mb-3 items-center">
+                        <span class="col-span-4">Ending Balance</span>
+                        <span class="col-span-4"><input type="number" id="cfEnd" value="18000" class="fld"></span>
+                        <span class="col-span-4"><input type="date" id="cfEndDate" value="2026-10-21" class="fld"></span>
+                    </div>
+                    <div id="cfRows"></div>
+                    <button onclick="addCfRow()" class="text-[#3F51B5] font-semibold text-sm hover:underline mt-1">+ Add deposit / withdrawal</button>
+                    <button onclick="calculateCF()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-4">Calculate</button>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Arithmetic vs. Geometric Mean</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">The <strong>Arithmetic Mean</strong> is simply the average of your returns (add them all up and divide by the number of years). However, this can be misleading for investments. The <strong>Geometric Mean</strong> (also known as the Compound Annual Growth Rate or CAGR) reflects the actual compound growth of your money over time, accounting for volatility. Investors should always look at the Geometric Mean to understand true performance.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="lg:w-1/2">
+                <div id="resultsCF"></div>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+        <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 my-10 no-print">
+            <p class="font-medium">AdSense Space</p>
+            <p class="text-sm">(728x90 Leaderboard)</p>
+        </div>
+
+        <h2 class="text-xl font-bold text-gray-800 mb-2">2 · Average and Cumulative Return</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">Chain several investments' returns — each entered as the <strong>total return over its holding length</strong> — into one cumulative return and one average annual return.</p>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-1/2 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="grid grid-cols-12 gap-2 mb-2 font-bold text-gray-700">
+                        <span class="col-span-4">Return (per holding)</span><span class="col-span-4">Years</span><span class="col-span-4">Months</span>
+                    </div>
+                    <div id="hpRows"></div>
+                    <button onclick="addHpRow()" class="text-[#3F51B5] font-semibold text-sm hover:underline mt-1">+ Add holding period</button>
+                    <button onclick="calculateHP()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-4">Calculate</button>
+                </div>
             </div>
-        </aside>
+            <div class="lg:w-1/2">
+                <div id="resultsHP"></div>
+            </div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">What "Average Return" Really Means</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                An average return is the mathematical average of a series of returns over time — but there are two
+                honest ways to compute one, and they answer different questions. The first calculator above finds
+                the single annual rate at which a beginning balance, fed and drained by dated deposits and
+                withdrawals, lands exactly on the ending balance. Money that arrived early compounds longer, and
+                the rate knows it: the time value of money — a dollar today is worth more than a dollar tomorrow —
+                is built in. This is the money-weighted return, the right summary of <em>your</em> experience in an
+                account. The second calculator works when you don't have cash flows, only results: a list of
+                returns each earned over its own holding length. Those chain multiplicatively into a cumulative
+                return, which is then normalized over the total time into an average annual return — again with
+                timing accounted for, not averaged away.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Not the accounting rate of return</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The average rate of return (ARR), or accounting rate of return, averages the cash flow an
+                investment generates over its life — and stops there. It never discounts: year-ten dollars weigh
+                the same as year-one dollars, so ARR systematically flatters slow-paying investments. It's a
+                reasonable first glance at a big decision and a poor final answer; use it alongside measures (like
+                both calculators here, or IRR and NPV) that respect timing.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Cumulative return: the total, without the clock</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Cumulative return is the aggregate gain or loss of an investment, as a sum or a percentage,
+                irrespective of how long it took. It contrasts with the annual return (one year's result) and with
+                the average annual return (the total, normalized per year). Because most financial figures are
+                quoted annualized, cumulative return is the less comparable of the three — a 40% cumulative return
+                is excellent over two years and mediocre over twenty. Quote it with its holding period attached, or
+                next to its annualized twin, as the results above do.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">My brokerage shows a different "average return" — why?</h4>
+                    <p class="text-gray-700">It may be showing a time-weighted return, which strips out the effect of your deposits and withdrawals to judge the investments themselves. The cash-flow calculator here is money-weighted: it judges your account, timing and all. Both are legitimate; they answer different questions.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Why chain returns instead of averaging them?</h4>
+                    <p class="text-gray-700">Because returns compound on each other. +10% then −10% averages arithmetically to 0% but actually leaves you at 0.99× — down 1%. Chaining (multiplying growth factors) is the only average that reproduces the ending value.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Can the cash-flow return be negative or fail to solve?</h4>
+                    <p class="text-gray-700">Negative, yes — if the ending balance trails what the flows alone would produce. It can fail to solve only in pathological cases (for instance, net withdrawals exceeding everything the account could have held); the calculator says so rather than inventing a number.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. Cash-flow returns use actual days over a 365-day year.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="investment.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Investment Calculator</h3>
+                <p class="text-sm text-gray-600">Project growth and solve for any input.</p>
+            </a>
+            <a href="mutual-fund.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Mutual Fund Calculator</h3>
+                <p class="text-sm text-gray-600">Fund returns after loads and expenses, with net IRR.</p>
+            </a>
+            <a href="interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Interest Calculator</h3>
+                <p class="text-sm text-gray-600">Compound growth with contributions and inflation.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateAverageReturn() {
-            const input = document.getElementById('arReturns').value;
-            
-            // Parse the comma-separated string into an array of numbers
-            const returnsString = input.split(',');
-            let returns = [];
-            
-            for (let i = 0; i < returnsString.length; i++) {
-                const val = parseFloat(returnsString[i].trim());
-                if (!isNaN(val)) {
-                    returns.push(val / 100); // Convert percentage to decimal
-                }
-            }
+        window.addEventListener('DOMContentLoaded', () => {
+            addCfRow('d', 5000, '2024-01-15'); addCfRow('w', 1500, '2024-06-01'); addCfRow('d', 3800, '2025-01-18');
+            addHpRow(10, 1, 2); addHpRow(-2, '', 5); addHpRow(15, 2, 3);
+            prefillFromURL();
+            calculateCF(); calculateHP();
+        });
 
-            if (returns.length < 2) {
-                alert("Please enter at least two valid numbers separated by commas.");
-                return;
-            }
+        function dateMs(s) { const p = s.split('-').map(Number); return Date.UTC(p[0], p[1] - 1, p[2]); }
+        function yearsBetween(aMs, bMs) { return (bMs - aMs) / 86400000 / 365; }
 
-            const n = returns.length;
-
-            // 1. Arithmetic Mean
-            let sum = 0;
-            for (let i = 0; i < n; i++) {
-                sum += returns[i];
-            }
-            const arithmeticMean = sum / n;
-
-            // 2. Geometric Mean (CAGR)
-            let product = 1;
-            for (let i = 0; i < n; i++) {
-                product *= (1 + returns[i]);
-            }
-            const geometricMean = Math.pow(product, (1 / n)) - 1;
-
-            // 3. Total Growth
-            const totalGrowth = product - 1;
-
-            // Formatting
-            const arithmeticPct = (arithmeticMean * 100).toFixed(2) + "%";
-            const geometricPct = (geometricMean * 100).toFixed(2) + "%";
-            const totalGrowthPct = (totalGrowth * 100).toFixed(2) + "%";
-
-            document.getElementById('arArithmetic').textContent = arithmeticPct;
-            document.getElementById('arGeometric').textContent = geometricPct;
-            document.getElementById('arTotalGrowth').textContent = totalGrowthPct;
-
-            document.getElementById('arResults').classList.remove('hidden');
+        // ---------- Calculator 1: cash flows ----------
+        let cfCount = 0;
+        function addCfRow(type, amt, date) {
+            cfCount++;
+            const div = document.createElement('div');
+            div.className = 'grid grid-cols-12 gap-2 mb-2 items-center cf-row';
+            div.innerHTML = `
+                <span class="col-span-4"><select class="fld cf-type"><option value="d" ${type === 'd' ? 'selected' : ''}>Deposit</option><option value="w" ${type === 'w' ? 'selected' : ''}>Withdraw</option></select></span>
+                <span class="col-span-4"><input type="number" class="fld cf-amt" value="${amt === undefined ? '' : amt}"></span>
+                <span class="col-span-3"><input type="date" class="fld cf-date" value="${date || '2024-01-01'}"></span>
+                <span class="col-span-1"><button onclick="this.closest('.cf-row').remove()" class="text-red-500 font-bold" title="Remove">×</button></span>`;
+            document.getElementById('cfRows').appendChild(div);
         }
+
+        function calculateCF() {
+            const out = document.getElementById('resultsCF');
+            const start = parseFloat(document.getElementById('cfStart').value);
+            const end = parseFloat(document.getElementById('cfEnd').value);
+            const startMs = dateMs(document.getElementById('cfStartDate').value);
+            const endMs = dateMs(document.getElementById('cfEndDate').value);
+            const fail = m => { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">' + m + '</div>'; };
+            if (isNaN(start) || isNaN(end) || !(endMs > startMs)) return fail('Please enter starting and ending balances with the ending date after the starting date.');
+            const T = yearsBetween(startMs, endMs);
+            const flows = [];
+            let totDep = 0, totWd = 0;
+            document.querySelectorAll('.cf-row').forEach(row => {
+                const amt = parseFloat(row.querySelector('.cf-amt').value);
+                if (isNaN(amt) || amt === 0) return;
+                const signed = row.querySelector('.cf-type').value === 'd' ? amt : -amt;
+                const t = yearsBetween(startMs, dateMs(row.querySelector('.cf-date').value));
+                flows.push({ amt: signed, t });
+                if (signed > 0) totDep += signed; else totWd += -signed;
+            });
+            const fv = r => start * Math.pow(1 + r, T) + flows.reduce((s, f) => s + f.amt * Math.pow(1 + r, T - f.t), 0);
+            let lo = -0.9999, hi = 10, solved = null;
+            if (fv(lo) > end && fv(hi) > end || fv(lo) < end && fv(hi) < end) {
+                // no sign change -> no solution in range
+            } else {
+                for (let i = 0; i < 200; i++) { const mid = (lo + hi) / 2; (fv(mid) < end) ? lo = mid : hi = mid; }
+                solved = (lo + hi) / 2;
+            }
+            if (solved === null) return fail('No average return in a reasonable range reconciles these balances and flows. Check for withdrawals larger than the account could have held.');
+            const netGain = end - start - totDep + totWd;
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Average Annual Return</p>
+                    <p class="text-4xl font-bold">${(solved * 100).toFixed(3)}%</p>
+                    <p class="text-sm opacity-90 mt-1">money-weighted, over ${T.toFixed(2)} years</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Starting Balance:</span> <span class="font-bold">${formatMoney(start)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total Deposits:</span> <span class="font-bold">${formatMoney(totDep)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total Withdrawals:</span> <span class="font-bold">${formatMoney(totWd)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Ending Balance:</span> <span class="font-bold">${formatMoney(end)}</span></p>
+                    <p class="flex justify-between"><span>Net Gain:</span> <span class="font-bold">${formatMoney(netGain)}</span></p>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                </div>`;
+            updateURL();
+        }
+
+        // ---------- Calculator 2: holding periods ----------
+        function addHpRow(r, y, m) {
+            const div = document.createElement('div');
+            div.className = 'grid grid-cols-12 gap-2 mb-2 items-center hp-row';
+            div.innerHTML = `
+                <span class="col-span-4"><input type="number" step="any" class="fld hp-r" value="${r === undefined ? '' : r}" placeholder="%"></span>
+                <span class="col-span-4"><input type="number" step="any" class="fld hp-y" value="${y === undefined ? '' : y}"></span>
+                <span class="col-span-3"><input type="number" step="any" class="fld hp-m" value="${m === undefined ? '' : m}"></span>
+                <span class="col-span-1"><button onclick="this.closest('.hp-row').remove()" class="text-red-500 font-bold" title="Remove">×</button></span>`;
+            document.getElementById('hpRows').appendChild(div);
+        }
+
+        function calculateHP() {
+            const out = document.getElementById('resultsHP');
+            const rows = [];
+            document.querySelectorAll('.hp-row').forEach(row => {
+                const r = parseFloat(row.querySelector('.hp-r').value);
+                const y = parseFloat(row.querySelector('.hp-y').value) || 0;
+                const m = parseFloat(row.querySelector('.hp-m').value) || 0;
+                if (isNaN(r) || (y === 0 && m === 0)) return;
+                rows.push({ r: r / 100, months: y * 12 + m });
+            });
+            if (!rows.length) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Enter at least one return with a holding length.</div>'; return; }
+            const growth = rows.reduce((s, x) => s * (1 + x.r), 1);
+            const cum = growth - 1;
+            const totMonths = rows.reduce((s, x) => s + x.months, 0);
+            const totYears = totMonths / 12;
+            const avg = Math.pow(growth, 1 / totYears) - 1;
+            const perRow = rows.map((x, i) => `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${i + 1}</td><td class="py-1.5 px-2 text-right">${(x.r * 100).toFixed(2)}%</td><td class="py-1.5 px-2 text-right">${x.months} months</td><td class="py-1.5 px-2 text-right">${(Math.pow(1 + x.r, 1 / (x.months / 12)) * 100 - 100).toFixed(2)}%</td></tr>`).join('');
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Average Annual Return</p>
+                    <p class="text-4xl font-bold">${(avg * 100).toFixed(3)}%</p>
+                    <p class="text-sm opacity-90 mt-1">Cumulative return: <strong>${(cum * 100).toFixed(3)}%</strong> over ${totYears.toFixed(2)} years</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Cumulative Return:</span> <span class="font-bold">${(cum * 100).toFixed(3)}%</span></p>
+                    <p class="flex justify-between mb-2"><span>Average Annual Return:</span> <span class="font-bold">${(avg * 100).toFixed(3)}%</span></p>
+                    <p class="flex justify-between"><span>Total Holding Time:</span> <span class="font-bold">${totMonths} months (${totYears.toFixed(2)} years)</span></p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Per-Holding Detail</h3>
+                    <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                        <thead class="bg-gray-50 text-gray-700"><tr><th class="py-2 px-2 border-b">#</th><th class="py-2 px-2 border-b text-right">Period Return</th><th class="py-2 px-2 border-b text-right">Holding</th><th class="py-2 px-2 border-b text-right">Annualized</th></tr></thead>
+                        <tbody>${perRow}</tbody>
+                    </table>
+                </div>`;
+            updateURL();
+        }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            p.set('sb', document.getElementById('cfStart').value);
+            p.set('sbd', document.getElementById('cfStartDate').value);
+            p.set('eb', document.getElementById('cfEnd').value);
+            p.set('ebd', document.getElementById('cfEndDate').value);
+            const cf = [];
+            document.querySelectorAll('.cf-row').forEach(row => {
+                const a = row.querySelector('.cf-amt').value;
+                if (a !== '') cf.push(row.querySelector('.cf-type').value + ',' + a + ',' + row.querySelector('.cf-date').value);
+            });
+            p.set('cf', cf.join(';'));
+            const hp = [];
+            document.querySelectorAll('.hp-row').forEach(row => {
+                const r = row.querySelector('.hp-r').value;
+                if (r !== '') hp.push(r + ',' + (row.querySelector('.hp-y').value || 0) + ',' + (row.querySelector('.hp-m').value || 0));
+            });
+            p.set('hp', hp.join(';'));
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (!q.get('cf') && !q.get('hp')) return;
+            if (q.get('sb')) document.getElementById('cfStart').value = q.get('sb');
+            if (q.get('sbd')) document.getElementById('cfStartDate').value = q.get('sbd');
+            if (q.get('eb')) document.getElementById('cfEnd').value = q.get('eb');
+            if (q.get('ebd')) document.getElementById('cfEndDate').value = q.get('ebd');
+            if (q.get('cf')) {
+                document.getElementById('cfRows').innerHTML = '';
+                q.get('cf').split(';').forEach(s => { const [t, a, d] = s.split(','); addCfRow(t, a, d); });
+            }
+            if (q.get('hp')) {
+                document.getElementById('hpRows').innerHTML = '';
+                q.get('hp').split(';').forEach(s => { const [r, y, m] = s.split(','); addHpRow(r, y, m); });
+            }
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
