@@ -4,114 +4,452 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Interest Calculator - CalcNova</title>
+    <meta name="description" content="Compute simple interest and end balance with I = Prt — or solve backwards for the principal, the term, or the rate. Includes calculation steps and a simple-vs-compound comparison.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/simple-interest">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Simple Interest Calculator - CalcNova">
+    <meta property="og:description" content="Interest on the principal only — no interest on interest. Solve for balance, principal, term or rate, with the steps shown.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/simple-interest">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Simple Interest Calculator - CalcNova">
+    <meta name="twitter:description" content="I = Prt, solved in any direction, with a compound-interest comparison alongside.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Simple Interest Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/simple-interest" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is the simple interest formula?",
+                "acceptedAnswer": { "@type": "Answer", "text": "I = P × r × t: interest equals principal times annual rate times time in years. The end balance is P + I. Because interest is computed only on the original principal, the same dollar amount of interest accrues every period — growth is a straight line, not a curve. The tabs of this calculator solve the same formula for whichever variable you don't know." }
+            },
+            {
+                "@type": "Question",
+                "name": "Where is simple interest actually used?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Short-term and informal lending, some auto and personal loans, and bond coupons — a bond's coupon payment is simple interest on its face value, paid out rather than reinvested. Most deposit accounts and credit cards, by contrast, compound. If interest is paid out to you (like coupons or dividends), it only starts compounding when you reinvest it as new principal." }
+            },
+            {
+                "@type": "Question",
+                "name": "Simple or compound — which is better?",
+                "acceptedAnswer": { "@type": "Answer", "text": "As a borrower, simple: you never pay interest on interest, so the same rate costs less. As an investor or lender, compound: your earnings themselves earn. On $10,000 at 5% for five years, simple interest totals $12,500 while monthly compounding totals $12,833.59 — and the gap grows exponentially with time and rate." }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I handle months in the formula?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Convert to years: six months is t = 0.5. Or work per period with I = P × r × n, using the rate per period and the number of periods — a 0.5% monthly rate over 6 periods. This calculator's per-month options for rate and term handle the conversion for you." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 34%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .tab-btn { flex: 1 1 0; padding: 0.55rem 0.2rem; font-size: 0.85rem; font-weight: 700; border-radius: 0.5rem; border: 1px solid #D1D5DB; background: #fff; color: #374151; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .tab-btn.active { background: #3F51B5; color: #fff; border-color: #3F51B5; }
+        .formula { text-align: center; font-size: 1.15rem; font-weight: 600; color: #1F2937; background: #F3F4F6; border-radius: 0.5rem; padding: 0.75rem; margin: 0.75rem 0; }
+        @media print { nav, footer, .no-print, #calculator-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Simple Interest</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Simple Interest Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Simple Interest Calculator</h1>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Simple Interest Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">Interest on the principal only — never on interest itself. Click a tab to solve for that piece of <strong>I = P × r × t</strong>. (Real life mostly compounds; for that, use the <a href="interest.html" class="text-[#3F51B5] font-semibold hover:underline">Interest Calculator</a>.)</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Principal Amount ($)</label>
-                        <input type="number" id="siPrincipal" value="10000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
-                        <input type="number" id="siRate" value="5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Time (Years)</label>
-                        <input type="number" id="siYears" value="5" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+            <div class="flex gap-1.5 mb-4">
+                <button class="tab-btn active" data-tab="balance" onclick="setTab('balance')">Balance</button>
+                <button class="tab-btn" data-tab="principal" onclick="setTab('principal')">Principal</button>
+                <button class="tab-btn" data-tab="term" onclick="setTab('term')">Term</button>
+                <button class="tab-btn" data-tab="rate" onclick="setTab('rate')">Rate</button>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="input-group" id="row-balance">
+                    <label>End Balance</label>
+                    <div class="w-[66%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="balance" value="30000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
                 </div>
-                <button onclick="calculateSimpleInterest()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate</button>
-
-                <div id="siResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Principal</p>
-                            <p class="text-xl font-bold text-gray-800" id="siP">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="siI">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Final Amount</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="siTotal">$0</p>
-                        </div>
+                <div class="input-group" id="row-principal">
+                    <label>Principal</label>
+                    <div class="w-[66%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="principal" value="20000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
+                </div>
+                <div class="input-group" id="row-rate">
+                    <label>Interest Rate</label>
+                    <div class="w-[66%] flex gap-1">
+                        <input type="number" id="rate" value="3" step="any" class="w-1/2">
+                        <select id="ratebase" class="w-1/2 bg-gray-50">
+                            <option value="y" selected>per year</option>
+                            <option value="m">per month</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group" id="row-term">
+                    <label>Term</label>
+                    <div class="w-[66%] flex gap-1">
+                        <input type="number" id="term" value="10" step="any" class="w-1/2">
+                        <select id="termbase" class="w-1/2 bg-gray-50">
+                            <option value="y" selected>years</option>
+                            <option value="m">months</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateSimple()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is Simple Interest?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Simple interest is a quick and easy method of calculating the interest charge on a loan. Simple interest is determined by multiplying the daily interest rate by the principal by the number of days that elapse between payments. Unlike compound interest, it does not add interest to the principal balance.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
+        <div class="md:w-3/5">
+            <div id="resultsArea"></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Simple Interest, Explained</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Interest is what you pay to borrow money, or what you're paid to lend it — on an auto loan, a credit
+                card, or a deposit in an interest-bearing account. <strong>Simple interest</strong> is the plain version of the
+                idea: it is always computed on the original sum (the principal) and nothing else. The percentage is
+                fixed for the life of the arrangement, and no matter how many times interest is tallied, previously
+                accrued interest never joins the base. Each period adds the same number of dollars as the last —
+                growth in a straight line.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The formula, two ways</h3>
+            <div class="formula">Simple Interest = Principal × Rate × Time &nbsp;·&nbsp; I = Prt</div>
+            <p class="text-gray-700 leading-7 mb-4">
+                With I = total interest, P = principal, r = annual rate (as a decimal), t = term in years. The
+                "t" flexes to the real period: six months is t = 0.5. The same formula per period reads
+                <strong>I = Prn</strong> — rate per period, times the number of periods. A worked pair: borrow $10,000 at 5%
+                annual simple interest for five years and the interest is $10,000 × 0.05 = $500 a year, × 5 =
+                <strong>$2,500</strong>, for a total repayment of $12,500. Per period instead: at a 5% <em>monthly</em> rate over 12
+                months, interest is $10,000 × 0.05 × 12 = <strong>$6,000</strong>, total $16,000. (Divide a total back down and
+                you can quote the interest per month or per day.)
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Where simple interest actually lives</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Borrowers should hope for it: you only ever pay on the original balance, so a given rate costs less
+                than its compounding twin — which is why you'll find it on some short-term loans. Lenders and
+                investors get the worse side of the same deal: earnings that don't compound leave growth on the
+                table. Simple interest survives in pockets where its plainness is the point — a bond's coupon is
+                simple interest on face value, paid out in cash; some investments quote a simple return as a
+                dividend. In both cases the catch is the same: paid-out interest only starts compounding when
+                <em>you</em> reinvest it as new principal. Most checking and savings accounts, and essentially all credit
+                cards, compound instead.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Simple vs compound, in one loan</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Compound interest charges (or pays) on principal <em>plus</em> accumulated interest — interest on
+                interest — under A = P(1 + r/n)<sup>nt</sup>, where n is how often it compounds per year. Take the $10,000,
+                5%, five-year loan from above. Simple: <strong>$12,500</strong> total. Compounded monthly: <strong>$12,833.59</strong> — $2,833.59
+                of interest instead of $2,500. Five years at 5% is a gentle case; stretch the term or the rate and
+                the gap doesn't grow politely, it grows exponentially. The results panel above shows this comparison
+                for your own numbers on every calculation. So the rule of thumb stands: <strong>borrow on simple interest
+                when you can, save and invest where it compounds</strong> — and check which one a contract actually uses
+                before signing anything.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Why does the balance graph go up in a straight line?</h4>
+                    <p class="text-gray-700">Because every period adds the identical interest amount — P × r never changes. A compounding balance curves upward instead; the straight line is simple interest's fingerprint.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">My rate is monthly but my term is in years — problem?</h4>
+                    <p class="text-gray-700">No. Set the rate to "per month" and the term to "years"; the calculator converts both to a common annual basis and shows the conversion in the calculation steps.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Do credit cards use simple interest?</h4>
+                    <p class="text-gray-700">No — cards compound (typically daily on the average daily balance), which is why card debt snowballs. Simple interest shows up more in short-term loans and bond coupons.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Where's the compound version?</h4>
+                    <p class="text-gray-700">The <a href="compound-interest.html" class="text-[#3F51B5] font-semibold hover:underline">compound interest calculator</a> converts rates between frequencies and projects growth; the <a href="interest.html" class="text-[#3F51B5] font-semibold hover:underline">interest calculator</a> adds contributions, tax, and inflation.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Interest Calculator</h3>
+                <p class="text-sm text-gray-600">Compound growth with contributions, tax, inflation.</p>
+            </a>
+            <a href="compound-interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Compound Interest Calculator</h3>
+                <p class="text-sm text-gray-600">Convert rates between compounding frequencies.</p>
+            </a>
+            <a href="savings.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Savings Calculator</h3>
+                <p class="text-sm text-gray-600">Account growth with escalating contributions.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateSimpleInterest() {
-            const principal = parseFloat(document.getElementById('siPrincipal').value);
-            const rate = parseFloat(document.getElementById('siRate').value) / 100;
-            const years = parseFloat(document.getElementById('siYears').value);
+        let chartInstance = null, barChartInstance = null, tab = 'balance';
 
-            if (isNaN(principal) || isNaN(rate) || isNaN(years) || principal <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
+        window.addEventListener('DOMContentLoaded', () => { prefillFromURL(); applyTabVisibility(); calculateSimple(); });
+
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+
+        function clearForm() {
+            document.getElementById('principal').value = '';
+            document.getElementById('resultsArea').innerHTML = '';
+        }
+
+        function setTab(t) {
+            tab = t;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+            applyTabVisibility();
+            calculateSimple();
+        }
+
+        function applyTabVisibility() {
+            document.getElementById('row-balance').style.display = tab === 'balance' ? 'none' : 'flex';
+            document.getElementById('row-principal').style.display = tab === 'principal' ? 'none' : 'flex';
+            document.getElementById('row-term').style.display = tab === 'term' ? 'none' : 'flex';
+            document.getElementById('row-rate').style.display = tab === 'rate' ? 'none' : 'flex';
+        }
+
+        function fmtPct(x) { return (Math.round(x * 10000) / 100).toString() + '%'; }
+
+        function calculateSimple() {
+            const out = document.getElementById('resultsArea');
+            let B = num('balance'), P = num('principal');
+            const rateIn = num('rate'), ratebase = document.getElementById('ratebase').value;
+            const termIn = num('term'), termbase = document.getElementById('termbase').value;
+            let rA = ratebase === 'm' ? rateIn * 12 : rateIn;          // annual rate %
+            let tY = termbase === 'm' ? termIn / 12 : termIn;          // term in years
+            const fail = msg => { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">' + msg + '</div>'; };
+            let bannerLabel, bannerValue, steps = '';
+
+            if (tab === 'balance') {
+                if (P <= 0 || tY <= 0) return fail('Please enter a principal and a term greater than zero.');
+                const I = P * rA / 100 * tY; B = P + I;
+                bannerLabel = 'End Balance'; bannerValue = formatMoney(B);
+                steps = `<p>Total Interest = ${formatMoney(P)} × ${fmtPct(rA)} × ${+tY.toFixed(4)} = <strong>${formatMoney(I)}</strong></p>
+                         <p>End Balance = ${formatMoney(P)} + ${formatMoney(I)} = <strong>${formatMoney(B)}</strong></p>`;
+            } else if (tab === 'principal') {
+                if (B <= 0 || tY <= 0) return fail('Please enter an end balance and a term greater than zero.');
+                P = B / (1 + rA / 100 * tY);
+                const I = B - P;
+                bannerLabel = 'Principal'; bannerValue = formatMoney(P);
+                steps = `<p>Principal = ${formatMoney(B)} ÷ (1 + ${fmtPct(rA)} × ${+tY.toFixed(4)}) = <strong>${formatMoney(P)}</strong></p>
+                         <p>Total Interest = ${formatMoney(B)} − ${formatMoney(P)} = <strong>${formatMoney(I)}</strong></p>`;
+            } else if (tab === 'rate') {
+                if (P <= 0 || tY <= 0) return fail('Please enter a principal and a term greater than zero.');
+                if (B < P) return fail('End balance is below the principal — that implies a negative rate. Check the inputs.');
+                rA = (B / P - 1) / tY * 100;
+                const I = B - P;
+                bannerLabel = 'Interest Rate'; bannerValue = rA.toFixed(3) + '% per year';
+                steps = `<p>Rate = (${formatMoney(B)} ÷ ${formatMoney(P)} − 1) ÷ ${+tY.toFixed(4)} = <strong>${rA.toFixed(4)}% per year</strong></p>
+                         <p>Total Interest = ${formatMoney(B)} − ${formatMoney(P)} = <strong>${formatMoney(I)}</strong></p>`;
+            } else if (tab === 'term') {
+                if (P <= 0) return fail('Please enter a principal greater than zero.');
+                if (rA <= 0) return fail('With a 0% rate the balance never changes — no term reaches a different balance.');
+                if (B < P) return fail('End balance is below the principal — impossible at a positive rate. Check the inputs.');
+                tY = (B / P - 1) / (rA / 100);
+                const I = B - P;
+                bannerLabel = 'Term'; bannerValue = tY.toFixed(2) + ' years (' + Math.round(tY * 12) + ' months)';
+                steps = `<p>Term = (${formatMoney(B)} ÷ ${formatMoney(P)} − 1) ÷ ${fmtPct(rA)} = <strong>${tY.toFixed(4)} years</strong></p>
+                         <p>Total Interest = ${formatMoney(B)} − ${formatMoney(P)} = <strong>${formatMoney(I)}</strong></p>`;
             }
 
-            // Simple Interest Formula: I = P * r * t
-            const interest = principal * rate * years;
-            const total = principal + interest;
+            const I = B - P;
+            const convNote = (ratebase === 'm' || termbase === 'm')
+                ? `<p class="text-xs text-gray-500 mt-2">Converted to an annual basis: rate ${fmtPct(rA)} per year, term ${+tY.toFixed(4)} years.</p>` : '';
 
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+            // schedule rows in the term's own unit
+            const perYear = termbase === 'y';
+            const periods = Math.min(perYear ? Math.ceil(tY) : Math.ceil(tY * 12), 600);
+            const intPer = perYear ? P * rA / 100 : P * rA / 100 / 12;
+            let rowsHtml = '';
+            for (let k = 1; k <= periods; k++) {
+                const frac = perYear ? Math.min(k, tY) : Math.min(k, tY * 12);
+                const kk = perYear ? frac : frac / 12;
+                const interestCum = P * rA / 100 * kk;
+                rowsHtml += `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${k}</td><td class="py-1.5 px-2 text-right">${formatMoney(intPer * (perYear ? Math.min(1, tY - (k - 1)) : Math.min(1, tY * 12 - (k - 1))))}</td><td class="py-1.5 px-2 text-right">${formatMoney(interestCum)}</td><td class="py-1.5 px-2 text-right">${formatMoney(P + interestCum)}</td></tr>`;
+                if (kk >= tY) break;
+            }
 
-            document.getElementById('siP').textContent = formatter.format(principal);
-            document.getElementById('siI').textContent = formatter.format(interest);
-            document.getElementById('siTotal').textContent = formatter.format(total);
+            // compound comparison (monthly compounding)
+            const compB = P * Math.pow(1 + rA / 100 / 12, 12 * tY);
+            const compBox = `
+                <div class="bg-teal-50 border border-teal-200 rounded-xl p-4 mb-6 text-sm">
+                    <p class="font-bold text-teal-900 mb-1">Same numbers, compounded monthly instead:</p>
+                    <p class="text-teal-900">End balance would be <strong>${formatMoney(compB)}</strong> — that's <strong>${formatMoney(compB - B)}</strong> ${compB >= B ? 'more' : 'less'} than simple interest's ${formatMoney(B)}. The gap is interest earning its own interest.</p>
+                </div>`;
 
-            document.getElementById('siResults').classList.remove('hidden');
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">${bannerLabel}</p>
+                    <p class="text-4xl font-bold">${bannerValue}</p>
+                    <p class="text-sm opacity-90 mt-1">Principal ${formatMoney(P)} · Rate ${fmtPct(rA)}/yr · Term ${+tY.toFixed(2)} years</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>End Balance:</span> <span class="font-bold">${formatMoney(B)}</span></p>
+                    <p class="flex justify-between"><span>Total Interest:</span> <span class="font-bold">${formatMoney(I)}</span></p>
+                    <div class="border-t mt-3 pt-3">
+                        <p class="font-bold text-gray-800 mb-1">Calculation steps:</p>
+                        ${steps}
+                        ${convNote}
+                    </div>
+                </div>
+                ${compBox}
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="barChart"></canvas>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Schedule (${perYear ? 'per year' : 'per month'})</h3>
+                    <div class="overflow-x-auto" style="max-height:20rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">${perYear ? 'Year' : 'Month'}</th><th class="py-2 px-2 border-b text-right">Interest (period)</th><th class="py-2 px-2 border-b text-right">Interest (cum.)</th><th class="py-2 px-2 border-b text-right">Balance</th></tr></thead>
+                            <tbody>${rowsHtml}</tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                </div>`;
+
+            const bc = document.getElementById('barChart');
+            if (bc) {
+                if (barChartInstance) barChartInstance.destroy();
+                const stepsN = Math.min(Math.max(1, Math.round(tY)), 50);
+                const labels = [], prin = [], intr = [];
+                for (let k = 0; k <= stepsN; k++) { labels.push(k); prin.push(Math.round(P)); intr.push(Math.round(P * rA / 100 * (tY * k / stepsN))); }
+                barChartInstance = new Chart(bc.getContext('2d'), {
+                    type: 'bar',
+                    data: { labels, datasets: [
+                        { label: 'Principal', data: prin, backgroundColor: '#3F51B5' },
+                        { label: 'Interest', data: intr, backgroundColor: '#14B8A6' }
+                    ]},
+                    options: { responsive: true, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Balance Accumulation (straight line — that is simple interest)' } }, scales: { x: { stacked: true, title: { display: true, text: 'Years' } }, y: { stacked: true, ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } } } }
+                });
+            }
+            const pc = document.getElementById('pieChart');
+            if (pc) {
+                if (chartInstance) chartInstance.destroy();
+                chartInstance = new Chart(pc.getContext('2d'), {
+                    type: 'doughnut',
+                    data: { labels: ['Principal', 'Interest'], datasets: [{ data: [Math.round(P), Math.round(I)], backgroundColor: ['#3F51B5', '#14B8A6'] }] },
+                    options: { responsive: true, plugins: { legend: { position: 'right' }, title: { display: true, text: 'Breakdown' }, tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + formatMoney(c.parsed) } } } }
+                });
+            }
+            updateURL();
         }
+
+        const PARAMS = [['balance', 'b'], ['principal', 'p'], ['rate', 'r'], ['ratebase', 'rb'], ['term', 't'], ['termbase', 'tb']];
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            p.set('tab', tab);
+            PARAMS.forEach(([id, key]) => { p.set(key, document.getElementById(id).value); });
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); });
+            if (q.get('tab')) {
+                tab = q.get('tab');
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+            }
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
