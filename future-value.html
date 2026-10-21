@@ -4,112 +4,368 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Future Value Calculator - CalcNova</title>
+    <meta name="description" content="Find the future value of a starting amount plus periodic deposits — with total interest, a growth chart, and the full period-by-period schedule.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/future-value">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Future Value Calculator - CalcNova">
+    <meta property="og:description" content="What today's money and steady deposits grow into, period by period.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/future-value">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Future Value Calculator - CalcNova">
+    <meta name="twitter:description" content="Future value of a lump sum plus periodic deposits, with chart and schedule.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Future Value Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/future-value" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is future value?",
+                "acceptedAnswer": { "@type": "Answer", "text": "What money is expected to be worth at a future date after earning compound interest: FV = PV × (1 + r)^N for a lump sum, plus PMT × [((1 + r)^N − 1) / r] for a stream of deposits. $10 at 6% for one year has a future value of $10.60 — the simplest possible case." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why do deposits made at the beginning worth more?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Each beginning-of-period deposit earns interest for one extra period compared with an end-of-period deposit, so the whole deposit stream is worth exactly (1 + r) times as much. Over 10 periods at 6%, $100 per period grows to $1,397.16 paid at the beginning versus $1,318.08 at the end." }
+            },
+            {
+                "@type": "Question",
+                "name": "What does the PV figure in the results mean?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The present value of everything that produces the future value: your starting amount plus the discounted value of the deposit stream. It answers 'what single sum today is equivalent to this whole plan?' — $1,736.01 in the default example." }
+            },
+            {
+                "@type": "Question",
+                "name": "How is future value used in real life?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Savings goals (what will this account hold in 10 years?), retirement planning (what will monthly contributions become?), and any comparison of money across time. FV is one of the five time-value-of-money keys — without it there would be no mortgages, auto loans, or credit cards, since every loan prices a present sum against future payments." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .formula { text-align: center; font-size: 1.05rem; font-weight: 600; color: #1F2937; background: #F3F4F6; border-radius: 0.5rem; padding: 0.75rem; margin: 0.75rem 0; }
+        canvas.donut { max-width: 220px; width: 100%; height: auto; display: block; margin: 0 auto; }
+        canvas.chart { width: 100%; height: auto; display: block; }
+        @media print { nav, footer, .no-print, .calc-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Future Value</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Future Value Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Future Value Calculator</h1>
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-2">
+            <h1 class="text-2xl font-bold text-[#3F51B5]">Future Value Calculator</h1>
+            <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">Print</button>
+        </div>
+        <p class="text-gray-600 text-sm mb-8 max-w-3xl">Calculate the future value (FV) of an investment from its compounding periods (N), interest/yield rate (I/Y), starting amount (PV), and periodic deposit per period (PMT) — with a growth chart and the full schedule.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Present Value (Initial Investment) ($)</label>
-                        <input type="number" id="fvPresent" value="10000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group">
+                        <label>Number of Periods (N)</label>
+                        <input type="number" id="fN" value="10" class="w-[58%]">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
-                        <input type="number" id="fvRate" value="6" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="input-group">
+                        <label>Starting Amount (PV)</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="fPV" value="1000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Time (Years)</label>
-                        <input type="number" id="fvYears" value="10" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="input-group">
+                        <label>Interest Rate (I/Y)</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="fRate" value="6" step="any" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Compound Frequency</label>
-                        <select id="fvComp" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="1">Annually</option>
-                            <option value="12" selected>Monthly</option>
-                            <option value="365">Daily</option>
-                        </select>
+                    <div class="input-group">
+                        <label>Periodic Deposit (PMT)</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="fPMT" value="100" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
                     </div>
+                    <div class="input-group">
+                        <label>PMT Timing</label>
+                        <div class="w-[58%] flex gap-1">
+                            <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="fWhen" value="end" checked class="mr-1"> End</label>
+                            <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="fWhen" value="beginning" class="mr-1"> Beginning</label>
+                        </div>
+                    </div>
+                    <p class="text-gray-500 text-xs">PMT made at the chosen point of each compound period.</p>
+                    <button onclick="calculate()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-3">Calculate</button>
                 </div>
-                <button onclick="calculateFV()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Future Value</button>
-
-                <div id="fvResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
-                    <p class="text-sm text-gray-500">Future Value</p>
-                    <p class="text-4xl font-bold text-[#14B8A6]" id="fvAmount">$0</p>
-                    <p class="text-sm text-gray-500 mt-2">Total Interest Earned</p>
-                    <p class="text-xl font-bold text-[#3F51B5]" id="fvInterest">$0</p>
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden lg:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Understanding Future Value</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Future Value (FV) is the value of a current asset at a future date based on an assumed rate of growth. The future value is important to investors and financial planners, as they use it to estimate how much an investment made today will be worth in the future. Knowing the future value allows investors to make sound investment decisions based on their anticipated needs.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="lg:w-3/5">
+                <div id="results"></div>
             </div>
         </div>
-
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Future Value and the Time Value of Money</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Future value (FV)</strong> is what money is expected to be worth at a later date. Cash resting in a
+                savings account, or locked into a bond, earns compound interest — so its amount at any future
+                checkpoint differs from today's, and FV is the arithmetic that names the checkpoint figure:
+            </p>
+            <div class="formula">FV = PV × (1 + r)<sup>N</sup> + PMT × [((1 + r)<sup>N</sup> − 1) ÷ r] &nbsp;·&nbsp; defaults: $3,108.93</div>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <p class="text-gray-700 leading-7 mb-4">
+                The savings account is the natural classroom for the concept, because its future value simply
+                answers "how much will be in the account then?" Try the smallest possible case in the calculator
+                above: $10 of starting amount at 6% for 1 period, no deposits — FV comes out <strong>$10.60</strong>, ten
+                dollars of principal and sixty cents of interest. Scale that seed up and the second term takes
+                over: in the defaults, $1,000 of starting money and $1,000 of deposits produce $1,108.93 of pure
+                interest — the interest ends up the largest of the three slices, which is compounding's signature.
+                Given enough periods it always wins; the only question the inputs decide is how long "enough"
+                takes.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">One of the five keys</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                FV, together with PV, I/Y, N, and PMT, forms the <strong>time value of money</strong> — the backbone of
+                finance. There could be no mortgages, auto loans, or credit cards without it: a lender computes
+                the future value of the sum advanced, a borrower repays it in installments, and the rate is the
+                bridge negotiated between them. To run the same machinery backward — what a future sum is worth
+                <em>now</em> — use the Present Value Calculator; to solve for any of the five keys from the other four,
+                the Finance Calculator.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Does FV account for inflation or taxes?</h4>
+                    <p class="text-gray-700">Not by itself — FV is stated in nominal future dollars. For purchasing-power terms, either discount the result by expected inflation or rerun with a real (inflation-adjusted) rate; our Interest Calculator shows buying power explicitly, and the Savings Calculator can skim tax from interest as it accrues.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Can the periodic deposit be zero?</h4>
+                    <p class="text-gray-700">Yes — with PMT at zero the calculator reduces to pure lump-sum compounding, FV = PV × (1 + r)^N, the same engine as the Compound Interest Calculator (which adds compounding-frequency choices).</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial advice.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="present-value.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Present Value Calculator</h3>
+                <p class="text-sm text-gray-600">Run the film backward: future money in today's dollars.</p>
+            </a>
+            <a href="investment.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Investment Calculator</h3>
+                <p class="text-sm text-gray-600">Solve for the deposit, rate, or time instead.</p>
+            </a>
+            <a href="finance.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Finance Calculator</h3>
+                <p class="text-sm text-gray-600">The full five-key TVM machine.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateFV() {
-            const present = parseFloat(document.getElementById('fvPresent').value);
-            const rate = parseFloat(document.getElementById('fvRate').value) / 100;
-            const years = parseFloat(document.getElementById('fvYears').value);
-            const compFreq = parseFloat(document.getElementById('fvComp').value);
+        window.addEventListener('DOMContentLoaded', () => { prefillFromURL(); calculate(); });
 
-            if (isNaN(present) || isNaN(rate) || isNaN(years) || isNaN(compFreq) || present <= 0 || years <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? NaN : v; }
+
+        function calculate() {
+            const out = document.getElementById('results');
+            const N = Math.round(num('fN')), PV0 = num('fPV'), rPct = num('fRate'), PMT = num('fPMT');
+            const when = document.querySelector('input[name="fWhen"]:checked').value;
+            if (!(N > 0) || isNaN(PV0) || isNaN(rPct) || isNaN(PMT)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter periods, a starting amount, a rate, and a deposit (0 is fine).</div>'; return; }
+            const r = rPct / 100;
+            const f = Math.pow(1 + r, N);
+            let FV, PVtot;
+            if (r === 0) { FV = PV0 + PMT * N; PVtot = PV0 + PMT * N; }
+            else {
+                const annFV = PMT * (f - 1) / r * (when === 'beginning' ? (1 + r) : 1);
+                const annPV = PMT * (1 - 1 / f) / r * (when === 'beginning' ? (1 + r) : 1);
+                FV = PV0 * f + annFV;
+                PVtot = PV0 + annPV;
             }
-
-            // Future Value Formula: FV = PV * (1 + r/n)^(n*t)
-            const futureValue = present * Math.pow((1 + (rate / compFreq)), (compFreq * years));
-            const interestEarned = futureValue - present;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('fvAmount').textContent = formatter.format(futureValue);
-            document.getElementById('fvInterest').textContent = formatter.format(interestEarned);
-
-            document.getElementById('fvResults').classList.remove('hidden');
+            const deposits = PMT * N;
+            const interest = FV - PV0 - deposits;
+            let bal = PV0, rows = '', bars = [{ start: PV0, dep: 0, intr: 0 }];
+            for (let t = 1; t <= N; t++) {
+                const start = bal; let intr;
+                if (when === 'beginning') { bal += PMT; intr = bal * r; bal += intr; }
+                else { intr = bal * r; bal += intr + PMT; }
+                rows += `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${t}</td><td class="py-1.5 px-2 text-right">${formatMoney(start)}</td><td class="py-1.5 px-2 text-right">${formatMoney(PMT)}</td><td class="py-1.5 px-2 text-right">${formatMoney(intr)}</td><td class="py-1.5 px-2 text-right">${formatMoney(bal)}</td></tr>`;
+                bars.push({ start: PV0, dep: PMT * t, intr: bal - PV0 - PMT * t });
+            }
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Future Value</p>
+                    <p class="text-4xl font-bold">${formatMoney(FV)}</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <div class="text-sm">
+                        <p class="flex justify-between mb-2"><span>PV (Present Value of the plan):</span> <span class="font-bold">${formatMoney(PVtot)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Total Periodic Deposits:</span> <span class="font-bold">${formatMoney(deposits)}</span></p>
+                        <p class="flex justify-between"><span>Total Interest:</span> <span class="font-bold">${formatMoney(interest)}</span></p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mt-4 items-center">
+                        <canvas id="fvDonut" class="donut" width="220" height="220" role="img" aria-label="Composition of the future value"></canvas>
+                        <div class="text-sm space-y-2" id="fvLegend"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Growth Chart</h3>
+                    <canvas id="fvChart" class="chart" width="640" height="300" role="img" aria-label="Stacked growth chart"></canvas>
+                    <div class="flex flex-wrap gap-4 text-xs mt-2 text-gray-600">
+                        <span><span class="inline-block w-3 h-3 rounded-sm mr-1" style="background:#2b7ddb"></span>Starting amount</span>
+                        <span><span class="inline-block w-3 h-3 rounded-sm mr-1" style="background:#8bbc21"></span>Accumulated deposits</span>
+                        <span><span class="inline-block w-3 h-3 rounded-sm mr-1" style="background:#910000"></span>Accumulated interest</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Schedule</h3>
+                    <div class="overflow-x-auto" style="max-height:22rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">Period</th><th class="py-2 px-2 border-b text-right">Start Balance</th><th class="py-2 px-2 border-b text-right">Deposit</th><th class="py-2 px-2 border-b text-right">Interest</th><th class="py-2 px-2 border-b text-right">End Balance</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>
+                </div>`;
+            drawDonut('fvDonut', [
+                { label: 'Starting amount', value: PV0, color: '#2b7ddb' },
+                { label: 'Periodic deposits', value: deposits, color: '#8bbc21' },
+                { label: 'Interest', value: Math.max(interest, 0), color: '#910000' }
+            ], 'fvLegend');
+            drawBars('fvChart', bars);
+            updateURL();
         }
+
+        function drawBars(id, bars) {
+            const cv = document.getElementById(id); if (!cv) return;
+            const ctx = cv.getContext('2d');
+            const W = 640, H = 300, padL = 64, padB = 26, padT = 10;
+            const iw = W - padL - 8, ih = H - padB - padT;
+            const maxV = Math.max(...bars.map(b => b.start + b.dep + b.intr), 1);
+            ctx.clearRect(0, 0, W, H);
+            ctx.font = '11px Inter, sans-serif'; ctx.fillStyle = '#6B7280'; ctx.strokeStyle = '#E5E7EB';
+            for (let g = 0; g <= 4; g++) {
+                const v = maxV * g / 4, y = padT + ih - ih * g / 4;
+                ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - 8, y); ctx.stroke();
+                ctx.textAlign = 'right'; ctx.fillText(shortMoney(v), padL - 6, y + 4);
+            }
+            const n = bars.length, slot = iw / n, bw = Math.min(26, slot * 0.62);
+            bars.forEach((b, i) => {
+                const x = padL + slot * i + (slot - bw) / 2;
+                let yBase = padT + ih;
+                const segs = [[b.start, '#2b7ddb'], [b.dep, '#8bbc21'], [b.intr, '#910000']];
+                segs.forEach(([v, c]) => {
+                    const h = Math.max(v, 0) / maxV * ih;
+                    ctx.fillStyle = c; ctx.fillRect(x, yBase - h, bw, h); yBase -= h;
+                });
+                if (i === 0 || i === n - 1 || i === Math.floor(n / 2)) {
+                    ctx.fillStyle = '#6B7280'; ctx.textAlign = 'center'; ctx.fillText(i, x + bw / 2, H - 8);
+                }
+            });
+            ctx.fillStyle = '#374151'; ctx.textAlign = 'center'; ctx.fillText('Period', padL + iw / 2, H - 8 + 0);
+        }
+        function shortMoney(v) {
+            if (v >= 1000) return '$' + (v / 1000).toFixed(v >= 10000 ? 0 : 1).replace(/\.0$/, '') + 'K';
+            return '$' + Math.round(v);
+        }
+
+        function drawDonut(id, parts, legendId) {
+            const cv = document.getElementById(id); if (!cv) return;
+            const ctx = cv.getContext('2d');
+            const total = parts.reduce((s, p) => s + p.value, 0) || 1;
+            const cx = 110, cy = 110, R = 100, rIn = 58;
+            ctx.clearRect(0, 0, 220, 220);
+            let ang = -Math.PI / 2;
+            parts.forEach(p => {
+                const sweep = p.value / total * Math.PI * 2;
+                ctx.beginPath(); ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, R, ang, ang + sweep); ctx.closePath();
+                ctx.fillStyle = p.color; ctx.fill();
+                ang += sweep;
+            });
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath(); ctx.arc(cx, cy, rIn, 0, Math.PI * 2); ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(cx, cy, rIn - 1, 0, Math.PI * 2); ctx.fill();
+            document.getElementById(legendId).innerHTML = parts.map(p => `
+                <p class="flex items-center"><span class="inline-block w-3.5 h-3.5 rounded-sm mr-2" style="background:${p.color}"></span>${p.label}: <strong class="ml-1">${formatMoney(p.value)} (${(p.value / total * 100).toFixed(0)}%)</strong></p>`).join('');
+        }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            p.set('n', document.getElementById('fN').value);
+            p.set('pv', document.getElementById('fPV').value);
+            p.set('r', document.getElementById('fRate').value);
+            p.set('pmt', document.getElementById('fPMT').value);
+            p.set('w', document.querySelector('input[name="fWhen"]:checked').value);
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            const set = (id, key) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); };
+            set('fN', 'n'); set('fPV', 'pv'); set('fRate', 'r'); set('fPMT', 'pmt');
+            if (q.get('w')) { const el = document.querySelector(`input[name="fWhen"][value="${q.get('w')}"]`); if (el) el.checked = true; }
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
