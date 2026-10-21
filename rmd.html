@@ -1,117 +1,683 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RMD Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RMD Calculator — Required Minimum Distribution | CalcNova</title>
+<meta name="description" content="Free RMD calculator: compute your Required Minimum Distribution from the IRS Uniform Lifetime Table (or the Joint Life Table when a spouse is more than 10 years younger), with a year-by-year projection of future RMDs and balances to age 120.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/rmd">
+<meta property="og:title" content="RMD Calculator — Required Minimum Distribution | CalcNova">
+<meta property="og:description" content="Your required minimum distribution, the IRS distribution period behind it, and a projection of every future RMD to age 120.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/rmd">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"RMD Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/rmd"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How is my RMD calculated?","acceptedAnswer":{"@type":"Answer","text":"Divide your account balance on December 31 of the previous year by the distribution period for your age from the IRS Uniform Lifetime Table. Example: a $300,000 balance at age 75 uses a period of 24.6, giving an RMD of $12,195.12. If your spouse is the account's primary beneficiary and is more than 10 years younger than you, the longer period from the Joint Life and Last Survivor Table is used instead."}},
+{"@type":"Question","name":"What happens if I miss my RMD or take too little?","acceptedAnswer":{"@type":"Answer","text":"The IRS charges a 25% excise tax on the amount you should have withdrawn but did not. If the shortfall is corrected within the IRS correction window (generally two years) and a return is filed, the penalty can drop to 10%. On a $1,000 shortfall, that is a $250 penalty, or $100 if corrected in time."}},
+{"@type":"Question","name":"Do Roth IRAs have RMDs?","acceptedAnswer":{"@type":"Answer","text":"No. Roth IRAs have no required minimum distributions during the original owner's lifetime, because contributions were taxed going in. Since 2024, designated Roth accounts in 401(k) and similar workplace plans are also exempt from lifetime RMDs. Inherited Roth IRAs follow the beneficiary rules, including the 10-year rule for most non-spouse beneficiaries."}},
+{"@type":"Question","name":"Can I take the RMD for all my IRAs from one account?","acceptedAnswer":{"@type":"Answer","text":"For IRAs, yes: calculate each account's RMD separately, but you may withdraw the combined total from one or more of your IRAs. The same aggregation applies among 403(b) plans. Each 401(k), however, must satisfy its own RMD separately, and taking extra from one account never reduces a future year's RMD."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-xs text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:underline">Home</a> &gt;
+        <a href="financial.html" class="hover:underline">Financial</a> &gt;
+        <span class="text-gray-700 font-medium">RMD Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">RMD</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-[#3F51B5]">RMD Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Once you reach your RMD age — 73 for most people retiring today — the IRS requires you to withdraw a minimum amount from tax-deferred retirement accounts every year: the <strong>Required Minimum Distribution</strong>. Enter your details and this calculator works out this year's RMD from IRS Publication 590-B and projects every future distribution.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Required Minimum Distribution (RMD) Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Account Balance (Dec 31 of previous year) ($)</label>
-                        <input type="number" id="rmdBalance" value="500000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+        <section class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 class="text-lg font-bold text-[#3F51B5] mb-5">Your details</h2>
+            <div class="space-y-4">
+                <div>
+                    <label for="iBirth" class="block text-sm font-medium text-gray-700 mb-1">Your year of birth</label>
+                    <input id="iBirth" type="number" value="1951" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                </div>
+                <div>
+                    <label for="iYear" class="block text-sm font-medium text-gray-700 mb-1">Year of RMD</label>
+                    <select id="iYear" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                        <option value="2028">2028</option>
+                        <option value="2027">2027</option>
+                        <option value="2026" selected>2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="iBalance" class="block text-sm font-medium text-gray-700 mb-1" id="balLabel">Account balance as of 12/31/2025</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iBalance" type="number" value="300000" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Your Age This Year</label>
-                        <input type="number" id="rmdAge" value="75" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-700 mb-1">Is your spouse the primary beneficiary?</span>
+                    <div class="flex gap-6 text-sm pt-1">
+                        <label class="flex items-center gap-2"><input type="radio" name="spb" value="y" checked class="accent-[#3F51B5]"> Yes</label>
+                        <label class="flex items-center gap-2"><input type="radio" name="spb" value="n" class="accent-[#3F51B5]"> No</label>
                     </div>
                 </div>
-                <button onclick="calculateRMD()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate RMD</button>
-
-                <div id="rmdResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
-                    <p class="text-sm text-gray-500">Required Minimum Distribution (RMD) for this year</p>
-                    <p class="text-4xl font-bold text-[#14B8A6]" id="rmdAmount">$0</p>
-                    <p class="text-sm text-gray-500 mt-2">Life Expectancy Factor used</p>
-                    <p class="text-xl font-bold text-[#3F51B5]" id="rmdFactor">0.0</p>
+                <div id="spouseRow">
+                    <label for="iSpouseBirth" class="block text-sm font-medium text-gray-700 mb-1">Your spouse's year of birth</label>
+                    <input id="iSpouseBirth" type="number" value="1953" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                </div>
+                <div>
+                    <label for="iReturn" class="block text-sm font-medium text-gray-700 mb-1">Estimated rate of return <span class="text-gray-400 font-normal">(optional — powers the projection)</span></label>
+                    <div class="relative">
+                        <input id="iReturn" type="number" step="any" value="5" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 pr-8 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                        <span class="absolute right-3 top-2.5 text-gray-400">%</span>
+                    </div>
                 </div>
             </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="calculate()" class="flex-1 bg-[#4CAF50] hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition">Calculate</button>
+                <button onclick="shareLink(this)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg transition text-sm">Copy share link</button>
+            </div>
+            <p class="text-xs text-gray-400 mt-4">Based on the IRS life expectancy tables in Publication 590-B: the Uniform Lifetime Table, or the Joint Life and Last Survivor Table when a spouse who is the primary beneficiary is more than 10 years younger. Intended for U.S. residents.</p>
+        </section>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is an RMD?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A Required Minimum Distribution (RMD) is the minimum amount of money you must withdraw from your retirement accounts (like a Traditional IRA or 401k) each year once you reach a certain age. Under the SECURE 2.0 Act, the age to start taking RMDs is 73 (or 75 if you were born in 1960 or later). The IRS calculates the RMD by dividing your account balance by a "life expectancy factor." Failing to take the RMD results in a hefty penalty.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
+        <div class="lg:col-span-3 space-y-8">
+            <section id="results" class="scroll-mt-24"></section>
+
+            <!-- AdSense: 300x250 beside the form / above results on mobile -->
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+
+            <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 prose max-w-none prose-gray prose-headings:text-[#3F51B5]">
+                <h2>RMDs: Required Minimum Distributions</h2>
+                <p>A required minimum distribution is the smallest amount the IRS lets you leave untouched each year once distributions begin — or rather, the smallest amount you <em>must</em> take out of tax-deferred accounts such as traditional, SEP, and SIMPLE IRAs, most 401(k), 403(b), and 457(b) plans, and profit-sharing plans. The money went in tax-deferred and grew untaxed for decades; the RMD is how the IRS finally collects, because every dollar withdrawn is taxed as ordinary income. Nothing stops you from taking more than the minimum — the RMD is a floor, not a ceiling.</p>
+
+                <h3>When RMDs start, and the dates that matter</h3>
+                <p>Your first RMD is due by <strong>April 1 of the year after</strong> you reach your applicable age: <strong>73</strong> if you were born from 1951 through 1959, and <strong>75</strong> if you were born in 1960 or later (the SECURE Act 2.0 schedule; before 2020 the age was 70½, then 72). Every RMD after the first is due by <strong>December 31</strong> of its year. Delaying the first one is allowed but usually unwise: you would owe two RMDs in a single year, stacking two taxable events and possibly pushing yourself into a higher bracket. One genuine delay does exist — if you are still working for the company that sponsors your 401(k) and own less than 5% of it, that plan's RMDs can wait until you retire. The exception never applies to IRAs.</p>
+
+                <h3>How an RMD is calculated</h3>
+                <p>Three steps, straight from IRS Publication 590-B:</p>
+                <ol>
+                    <li>Take the account balance at the <strong>close of December 31 of the previous year</strong></li>
+                    <li>Find the <strong>distribution period</strong> for your age in the correct IRS table</li>
+                    <li><strong>Divide</strong>: RMD = prior year-end balance ÷ distribution period</li>
+                </ol>
+                <p>Most owners use the <strong>Uniform Lifetime Table</strong> — the calculator's defaults, for instance, divide a $300,000 balance by the age-75 period of 24.6 to get $12,195.12, a 4.1% withdrawal. The percentage climbs steeply with age: about 3.8% at 73, 6.3% at 85, 11.2% at 95, and half the remaining balance at 120. The one exception: if your spouse is the account's sole (primary) beneficiary <em>and</em> more than 10 years younger than you, the <strong>Joint Life and Last Survivor Table</strong> applies instead. Its longer periods — reflecting two lifetimes — produce a noticeably smaller RMD, and this calculator switches to it automatically when your inputs qualify.</p>
+
+                <h3>Every account, calculated separately</h3>
+                <p>An RMD must be <em>figured</em> for each account individually, but withdrawal rules differ by account type. Traditional IRAs: calculate each one, then take the combined total from any one or several of them. 403(b) plans aggregate the same way. Each 401(k) must satisfy its own RMD from that plan. Withdrawals from a Roth IRA never count toward any RMD, and over-withdrawing in one year earns no credit against future years.</p>
+
+                <h3>The cost of missing one</h3>
+                <p>Fall short and the IRS levies a <strong>25% excise tax</strong> on the amount not withdrawn — $250 on a $1,000 shortfall. Correct the mistake within the IRS correction window (generally two years) and file the return, and the penalty drops to <strong>10%</strong>. Responsibility is yours even if your custodian calculated the RMD for you — custodians must offer the figure, but errors remain the taxpayer's problem, which is why checking your own number each year is worth the minute it takes.</p>
+
+                <h3>Roth accounts and inherited accounts</h3>
+                <p>Roth IRAs have <strong>no lifetime RMDs</strong> for the original owner, and since 2024 the same is true of Roth 401(k)s — one reason Roth conversions before age 73 are a popular way to shrink future RMDs. Inherited accounts are a different world: since the SECURE Act of 2019, most non-spouse beneficiaries must empty an inherited IRA within <strong>10 years</strong> of the owner's death. Exceptions — surviving spouses, minor children (until they come of age), disabled or chronically ill beneficiaries, and anyone not more than 10 years younger than the owner — may still stretch distributions over a lifetime. A spouse has the extra option of rolling the account into their own IRA and treating it as theirs. Finally, if you are charitably inclined, a <strong>qualified charitable distribution</strong> sends your RMD straight from the IRA to a charity: it satisfies the requirement while keeping the amount out of your taxable income entirely.</p>
+
+                <h3>Frequently asked questions</h3>
+                <h4>How is my RMD calculated?</h4>
+                <p>Prior December 31 balance ÷ the IRS distribution period for your age. $300,000 ÷ 24.6 (age 75) = $12,195.12.</p>
+                <h4>What if I take too little?</h4>
+                <p>A 25% excise tax on the shortfall, reducible to 10% if corrected inside the two-year correction window.</p>
+                <h4>Do Roth IRAs have RMDs?</h4>
+                <p>Not during the owner's lifetime — and since 2024, neither do Roth 401(k)s. Inherited Roth IRAs follow the beneficiary rules instead.</p>
+                <h4>Can I take all my IRA RMDs from one account?</h4>
+                <p>Yes for IRAs (and separately for 403(b)s): figure each account's RMD, then withdraw the total from any one or more of them. Each 401(k) stands alone.</p>
+            </section>
+
+            <section>
+                <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <a href="retirement.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                        <div class="font-bold text-[#3F51B5]">Retirement Calculator</div>
+                        <p class="text-sm text-gray-500 mt-1">How much you need, how much to save, and how long it will last.</p>
+                    </a>
+                    <a href="401k.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                        <div class="font-bold text-[#3F51B5]">401K Calculator</div>
+                        <p class="text-sm text-gray-500 mt-1">Project your 401(k) balance, employer match, and retirement payout.</p>
+                    </a>
+                    <a href="ira.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                        <div class="font-bold text-[#3F51B5]">IRA Calculator</div>
+                        <p class="text-sm text-gray-500 mt-1">Traditional, SEP, and SIMPLE IRAs vs. Roth vs. taxable savings, after tax.</p>
+                    </a>
                 </div>
-            </div>
+            </section>
         </div>
+    </div>
+</main>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
-
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
         </div>
-    </footer>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-    <script>
-        // Simplified IRS Uniform Lifetime Table (for beneficiaries, ages 72+)
-        const lifeExpectancyTable = {
-            72: 27.4, 73: 26.5, 74: 25.5, 75: 24.6, 76: 23.7, 77: 22.9, 78: 22.0, 79: 21.1, 80: 20.2,
-            81: 19.4, 82: 18.5, 83: 17.7, 84: 16.8, 85: 16.0, 86: 15.2, 87: 14.4, 88: 13.7, 89: 12.9,
-            90: 12.2, 91: 11.5, 92: 10.8, 93: 10.1, 94: 9.5, 95: 8.9, 96: 8.4, 97: 7.8, 98: 7.3,
-            99: 6.8, 100: 6.4
-        };
+<script>
+// IRS Uniform Lifetime Table (Pub. 590-B, Table III) — distribution periods, ages 72-120.
+const ULT = {72:27.4,73:26.5,74:25.5,75:24.6,76:23.7,77:22.9,78:22.0,79:21.1,80:20.2,81:19.4,82:18.5,83:17.7,84:16.8,85:16.0,86:15.2,87:14.4,88:13.7,89:12.9,90:12.2,91:11.5,92:10.8,93:10.1,94:9.5,95:8.9,96:8.4,97:7.8,98:7.3,99:6.8,100:6.4,101:6.0,102:5.6,103:5.2,104:4.9,105:4.6,106:4.3,107:4.1,108:3.9,109:3.7,110:3.5,111:3.4,112:3.3,113:3.1,114:3.0,115:2.9,116:2.8,117:2.7,118:2.5,119:2.3,120:2.0};
+// IRS Joint Life and Last Survivor Table (Pub. 590-B, Table II), transcribed from the IRS
+// publication. JOINT[spouseDecade] = { f: first owner-age row, r: rows of 10 values for
+// spouse ages decade..decade+9 }. Rows run from f upward; the last row repeats to age 120.
+const JOINT = {
+20: { f: 72, r: [
+"65.1 64.2 63.2 62.2 61.3 60.3 59.3 58.4 57.4 56.5",
+"65.1 64.2 63.2 62.2 61.2 60.3 59.3 58.4 57.4 56.4",
+"65.1 64.1 63.2 62.2 61.2 60.3 59.3 58.3 57.4 56.4",
+"65.1 64.1 63.2 62.2 61.2 60.3 59.3 58.3 57.4 56.4",
+"65.1 64.1 63.2 62.2 61.2 60.2 59.3 58.3 57.4 56.4",
+"65.1 64.1 63.1 62.2 61.2 60.2 59.3 58.3 57.3 56.4",
+"65.1 64.1 63.1 62.2 61.2 60.2 59.3 58.3 57.3 56.4",
+"65.1 64.1 63.1 62.2 61.2 60.2 59.3 58.3 57.3 56.4",
+"65.1 64.1 63.1 62.1 61.2 60.2 59.2 58.3 57.3 56.4",
+"65.1 64.1 63.1 62.1 61.2 60.2 59.2 58.3 57.3 56.4",
+"65.1 64.1 63.1 62.1 61.2 60.2 59.2 58.3 57.3 56.3",
+"65.1 64.1 63.1 62.1 61.2 60.2 59.2 58.3 57.3 56.3",
+"65.1 64.1 63.1 62.1 61.2 60.2 59.2 58.3 57.3 56.3",
+"65.1 64.1 63.1 62.1 61.2 60.2 59.2 58.3 57.3 56.3",
+"65.1 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3",
+"65.0 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3",
+"65.0 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3",
+"65.0 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3",
+"65.0 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3",
+"65.0 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3",
+"65.0 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3",
+"65.0 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3",
+"65.0 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3",
+"65.0 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3",
+"65.0 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3",
+"65.0 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3",
+"65.0 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3",
+"65.0 64.1 63.1 62.1 61.1 60.2 59.2 58.2 57.3 56.3"
+]},
+30: { f: 72, r: [
+"55.5 54.5 53.6 52.6 51.7 50.8 49.8 48.9 47.9 47.0",
+"55.5 54.5 53.6 52.6 51.7 50.7 49.8 48.8 47.9 46.9",
+"55.5 54.5 53.6 52.6 51.7 50.7 49.8 48.8 47.9 46.9",
+"55.5 54.5 53.5 52.6 51.6 50.7 49.7 48.8 47.8 46.9",
+"55.4 54.5 53.5 52.6 51.6 50.7 49.7 48.8 47.8 46.9",
+"55.4 54.5 53.5 52.6 51.6 50.7 49.7 48.8 47.8 46.9",
+"55.4 54.5 53.5 52.6 51.6 50.6 49.7 48.7 47.8 46.8",
+"55.4 54.5 53.5 52.5 51.6 50.6 49.7 48.7 47.8 46.8",
+"55.4 54.4 53.5 52.5 51.6 50.6 49.7 48.7 47.8 46.8",
+"55.4 54.4 53.5 52.5 51.6 50.6 49.7 48.7 47.7 46.8",
+"55.4 54.4 53.5 52.5 51.6 50.6 49.7 48.7 47.7 46.8",
+"55.4 54.4 53.5 52.5 51.6 50.6 49.6 48.7 47.7 46.8",
+"55.4 54.4 53.5 52.5 51.5 50.6 49.6 48.7 47.7 46.8",
+"55.4 54.4 53.5 52.5 51.5 50.6 49.6 48.7 47.7 46.8",
+"55.4 54.4 53.5 52.5 51.5 50.6 49.6 48.7 47.7 46.7",
+"55.4 54.4 53.4 52.5 51.5 50.6 49.6 48.7 47.7 46.7",
+"55.4 54.4 53.4 52.5 51.5 50.6 49.6 48.7 47.7 46.7",
+"55.4 54.4 53.4 52.5 51.5 50.6 49.6 48.7 47.7 46.7",
+"55.4 54.4 53.4 52.5 51.5 50.6 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.6 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.6 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.6 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.6 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.6 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.6 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.6 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.6 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.6 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.6 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.6 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.6 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.5 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.5 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.5 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.5 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.5 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.5 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.5 49.6 48.6 47.7 46.7",
+"55.3 54.4 53.4 52.5 51.5 50.5 49.6 48.6 47.7 46.7"
+]},
+40: { f: 72, r: [
+"46.0 45.1 44.2 43.2 42.3 41.4 40.5 39.6 38.7 37.8",
+"46.0 45.1 44.1 43.2 42.3 41.4 40.4 39.5 38.6 37.7",
+"46.0 45.0 44.1 43.2 42.2 41.3 40.4 39.5 38.6 37.7",
+"45.9 45.0 44.1 43.1 42.2 41.3 40.3 39.4 38.5 37.6",
+"45.9 45.0 44.0 43.1 42.2 41.2 40.3 39.4 38.5 37.5",
+"45.9 45.0 44.0 43.1 42.1 41.2 40.3 39.3 38.4 37.5",
+"45.9 44.9 44.0 43.0 42.1 41.2 40.2 39.3 38.4 37.5",
+"45.9 44.9 44.0 43.0 42.1 41.1 40.2 39.3 38.3 37.4",
+"45.9 44.9 43.9 43.0 42.1 41.1 40.2 39.2 38.3 37.4",
+"45.8 44.9 43.9 43.0 42.0 41.1 40.1 39.2 38.3 37.3",
+"45.8 44.9 43.9 43.0 42.0 41.1 40.1 39.2 38.3 37.3",
+"45.8 44.9 43.9 43.0 42.0 41.1 40.1 39.2 38.2 37.3",
+"45.8 44.9 43.9 42.9 42.0 41.0 40.1 39.2 38.2 37.3",
+"45.8 44.8 43.9 42.9 42.0 41.0 40.1 39.1 38.2 37.3",
+"45.8 44.8 43.9 42.9 42.0 41.0 40.1 39.1 38.2 37.2",
+"45.8 44.8 43.9 42.9 42.0 41.0 40.1 39.1 38.2 37.2",
+"45.8 44.8 43.9 42.9 42.0 41.0 40.0 39.1 38.2 37.2",
+"45.8 44.8 43.9 42.9 41.9 41.0 40.0 39.1 38.1 37.2",
+"45.8 44.8 43.9 42.9 41.9 41.0 40.0 39.1 38.1 37.2",
+"45.8 44.8 43.9 42.9 41.9 41.0 40.0 39.1 38.1 37.2",
+"45.8 44.8 43.8 42.9 41.9 41.0 40.0 39.1 38.1 37.2",
+"45.8 44.8 43.8 42.9 41.9 41.0 40.0 39.1 38.1 37.2",
+"45.8 44.8 43.8 42.9 41.9 41.0 40.0 39.1 38.1 37.2",
+"45.8 44.8 43.8 42.9 41.9 41.0 40.0 39.1 38.1 37.2",
+"45.8 44.8 43.8 42.9 41.9 41.0 40.0 39.1 38.1 37.2",
+"45.8 44.8 43.8 42.9 41.9 41.0 40.0 39.1 38.1 37.2",
+"45.8 44.8 43.8 42.9 41.9 41.0 40.0 39.1 38.1 37.2",
+"45.8 44.8 43.8 42.9 41.9 41.0 40.0 39.1 38.1 37.2",
+"45.8 44.8 43.8 42.9 41.9 41.0 40.0 39.0 38.1 37.1",
+"45.8 44.8 43.8 42.9 41.9 41.0 40.0 39.0 38.1 37.1",
+"45.8 44.8 43.8 42.9 41.9 41.0 40.0 39.0 38.1 37.1",
+"45.8 44.8 43.8 42.9 41.9 41.0 40.0 39.0 38.1 37.1",
+"45.8 44.8 43.8 42.9 41.9 41.0 40.0 39.0 38.1 37.1",
+"45.7 44.8 43.8 42.9 41.9 41.0 40.0 39.0 38.1 37.1",
+"45.7 44.8 43.8 42.9 41.9 41.0 40.0 39.0 38.1 37.1",
+"45.7 44.8 43.8 42.9 41.9 41.0 40.0 39.0 38.1 37.1",
+"45.7 44.8 43.8 42.9 41.9 41.0 40.0 39.0 38.1 37.1",
+"45.7 44.8 43.8 42.9 41.9 41.0 40.0 39.0 38.1 37.1",
+"45.7 44.8 43.8 42.9 41.9 41.0 40.0 39.0 38.1 37.1"
+]},
+50: { f: 72, r: [
+"36.9 36.0 35.2 34.3 33.5 32.7 31.9 31.1 30.3 29.5",
+"36.8 36.0 35.1 34.2 33.4 32.6 31.7 30.9 30.1 29.4",
+"36.8 35.9 35.0 34.1 33.3 32.4 31.6 30.8 30.0 29.2",
+"36.7 35.8 34.9 34.1 33.2 32.4 31.5 30.7 29.9 29.1",
+"36.6 35.7 34.9 34.0 33.1 32.3 31.4 30.6 29.8 29.0",
+"36.6 35.7 34.8 33.9 33.0 32.2 31.3 30.5 29.7 28.8",
+"36.5 35.6 34.7 33.9 33.0 32.1 31.2 30.4 29.6 28.7",
+"36.5 35.6 34.7 33.8 32.9 32.0 31.2 30.3 29.5 28.7",
+"36.5 35.5 34.6 33.7 32.9 32.0 31.1 30.3 29.4 28.6",
+"36.4 35.5 34.6 33.7 32.8 31.9 31.1 30.2 29.3 28.5",
+"36.4 35.5 34.6 33.7 32.8 31.9 31.0 30.1 29.3 28.4",
+"36.4 35.4 34.5 33.6 32.7 31.8 31.0 30.1 29.2 28.4",
+"36.3 35.4 34.5 33.6 32.7 31.8 30.9 30.0 29.2 28.3",
+"36.3 35.4 34.5 33.6 32.7 31.8 30.9 30.0 29.1 28.3",
+"36.3 35.4 34.5 33.5 32.6 31.7 30.9 30.0 29.1 28.2",
+"36.3 35.4 34.4 33.5 32.6 31.7 30.8 29.9 29.1 28.2",
+"36.3 35.3 34.4 33.5 32.6 31.7 30.8 29.9 29.0 28.2",
+"36.3 35.3 34.4 33.5 32.6 31.7 30.8 29.9 29.0 28.2",
+"36.3 35.3 34.4 33.5 32.6 31.7 30.8 29.9 29.0 28.1",
+"36.2 35.3 34.4 33.5 32.5 31.6 30.7 29.9 29.0 28.1",
+"36.2 35.3 34.4 33.5 32.5 31.6 30.7 29.8 29.0 28.1",
+"36.2 35.3 34.4 33.4 32.5 31.6 30.7 29.8 29.0 28.1",
+"36.2 35.3 34.4 33.4 32.5 31.6 30.7 29.8 28.9 28.1",
+"36.2 35.3 34.4 33.4 32.5 31.6 30.7 29.8 28.9 28.1",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.7 29.8 28.9 28.0",
+"36.2 35.3 34.3 33.4 32.5 31.6 30.6 29.8 28.9 28.0"
+]},
+60: { f: 72, r: [
+"28.8 28.1 27.4 26.7 26.0 25.4 24.8 24.2 23.6 23.1",
+"28.6 27.9 27.2 26.5 25.8 25.1 24.5 23.9 23.3 22.7",
+"28.4 27.7 27.0 26.2 25.5 24.9 24.2 23.6 23.0 22.4",
+"28.3 27.5 26.8 26.1 25.3 24.6 24.0 23.3 22.7 22.1",
+"28.2 27.4 26.6 25.9 25.2 24.4 23.7 23.1 22.4 21.8",
+"28.0 27.3 26.5 25.7 25.0 24.3 23.5 22.9 22.2 21.5",
+"27.9 27.1 26.4 25.6 24.8 24.1 23.4 22.7 22.0 21.3",
+"27.8 27.0 26.2 25.5 24.7 23.9 23.2 22.5 21.8 21.1",
+"27.8 26.9 26.1 25.3 24.6 23.8 23.1 22.3 21.6 20.9",
+"27.7 26.9 26.0 25.2 24.5 23.7 22.9 22.2 21.5 20.7",
+"27.6 26.8 26.0 25.2 24.4 23.6 22.8 22.1 21.3 20.6",
+"27.5 26.7 25.9 25.1 24.3 23.5 22.7 22.0 21.2 20.5",
+"27.5 26.7 25.8 25.0 24.2 23.4 22.6 21.9 21.1 20.4",
+"27.4 26.6 25.8 25.0 24.1 23.3 22.6 21.8 21.0 20.3",
+"27.4 26.6 25.7 24.9 24.1 23.3 22.5 21.7 20.9 20.2",
+"27.4 26.5 25.7 24.9 24.0 23.2 22.4 21.6 20.9 20.1",
+"27.3 26.5 25.6 24.8 24.0 23.2 22.4 21.6 20.8 20.0",
+"27.3 26.4 25.6 24.8 24.0 23.1 22.3 21.5 20.7 20.0",
+"27.3 26.4 25.6 24.7 23.9 23.1 22.3 21.5 20.7 19.9",
+"27.3 26.4 25.6 24.7 23.9 23.1 22.3 21.5 20.7 19.9",
+"27.2 26.4 25.5 24.7 23.9 23.0 22.2 21.4 20.6 19.8",
+"27.2 26.4 25.5 24.7 23.8 23.0 22.2 21.4 20.6 19.8",
+"27.2 26.3 25.5 24.7 23.8 23.0 22.2 21.4 20.6 19.8",
+"27.2 26.3 25.5 24.6 23.8 23.0 22.2 21.4 20.6 19.7",
+"27.2 26.3 25.5 24.6 23.8 23.0 22.2 21.3 20.5 19.7",
+"27.2 26.3 25.5 24.6 23.8 23.0 22.1 21.3 20.5 19.7",
+"27.2 26.3 25.5 24.6 23.8 22.9 22.1 21.3 20.5 19.7",
+"27.2 26.3 25.4 24.6 23.8 22.9 22.1 21.3 20.5 19.7",
+"27.1 26.3 25.4 24.6 23.8 22.9 22.1 21.3 20.5 19.7",
+"27.1 26.3 25.4 24.6 23.8 22.9 22.1 21.3 20.5 19.7",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.5 19.7",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.5 19.6",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.5 19.6",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.5 19.6",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.5 19.6",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.5 19.6",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.5 19.6",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.4 19.6",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.4 19.6",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.4 19.6",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.4 19.6",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.4 19.6",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.4 19.6",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.3 20.4 19.6",
+"27.1 26.3 25.4 24.6 23.7 22.9 22.1 21.2 20.4 19.6",
+"27.1 26.3 25.4 24.5 23.7 22.9 22.1 21.2 20.4 19.6",
+"27.1 26.2 25.4 24.5 23.7 22.9 22.1 21.2 20.4 19.6",
+"27.1 26.2 25.4 24.5 23.7 22.9 22.1 21.2 20.4 19.6",
+"27.1 26.2 25.4 24.5 23.7 22.9 22.0 21.2 20.4 19.6"
+]},
+70: { f: 72, r: [
+"22.5 22.0 21.6 21.1 20.7 20.4 20.0 19.7 19.4 19.2",
+"22.2 21.6 21.1 20.7 20.3 19.9 19.5 19.1 18.8 18.6",
+"21.8 21.3 20.7 20.3 19.8 19.4 19.0 18.6 18.3 18.0",
+"21.5 20.9 20.4 19.9 19.4 18.9 18.5 18.1 17.8 17.4",
+"21.2 20.6 20.0 19.5 19.0 18.5 18.1 17.7 17.3 16.9",
+"20.9 20.3 19.7 19.1 18.6 18.1 17.7 17.2 16.8 16.4",
+"20.6 20.0 19.4 18.8 18.3 17.8 17.3 16.8 16.4 16.0",
+"20.4 19.8 19.2 18.6 18.0 17.4 16.9 16.4 16.0 15.6",
+"20.2 19.6 18.9 18.3 17.7 17.1 16.6 16.1 15.6 15.2",
+"20.0 19.4 18.7 18.1 17.4 16.9 16.3 15.8 15.3 14.8",
+"19.9 19.2 18.5 17.9 17.2 16.6 16.0 15.5 15.0 14.5",
+"19.7 19.0 18.3 17.7 17.0 16.4 15.8 15.2 14.7 14.2",
+"19.6 18.9 18.2 17.5 16.8 16.2 15.6 15.0 14.4 13.9",
+"19.5 18.8 18.1 17.4 16.7 16.0 15.4 14.8 14.2 13.6",
+"19.4 18.7 17.9 17.2 16.5 15.9 15.2 14.6 14.0 13.4",
+"19.3 18.6 17.8 17.1 16.4 15.7 15.1 14.4 13.8 13.2",
+"19.2 18.5 17.7 17.0 16.3 15.6 14.9 14.3 13.7 13.1",
+"19.2 18.4 17.7 16.9 16.2 15.5 14.8 14.2 13.5 12.9",
+"19.1 18.4 17.6 16.9 16.1 15.4 14.8 14.1 13.4 12.8",
+"19.1 18.3 17.5 16.8 16.1 15.3 14.6 14.0 13.3 12.7",
+"19.0 18.3 17.5 16.7 16.0 15.3 14.6 13.9 13.2 12.6",
+"19.0 18.2 17.4 16.7 15.9 15.2 14.5 13.8 13.1 12.5",
+"19.0 18.2 17.4 16.6 15.9 15.2 14.4 13.7 13.1 12.4",
+"18.9 18.2 17.4 16.6 15.9 15.1 14.4 13.7 13.0 12.3",
+"18.9 18.1 17.4 16.6 15.8 15.1 14.3 13.6 12.9 12.3",
+"18.9 18.1 17.3 16.6 15.8 15.0 14.3 13.6 12.9 12.2",
+"18.9 18.1 17.3 16.5 15.8 15.0 14.3 13.6 12.9 12.2",
+"18.9 18.1 17.3 16.5 15.7 15.0 14.3 13.5 12.8 12.2",
+"18.9 18.1 17.3 16.5 15.7 15.0 14.2 13.5 12.8 12.1",
+"18.9 18.1 17.3 16.5 15.7 15.0 14.2 13.5 12.8 12.1",
+"18.8 18.0 17.3 16.5 15.7 14.9 14.2 13.5 12.8 12.1",
+"18.8 18.0 17.3 16.5 15.7 14.9 14.2 13.5 12.8 12.1",
+"18.8 18.0 17.2 16.5 15.7 14.9 14.2 13.5 12.7 12.0",
+"18.8 18.0 17.2 16.5 15.7 14.9 14.2 13.4 12.7 12.0",
+"18.8 18.0 17.2 16.5 15.7 14.9 14.2 13.4 12.7 12.0",
+"18.8 18.0 17.2 16.5 15.7 14.9 14.2 13.4 12.7 12.0",
+"18.8 18.0 17.2 16.5 15.7 14.9 14.2 13.4 12.7 12.0",
+"18.8 18.0 17.2 16.4 15.7 14.9 14.2 13.4 12.7 12.0",
+"18.8 18.0 17.2 16.4 15.7 14.9 14.2 13.4 12.7 12.0",
+"18.8 18.0 17.2 16.4 15.7 14.9 14.2 13.4 12.7 12.0",
+"18.8 18.0 17.2 16.4 15.7 14.9 14.2 13.4 12.7 12.0",
+"18.8 18.0 17.2 16.4 15.7 14.9 14.2 13.4 12.7 12.0",
+"18.8 18.0 17.2 16.4 15.7 14.9 14.1 13.4 12.7 12.0",
+"18.8 18.0 17.2 16.4 15.7 14.9 14.1 13.4 12.7 12.0",
+"18.8 18.0 17.2 16.4 15.6 14.9 14.1 13.4 12.7 12.0",
+"18.8 18.0 17.2 16.4 15.6 14.9 14.1 13.4 12.7 12.0",
+"18.8 18.0 17.2 16.4 15.6 14.9 14.1 13.4 12.6 11.9",
+"18.8 18.0 17.2 16.4 15.6 14.8 14.1 13.4 12.6 11.9",
+"18.8 18.0 17.2 16.4 15.6 14.8 14.1 13.3 12.6 11.9"
+]},
+80: { f: 91, r: [
+"12.1 11.5 10.9 10.4 9.9 9.5 9.1 8.7 8.3 8.0",
+"11.9 11.4 10.8 10.3 9.8 9.3 8.9 8.5 8.1 7.8",
+"11.9 11.3 10.7 10.1 9.6 9.2 8.7 8.3 7.9 7.6",
+"11.8 11.2 10.6 10.0 9.5 9.0 8.6 8.2 7.8 7.4",
+"11.7 11.1 10.5 9.9 9.4 8.9 8.5 8.0 7.6 7.3",
+"11.6 11.0 10.4 9.9 9.3 8.8 8.4 7.9 7.5 7.1",
+"11.6 11.0 10.4 9.8 9.2 8.7 8.3 7.8 7.4 7.0",
+"11.5 10.9 10.3 9.7 9.2 8.7 8.2 7.7 7.3 6.9",
+"11.5 10.9 10.2 9.7 9.1 8.6 8.1 7.6 7.2 6.8",
+"11.5 10.8 10.2 9.6 9.1 8.5 8.0 7.6 7.2 6.8",
+"11.4 10.8 10.2 9.6 9.0 8.5 8.0 7.5 7.1 6.7",
+"11.4 10.8 10.1 9.6 9.0 8.5 8.0 7.5 7.0 6.6",
+"11.4 10.7 10.1 9.5 9.0 8.4 7.9 7.4 7.0 6.6",
+"11.4 10.7 10.1 9.5 8.9 8.4 7.9 7.4 7.0 6.6",
+"11.4 10.7 10.1 9.5 8.9 8.4 7.9 7.4 6.9 6.5",
+"11.4 10.7 10.1 9.5 8.9 8.4 7.9 7.4 6.9 6.5",
+"11.4 10.7 10.1 9.5 8.9 8.4 7.9 7.4 6.9 6.5",
+"11.4 10.7 10.1 9.5 8.9 8.4 7.8 7.4 6.9 6.5",
+"11.3 10.7 10.1 9.5 8.9 8.4 7.8 7.4 6.9 6.5",
+"11.3 10.7 10.1 9.5 8.9 8.3 7.8 7.4 6.9 6.5",
+"11.3 10.7 10.1 9.5 8.9 8.3 7.8 7.3 6.9 6.5",
+"11.3 10.7 10.1 9.5 8.9 8.3 7.8 7.3 6.9 6.5",
+"11.3 10.7 10.0 9.4 8.9 8.3 7.8 7.3 6.9 6.4",
+"11.3 10.7 10.0 9.4 8.9 8.3 7.8 7.3 6.9 6.4",
+"11.3 10.7 10.0 9.4 8.8 8.3 7.8 7.3 6.8 6.4",
+"11.3 10.6 10.0 9.4 8.8 8.3 7.7 7.3 6.8 6.4",
+"11.3 10.6 10.0 9.4 8.8 8.2 7.7 7.2 6.8 6.3",
+"11.3 10.6 10.0 9.3 8.8 8.2 7.7 7.2 6.7 6.3",
+"11.2 10.6 9.9 9.3 8.7 8.2 7.6 7.1 6.6 6.2",
+"11.2 10.5 9.9 9.3 8.7 8.1 7.6 7.1 6.6 6.1"
+]},
+90: { f: 101, r: [
+"6.3 6.0 5.6 5.3 5.1 4.8 4.6 4.4 4.2 4.1",
+"6.3 5.9 5.6 5.3 5.0 4.7 4.5 4.3 4.1 4.0",
+"6.2 5.9 5.5 5.2 4.9 4.7 4.5 4.2 4.1 3.9",
+"6.2 5.8 5.5 5.2 4.9 4.6 4.4 4.2 4.0 3.8",
+"6.1 5.8 5.4 5.1 4.9 4.6 4.4 4.1 4.0 3.8",
+"6.1 5.8 5.4 5.1 4.8 4.6 4.3 4.1 3.9 3.8",
+"6.1 5.8 5.4 5.1 4.8 4.6 4.3 4.1 3.9 3.7",
+"6.1 5.7 5.4 5.1 4.8 4.5 4.3 4.1 3.9 3.7",
+"6.1 5.7 5.4 5.1 4.8 4.5 4.3 4.1 3.9 3.7",
+"6.1 5.7 5.4 5.1 4.8 4.5 4.3 4.1 3.9 3.7",
+"6.1 5.7 5.4 5.1 4.8 4.5 4.3 4.1 3.9 3.7",
+"6.1 5.7 5.4 5.1 4.8 4.5 4.3 4.0 3.8 3.7",
+"6.1 5.7 5.3 5.0 4.7 4.5 4.2 4.0 3.8 3.6",
+"6.0 5.7 5.3 5.0 4.7 4.4 4.2 4.0 3.8 3.6",
+"6.0 5.6 5.3 5.0 4.7 4.4 4.2 4.0 3.8 3.6",
+"6.0 5.6 5.2 4.9 4.6 4.4 4.1 3.9 3.7 3.5",
+"5.9 5.5 5.2 4.9 4.6 4.3 4.0 3.8 3.6 3.4",
+"5.8 5.5 5.1 4.8 4.5 4.2 3.9 3.7 3.5 3.3",
+"5.8 5.4 5.0 4.7 4.4 4.1 3.8 3.6 3.3 3.1",
+"5.7 5.3 4.9 4.6 4.3 4.0 3.7 3.4 3.2 3.0"
+]},
+100: { f: 111, r: [
+"3.5 3.4 3.3 3.2 3.1 3.0 3.0 3.0 3.0 3.0",
+"3.5 3.4 3.2 3.1 3.1 3.0 3.0 2.9 2.9 2.9",
+"3.5 3.4 3.2 3.1 3.1 3.0 3.0 2.9 2.9 2.9",
+"3.5 3.3 3.2 3.1 3.0 3.0 2.9 2.9 2.9 2.9",
+"3.4 3.3 3.2 3.1 3.0 2.9 2.9 2.9 2.8 2.8",
+"3.3 3.2 3.1 3.0 2.9 2.8 2.8 2.8 2.8 2.8",
+"3.3 3.1 3.0 2.9 2.8 2.7 2.7 2.7 2.7 2.6",
+"3.1 3.0 2.8 2.7 2.6 2.6 2.5 2.5 2.5 2.5",
+"2.9 2.8 2.6 2.5 2.4 2.4 2.3 2.3 2.3 2.3",
+"2.8 2.6 2.5 2.3 2.2 2.1 2.1 2.1 2.0 2.0"
+]}
+};
 
-        function calculateRMD() {
-            const balance = parseFloat(document.getElementById('rmdBalance').value);
-            const age = parseInt(document.getElementById('rmdAge').value);
+const $ = id => document.getElementById(id);
+const fmt2 = n => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtP = p => String(parseFloat(p.toFixed(1)));
+function startAge(birthYear) { return birthYear <= 1950 ? 72 : birthYear <= 1959 ? 73 : 75; }
 
-            if (isNaN(balance) || isNaN(age) || balance <= 0) {
-                alert("Please enter valid numbers.");
-                return;
-            }
+function jointPeriod(owner, spouse) {
+    owner = Math.min(Math.max(owner, 72), 120);
+    spouse = Math.min(Math.max(spouse, 20), 109);
+    const dec = Math.floor(spouse / 10) * 10;
+    const blk = JOINT[dec];
+    const idx = Math.min(Math.max(owner - blk.f, 0), blk.r.length - 1);
+    return parseFloat(blk.r[idx].split(" ")[spouse - dec]);
+}
+function periodFor(ownerAge, spouseAge, useJoint) {
+    if (useJoint) return jointPeriod(ownerAge, spouseAge);
+    return ULT[Math.min(ownerAge, 120)];
+}
+// Full projection: withdraw exactly the RMD at each year-end; balance grows at retPct first.
+function rmdSim(birth, rmdYear, balance, spouseBirth, retPct) {
+    const age0 = rmdYear - birth;
+    const spAge0 = (spouseBirth === null || spouseBirth === undefined || isNaN(spouseBirth)) ? null : rmdYear - spouseBirth;
+    const useJoint = spAge0 !== null && (age0 - spAge0) > 10;
+    const rows = [];
+    let bal = balance;
+    for (let age = age0; age <= 120; age++) {
+        const period = periodFor(age, spAge0 === null ? null : spAge0 + (age - age0), useJoint);
+        const rmd = bal / period;
+        const eoy = (retPct === null) ? null : bal * (1 + retPct) - rmd;
+        rows.push({ year: rmdYear + (age - age0), age, period, rmd, eoy });
+        if (eoy === null) break;
+        bal = eoy;
+    }
+    return { rows, useJoint, age0 };
+}
 
-            if (age < 73) {
-                alert("You are not required to take an RMD until age 73.");
-                return;
-            }
+function drawBars(rows) {
+    const cv = $("rmdChart"); if (!cv) return;
+    const ctx = cv.getContext("2d");
+    const W = cv.width, H = cv.height, padL = 64, padR = 8, padT = 26, padB = 30;
+    const iw = W - padL - padR, ih = H - padT - padB;
+    const totals = rows.map(r => r.eoy + r.rmd);
+    const maxV = Math.max(...totals) * 1.08;
+    ctx.clearRect(0, 0, W, H);
+    ctx.font = "11px Inter, sans-serif";
+    for (let i = 0; i <= 4; i++) {
+        const v = maxV * i / 4, y = padT + ih - ih * i / 4;
+        ctx.strokeStyle = "#e2e8f0"; ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+        ctx.fillStyle = "#64748b"; ctx.textAlign = "right";
+        ctx.fillText("$" + Math.round(v / 1000) + "K", padL - 6, y + 4);
+    }
+    const bw = iw / rows.length;
+    rows.forEach((r, i) => {
+        const x = padL + i * bw;
+        const hB = ih * r.eoy / maxV, hR = ih * r.rmd / maxV;
+        ctx.fillStyle = "#2b7ddb"; ctx.fillRect(x + 0.5, padT + ih - hB, Math.max(bw - 1.5, 1), hB);
+        ctx.fillStyle = "#8bbc21"; ctx.fillRect(x + 0.5, padT + ih - hB - hR, Math.max(bw - 1.5, 1), hR);
+        if (r.age % 5 === 0 || i === 0) { ctx.fillStyle = "#64748b"; ctx.textAlign = "center"; ctx.fillText(String(r.age), x + bw / 2, H - 16); }
+    });
+    ctx.fillStyle = "#334155"; ctx.textAlign = "center"; ctx.fillText("Your age", padL + iw / 2, H - 3);
+    ctx.fillStyle = "#2b7ddb"; ctx.fillRect(W - 190, 4, 12, 12);
+    ctx.fillStyle = "#334155"; ctx.textAlign = "left"; ctx.fillText("End balance", W - 174, 14);
+    ctx.fillStyle = "#8bbc21"; ctx.fillRect(W - 90, 4, 12, 12);
+    ctx.fillStyle = "#334155"; ctx.fillText("RMD", W - 74, 14);
+}
 
-            // If age is over 100, use the factor for 100
-            const factorAge = age > 100 ? 100 : age;
-            const factor = lifeExpectancyTable[factorAge];
+function calculate() {
+    const birth = Math.round(parseFloat($("iBirth").value));
+    const year = Math.round(parseFloat($("iYear").value));
+    const balance = parseFloat($("iBalance").value);
+    const spb = document.querySelector('input[name="spb"]:checked').value;
+    const spouseBirth = spb === "y" ? Math.round(parseFloat($("iSpouseBirth").value)) : null;
+    const retRaw = $("iReturn").value.trim();
+    const retPct = retRaw === "" || isNaN(parseFloat(retRaw)) ? null : parseFloat(retRaw) / 100;
+    const box = $("results");
+    if (isNaN(birth) || isNaN(year) || isNaN(balance) || balance <= 0 || (spb === "y" && isNaN(spouseBirth))) {
+        box.innerHTML = `<div class="bg-amber-50 border border-amber-300 text-amber-800 rounded-xl p-5 text-sm">Please enter your year of birth, the RMD year, the prior year-end account balance${spb === "y" ? ", and your spouse's year of birth" : ""}.</div>`;
+        return;
+    }
+    const age = year - birth;
+    const sa = startAge(birth);
+    if (age < sa) {
+        box.innerHTML = `<div class="bg-sky-50 border border-sky-300 text-sky-900 rounded-xl p-5 text-sm"><strong>No RMD is required for ${year}.</strong> Born in ${birth}, you reach the RMD age of ${sa} in ${birth + sa}; your first distribution is for that year (due by April 1 of the following year). Enter ${birth + sa} or a later year above to see the amount.</div>`;
+        return;
+    }
+    if (age > 120) {
+        box.innerHTML = `<div class="bg-amber-50 border border-amber-300 text-amber-800 rounded-xl p-5 text-sm">The IRS tables end at age 120 — please check the years entered.</div>`;
+        return;
+    }
+    const sim = rmdSim(birth, year, balance, spouseBirth, retPct);
+    const first = sim.rows[0];
+    const pct = first.rmd / balance * 100;
+    let html = `<div class="bg-[#3F51B5] text-white rounded-xl p-6 shadow-sm">
+        <div class="text-sm opacity-90">Your RMD for ${year}</div>
+        <div class="text-4xl sm:text-5xl font-extrabold mt-1 num">${fmt2(first.rmd)}</div>
+        <div class="text-sm opacity-90 mt-2">The distribution period for your case is <strong>${fmtP(first.period)}</strong> — ${sim.useJoint ? "Joint Life and Last Survivor Table (spouse is primary beneficiary and more than 10 years younger)" : "Uniform Lifetime Table"}.</div>
+        <div class="mt-4 bg-white/10 rounded-lg px-4 py-3 text-sm num">RMD = ${fmt2(balance)} &divide; ${fmtP(first.period)} = <strong>${fmt2(first.rmd)}</strong></div>
+    </div>
+    <div class="grid grid-cols-3 gap-4">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center"><div class="text-xs text-gray-500">Your age in ${year}</div><div class="text-xl font-bold text-[#3F51B5] num mt-1">${age}</div></div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center"><div class="text-xs text-gray-500">Share of balance</div><div class="text-xl font-bold text-[#3F51B5] num mt-1">${pct.toFixed(1)}%</div></div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center"><div class="text-xs text-gray-500">Due by</div><div class="text-xl font-bold text-[#3F51B5] num mt-1">Dec 31, ${year}</div></div>
+    </div>`;
+    if (retPct !== null) {
+        html += `<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 class="font-bold text-[#3F51B5]">Future RMDs and balances</h3>
+            <p class="text-sm text-gray-500 mt-1">If you withdraw only the RMD at the end of each year and your account returns ${(retPct * 100).toFixed(2).replace(/\.?0+$/, "")}% per year, your balance and required distributions evolve like this:</p>
+            <canvas id="rmdChart" width="640" height="300" class="w-full h-auto mt-4"></canvas>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 overflow-x-auto">
+            <table class="w-full text-sm num">
+                <thead><tr class="text-left text-gray-500 border-b border-gray-200">
+                    <th class="py-2 pr-3 font-semibold">Year</th><th class="py-2 pr-3 font-semibold">Your age</th><th class="py-2 pr-3 font-semibold">Distribution period</th><th class="py-2 pr-3 font-semibold text-right">RMD</th><th class="py-2 font-semibold text-right">End of year balance</th>
+                </tr></thead><tbody>
+                ${sim.rows.map(r => `<tr class="border-b border-gray-100"><td class="py-1.5 pr-3">${r.year}</td><td class="py-1.5 pr-3">${r.age}</td><td class="py-1.5 pr-3">${fmtP(r.period)}</td><td class="py-1.5 pr-3 text-right">${fmt2(r.rmd)}</td><td class="py-1.5 text-right">${fmt2(r.eoy)}</td></tr>`).join("")}
+                </tbody></table>
+        </div>`;
+    } else {
+        html += `<div class="bg-gray-50 border border-gray-200 text-gray-600 rounded-xl p-5 text-sm">Add an estimated rate of return above to project every future year's RMD and balance, all the way to age 120.</div>`;
+    }
+    box.innerHTML = html;
+    if (retPct !== null) drawBars(sim.rows);
+}
 
-            // RMD = Balance / Life Expectancy Factor
-            const rmd = balance / factor;
+function shareLink(btn) {
+    const p = new URLSearchParams();
+    p.set("b", $("iBirth").value); p.set("y", $("iYear").value); p.set("bal", $("iBalance").value);
+    p.set("sn", document.querySelector('input[name="spb"]:checked').value);
+    if (p.get("sn") === "y") p.set("sp", $("iSpouseBirth").value);
+    if ($("iReturn").value.trim() !== "") p.set("r", $("iReturn").value);
+    const url = location.origin + location.pathname + "?" + p.toString();
+    history.replaceState(null, "", url);
+    if (navigator.clipboard) navigator.clipboard.writeText(url);
+    const old = btn.textContent; btn.textContent = "Link copied ✓";
+    setTimeout(() => btn.textContent = old, 1600);
+}
 
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+function syncForm() {
+    const spb = document.querySelector('input[name="spb"]:checked').value;
+    $("spouseRow").style.display = spb === "y" ? "" : "none";
+    $("balLabel").textContent = "Account balance as of 12/31/" + (parseInt($("iYear").value, 10) - 1);
+}
+document.querySelectorAll('input[name="spb"]').forEach(r => r.addEventListener("change", syncForm));
+$("iYear").addEventListener("change", syncForm);
 
-            document.getElementById('rmdAmount').textContent = formatter.format(rmd);
-            document.getElementById('rmdFactor').textContent = factor.toFixed(1);
-
-            document.getElementById('rmdResults').classList.remove('hidden');
-        }
-    </script>
+(function init() {
+    const q = new URLSearchParams(location.search);
+    if (q.get("b")) $("iBirth").value = q.get("b");
+    if (q.get("y")) $("iYear").value = q.get("y");
+    if (q.get("bal")) $("iBalance").value = q.get("bal");
+    if (q.get("sn")) { const r = document.querySelector(`input[name="spb"][value="${q.get("sn")}"]`); if (r) r.checked = true; }
+    if (q.get("sp")) $("iSpouseBirth").value = q.get("sp");
+    if (q.get("r")) $("iReturn").value = q.get("r");
+    syncForm();
+    calculate();
+})();
+</script>
 </body>
 </html>
