@@ -4,132 +4,470 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CD Calculator - CalcNova</title>
+    <meta name="description" content="Find the total interest, end balance and growth schedule of a certificate of deposit (CD), with your marginal tax rate applied to the interest. Shows the effective APY too.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/cd">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="CD Calculator - CalcNova">
+    <meta property="og:description" content="What a CD really earns by maturity — end balance, after-tax interest, APY, and the full growth schedule.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/cd">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CD Calculator - CalcNova">
+    <meta name="twitter:description" content="Certificate of deposit growth with tax on interest and the effective APY.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "CD Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/cd" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What happens if I withdraw from a CD early?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Almost always a penalty — typically several months of interest, sometimes eating into principal on very young CDs (liquid CDs are the exception). The penalty's size depends on the term and the bank. In a rising-rate environment it can occasionally pay to eat the penalty and reinvest at the new, higher rate; run both numbers before deciding." }
+            },
+            {
+                "@type": "Question",
+                "name": "Are CDs insured?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes — CDs from FDIC-insured banks are covered up to $250,000 per depositor, per institution, and credit-union CDs carry equivalent NCUA coverage. Deposit more than the cap by spreading CDs across several insured institutions." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is a CD ladder?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Splitting one deposit across several CDs maturing at staggered intervals — say 1, 2 and 3 years instead of a single 3-year CD. Something matures every year, freeing cash or letting you reinvest at current rates, while longer rungs still earn the higher long-term rates. It trades a little peak yield for a lot of flexibility." }
+            },
+            {
+                "@type": "Question",
+                "name": "Is CD interest taxed?",
+                "acceptedAnswer": { "@type": "Answer", "text": "In the U.S., yes — as ordinary income in the year it's earned (even if it stays in the CD), unless the CD sits inside a tax-advantaged account like an IRA. Enter your marginal rate above to see the after-tax result; the tax is skimmed from interest as it accrues." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        @media print { nav, footer, .no-print, #calculator-form { display: none !important; } #scheduleWrap { max-height: none !important; overflow: visible !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">CD</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">CD Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">CD Calculator</h1>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">CD Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">Work out what a certificate of deposit actually earns by maturity — end balance and total interest, with income tax on the interest taken into account for a more honest number.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Initial Deposit ($)</label>
-                        <input type="number" id="cdDeposit" value="10000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
-                        <input type="number" id="cdRate" value="4.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">CD Term (Months)</label>
-                        <select id="cdTerm" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="6">6 Months</option>
-                            <option value="12" selected>12 Months (1 Year)</option>
-                            <option value="24">24 Months (2 Years)</option>
-                            <option value="36">36 Months (3 Years)</option>
-                            <option value="60">60 Months (5 Years)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Compound Frequency</label>
-                        <select id="cdComp" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="12" selected>Monthly</option>
-                            <option value="4">Quarterly</option>
-                            <option value="2">Semi-Annually</option>
-                            <option value="1">Annually</option>
-                        </select>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="input-group">
+                    <label>Initial Deposit</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="initial" value="10000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
                 </div>
-                <button onclick="calculateCD()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate CD Return</button>
-
-                <div id="cdResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Initial Deposit</p>
-                            <p class="text-xl font-bold text-gray-800" id="cdP">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Interest Earned</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="cdI">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Maturity Value</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="cdTotal">$0</p>
-                        </div>
+                <div class="input-group">
+                    <label>Interest Rate</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="rate" value="5" step="0.01" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
                     </div>
+                </div>
+                <div class="input-group">
+                    <label>Compound</label>
+                    <select id="compound" class="w-[58%] bg-gray-50">
+                        <option value="1" selected>Annually (APY)</option>
+                        <option value="2">Semiannually</option>
+                        <option value="4">Quarterly</option>
+                        <option value="12">Monthly (APR)</option>
+                        <option value="24">Semimonthly</option>
+                        <option value="26">Biweekly</option>
+                        <option value="52">Weekly</option>
+                        <option value="365">Daily</option>
+                        <option value="0">Continuously</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Deposit Length</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="years" value="3" class="w-1/2">
+                        <span class="w-1/2 flex items-center bg-gray-50 border border-gray-300 rounded-md px-2">years</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label></label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="months" value="0" class="w-1/2">
+                        <span class="w-1/2 flex items-center bg-gray-50 border border-gray-300 rounded-md px-2">months</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Marginal Tax Rate</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="tax" value="0" step="0.1" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Your marginal rate applies to the interest. Enter 0 for tax-free accounts (e.g., inside an IRA) or a pre-tax view.</p>
+
+                <div class="flex gap-2 mt-5">
+                    <button onclick="calculateCD()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is a CD?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A Certificate of Deposit (CD) is a savings account with a fixed interest rate and a fixed withdrawal date (maturity date). In exchange for leaving your money in the account for a specific period, the bank pays you a higher interest rate than a regular savings account. However, withdrawing money before the maturity date usually results in a penalty fee.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
+        <div class="md:w-3/5">
+            <div id="resultsArea"></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Certificates of Deposit, Explained</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                A certificate of deposit is a deal: hand a bank money for a fixed stretch — commonly three months to
+                five years — and it pays a fixed interest rate for leaving it untouched. Bigger deposits and longer
+                terms generally buy higher rates, and the longer term carries more interest-rate risk (your money
+                is committed while new rates move on). CDs sit at the low-risk, low-return end of investing: yields
+                historically beat savings accounts and money markets and trail the long-run average of stocks by a
+                wide margin. The name survives from the paper era, when buyers literally received a certificate for
+                their deposit; today everything is electronic, and this calculator covers the standard fixed-rate
+                CD (some CDs float or link to indexes and can't be modeled this way).
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Insured by design</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                CDs from FDIC-insured banks are guaranteed up to $250,000 per depositor, per institution — if the
+                bank fails, the insurance pays. Savers above the cap simply hold CDs at several insured banks, and
+                credit-union CDs carry the equivalent NCUA coverage. Few investments can match that floor, which is
+                precisely the trade for their modest returns. CD gains are taxable as income in the U.S. unless the
+                CD lives inside a tax-advantaged account such as a traditional or Roth IRA — the tax field above
+                exists because a 5% CD in a 24% bracket is really a 3.8% CD.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Buying one (and what the bank does with it)</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Buying a CD is lending money to the bank: it re-lends your deposit at higher rates, holds it in
+                reserves, or funds operations, keeping the spread — CD rates ultimately hang off the federal funds
+                rate and each institution's appetite for deposits. Shopping therefore matters: rates on identical
+                terms differ across banks, minimum deposits vary, and brokers add access to many banks' CDs
+                (sometimes for a fee). Compare by <strong>APY</strong>, which folds compounding into one honest number — banks
+                quote debt in APR but deposit products like CDs in APY, and APY is the truer measure of what you'll
+                actually net over a year.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">A four-century-old idea</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The mechanism is old: European banks in the 1600s issued receipts for deposits they lent to
+                merchants, and began paying interest to keep depositors from withdrawing while the money was out —
+                the modern CD in embryo. The modern institution arrived after the 1929 crash exposed unregulated
+                banks with no reserve requirements; the FDIC was created to regulate banks and guarantee depositors
+                like CD holders. Yields have swung with inflation ever since: near 20% in the high-inflation late
+                1970s and 1980s, about 4% just before the 2008 crisis, under 1% for a one-year CD in 2021, then
+                above 5% in 2023–2024 as the Fed hiked against inflation, easing again through 2025 and 2026 as
+                inflation cooled.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Using CDs well — and the ladder</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                CDs earn their keep where the date is known and the loss tolerance is zero: ballast that steadies a
+                portfolio as retirement nears, a down-payment fund maturing the year you plan to buy, any goal
+                inside five years where a stock dip would be a disaster. Their weakness is lock-up, and the classic
+                workaround is the <strong>CD ladder</strong>: split the deposit across, say, 1-, 2- and 3-year CDs instead of one
+                3-year CD. A rung matures every year — proceeds can be spent or rolled into a fresh long CD at
+                whatever rates then prevail — while part of the money always earns long-term rates. At maturity of
+                any single CD, doing nothing usually means auto-renewal into a similar CD (often at a worse rate
+                than new-money offers), so mark the date and decide actively.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Early withdrawal, and the CD family</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Money in a CD is meant to stay there: early exits normally cost a penalty scaled to the term and
+                the bank's policy (liquid CDs excepted). Counterintuitively, in sharply rising-rate environments
+                paying the penalty to reinvest higher can come out ahead — it's an arithmetic question, not a
+                character flaw. Beyond the traditional CD you'll meet: <strong>jumbo</strong> CDs ($100,000+ minimums, better
+                rates), <strong>bump-up</strong> CDs (one chance to raise your rate mid-term, starting lower), <strong>liquid</strong> CDs
+                (penalty-free withdrawals, lower rates), <strong>zero-coupon</strong> CDs (bought at a discount, interest
+                reinvested, longer terms), <strong>callable</strong> CDs (the issuer can redeem early — you get a higher rate for
+                that risk), and <strong>brokered</strong> CDs (sold through brokerage accounts, wider selection). Alternatives
+                in the same risk neighborhood: paying down debt (a guaranteed return at the loan's rate), money
+                market accounts, bonds, and — newer and riskier — peer-to-peer lending.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Why does compounding frequency change the result?</h4>
+                    <p class="text-gray-700">More frequent compounding starts earning interest on interest sooner. The gap is small at CD rates but real — daily beats annual by a few dollars per $10,000 per year. Our <a href="compound-interest.html" class="text-[#3F51B5] font-semibold hover:underline">compound interest calculator</a> converts between frequencies.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What if I need the money before maturity?</h4>
+                    <p class="text-gray-700">Expect a penalty of several months' interest. If access is a real possibility, a shorter term, a liquid CD, or a ladder fits better than one long CD.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">CD or savings account?</h4>
+                    <p class="text-gray-700">CD if the money has a date and won't be touched — you'll usually earn more. Savings if it might be needed; the <a href="savings.html" class="text-[#3F51B5] font-semibold hover:underline">savings calculator</a> models accounts with ongoing contributions.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. This calculator models fixed-rate CDs; early-withdrawal penalties are not included.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="savings.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Savings Calculator</h3>
+                <p class="text-sm text-gray-600">Savings growth with escalating contributions.</p>
+            </a>
+            <a href="compound-interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Compound Interest Calculator</h3>
+                <p class="text-sm text-gray-600">Convert rates between compounding frequencies.</p>
+            </a>
+            <a href="interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Interest Calculator</h3>
+                <p class="text-sm text-gray-600">Compound growth with contributions and inflation.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateCD() {
-            const deposit = parseFloat(document.getElementById('cdDeposit').value);
-            const rate = parseFloat(document.getElementById('cdRate').value) / 100;
-            const termMonths = parseInt(document.getElementById('cdTerm').value);
-            const compFreq = parseInt(document.getElementById('cdComp').value);
+        let chartInstance = null, barChartInstance = null;
 
-            if (isNaN(deposit) || isNaN(rate) || isNaN(termMonths) || isNaN(compFreq) || deposit <= 0) {
-                alert("Please enter valid numbers.");
-                return;
-            }
+        window.addEventListener('DOMContentLoaded', () => { prefillFromURL(); calculateCD(); });
 
-            const years = termMonths / 12;
-            
-            // Compound Interest Formula: A = P(1 + r/n)^(nt)
-            const total = deposit * Math.pow((1 + (rate / compFreq)), (compFreq * years));
-            const interest = total - deposit;
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
 
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('cdP').textContent = formatter.format(deposit);
-            document.getElementById('cdI').textContent = formatter.format(interest);
-            document.getElementById('cdTotal').textContent = formatter.format(total);
-
-            document.getElementById('cdResults').classList.remove('hidden');
+        function clearForm() {
+            document.getElementById('initial').value = '';
+            document.getElementById('resultsArea').innerHTML = '';
         }
+
+        function effMonthly(ratePct, freq) {
+            const r = ratePct / 100;
+            if (freq === 0) return Math.exp(r / 12) - 1;
+            return Math.pow(1 + r / freq, freq / 12) - 1;
+        }
+        function earPct(ratePct, freq) {
+            const r = ratePct / 100;
+            if (freq === 0) return (Math.exp(r) - 1) * 100;
+            return (Math.pow(1 + r / freq, freq) - 1) * 100;
+        }
+
+        function calculateCD() {
+            const out = document.getElementById('resultsArea');
+            const P = num('initial'), rate = num('rate'), taxPct = num('tax');
+            const freq = parseInt(document.getElementById('compound').value, 10);
+            const totalMonths = Math.round(num('years') * 12 + num('months'));
+            if (P <= 0 || totalMonths <= 0) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a deposit and a length of at least one month.</div>'; return; }
+
+            const rm = effMonthly(rate, freq);
+            let bal = P, totInt = 0, totTax = 0;
+            const rows = [];
+            for (let m = 1; m <= totalMonths; m++) {
+                const gross = bal * rm;
+                const taxAmt = gross * taxPct / 100;
+                const interest = gross - taxAmt;
+                bal += interest; totInt += interest; totTax += taxAmt;
+                rows.push({ m, dep: m === 1 ? P : 0, interest, bal });
+            }
+            const yearMap = {};
+            rows.forEach(row => {
+                const y = Math.ceil(row.m / 12);
+                if (!yearMap[y]) yearMap[y] = { dep: 0, interest: 0, balance: row.bal };
+                yearMap[y].dep += row.dep; yearMap[y].interest += row.interest; yearMap[y].balance = row.bal;
+            });
+
+            const monthlyRows = rows.map(row => {
+                const divider = row.m % 12 === 0 ? `<tr class="bg-indigo-50 font-semibold text-indigo-900"><td colspan="4" class="py-1.5 px-2 text-center">End of year ${row.m / 12}</td></tr>` : '';
+                return `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${row.m}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.dep)}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.interest)}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.bal)}</td></tr>` + divider;
+            }).join('');
+            const yearRows = Object.keys(yearMap).map(y => {
+                const v = yearMap[y];
+                return `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${y}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.dep)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.interest)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.balance)}</td></tr>`;
+            }).join('');
+
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">End Balance at Maturity</p>
+                    <p class="text-4xl font-bold">${formatMoney(bal)}</p>
+                    <p class="text-sm opacity-90 mt-1">Effective APY: <strong>${earPct(rate, freq).toFixed(3)}%</strong>${taxPct > 0 ? ' · interest shown after ' + taxPct + '% tax' : ''}</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>End Balance:</span> <span class="font-bold">${formatMoney(bal)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Initial Deposit:</span> <span class="font-bold">${formatMoney(P)}</span></p>
+                    <p class="flex justify-between"><span>Total Interest${taxPct > 0 ? ' (after tax)' : ''}:</span> <span class="font-bold">${formatMoney(totInt)}</span></p>
+                    ${taxPct > 0 ? '<p class="flex justify-between mt-2 text-gray-500"><span>Tax paid on interest:</span> <span class="font-bold">' + formatMoney(totTax) + '</span></p>' : ''}
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="barChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <h3 class="font-bold text-gray-800">Accumulation Schedule</h3>
+                        <div class="flex gap-2 no-print">
+                            <button id="schedYearlyBtn" onclick="setSchedView('y')" class="bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold">Yearly</button>
+                            <button id="schedMonthlyBtn" onclick="setSchedView('m')" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold">Monthly</button>
+                        </div>
+                    </div>
+                    <div id="scheduleWrap" class="overflow-x-auto" style="max-height:26rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">#</th><th class="py-2 px-2 border-b text-right">Deposit</th><th class="py-2 px-2 border-b text-right">Interest</th><th class="py-2 px-2 border-b text-right">Ending Balance</th></tr></thead>
+                            <tbody id="schedYearly">${yearRows}</tbody>
+                            <tbody id="schedMonthly" class="hidden">${monthlyRows}</tbody>
+                        </table>
+                    </div>
+                    <button id="schedToggle" onclick="toggleSchedule()" class="mt-3 bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">View Full Schedule</button>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                    <button onclick="downloadCSV()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">⬇ Download CSV</button>
+                </div>`;
+
+            window._cdRows = rows;
+
+            const pc = document.getElementById('pieChart');
+            if (pc) {
+                if (chartInstance) chartInstance.destroy();
+                chartInstance = new Chart(pc.getContext('2d'), {
+                    type: 'doughnut',
+                    data: { labels: ['Initial Deposit', 'Interest'], datasets: [{ data: [Math.round(P), Math.round(totInt)], backgroundColor: ['#3F51B5', '#14B8A6'] }] },
+                    options: { responsive: true, plugins: { legend: { position: 'right' }, title: { display: true, text: 'End Balance Breakdown' }, tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + formatMoney(c.parsed) } } } }
+                });
+            }
+            const bc = document.getElementById('barChart');
+            if (bc) {
+                if (barChartInstance) barChartInstance.destroy();
+                const ys = Object.keys(yearMap);
+                barChartInstance = new Chart(bc.getContext('2d'), {
+                    type: 'bar',
+                    data: { labels: ys, datasets: [
+                        { label: 'Initial Deposit', data: ys.map(() => Math.round(P)), backgroundColor: '#3F51B5' },
+                        { label: 'Interest', data: ys.map(y => Math.round(yearMap[y].balance - P)), backgroundColor: '#14B8A6' }
+                    ]},
+                    options: { responsive: true, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Accumulation by Year' } }, scales: { x: { stacked: true, title: { display: true, text: 'Year' } }, y: { stacked: true, ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } } } }
+                });
+            }
+            updateURL();
+        }
+
+        let schedExpanded = false;
+        function toggleSchedule() {
+            const wrap = document.getElementById('scheduleWrap');
+            const btn = document.getElementById('schedToggle');
+            schedExpanded = !schedExpanded;
+            wrap.style.maxHeight = schedExpanded ? 'none' : '26rem';
+            btn.textContent = schedExpanded ? 'Show Less' : 'View Full Schedule';
+        }
+        function setSchedView(v) {
+            document.getElementById('schedMonthly').classList.toggle('hidden', v !== 'm');
+            document.getElementById('schedYearly').classList.toggle('hidden', v !== 'y');
+            const bm = document.getElementById('schedMonthlyBtn'), by = document.getElementById('schedYearlyBtn');
+            bm.className = v === 'm' ? 'bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold' : 'bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold';
+            by.className = v === 'y' ? 'bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold' : 'bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold';
+        }
+
+        function downloadCSV() {
+            const rows = window._cdRows || [];
+            if (!rows.length) return;
+            let csv = 'Month,Deposit,Interest,Ending Balance\n';
+            rows.forEach(r => { csv += [r.m, r.dep.toFixed(2), r.interest.toFixed(2), r.bal.toFixed(2)].join(',') + '\n'; });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'cd-schedule.csv';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        const PARAMS = [['initial', 'i'], ['rate', 'r'], ['compound', 'f'], ['years', 'y'], ['months', 'mo'], ['tax', 't']];
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            PARAMS.forEach(([id, key]) => { p.set(key, document.getElementById(id).value); });
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); });
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
