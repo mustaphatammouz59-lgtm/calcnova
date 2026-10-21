@@ -4,133 +4,627 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Investment Calculator - CalcNova</title>
+    <meta name="description" content="Free investment calculator with five solvers: find the end balance, the contribution needed, the return rate required, the starting amount, or the time to reach your target.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/investment">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Investment Calculator - CalcNova">
+    <meta property="og:description" content="One calculator, five questions: how much will I have, what must I contribute, what return do I need, how much must I start with, how long will it take?">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/investment">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Investment Calculator - CalcNova">
+    <meta name="twitter:description" content="Solve for end amount, contribution, return rate, starting amount, or investment length.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Investment Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/investment" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Which tab should I use?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The tab names the unknown you want solved. Know your starting amount, contributions, rate and time, and want the outcome? End Amount. Have a target and want the monthly contribution, the return, the starting sum, or the time it takes? Pick the tab with that name and the calculator solves for it, holding the others as you entered them." }
+            },
+            {
+                "@type": "Question",
+                "name": "What return rate is realistic?",
+                "acceptedAnswer": { "@type": "Answer", "text": "For planning, not prediction: U.S. stocks (the S&P 500) have returned roughly 10% a year nominal over long spans, with deep drawdowns along the way; high-quality bonds and CDs typically sit several points lower with far less drama. A balanced portfolio is often modeled at 5–7%. If a plan only works at 12%+, the plan — not the calculator — is the problem." }
+            },
+            {
+                "@type": "Question",
+                "name": "Does this calculator include taxes and inflation?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No — it works in nominal, pre-tax terms, like most return planning. If taxes on interest and inflation matter to your question, the Interest Calculator runs the same compounding engine with a tax rate skimmed as interest accrues and an inflation-adjusted buying-power result." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why does it say my target can't be reached?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Because with the other inputs fixed, the math never gets there — for example, a target below what your starting amount and contributions already guarantee would need a negative return, or a target so high that even 100 years of growth at the entered rate falls short. Loosen one input (more time, more contributions, or a smaller target) and solve again." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        .tab-btn { flex: 1 1 auto; padding: 0.5rem 0.4rem; font-size: 0.8rem; font-weight: 700; border-radius: 0.5rem; border: 1px solid #D1D5DB; background: #fff; color: #374151; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .tab-btn.active { background: #3F51B5; color: #fff; border-color: #3F51B5; }
+        @media print {
+            nav, footer, .no-print, #calculator-form { display: none !important; }
+            #scheduleWrap { max-height: none !important; overflow: visible !important; }
+        }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Investment</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Investment Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Investment Calculator</h1>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Investment Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">One investment, five possible unknowns. Pick the tab named after the thing you want to find — the calculator solves for it and holds everything else as entered.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Initial Investment ($)</label>
-                        <input type="number" id="invInitial" value="10000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Monthly Contribution ($)</label>
-                        <input type="number" id="invMonthly" value="500" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Expected Annual Return (%)</label>
-                        <input type="number" id="invRate" value="7" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Investment Length (Years)</label>
-                        <input type="number" id="invYears" value="20" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+            <div class="flex flex-wrap gap-1.5 mb-4">
+                <button class="tab-btn active" data-tab="endamount" onclick="setTab('endamount')">End Amount</button>
+                <button class="tab-btn" data-tab="contributeamount" onclick="setTab('contributeamount')">Additional Contribution</button>
+                <button class="tab-btn" data-tab="returnrate" onclick="setTab('returnrate')">Return Rate</button>
+                <button class="tab-btn" data-tab="startingamount" onclick="setTab('startingamount')">Starting Amount</button>
+                <button class="tab-btn" data-tab="investlength" onclick="setTab('investlength')">Investment Length</button>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="input-group" id="row-target">
+                    <label>Your Target</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="target" value="1000000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
                 </div>
-                <button onclick="calculateInvestment()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Future Value</button>
-
-                <div id="invResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Invested</p>
-                            <p class="text-xl font-bold text-gray-800" id="invTotalInvested">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Earned</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="invTotalInterest">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Future Value</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="invFutureValue">$0</p>
-                        </div>
+                <div class="input-group" id="row-starting">
+                    <label>Starting Amount</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="starting" value="20000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
+                </div>
+                <div class="input-group" id="row-years">
+                    <label>After</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="years" value="10" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
+                    </div>
+                </div>
+                <div class="input-group" id="row-rate">
+                    <label>Return Rate</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="rate" value="6" step="0.01" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Compound</label>
+                    <select id="compound" class="w-[58%] bg-gray-50">
+                        <option value="1" selected>Annually</option>
+                        <option value="2">Semiannually</option>
+                        <option value="4">Quarterly</option>
+                        <option value="12">Monthly</option>
+                        <option value="24">Semimonthly</option>
+                        <option value="26">Biweekly</option>
+                        <option value="52">Weekly</option>
+                        <option value="365">Daily</option>
+                        <option value="0">Continuously</option>
+                    </select>
+                </div>
+                <div class="input-group" id="row-contrib">
+                    <label>Additional Contribution</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="contrib" value="1000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Contribute at the</label>
+                    <div class="w-[58%] flex gap-4 items-center py-1">
+                        <label class="flex items-center gap-1 cursor-pointer" style="width:auto;"><input type="radio" name="atwhen" value="beginning" class="w-4 h-4"> beginning</label>
+                        <label class="flex items-center gap-1 cursor-pointer" style="width:auto;"><input type="radio" name="atwhen" value="end" checked class="w-4 h-4"> end</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>of each</label>
+                    <div class="w-[58%] flex gap-4 items-center py-1">
+                        <label class="flex items-center gap-1 cursor-pointer" style="width:auto;"><input type="radio" name="per" value="month" checked class="w-4 h-4"> month</label>
+                        <label class="flex items-center gap-1 cursor-pointer" style="width:auto;"><input type="radio" name="per" value="year" class="w-4 h-4"> year</label>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-6">
+                    <button onclick="calculateInv()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Investments Grow</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">This calculator uses the future value of an annuity formula to show how your initial investment and regular monthly contributions will grow over time, assuming a constant annual rate of return. The power of compound interest means that the earlier you start investing, the more your money will grow.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
+        <div class="md:w-3/5">
+            <div id="resultsArea"></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Investing Is Four Numbers and a Decision</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Strip any investment down and five quantities describe it: a <strong>starting amount</strong> (the principal —
+                savings, an inheritance, the price of an asset), a <strong>return rate</strong> (the percentage that does
+                the compounding, and the figure everyone compares investments by), an <strong>end amount</strong> (the
+                target or the outcome), an <strong>investment length</strong> (more periods means more compounding — and
+                more exposure to an unforeseeable future), and <strong>additional contributions</strong> (the annuity
+                payments, in finance jargon, that most real plans are actually built on). Fix any four and the
+                fifth is determined — which is exactly what the five tabs above do. The calculator is the easy
+                part; the sections below are about choosing honest values for the variables.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">CDs and savings vehicles: the low-risk shelf</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                A certificate of deposit is the textbook fixed-rate investment: a fixed return for a fixed length,
+                insured in the U.S. by the FDIC up to $250,000 per depositor per bank, with longer terms generally
+                paying higher rates. Savings and money market accounts are its liquid cousins — lower rates, no
+                lockup. These fit the calculator perfectly because both the rate and the length are known in
+                advance; there is no guessing, only arithmetic.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Bonds: lending, graded</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                A bond is a loan you make to a company or government, and its return is compensation for the risk
+                they might not pay you back. Rating agencies (Moody's, S&amp;P, Fitch) grade that risk: highly
+                rated issuers borrow cheaply and safely; low-rated ("high-yield") issuers pay handsomely for the
+                danger. Prices move opposite to interest rates, which matters if you sell early; held to maturity,
+                a bond simply pays its coupons — usually twice a year — and returns face value. One special case
+                deserves note: <strong>TIPS</strong>, U.S. Treasury inflation-protected securities, whose principal adjusts
+                with the Consumer Price Index — a government-guaranteed return that keeps pace with inflation by
+                construction, at the price of a modest base rate.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Stocks and funds: owning, not lending</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                A stock is literally a percentage of a company: shareholders share profits through dividends and
+                through whatever a future buyer will pay for the share. Returns are not fixed — which is why the
+                Return Rate tab exists: to ask what rate a goal <em>requires</em>, before asking whether the market is
+                likely to grant it. Most investors hold stocks through funds: mutual funds pool many stocks under
+                a manager for a fee (sometimes a sales "load"), while ETFs trade like a single stock and track an
+                index, sector, or asset class — the S&amp;P 500 being the canonical benchmark, with its roughly
+                10% long-run nominal average and its very real crashes inside that average.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Real estate and commodities</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Property invests two ways: appreciation (flipping, or holding while an area develops) and income
+                (rent) — often both, with leverage amplifying each; our
+                <a href="rental-property.html" class="text-[#3F51B5] font-semibold hover:underline">rental property calculator</a>
+                models that properly, and the
+                <a href="real-estate.html" class="text-[#3F51B5] font-semibold hover:underline">real estate hub</a> collects the
+                housing tools. REITs package the same exposure for people who prefer not to unclog anything.
+                Commodities are the wilder shelf: gold, whose value rests on scarcity and fear — it reliably
+                spikes in wars and crises; silver, half precious metal and half industrial input (solar panels,
+                cars); oil and gas, usually traded on spot and futures markets rather than held, with prices set
+                by the global economy's mood. All of them can be fed into this calculator as a starting amount
+                and an assumed return — and all of them punish a careless assumption.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The honest caveat</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                There is no "right" set of inputs. Use a historical average return for a house, a forecast for a
+                business, include every capital expenditure or only one cash-flow stream as "contributions" — each
+                choice is defensible and each changes the answer. Treat results as scenarios, not prophecies:
+                solve for the return your goal needs, then judge whether that return is plausible; solve for the
+                contribution, then judge whether your budget survives it. And before using this general tool on a
+                specific job, check the
+                <a href="financial.html" class="text-[#3F51B5] font-semibold hover:underline">financial calculators</a> list —
+                a purpose-built calculator (mortgage, rental property, retirement) will usually model the details
+                this one deliberately leaves out.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Which tab do I want?</h4>
+                    <p class="text-gray-700">The one named after your unknown. Everything else you enter is treated as given.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What return should I assume?</h4>
+                    <p class="text-gray-700">Long-run ballparks: ~10% nominal for U.S. stocks, several points less for bonds and CDs. If your plan needs 12%+ to work, fix the plan, not the input.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Taxes and inflation?</h4>
+                    <p class="text-gray-700">Not here — this is the nominal planner. The <a href="interest.html" class="text-[#3F51B5] font-semibold hover:underline">interest calculator</a> runs the same engine with tax skimmed as it accrues and a buying-power result after inflation.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">It says my target can't be reached?</h4>
+                    <p class="text-gray-700">With the other inputs frozen, the math never arrives — the target is below what's already guaranteed, or beyond 100 years of growth. Loosen an input and solve again.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. It assumes a fixed rate of return; real investments vary year to year, and past performance does not
+                predict future results.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Interest Calculator</h3>
+                <p class="text-sm text-gray-600">Same engine, plus tax on interest and inflation.</p>
+            </a>
+            <a href="compound-interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Compound Interest Calculator</h3>
+                <p class="text-sm text-gray-600">Growth of a balance with regular deposits.</p>
+            </a>
+            <a href="inflation.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Inflation Calculator</h3>
+                <p class="text-sm text-gray-600">Discount a future target back to today's dollars.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateInvestment() {
-            const initial = parseFloat(document.getElementById('invInitial').value);
-            const monthly = parseFloat(document.getElementById('invMonthly').value);
-            const rate = parseFloat(document.getElementById('invRate').value) / 100;
-            const years = parseFloat(document.getElementById('invYears').value);
+        let chartInstance = null, barChartInstance = null, tab = 'endamount';
 
-            if (isNaN(initial) || isNaN(monthly) || isNaN(rate) || isNaN(years)) {
-                alert("Please enter valid numbers.");
-                return;
-            }
+        window.addEventListener('DOMContentLoaded', () => {
+            prefillFromURL();
+            applyTabVisibility();
+            calculateInv();
+        });
 
-            const months = years * 12;
-            const monthlyRate = rate / 12;
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
 
-            // Future Value of Initial Investment
-            const fvInitial = initial * Math.pow(1 + monthlyRate, months);
-
-            // Future Value of Monthly Contributions (Annuity)
-            let fvContributions = 0;
-            if (monthlyRate > 0) {
-                fvContributions = monthly * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
-            } else {
-                fvContributions = monthly * months;
-            }
-
-            const totalFutureValue = fvInitial + fvContributions;
-            const totalInvested = initial + (monthly * months);
-            const totalInterest = totalFutureValue - totalInvested;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('invTotalInvested').textContent = formatter.format(totalInvested);
-            document.getElementById('invTotalInterest').textContent = formatter.format(totalInterest);
-            document.getElementById('invFutureValue').textContent = formatter.format(totalFutureValue);
-
-            document.getElementById('invResults').classList.remove('hidden');
+        function clearForm() {
+            document.getElementById('starting').value = '';
+            document.getElementById('resultsArea').innerHTML = '';
         }
+
+        function setTab(t) {
+            tab = t;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+            applyTabVisibility();
+            calculateInv();
+        }
+
+        function applyTabVisibility() {
+            document.getElementById('row-target').style.display = tab === 'endamount' ? 'none' : 'flex';
+            document.getElementById('row-starting').style.display = tab === 'startingamount' ? 'none' : 'flex';
+            document.getElementById('row-years').style.display = tab === 'investlength' ? 'none' : 'flex';
+            document.getElementById('row-rate').style.display = tab === 'returnrate' ? 'none' : 'flex';
+            document.getElementById('row-contrib').style.display = tab === 'contributeamount' ? 'none' : 'flex';
+        }
+
+        function effMonthly(ratePct, freq) {
+            const r = ratePct / 100;
+            if (freq === 0) return Math.exp(r / 12) - 1;
+            return Math.pow(1 + r / freq, freq / 12) - 1;
+        }
+
+        function sim(P, C, ratePct, freq, months, begin, per) {
+            const rm = effMonthly(ratePct, freq);
+            let bal = P, totInt = 0, totC = 0;
+            const rows = [];
+            for (let m = 1; m <= months; m++) {
+                let c = 0;
+                if (per === 'month') c = C;
+                else if (begin ? (m - 1) % 12 === 0 : m % 12 === 0) c = C;
+                let interest;
+                if (begin) { bal += c; interest = bal * rm; }
+                else interest = bal * rm;
+                bal += interest;
+                if (!begin) bal += c;
+                totInt += interest; totC += c;
+                rows.push({ m, dep: c + (m === 1 ? P : 0), interest, bal });
+            }
+            return { bal, totInt, totC, rows };
+        }
+
+        function calculateInv() {
+            const out = document.getElementById('resultsArea');
+            const target = num('target');
+            let P = num('starting'), C = num('contrib'), rate = num('rate');
+            const freq = parseInt(document.getElementById('compound').value, 10);
+            const yearsIn = Math.round(num('years'));
+            let months = yearsIn * 12;
+            const begin = document.querySelector('input[name="atwhen"]:checked').value === 'beginning';
+            const per = document.querySelector('input[name="per"]:checked').value;
+            const fail = msg => { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">' + msg + '</div>'; };
+
+            let bannerLabel, bannerValue, monthsSolved = null;
+
+            if (tab === 'endamount') {
+                if (months <= 0) return fail('Please enter an investment length of at least 1 year.');
+                bannerLabel = 'End Balance';
+            } else if (tab === 'contributeamount') {
+                if (months <= 0) return fail('Please enter an investment length of at least 1 year.');
+                if (target <= 0) return fail('Please enter a target amount.');
+                const fv0 = sim(P, 0, rate, freq, months, begin, per).bal;
+                const fv1 = sim(P, 1, rate, freq, months, begin, per).bal;
+                C = (target - fv0) / (fv1 - fv0);
+                if (C < 0) return fail('Your starting amount alone already grows past this target — no additional contribution is needed. (Solved contribution would be negative.)');
+                bannerLabel = 'Required Additional Contribution (' + (per === 'month' ? 'per month' : 'per year') + ')';
+                bannerValue = formatMoney(C);
+            } else if (tab === 'startingamount') {
+                if (months <= 0) return fail('Please enter an investment length of at least 1 year.');
+                if (target <= 0) return fail('Please enter a target amount.');
+                const fvC = sim(0, C, rate, freq, months, begin, per).bal;
+                const growth = Math.pow(1 + effMonthly(rate, freq), months);
+                P = (target - fvC) / growth;
+                if (P < 0) return fail('Your contributions alone already grow past this target — no starting amount is needed.');
+                bannerLabel = 'Required Starting Amount';
+                bannerValue = formatMoney(P);
+            } else if (tab === 'returnrate') {
+                if (months <= 0) return fail('Please enter an investment length of at least 1 year.');
+                if (target <= 0) return fail('Please enter a target amount.');
+                const fvAt = r => sim(P, C, r, freq, months, begin, per).bal;
+                let lo = -50, hi = 200;
+                if (fvAt(lo) > target) return fail('Even a −50% return overshoots this target — the target is below what the entered amounts imply. Raise the target or lower the amounts.');
+                while (fvAt(hi) < target && hi < 100000) hi *= 2;
+                if (fvAt(hi) < target) return fail('This target needs an implausibly high return (over 100,000%). Check the inputs.');
+                for (let i = 0; i < 200; i++) { const mid = (lo + hi) / 2; if (fvAt(mid) < target) lo = mid; else hi = mid; }
+                rate = (lo + hi) / 2;
+                bannerLabel = 'Required Return Rate';
+                bannerValue = rate.toFixed(2) + '%';
+            } else if (tab === 'investlength') {
+                if (target <= 0) return fail('Please enter a target amount.');
+                const rm = effMonthly(rate, freq);
+                let bal = P, hit = -1;
+                for (let m = 1; m <= 1200; m++) {
+                    let c = 0;
+                    if (per === 'month') c = C;
+                    else if (begin ? (m - 1) % 12 === 0 : m % 12 === 0) c = C;
+                    if (begin) bal += c;
+                    bal += bal * rm;
+                    if (!begin) bal += c;
+                    if (bal >= target) { hit = m; break; }
+                }
+                if (hit < 0) return fail('This target is not reached within 100 years at the entered rate and contributions. Raise the rate or contributions, or lower the target.');
+                months = hit; monthsSolved = hit;
+                bannerLabel = 'Time Needed to Reach ' + formatMoney(target);
+                const yy = Math.floor(hit / 12), mm = hit % 12;
+                bannerValue = (yy > 0 ? yy + ' year' + (yy > 1 ? 's' : '') : '') + (yy > 0 && mm > 0 ? ' ' : '') + (mm > 0 ? mm + ' month' + (mm > 1 ? 's' : '') : (yy === 0 ? '' : ''));
+                if (!bannerValue) bannerValue = 'Under 1 month';
+            }
+
+            const res = sim(P, C, rate, freq, months, begin, per);
+            if (tab === 'endamount') bannerValue = formatMoney(res.bal);
+            const s = res;
+
+            const yearMap = {};
+            s.rows.forEach(row => {
+                const y = Math.ceil(row.m / 12);
+                if (!yearMap[y]) yearMap[y] = { dep: 0, interest: 0, balance: row.bal };
+                yearMap[y].dep += row.dep; yearMap[y].interest += row.interest; yearMap[y].balance = row.bal;
+            });
+            let cumC = 0;
+            Object.keys(yearMap).forEach(y => { cumC += (yearMap[y].dep - (y === '1' ? P : 0)); yearMap[y].contribCum = cumC; });
+
+            const schedRows = s.rows.map(row =>
+                `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${row.m}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.dep)}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.interest)}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.bal)}</td></tr>`
+            ).join('');
+            const yearRows = Object.keys(yearMap).map(y => {
+                const v = yearMap[y];
+                return `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${y}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.dep)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.interest)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.balance)}</td></tr>`;
+            }).join('');
+
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">${bannerLabel}</p>
+                    <p class="text-4xl font-bold">${bannerValue}</p>
+                    <p class="text-sm opacity-90 mt-1">End balance: ${formatMoney(s.bal)}${tab !== 'investlength' ? ' after ' + yearsIn + ' years' : ''} at ${tab === 'returnrate' ? rate.toFixed(2) : rate}% return</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>End Balance:</span> <span class="font-bold">${formatMoney(s.bal)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Starting Amount:</span> <span class="font-bold">${formatMoney(P)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total Contributions:</span> <span class="font-bold">${formatMoney(s.totC)}</span></p>
+                    <p class="flex justify-between"><span>Total Interest:</span> <span class="font-bold">${formatMoney(s.totInt)}</span></p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="barChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <h3 class="font-bold text-gray-800">Accumulation Schedule</h3>
+                        <div class="flex gap-2 no-print">
+                            <button id="schedMonthlyBtn" onclick="setSchedView('m')" class="bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold">Monthly</button>
+                            <button id="schedYearlyBtn" onclick="setSchedView('y')" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold">Yearly</button>
+                        </div>
+                    </div>
+                    <div id="scheduleWrap" class="overflow-x-auto" style="max-height:26rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">#</th><th class="py-2 px-2 border-b text-right">Deposit</th><th class="py-2 px-2 border-b text-right">Interest</th><th class="py-2 px-2 border-b text-right">Ending Balance</th></tr></thead>
+                            <tbody id="schedMonthly">${schedRows}</tbody>
+                            <tbody id="schedYearly" class="hidden">${yearRows}</tbody>
+                        </table>
+                    </div>
+                    <button id="schedToggle" onclick="toggleSchedule()" class="mt-3 bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">View Full Schedule</button>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                    <button onclick="downloadCSV()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">⬇ Download CSV</button>
+                </div>`;
+
+            window._invRows = s.rows;
+
+            const pc = document.getElementById('pieChart');
+            if (pc) {
+                const ctx = pc.getContext('2d');
+                if (chartInstance) chartInstance.destroy();
+                chartInstance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: { labels: ['Starting Amount', 'Total Contributions', 'Interest'], datasets: [{ data: [Math.round(P), Math.round(s.totC), Math.round(s.totInt)], backgroundColor: ['#3F51B5', '#14B8A6', '#F59E0B'] }] },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'right' },
+                            title: { display: true, text: 'Where the End Balance Comes From' },
+                            tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + formatMoney(c.parsed) } }
+                        }
+                    }
+                });
+            }
+            const bc = document.getElementById('barChart');
+            if (bc) {
+                const ctx2 = bc.getContext('2d');
+                if (barChartInstance) barChartInstance.destroy();
+                const ys = Object.keys(yearMap);
+                barChartInstance = new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: ys,
+                        datasets: [
+                            { label: 'Starting Amount', data: ys.map(() => Math.round(P)), backgroundColor: '#3F51B5' },
+                            { label: 'Contributions', data: ys.map(y => Math.round(yearMap[y].contribCum)), backgroundColor: '#14B8A6' },
+                            { label: 'Interest', data: ys.map(y => Math.round(yearMap[y].balance - P - yearMap[y].contribCum)), backgroundColor: '#F59E0B' }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'top' }, title: { display: true, text: 'Accumulation by Year' } },
+                        scales: {
+                            x: { stacked: true, title: { display: true, text: 'Year' } },
+                            y: { stacked: true, ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } }
+                        }
+                    }
+                });
+            }
+            updateURL();
+        }
+
+        let schedExpanded = false;
+        function toggleSchedule() {
+            const wrap = document.getElementById('scheduleWrap');
+            const btn = document.getElementById('schedToggle');
+            schedExpanded = !schedExpanded;
+            wrap.style.maxHeight = schedExpanded ? 'none' : '26rem';
+            btn.textContent = schedExpanded ? 'Show Less' : 'View Full Schedule';
+        }
+        function setSchedView(v) {
+            document.getElementById('schedMonthly').classList.toggle('hidden', v !== 'm');
+            document.getElementById('schedYearly').classList.toggle('hidden', v !== 'y');
+            const bm = document.getElementById('schedMonthlyBtn'), by = document.getElementById('schedYearlyBtn');
+            bm.className = v === 'm' ? 'bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold' : 'bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold';
+            by.className = v === 'y' ? 'bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold' : 'bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold';
+        }
+
+        function downloadCSV() {
+            const rows = window._invRows || [];
+            if (!rows.length) return;
+            let csv = 'Month,Deposit,Interest,Ending Balance\n';
+            rows.forEach(r => { csv += [r.m, r.dep.toFixed(2), r.interest.toFixed(2), r.bal.toFixed(2)].join(',') + '\n'; });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'investment-accumulation.csv';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        const PARAMS = [['target', 't'], ['starting', 's'], ['years', 'y'], ['rate', 'r'], ['compound', 'f'], ['contrib', 'c']];
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            p.set('tab', tab);
+            PARAMS.forEach(([id, key]) => { p.set(key, document.getElementById(id).value); });
+            p.set('at', document.querySelector('input[name="atwhen"]:checked').value);
+            p.set('per', document.querySelector('input[name="per"]:checked').value);
+            return p.toString();
+        }
+
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); });
+            ['atwhen', 'per'].forEach((name, i) => {
+                const v = q.get(i === 0 ? 'at' : 'per');
+                if (v) { const r = document.querySelector('input[name="' + name + '"][value="' + v + '"]'); if (r) r.checked = true; }
+            });
+            if (q.get('tab')) {
+                tab = q.get('tab');
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+            }
+        }
+
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
