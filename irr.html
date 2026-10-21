@@ -4,139 +4,492 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IRR Calculator - CalcNova</title>
+    <meta name="description" content="Calculate the internal rate of return (IRR) for a fixed recurring cash flow or for irregular annual cash flows. Includes the NPV profile so you can see the rate where net present value crosses zero.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/irr">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Internal Rate of Return (IRR) Calculator - CalcNova">
+    <meta property="og:description" content="The discount rate that makes NPV zero — for fixed periodic cash flows or irregular annual ones.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/irr">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="IRR Calculator - CalcNova">
+    <meta name="twitter:description" content="IRR for fixed or irregular cash flows, with the NPV profile chart.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "IRR Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/irr" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What does IRR tell me, in one sentence?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The annualized rate of return at which the present value of everything a project pays you exactly equals everything you put in — its break-even rate of return after accounting for the time value of money. Above your required rate (hurdle rate / cost of capital), the project creates value; below it, it destroys value." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why can there be more than one IRR?",
+                "acceptedAnswer": { "@type": "Answer", "text": "IRR is a root of a polynomial. Every time the cash-flow series changes sign (outflow → inflow → outflow, say), another root becomes possible. Conventional projects (one outflow, then inflows) have exactly one. When multiple roots exist, this calculator reports them and the NPV profile chart is the safer guide." }
+            },
+            {
+                "@type": "Question",
+                "name": "IRR or NPV — which should decide?",
+                "acceptedAnswer": { "@type": "Answer", "text": "They agree on single conventional projects, but they can rank competing projects differently: IRR is a percentage and blind to scale, while NPV measures actual value created. A small project at 40% IRR can add less wealth than a large one at 15%. Professionals quote IRR for comparability and let NPV arbitrate conflicts." }
+            },
+            {
+                "@type": "Question",
+                "name": "My cash flows aren't annual — which calculator do I use?",
+                "acceptedAnswer": { "@type": "Answer", "text": "For dated deposits and withdrawals on arbitrary dates, the Average Return Calculator solves the same money-weighted rate (an XIRR). The irregular-flow calculator here assumes one flow at each year-end." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .fld { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; width: 100%; }
+        .fld:focus { border-color: #3F51B5; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .formula { text-align: center; font-size: 1.05rem; font-weight: 600; color: #1F2937; background: #F3F4F6; border-radius: 0.5rem; padding: 0.75rem; margin: 0.75rem 0; }
+        @media print { nav, footer, .no-print, .calc-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">IRR</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">IRR Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Internal Rate of Return (IRR) Calculator</h1>
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-2">
+            <h1 class="text-2xl font-bold text-[#3F51B5]">Internal Rate of Return (IRR) Calculator</h1>
+            <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">Print</button>
+        </div>
+        <p class="text-gray-600 text-sm mb-8 max-w-3xl">IRR is the discount rate that makes a project's net present value exactly zero — its break-even rate of return. Compute it for a fixed recurring cash flow, or for irregular annual cash flows.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <p class="text-sm text-gray-600 mb-4">Enter your initial investment (as a negative number) and your annual cash flows separated by commas. Example: <strong>-10000, 3000, 4200, 6800, 5000</strong></p>
-                
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Cash Flows ($)</label>
-                    <input type="text" id="irrCashFlows" value="-10000, 3000, 4200, 6800, 5000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+        <h2 class="text-xl font-bold text-gray-800 mb-2">1 · IRR Based on Fixed Cash Flow</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">An initial investment, a fixed deposit or withdrawal every period, and an ending balance. (Set the periodic amount to 0 for no cash flow.)</p>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-1/2 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group">
+                        <label>Initial Investment</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="fInitial" value="10000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Holding</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="fYears" value="2" class="w-1/2">
+                            <span class="w-1/2 flex items-center bg-gray-50 border border-gray-300 rounded-md px-2">years</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label></label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="fMonths" value="6" class="w-1/2">
+                            <span class="w-1/2 flex items-center bg-gray-50 border border-gray-300 rounded-md px-2">months</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Ending Balance</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="fEnding" value="15000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Periodic Cash Flow</label>
+                        <div class="w-[58%] flex gap-1">
+                            <select id="fType" class="w-1/2 bg-gray-50">
+                                <option value="d">Deposit</option>
+                                <option value="w" selected>Withdraw</option>
+                            </select>
+                            <input type="number" id="fAmount" value="100" class="w-1/2">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Frequency</label>
+                        <select id="fFreq" class="w-[58%] bg-gray-50">
+                            <option value="1">Annually</option>
+                            <option value="2">Semiannually</option>
+                            <option value="4">Quarterly</option>
+                            <option value="12" selected>Monthly</option>
+                            <option value="24">Semimonthly</option>
+                            <option value="26">Biweekly</option>
+                            <option value="52">Weekly</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Paid at the</label>
+                        <div class="w-[58%] flex gap-4 items-center py-1">
+                            <label class="flex items-center gap-1 w-auto"><input type="radio" name="fTiming" value="b"> beginning</label>
+                            <label class="flex items-center gap-1 w-auto"><input type="radio" name="fTiming" value="e" checked> end</label>
+                            <span>of each period</span>
+                        </div>
+                    </div>
+                    <button onclick="calculateFixed()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-3">Calculate</button>
                 </div>
-                
-                <button onclick="calculateIRR()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate IRR</button>
-
-                <div id="irrResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
-                    <p class="text-sm text-gray-500">Internal Rate of Return (IRR)</p>
-                    <p class="text-4xl font-bold text-[#14B8A6]" id="irrRate">0%</p>
-                    <p class="text-sm text-gray-500 mt-2">Net Present Value (NPV) at this rate</p>
-                    <p class="text-xl font-bold text-[#3F51B5]" id="irrNPV">$0.00</p>
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden lg:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is IRR?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">The Internal Rate of Return (IRR) is a metric used in financial analysis to estimate the profitability of potential investments. IRR is a discount rate that makes the net present value (NPV) of all cash flows equal to zero in a discounted cash flow analysis. Generally, the higher an IRR, the more desirable an investment is to undertake.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="lg:w-1/2">
+                <div id="resultsFixed"></div>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+        <hr class="my-10 border-gray-200">
+
+        <h2 class="text-xl font-bold text-gray-800 mb-2">2 · IRR Based on Irregular Cash Flow</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">An initial investment plus one cash flow at each year-end. Positive = money back to you; negative = more money in. (Cash flows on arbitrary dates? Use the <a href="average-return.html" class="text-[#3F51B5] font-semibold hover:underline">Average Return Calculator</a>.)</p>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-1/2 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group">
+                        <label>Initial Investment</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="iInitial" value="50000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <p class="font-bold text-gray-700 mt-3 mb-2">Cash Flow by Year:</p>
+                    <div id="iRows"></div>
+                    <button onclick="addYearRow()" class="text-[#3F51B5] font-semibold text-sm hover:underline mt-1">+ Add year</button>
+                    <button onclick="calculateIrregular()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-4">Calculate</button>
+                </div>
             </div>
-        </aside>
+            <div class="lg:w-1/2">
+                <div id="resultsIrregular"></div>
+            </div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Understanding IRR</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Every project proposal arrives as the same shape: money out now, a forecast stream of money back
+                later, and some risk that the stream disappoints. The internal rate of return compresses that whole
+                shape into one number. Formally, IRR is the discount rate at which the net present value of all the
+                project's cash flows equals zero: future inflows, discounted for the time value of money (a dollar
+                today outranks a dollar tomorrow), exactly repay the outlay. Read it as the project's break-even
+                rate of return. Clear the hurdle — the company's required rate of return, or its cost of capital —
+                and the project earns more than it costs; fall short, and the forecast doesn't justify the money.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The math (and why a calculator does it)</h3>
+            <div class="formula">0 = Σ<sub>t</sub> CF<sub>t</sub> / (1 + r)<sup>t</sup> &nbsp;—&nbsp; solve for r</div>
+            <p class="text-gray-700 leading-7 mb-4">
+                CF<sub>t</sub> is the cash flow in period t (the initial investment, CF<sub>0</sub>, is negative), and r is the IRR.
+                It's the NPV formula run in reverse: instead of plugging in a rate to get a value, you hunt for the
+                rate that makes the value zero. Beyond three or four periods there's no tidy algebraic solution, so
+                analysts iterate — financial calculators, spreadsheets, and this page all converge on r numerically,
+                which is also why our second calculator shows the NPV profile: you can watch NPV fall through zero
+                exactly at the IRR.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Where IRR earns its keep</h3>
+            <ol class="list-decimal pl-6 text-gray-700 leading-7 mb-4 space-y-2">
+                <li><strong>Investment decisions:</strong> a single comparable rate against the hurdle rate.</li>
+                <li><strong>Capital budgeting:</strong> ranking competing projects; higher IRRs get funded first (with the scale caveat below).</li>
+                <li><strong>Loans and leases:</strong> the true annualized cost of a financing structure, fees included.</li>
+                <li><strong>Private equity and venture capital:</strong> the industry's headline performance measure, since funds return cash irregularly over years.</li>
+                <li><strong>Real estate:</strong> purchase price, rent, costs and eventual sale folded into one rate — our rental property calculator reports an IRR for exactly this reason.</li>
+            </ol>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Two examples worth internalizing</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>The machine:</strong> $40,000 buys equipment returning $10,000, $20,000 and $30,000 over three years.
+                Entered in the irregular calculator above, the IRR is <strong>19.438%</strong>. Against a 12% cost of capital
+                it's an easy yes; against 20%, the same machine fails its hurdle — the project didn't change, the
+                price of money did. <strong>The tie that IRR breaks:</strong> two properties each cost $100,000 and each pay
+                $150,000 total over five years — identical 50% simple ROI. But A pays 5/20/25/40/60 while B pays
+                0/10/30/30/80. A's earlier cash wins: <strong>IRR 11.290% vs 10.259%</strong>. Money sooner can be reinvested and
+                carries less risk; ROI is blind to that, IRR is built from it.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The limitations, honestly</h3>
+            <ol class="list-decimal pl-6 text-gray-700 leading-7 mb-4 space-y-2">
+                <li><strong>Blind to scale:</strong> 40% on $1,000 is $400; 15% on $1,000,000 is $150,000. IRR alone can't tell you which made you richer — NPV can.</li>
+                <li><strong>Risk is outside the number:</strong> IRR treats forecast flows as certain. A safe 12% can beat a coin-flip 19%.</li>
+                <li><strong>Reinvestment assumption:</strong> the math implicitly reinvests interim flows at the IRR itself — flattering for very high IRRs. MIRR exists to fix exactly this.</li>
+                <li><strong>Multiple IRRs:</strong> flows that change sign more than once (out, in, out again) can produce several rates that zero the NPV. When that happens here, we list them all and the NPV profile is the tiebreaker.</li>
+            </ol>
+            <p class="text-gray-700 leading-7 mb-4">
+                So IRR is a lens, not a verdict — professionals pair it with NPV, MIRR, or the payback period
+                before committing real money.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">What IRR is "good"?</h4>
+                    <p class="text-gray-700">There is no universal good IRR — only IRR relative to your hurdle rate and to the risk. A project clearing its cost of capital by a wide margin with dependable flows is good; the same number on speculative flows may not be.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Can IRR be negative?</h4>
+                    <p class="text-gray-700">Yes — it means the project returns less than was put in, even before discounting for time. The solvers here search well into negative territory and report it plainly.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Why does the fixed-flow calculator show a per-period rate?</h4>
+                    <p class="text-gray-700">Because the compounding clock there is the payment period, not the year. The headline IRR is the effective annual rate; the period rate is what each individual period earns.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="average-return.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Average Return Calculator</h3>
+                <p class="text-sm text-gray-600">The same rate from dated deposits and withdrawals (XIRR).</p>
+            </a>
+            <a href="investment.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Investment Calculator</h3>
+                <p class="text-sm text-gray-600">Project the cash flows before you rate them.</p>
+            </a>
+            <a href="mutual-fund.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Mutual Fund Calculator</h3>
+                <p class="text-sm text-gray-600">Net IRR after fund fees and loads.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateIRR() {
-            const input = document.getElementById('irrCashFlows').value;
-            const strings = input.split(',');
-            let cashFlows = [];
-            
-            for (let i = 0; i < strings.length; i++) {
-                const val = parseFloat(strings[i].trim());
-                if (!isNaN(val)) {
-                    cashFlows.push(val);
+        let npvChartInstance = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            addYearRow(-10000); addYearRow(30000); addYearRow(50000);
+            prefillFromURL();
+            calculateFixed(); calculateIrregular();
+        });
+
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? NaN : v; }
+
+        // Generic IRR: scan for sign-change brackets of NPV(r), bisect each. Flows: [{t (in periods), amt}] investor perspective.
+        function findRoots(flows, periodYears) {
+            const npv = r => flows.reduce((s, f) => s + f.amt / Math.pow(1 + r, f.t), 0);
+            const roots = [];
+            let prevR = -0.9999, prevV = npv(prevR);
+            const steps = 4000;
+            for (let i = 1; i <= steps; i++) {
+                const r = -0.9999 + (10 + 0.9999) * i / steps;
+                const v = npv(r);
+                if (isFinite(v) && isFinite(prevV) && v === 0) roots.push(r);
+                else if (isFinite(v) && isFinite(prevV) && (v < 0) !== (prevV < 0)) {
+                    let lo = prevR, hi = r;
+                    for (let k = 0; k < 200; k++) { const mid = (lo + hi) / 2; (npv(mid) < 0) === (npv(lo) < 0) ? lo = mid : hi = mid; }
+                    roots.push((lo + hi) / 2);
                 }
+                prevR = r; prevV = v;
             }
-
-            if (cashFlows.length < 2) {
-                alert("Please enter at least two valid cash flow numbers.");
-                return;
-            }
-
-            // IRR Calculation using Numerical Iteration (Newton-Raphson method approximation)
-            // We are looking for r where NPV = 0
-            let rate = 0.1; // Initial guess (10%)
-            let maxIterations = 1000;
-            let precision = 0.00001;
-            let found = false;
-
-            for (let i = 0; i < maxIterations; i++) {
-                let npv = 0;
-                let derivative = 0; // To help converge faster
-
-                for (let t = 0; t < cashFlows.length; t++) {
-                    npv += cashFlows[t] / Math.pow(1 + rate, t);
-                    if (t > 0) {
-                        derivative -= (t * cashFlows[t]) / Math.pow(1 + rate, t + 1);
-                    }
-                }
-
-                if (Math.abs(npv) < precision) {
-                    found = true;
-                    break;
-                }
-
-                if (derivative === 0) break; // Prevent division by zero
-
-                // Newton-Raphson step
-                rate = rate - (npv / derivative);
-            }
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            if (found) {
-                document.getElementById('irrRate').textContent = (rate * 100).toFixed(2) + "%";
-                
-                // Calculate final NPV for display (should be ~0)
-                let finalNPV = 0;
-                for (let t = 0; t < cashFlows.length; t++) {
-                    finalNPV += cashFlows[t] / Math.pow(1 + rate, t);
-                }
-                document.getElementById('irrNPV').textContent = formatter.format(finalNPV);
-            } else {
-                document.getElementById('irrRate').textContent = "N/A";
-                document.getElementById('irrNPV').textContent = "Could not converge. Check cash flows.";
-            }
-
-            document.getElementById('irrResults').classList.remove('hidden');
+            return { roots, npv };
         }
+
+        // ---------- Calculator 1: fixed periodic cash flow ----------
+        function calculateFixed() {
+            const out = document.getElementById('resultsFixed');
+            const initial = num('fInitial'), ending = num('fEnding'), amt = num('fAmount') || 0;
+            const totalMonths = Math.round((num('fYears') || 0) * 12 + (num('fMonths') || 0));
+            const f = parseInt(document.getElementById('fFreq').value, 10);
+            const type = document.getElementById('fType').value;
+            const timing = document.querySelector('input[name="fTiming"]:checked').value;
+            const fail = m => { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">' + m + '</div>'; };
+            if (!(initial > 0) || isNaN(ending) || totalMonths <= 0) return fail('Please enter an initial investment, an ending balance, and a holding period of at least one month.');
+
+            const N = totalMonths / 12 * f;                 // periods (may be fractional)
+            const nFull = Math.floor(N + 1e-9);
+            const sign = type === 'w' ? 1 : -1;              // investor view: withdrawals are inflows
+            const flows = [{ t: 0, amt: -initial }];
+            for (let k = 1; k <= nFull; k++) {
+                const t = timing === 'b' ? k - 1 : k;
+                if (amt !== 0) flows.push({ t, amt: sign * amt });
+            }
+            flows.push({ t: N, amt: ending });
+            // merge same-t flows for solver stability
+            const merged = {};
+            flows.forEach(fl => { merged[fl.t] = (merged[fl.t] || 0) + fl.amt; });
+            const flowArr = Object.keys(merged).map(t => ({ t: parseFloat(t), amt: merged[t] })).filter(fl => fl.amt !== 0);
+            const { roots } = findRoots(flowArr, 1 / f);
+            if (!roots.length) return fail('No IRR reconciles these figures — check that total inflows and the ending balance relate sensibly to the initial investment.');
+            const iPer = roots[0];
+            const irrAnnual = (Math.pow(1 + iPer, f) - 1) * 100;
+            const totalPeriodic = amt * nFull;
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Internal Rate of Return</p>
+                    <p class="text-4xl font-bold">${irrAnnual.toFixed(3)}%</p>
+                    <p class="text-sm opacity-90 mt-1">per year · ${(iPer * 100).toFixed(4)}% per period${roots.length > 1 ? ' · additional root(s): ' + roots.slice(1).map(r => ((Math.pow(1 + r, f) - 1) * 100).toFixed(2) + '%').join(', ') : ''}</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Initial Investment:</span> <span class="font-bold">${formatMoney(initial)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Periodic ${type === 'w' ? 'Withdrawals' : 'Deposits'} (${nFull} × ${formatMoney(amt)}):</span> <span class="font-bold">${formatMoney(totalPeriodic)}</span></p>
+                    <p class="flex justify-between"><span>Ending Balance:</span> <span class="font-bold">${formatMoney(ending)}</span></p>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                </div>`;
+            updateURL();
+        }
+
+        // ---------- Calculator 2: irregular annual flows ----------
+        let yearCount = 0;
+        function addYearRow(val) {
+            yearCount++;
+            const div = document.createElement('div');
+            div.className = 'grid grid-cols-12 gap-2 mb-2 items-center i-row';
+            div.innerHTML = `
+                <span class="col-span-3 text-gray-600">Year <span class="i-yr">${yearCount}</span></span>
+                <span class="col-span-8"><input type="number" step="any" class="fld i-amt" value="${val === undefined ? '' : val}"></span>
+                <span class="col-span-1"><button onclick="removeYearRow(this)" class="text-red-500 font-bold" title="Remove">×</button></span>`;
+            document.getElementById('iRows').appendChild(div);
+        }
+        function removeYearRow(btn) {
+            btn.closest('.i-row').remove();
+            document.querySelectorAll('.i-row .i-yr').forEach((el, i) => el.textContent = i + 1);
+        }
+
+        function calculateIrregular() {
+            const out = document.getElementById('resultsIrregular');
+            const initial = num('iInitial');
+            if (!(initial > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter an initial investment greater than zero.</div>'; return; }
+            const flows = [{ t: 0, amt: -initial }];
+            let totIn = 0, totOut = initial;
+            document.querySelectorAll('.i-row').forEach((row, idx) => {
+                const v = parseFloat(row.querySelector('.i-amt').value);
+                if (isNaN(v)) return;
+                flows.push({ t: idx + 1, amt: v });
+                if (v > 0) totIn += v; else totOut += -v;
+            });
+            const { roots, npv } = findRoots(flows, 1);
+            if (!roots.length) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">No IRR exists for this cash-flow series (NPV never crosses zero). Check that later inflows eventually repay the outflows.</div>'; return; }
+            const irr = roots[0];
+            const multi = roots.length > 1 ? `<p class="text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3 mt-3">⚠ This series changes sign more than once and has ${roots.length} IRRs: ${roots.map(r => (r * 100).toFixed(3) + '%').join(', ')}. The headline figure is the first; judge the project by its NPV profile below.</p>` : '';
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Internal Rate of Return</p>
+                    <p class="text-4xl font-bold">${(irr * 100).toFixed(3)}%</p>
+                    <p class="text-sm opacity-90 mt-1">per year · NPV at this rate ≈ $0.00</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Total Outflows:</span> <span class="font-bold">${formatMoney(totOut)}</span></p>
+                    <p class="flex justify-between"><span>Total Inflows:</span> <span class="font-bold">${formatMoney(totIn)}</span></p>
+                    ${multi}
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="npvChart"></canvas>
+                </div>`;
+            const ctx = document.getElementById('npvChart');
+            if (ctx) {
+                if (npvChartInstance) npvChartInstance.destroy();
+                const xs = [], ys = [];
+                const cap = Math.max(0.5, irr * 2.2);
+                for (let i = 0; i <= 60; i++) { const r = -0.2 + (cap + 0.2) * i / 60; xs.push((r * 100).toFixed(1) + '%'); ys.push(Math.round(npv(r))); }
+                npvChartInstance = new Chart(ctx.getContext('2d'), {
+                    type: 'line',
+                    data: { labels: xs, datasets: [{ label: 'NPV', data: ys, borderColor: '#3F51B5', backgroundColor: 'rgba(63,81,181,0.08)', fill: true, pointRadius: 0, tension: 0.25 }] },
+                    options: { responsive: true, plugins: { legend: { display: false }, title: { display: true, text: 'NPV vs Discount Rate — crosses zero at the IRR (' + (irr * 100).toFixed(2) + '%)' } }, scales: { x: { ticks: { maxTicksLimit: 9 }, title: { display: true, text: 'Discount rate' } }, y: { ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } } } }
+                });
+            }
+            updateURL();
+        }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            p.set('fi', document.getElementById('fInitial').value);
+            p.set('fy', document.getElementById('fYears').value);
+            p.set('fm', document.getElementById('fMonths').value);
+            p.set('fe', document.getElementById('fEnding').value);
+            p.set('ft', document.getElementById('fType').value);
+            p.set('fa', document.getElementById('fAmount').value);
+            p.set('ff', document.getElementById('fFreq').value);
+            p.set('ftm', document.querySelector('input[name="fTiming"]:checked').value);
+            p.set('ii', document.getElementById('iInitial').value);
+            const yrs = [];
+            document.querySelectorAll('.i-row .i-amt').forEach(el => yrs.push(el.value));
+            p.set('yrs', yrs.join(','));
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            const set = (id, key) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); };
+            set('fInitial', 'fi'); set('fYears', 'fy'); set('fMonths', 'fm'); set('fEnding', 'fe');
+            set('fType', 'ft'); set('fAmount', 'fa'); set('fFreq', 'ff'); set('iInitial', 'ii');
+            if (q.get('ftm')) { const r = document.querySelector('input[name="fTiming"][value="' + q.get('ftm') + '"]'); if (r) r.checked = true; }
+            if (q.get('yrs')) {
+                document.getElementById('iRows').innerHTML = ''; yearCount = 0;
+                q.get('yrs').split(',').forEach(v => addYearRow(v));
+            }
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
