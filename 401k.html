@@ -3,163 +3,477 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>401K Calculator - CalcNova</title>
+    <title>401(k) Calculator - CalcNova</title>
+    <meta name="description" content="Estimate your 401(k) balance at retirement and your monthly payout, calculate the true cost of an early withdrawal, and find the contribution window that captures the full employer match.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/401k">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="401(k) Calculator - CalcNova">
+    <meta property="og:description" content="401(k) growth with employer match, early-withdrawal costs, and the maximize-the-match window.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/401k">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="401(k) Calculator - CalcNova">
+    <meta name="twitter:description" content="Project a 401(k), price an early withdrawal, and capture the full employer match.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "401(k) Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/401k" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What are the 401(k) contribution limits for 2026?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The employee deferral limit is $24,500 under age 50, $32,500 at 50 or older (with catch-up), and $35,750 for ages 60–63. Total contributions from employee plus employer cannot exceed the lesser of 100% of compensation or $72,000 in 2026. IRA limits are far lower: $7,500 under 50 and $8,600 at 50+." }
+            },
+            {
+                "@type": "Question",
+                "name": "How does an employer match work?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The employer adds a percentage of whatever you contribute, up to a cap expressed as a percentage of your salary. Matching 50% of contributions with a 3%-of-salary cap means contributing 6% of pay earns the full 3% — on a $75,000 salary, $2,250 a year of employer money. Experts call the match 'free money' or an instant pay raise: a 100% match is an immediate 100% return before any investment growth." }
+            },
+            {
+                "@type": "Question",
+                "name": "What happens if I withdraw from a 401(k) early?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Before 59½, a withdrawal is taxed as ordinary income (federal, state, and sometimes local) and usually hit with an additional 10% early-withdrawal penalty — on $10,000 at a 25% federal and 5% state rate, you keep just $6,000, plus you lose all future tax-deferred compounding on the amount taken. Exceptions waive the penalty (not the tax): leaving employment at 55 or later (the rule of 55), qualifying disability, certain medical expenses, QDROs, and substantially equal periodic payments under rule 72(t), among others." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is vesting?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Your own contributions are always 100% yours. Employer contributions may vest over time: graded vesting might give you 25% after year one, rising to 100% after year four; cliff vesting gives 0% until a single date, then 100%. Leaving before you're fully vested forfeits the unvested share of the employer's money." }
+            },
+            {
+                "@type": "Question",
+                "name": "When must I start taking money out (RMDs)?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Required minimum distributions begin at age 73 (the deadline is April 1 of the following year), calculated from the prior December 31 balance and an IRS life-expectancy factor; missing one draws a steep penalty. Still working at 73 for the employer sponsoring the plan (and not a 5%+ owner) can postpone RMDs from that plan until you retire." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 46%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .sect { font-weight: 700; color: #3F51B5; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; margin: 0.9rem 0 0.4rem; }
+        canvas.donut { max-width: 220px; width: 100%; height: auto; display: block; margin: 0 auto; }
+        @media print { nav, footer, .no-print, .calc-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">401K</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">401(k) Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">401K Calculator</h1>
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-2">
+            <h1 class="text-2xl font-bold text-[#3F51B5]">401(k) Calculator</h1>
+            <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">Print</button>
+        </div>
+        <p class="text-gray-600 text-sm mb-8 max-w-3xl">Estimate a 401(k) balance at retirement and the distributions it can pay, based on income, contribution percentage, age, salary increases, and investment return. Mainly intended for U.S. residents.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Age</label>
-                        <input type="number" id="kAge" value="30" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Retirement Age</label>
-                        <input type="number" id="kRetireAge" value="65" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current 401(k) Balance ($)</label>
-                        <input type="number" id="kBalance" value="20000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Salary ($)</label>
-                        <input type="number" id="kSalary" value="75000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Your Contribution (%)</label>
-                        <input type="number" id="kContrib" value="6" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Employer Match (%)</label>
-                        <input type="number" id="kMatch" value="4" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Expected Annual Return (%)</label>
-                        <input type="number" id="kReturn" value="7" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
+        <h2 class="text-xl font-bold text-gray-800 mb-4">1 · 401(k) Balance &amp; Payout Projection</h2>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <p class="sect" style="margin-top:0;">Basic Info</p>
+                    <div class="input-group"><label>Current age</label><input type="number" id="kAge" value="30" class="w-[54%]"></div>
+                    <div class="input-group"><label>Current annual salary</label><input type="number" id="kSalary" value="75000" class="w-[54%]"></div>
+                    <div class="input-group"><label>Current 401(k) balance</label><input type="number" id="kBal" value="35000" class="w-[54%]"></div>
+                    <div class="input-group"><label>Contribution (% of salary)</label><div class="w-[54%] flex gap-1"><input type="number" id="kContrib" value="10" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Employer match</label><div class="w-[54%] flex gap-1"><input type="number" id="kMatch" value="50" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Employer match limit (% of salary)</label><div class="w-[54%] flex gap-1"><input type="number" id="kMatchCap" value="3" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <p class="text-gray-500 text-xs -mt-1 mb-2">The employer adds the match % of your contribution, up to this % of your salary.</p>
+                    <p class="sect">Projections</p>
+                    <div class="input-group"><label>Expected retirement age</label><input type="number" id="kRetAge" value="65" class="w-[54%]"></div>
+                    <div class="input-group"><label>Life expectancy</label><input type="number" id="kLife" value="85" class="w-[54%]"></div>
+                    <div class="input-group"><label>Expected salary increase /yr</label><div class="w-[54%] flex gap-1"><input type="number" id="kRaise" value="3" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Expected annual return</label><div class="w-[54%] flex gap-1"><input type="number" id="kRet" value="6" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Expected inflation rate</label><div class="w-[54%] flex gap-1"><input type="number" id="kInfl" value="3" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <button onclick="calculateMain()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-2">Calculate</button>
                 </div>
-                <button onclick="calculate401k()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate 401(k) Balance</button>
-
-                <div id="kResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Contributions (You + Employer)</p>
-                            <p class="text-xl font-bold text-gray-800" id="kTotalContrib">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Earned</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="kTotalInterest">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Estimated Balance at Retirement</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="kFinalBalance">$0</p>
-                        </div>
-                    </div>
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden lg:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Power of Employer Match</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A 401(k) is a retirement savings plan sponsored by an employer. One of the biggest benefits is the "employer match," where your employer contributes a percentage of your salary to your account, up to a certain limit, as long as you contribute too. This is essentially free money. This calculator assumes the employer matches your contribution up to the percentage you enter.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
-            </div>
+            <div class="lg:w-3/5"><div id="resultsMain"></div></div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+        <hr class="my-10 border-gray-200">
+
+        <h2 class="text-xl font-bold text-gray-800 mb-2">2 · 401(k) Early Withdrawal Costs</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">Early 401(k) withdrawals result in a penalty. Find the actual amount received if you opt for one.</p>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group"><label>Early withdrawal amount</label><input type="number" id="eAmt" value="10000" class="w-[54%]"></div>
+                    <div class="input-group"><label>Federal income tax rate</label><div class="w-[54%] flex gap-1"><input type="number" id="eFed" value="25" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>State income tax rate</label><div class="w-[54%] flex gap-1"><input type="number" id="eState" value="5" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Local/city income tax rate</label><div class="w-[54%] flex gap-1"><input type="number" id="eLocal" value="0" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Are you employed?</label><div class="w-[54%] flex gap-1">
+                        <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="eEmployed" value="y" checked class="mr-1" onchange="toggle55()"> Yes</label>
+                        <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="eEmployed" value="n" class="mr-1" onchange="toggle55()"> No</label>
+                    </div></div>
+                    <div class="input-group" id="e55row" style="display:none;"><label>55 or older when you left employment?</label><div class="w-[54%] flex gap-1">
+                        <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="e55" value="y" class="mr-1"> Yes</label>
+                        <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="e55" value="n" checked class="mr-1"> No</label>
+                    </div></div>
+                    <div class="input-group"><label>Qualifying disability?</label><div class="w-[54%] flex gap-1">
+                        <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="eDis" value="y" class="mr-1"> Yes</label>
+                        <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="eDis" value="n" checked class="mr-1"> No</label>
+                    </div></div>
+                    <div class="input-group"><label>Other penalty exemptions?</label><div class="w-[54%] flex gap-1">
+                        <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="eEx" value="y" class="mr-1"> Yes</label>
+                        <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="eEx" value="n" checked class="mr-1"> No</label>
+                    </div></div>
+                    <button onclick="calculateEarly()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-2">Calculate</button>
+                </div>
             </div>
-        </aside>
+            <div class="lg:w-3/5"><div id="resultsEarly"></div></div>
+        </div>
+
+        <hr class="my-10 border-gray-200">
+
+        <h2 class="text-xl font-bold text-gray-800 mb-2">3 · Maximize Employer 401(k) Match</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">Contributing too little leaves match money unclaimed; contributing too much can hit the IRS limit before year-end, after which many employers stop matching (absent a true-up). This is the contribution window that captures the full match.</p>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group"><label>Current age</label><input type="number" id="mAge" value="30" class="w-[54%]"></div>
+                    <div class="input-group"><label>Current annual salary</label><input type="number" id="mSalary" value="75000" class="w-[54%]"></div>
+                    <div class="input-group"><label>Employer match 1</label><div class="w-[54%] flex gap-1"><input type="number" id="mMatch1" value="50" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Employer match 1 limit (% of salary)</label><div class="w-[54%] flex gap-1"><input type="number" id="mCap1" value="3" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Employer match 2</label><div class="w-[54%] flex gap-1"><input type="number" id="mMatch2" value="20" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Employer match 2 limit (% of salary)</label><div class="w-[54%] flex gap-1"><input type="number" id="mCap2" value="6" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <p class="text-gray-500 text-xs">Tier 2's limit is the employer's cumulative cap after tier 1 is filled.</p>
+                    <button onclick="calculateMax()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-2">Calculate</button>
+                </div>
+            </div>
+            <div class="lg:w-3/5"><div id="resultsMax"></div></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">401(k)s: How They Work, and How They Can Bite</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                A 401(k) is an employer-sponsored retirement plan named for subsection 401(k) of the Internal
+                Revenue Code, created by the Revenue Act of 1978 (self-employed people can open a self-directed or
+                "solo" version). Contributions leave your paycheck <strong>pre-tax</strong>, and dividends, interest, and
+                capital gains inside the plan are <strong>tax-deferred</strong> — assets grow untaxed until withdrawal,
+                typically in retirement and a lower bracket. Employers may cap the share of pay you can defer and
+                may <strong>match</strong> your contributions up to a percentage of salary. The IRS deferral limit rises
+                with the cost of living: $23,500 for 2025 and <strong>$24,500 for 2026</strong>, with catch-ups to $32,500
+                at 50+ and $35,750 at ages 60–63, and a combined employee-plus-employer ceiling of $72,000 in 2026.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The pros — and the cons</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                On the plus side: tax-deferred compounding; the employer match (in one survey, 43% of employees
+                said they'd trade pay for a richer match — it is, as the saying goes, free money); contributions
+                that are always tax-deductible because they reduce taxable income; limits far above an IRA's;
+                and strong creditor protection, which is precisely why raiding a 401(k) to dodge foreclosure or
+                debt is usually a mistake. On the minus side: a short menu of investment options chosen by the
+                employer; administrative fees that can run higher than a brokerage account's (mitigate with
+                low-cost index funds or ETFs); illiquidity before 59½; possible waiting periods before you may
+                even participate (six months is common, one year the legal max); and <strong>vesting</strong> — employer
+                money may become yours only gradually (graded: 25/50/75/100% over four years is typical) or all
+                at once (cliff), and leaving early forfeits the unvested part. Your own contributions are always
+                100% vested.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Defined contribution, defined benefit, and changing jobs</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                A 401(k) is a <em>defined contribution</em> plan: you choose the investments, and the outcome rides on
+                them. The older <em>defined benefit</em> pension promises a formula-based payout and rewards staying
+                25+ years with one employer — a career pattern that has largely vanished, which is why portable
+                401(k)s won. Changing jobs, you can usually leave the money in the old plan, roll it into the
+                new employer's plan, roll it into an IRA, or cash out and eat the taxes plus the 10% penalty
+                (rollovers are generally limited to one per twelve months). Inside most plans you'll find mutual
+                funds, index funds, ETFs, and target-date portfolios that de-risk automatically as retirement
+                nears; some plans allow a self-directed window or, after a rollover to an IRA, individual stocks.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Early withdrawals: hardship and the exceptions</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Money out before 59½ is taxed as ordinary income and usually penalized 10% more. Some plans
+                allow <strong>hardship withdrawals</strong> — which cannot be repaid — for documented needs: unreimbursed
+                medical costs (or those above 7.5% of AGI), buying a principal residence, the next 12 months of
+                tuition, preventing foreclosure or eviction, funeral expenses, or repairing casualty damage to a
+                home. Other withdrawals escape the penalty without being "hardship" at all: death (paid to a
+                beneficiary), qualifying disability, leaving employment at 55 or older, amounts within the
+                medical-expense deduction, QDRO payments to a former spouse or dependent, and substantially
+                equal periodic payments under IRS rule 72(t). Calculator 2 prices all of it — and remember the
+                invisible cost beyond taxes and penalty: every dollar out is a dollar no longer compounding
+                tax-deferred.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Distributions, RMDs, solo and Roth variants</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                After 59½ you may take distributions — lump sum (simple, but one enormous tax year and no more
+                tax-deferred growth) or installments (flexible, but each year's amount must at least meet the
+                <strong>required minimum distribution</strong> once those apply) — or roll the plan into an IRA, convert it
+                to an annuity (including joint-and-survivor versions paying across two lifetimes), or simply do
+                nothing and let compounding run. Doing nothing ends at <strong>age 73</strong>, when RMDs begin: the prior
+                December 31 balance divided by an IRS life-expectancy factor, first deadline April 1 of the
+                following year, with a punitive tax on amounts not withdrawn (waivable in some cases by
+                withdrawing the shortfall promptly and filing Form 5329 with an explanation). One exception:
+                still working at 73 for the sponsoring employer, without owning 5%+ of the company, defers that
+                plan's RMDs until you actually retire. The <strong>solo 401(k)</strong> mirrors most of this for the
+                self-employed, adds a borrowing feature (typically up to 50% of the account or $50,000,
+                whichever is less), and — unusually — can hold real estate, tax liens, precious metals, or
+                foreign currency where the plan permits. The <strong>Roth 401(k)</strong> flips the tax timing: after-tax
+                contributions, tax-free qualified withdrawals, the same 2026 limits ($24,500 / $32,500 /
+                $35,750) shared with the traditional side — but contributions can't be withdrawn penalty-free
+                until the plan is five years old, and RMDs apply at 73 unless you roll it into a Roth IRA, which
+                has neither restriction.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Should I contribute beyond the match?</h4>
+                    <p class="text-gray-700">Capture the full match first — nothing else reliably pays an instant 50–100%. Beyond that, compare the plan's fees and menu against an IRA's; many people fund the match, then an IRA, then come back to the 401(k) with what's left.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Why does contributing too much lose match money?</h4>
+                    <p class="text-gray-700">If your deferral percentage is so high that you reach the IRS annual limit in, say, October, your contributions stop — and in plans without a year-end true-up, so does the match for November and December. Spreading contributions across all twelve months (calculator 3's window) keeps every paycheck matched.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: These calculators provide estimates for educational purposes only and do not constitute financial
+                or tax advice. Contribution and match limits applied are the IRS 2026 figures ($24,500 / $32,500 at 50+ /
+                $35,750 at 60–63; $72,000 combined cap) and are not inflation-indexed in future projection years. Employer
+                match is modeled as the match % of your contribution, capped at the limit % of salary. Contributions are
+                credited at each year-end. Plan rules vary — confirm match, vesting, and true-up details with your plan
+                administrator.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="retirement.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Retirement Calculator</h3>
+                <p class="text-sm text-gray-600">Fit the 401(k) into the whole retirement picture.</p>
+            </a>
+            <a href="investment.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Investment Calculator</h3>
+                <p class="text-sm text-gray-600">Growth of money outside the plan.</p>
+            </a>
+            <a href="payback-period.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Payback Period Calculator</h3>
+                <p class="text-sm text-gray-600">Break-even thinking for other investments.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculate401k() {
-            const age = parseFloat(document.getElementById('kAge').value);
-            const retireAge = parseFloat(document.getElementById('kRetireAge').value);
-            const balance = parseFloat(document.getElementById('kBalance').value);
-            const salary = parseFloat(document.getElementById('kSalary').value);
-            const contribPct = parseFloat(document.getElementById('kContrib').value) / 100;
-            const matchPct = parseFloat(document.getElementById('kMatch').value) / 100;
-            const returnRate = parseFloat(document.getElementById('kReturn').value) / 100;
+        window.addEventListener('DOMContentLoaded', () => { prefillFromURL(); calculateMain(); calculateEarly(); calculateMax(); });
 
-            if (isNaN(age) || isNaN(retireAge) || isNaN(balance) || isNaN(salary) || isNaN(contribPct) || isNaN(matchPct) || isNaN(returnRate)) {
-                alert("Please enter valid numbers.");
-                return;
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? NaN : v; }
+        function radio(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ''; }
+        function irsLimit(age) { return age < 50 ? 24500 : (age >= 60 && age <= 63 ? 35750 : 32500); }
+        const TOTAL_CAP = 72000;
+
+        function calculateMain() {
+            const out = document.getElementById('resultsMain');
+            const age = num('kAge'), salary0 = num('kSalary'), bal0 = num('kBal') || 0;
+            const cPct = (num('kContrib') || 0) / 100, mPct = (num('kMatch') || 0) / 100, mCap = (num('kMatchCap') || 0) / 100;
+            const retAge = num('kRetAge'), life = num('kLife');
+            const raise = (num('kRaise') || 0) / 100, r = (num('kRet') || 0) / 100, infl = (num('kInfl') || 0) / 100;
+            if (!(retAge > age) || !(life > retAge) || !(salary0 > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please check the ages and salary.</div>'; return; }
+            let bal = bal0, totEmp = 0, totEmpr = 0, cappedYears = 0, rows = '';
+            for (let a = age; a < retAge; a++) {
+                const sal = salary0 * Math.pow(1 + raise, a - age);
+                let emp = Math.min(cPct * sal, irsLimit(a));
+                if (emp >= irsLimit(a) - 0.005 && cPct * sal > irsLimit(a)) cappedYears++;
+                let empr = Math.min(mPct * emp, mCap * sal);
+                if (emp + empr > TOTAL_CAP) empr = Math.max(TOTAL_CAP - emp, 0);
+                bal = bal * (1 + r) + emp + empr;
+                totEmp += emp; totEmpr += empr;
+                rows += `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${a + 1}</td><td class="py-1.5 px-2 text-right">${formatMoney(sal)}</td><td class="py-1.5 px-2 text-right">${formatMoney(emp)}</td><td class="py-1.5 px-2 text-right">${formatMoney(empr)}</td><td class="py-1.5 px-2 text-right">${formatMoney(bal)}</td></tr>`;
             }
-
-            if (retireAge <= age) {
-                alert("Retirement age must be greater than current age.");
-                return;
-            }
-
-            const years = retireAge - age;
-            const months = years * 12;
-            const monthlyRate = returnRate / 12;
-
-            // Monthly contributions
-            const monthlyEmployee = (salary * contribPct) / 12;
-            // Employer matches up to the matchPct limit
-            const actualMatchPct = Math.min(contribPct, matchPct);
-            const monthlyEmployer = (salary * actualMatchPct) / 12;
-            
-            const totalMonthlyContrib = monthlyEmployee + monthlyEmployer;
-
-            // Future Value of Current Balance
-            const fvBalance = balance * Math.pow(1 + monthlyRate, months);
-
-            // Future Value of Monthly Contributions
-            let fvContribs = 0;
-            if (monthlyRate > 0) {
-                fvContribs = totalMonthlyContrib * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
-            } else {
-                fvContribs = totalMonthlyContrib * months;
-            }
-
-            const finalBalance = fvBalance + fvContribs;
-            const totalInvested = balance + (totalMonthlyContrib * months);
-            const totalInterest = finalBalance - totalInvested;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('kTotalContrib').textContent = formatter.format(totalInvested);
-            document.getElementById('kTotalInterest').textContent = formatter.format(totalInterest);
-            document.getElementById('kFinalBalance').textContent = formatter.format(finalBalance);
-
-            document.getElementById('kResults').classList.remove('hidden');
+            const interest = bal - bal0 - totEmp - totEmpr;
+            const balToday = bal / Math.pow(1 + infl, retAge - age);
+            const im = Math.pow(1 + r, 1 / 12) - 1, gm = Math.pow(1 + infl, 1 / 12) - 1, qm = (1 + gm) / (1 + im), M = (life - retAge) * 12;
+            const W = (Math.abs(1 - qm) < 1e-12 || M === 0) ? bal / Math.max(M, 1) : bal * (1 - qm) / (1 - Math.pow(qm, M));
+            const Wtoday = W / Math.pow(1 + infl, retAge - age);
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">401(k) Balance at Retirement (age ${retAge})</p>
+                    <p class="text-4xl font-bold">${formatMoney(bal)}</p>
+                    <p class="text-sm opacity-90 mt-1">${formatMoney(balToday)} in today's dollars · pays about <strong>${formatMoney(Wtoday)}/month</strong> in today's money from ${retAge} to ${life}</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <div class="text-sm">
+                        <p class="flex justify-between mb-2"><span>Current balance:</span> <span class="font-bold">${formatMoney(bal0)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Your total contributions:</span> <span class="font-bold">${formatMoney(totEmp)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Employer total contributions:</span> <span class="font-bold">${formatMoney(totEmpr)}</span></p>
+                        <p class="flex justify-between mb-2"><span>Total interest earned:</span> <span class="font-bold">${formatMoney(interest)}</span></p>
+                        <p class="flex justify-between"><span>Monthly payout in retirement (first month, nominal):</span> <span class="font-bold">${formatMoney(W)}</span></p>
+                    </div>
+                    ${cappedYears ? `<p class="text-amber-700 bg-amber-50 border border-amber-200 rounded-md p-2 mt-3">Note: your contribution percentage hits the IRS deferral limit in ${cappedYears} year(s), so contributions were capped there.</p>` : ''}
+                    <div class="grid grid-cols-2 gap-3 mt-4 items-center">
+                        <canvas id="kDonut" class="donut" width="220" height="220" role="img" aria-label="Composition of the 401(k) balance"></canvas>
+                        <div class="text-sm space-y-2" id="kLegend"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Accumulation Schedule</h3>
+                    <div class="overflow-x-auto" style="max-height:22rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">Age</th><th class="py-2 px-2 border-b text-right">Salary</th><th class="py-2 px-2 border-b text-right">You Contribute</th><th class="py-2 px-2 border-b text-right">Employer</th><th class="py-2 px-2 border-b text-right">End Balance</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>
+                </div>`;
+            drawDonut('kDonut', [
+                { label: 'Starting balance', value: bal0, color: '#2b7ddb' },
+                { label: 'Your contributions', value: totEmp, color: '#3F51B5' },
+                { label: 'Employer contributions', value: totEmpr, color: '#8bbc21' },
+                { label: 'Interest', value: Math.max(interest, 0), color: '#910000' }
+            ], 'kLegend');
+            updateURL();
         }
+
+        function toggle55() {
+            document.getElementById('e55row').style.display = radio('eEmployed') === 'n' ? 'flex' : 'none';
+        }
+
+        function calculateEarly() {
+            const out = document.getElementById('resultsEarly');
+            const amt = num('eAmt');
+            const fed = (num('eFed') || 0) / 100, st = (num('eState') || 0) / 100, loc = (num('eLocal') || 0) / 100;
+            if (!(amt > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a withdrawal amount.</div>'; return; }
+            const exempt = radio('eDis') === 'y' || radio('eEx') === 'y' || (radio('eEmployed') === 'n' && radio('e55') === 'y');
+            const penalty = exempt ? 0 : amt * 0.10;
+            const fedT = amt * fed, stT = amt * st, locT = amt * loc;
+            const net = amt - fedT - stT - locT - penalty;
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">You Actually Receive</p>
+                    <p class="text-4xl font-bold">${formatMoney(net)}</p>
+                    <p class="text-sm opacity-90 mt-1">of ${formatMoney(amt)} withdrawn — a ${((1 - net / amt) * 100).toFixed(1)}% haircut before counting lost future growth</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Federal income tax (${(fed * 100).toFixed(1)}%):</span> <span class="font-bold">−${formatMoney(fedT)}</span></p>
+                    <p class="flex justify-between mb-2"><span>State income tax (${(st * 100).toFixed(1)}%):</span> <span class="font-bold">−${formatMoney(stT)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Local/city tax (${(loc * 100).toFixed(1)}%):</span> <span class="font-bold">−${formatMoney(locT)}</span></p>
+                    <p class="flex justify-between"><span>Early withdrawal penalty (10%):</span> <span class="font-bold">${exempt ? '$0.00 — waived by exemption' : '−' + formatMoney(penalty)}</span></p>
+                    ${exempt ? '<p class="text-green-700 font-semibold mt-2">The 10% penalty is waived under the exemption you selected. Income taxes still apply.</p>' : '<p class="text-gray-600 mt-2">No exemption selected, so the 10% penalty applies on top of income taxes.</p>'}
+                </div>`;
+            updateURL();
+        }
+
+        function calculateMax() {
+            const out = document.getElementById('resultsMax');
+            const age = num('mAge'), salary = num('mSalary');
+            const m1 = (num('mMatch1') || 0) / 100, c1 = (num('mCap1') || 0) / 100;
+            const m2 = (num('mMatch2') || 0) / 100, c2 = (num('mCap2') || 0) / 100;
+            if (!(salary > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a salary.</div>'; return; }
+            let minPct = 0;
+            if (m1 > 0) minPct += c1 / m1;
+            if (m2 > 0 && c2 > c1) minPct += (c2 - c1) / m2;
+            const maxEmployer = Math.max(c2, c1) * salary;
+            const maxPct = Math.min(irsLimit(age) / salary, 1);
+            const windowOK = minPct <= maxPct + 1e-9;
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Contribute Between</p>
+                    <p class="text-4xl font-bold">${(minPct * 100).toFixed(2)}% – ${(maxPct * 100).toFixed(2)}%</p>
+                    <p class="text-sm opacity-90 mt-1">of your salary to capture the full match without hitting the IRS limit early</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Minimum to earn the full match:</span> <span class="font-bold">${(minPct * 100).toFixed(2)}% (${formatMoney(minPct * salary)}/yr)</span></p>
+                    <p class="flex justify-between mb-2"><span>Maximum before hitting the ${new Date().getFullYear()} IRS limit (${formatMoney(irsLimit(age))} at your age):</span> <span class="font-bold">${(maxPct * 100).toFixed(2)}%</span></p>
+                    <p class="flex justify-between"><span>Full employer match captured:</span> <span class="font-bold">${formatMoney(maxEmployer)}/yr</span></p>
+                    ${windowOK ? '' : '<p class="text-red-700 font-semibold mt-2">Warning: the minimum needed for the full match exceeds the percentage that stays under the IRS limit — with this salary and match structure, the full match cannot be captured in a single year without hitting the cap.</p>'}
+                    <p class="text-gray-600 mt-2">Above the maximum, you'd reach the IRS deferral limit before December and — in plans without a true-up — miss the match on your final paychecks.</p>
+                </div>`;
+            updateURL();
+        }
+
+        function drawDonut(id, parts, legendId) {
+            const cv = document.getElementById(id); if (!cv) return;
+            const ctx = cv.getContext('2d');
+            const total = parts.reduce((s, p) => s + p.value, 0) || 1;
+            const cx = 110, cy = 110, R = 100, rIn = 58;
+            ctx.clearRect(0, 0, 220, 220);
+            let ang = -Math.PI / 2;
+            parts.forEach(p => {
+                const sweep = p.value / total * Math.PI * 2;
+                ctx.beginPath(); ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, R, ang, ang + sweep); ctx.closePath();
+                ctx.fillStyle = p.color; ctx.fill();
+                ang += sweep;
+            });
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath(); ctx.arc(cx, cy, rIn, 0, Math.PI * 2); ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(cx, cy, rIn - 1, 0, Math.PI * 2); ctx.fill();
+            document.getElementById(legendId).innerHTML = parts.map(p => `
+                <p class="flex items-center"><span class="inline-block w-3.5 h-3.5 rounded-sm mr-2" style="background:${p.color}"></span>${p.label}: <strong class="ml-1">${formatMoney(p.value)} (${(p.value / total * 100).toFixed(0)}%)</strong></p>`).join('');
+        }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            ['kAge','kSalary','kBal','kContrib','kMatch','kMatchCap','kRetAge','kLife','kRaise','kRet','kInfl',
+             'eAmt','eFed','eState','eLocal',
+             'mAge','mSalary','mMatch1','mCap1','mMatch2','mCap2'].forEach(id => p.set(id, document.getElementById(id).value));
+            p.set('eEmployed', radio('eEmployed')); p.set('e55', radio('e55')); p.set('eDis', radio('eDis')); p.set('eEx', radio('eEx'));
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            [...q.keys()].forEach(k => {
+                const el = document.getElementById(k);
+                if (el) { el.value = q.get(k); return; }
+                const r = document.querySelector(`input[name="${k}"][value="${q.get(k)}"]`);
+                if (r) r.checked = true;
+            });
+            toggle55();
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
 </html>
