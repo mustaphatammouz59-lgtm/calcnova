@@ -4,108 +4,401 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payback Period Calculator - CalcNova</title>
+    <meta name="description" content="Find the payback period and discounted payback period of an investment with steady (growing or shrinking) cash flows or irregular yearly cash flows — with the full recovery schedule.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/payback-period">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Payback Period Calculator - CalcNova">
+    <meta property="og:description" content="How long until an investment pays for itself — plain and discounted, for steady or irregular cash flows.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/payback-period">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Payback Period Calculator - CalcNova">
+    <meta name="twitter:description" content="Payback and discounted payback periods with complete schedules.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Payback Period Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/payback-period" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is the payback period?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The time an investment takes to earn back its initial cost from its cash flows — the break-even point in time. A $100,000 project returning $20,000 a year pays back in 100,000 / 20,000 = 5 years. Shorter is generally better: less time exposed, less capital at risk." }
+            },
+            {
+                "@type": "Question",
+                "name": "How does discounted payback differ?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It asks the same question in present-value dollars: each year's cash flow is discounted at the discount rate before being counted toward recovery. Because future dollars count for less, discounted payback is always at least as long as plain payback — for the $100-at-$20 example at a 10% discount rate, 7.27 years instead of 5. If discounted payback exceeds the investment's useful life, the project never truly breaks even." }
+            },
+            {
+                "@type": "Question",
+                "name": "What are payback's blind spots?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Plain payback ignores the time value of money (discounted payback fixes that) and both ignore every cash flow after the break-even point — a project can pay back fast and then die, or pay back slowly and print money for decades. Neither measures profitability or risk. Use them as a liquidity/risk screen alongside NPV or IRR, not as the decision itself." }
+            },
+            {
+                "@type": "Question",
+                "name": "What discount rate should I use?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Your opportunity cost of capital — for a company, typically its WACC (weighted average cost of capital), which weights the cost of equity and debt by their shares of the capital structure and is the standard rate in DCF analysis. Individuals often use their expected return on the next-best investment." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .fld { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; width: 100%; }
+        .fld:focus { border-color: #3F51B5; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .formula { text-align: center; font-size: 1.05rem; font-weight: 600; color: #1F2937; background: #F3F4F6; border-radius: 0.5rem; padding: 0.75rem; margin: 0.75rem 0; }
+        @media print { nav, footer, .no-print, .calc-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Payback Period</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Payback Period Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Payback Period Calculator</h1>
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-2">
+            <h1 class="text-2xl font-bold text-[#3F51B5]">Payback Period Calculator</h1>
+            <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">Print</button>
+        </div>
+        <p class="text-gray-600 text-sm mb-8 max-w-3xl">How long until an investment earns its cost back — the plain payback period, the discounted payback period (which respects the time value of money), and the full recovery schedule, for steady or irregular cash flows.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Initial Investment Cost ($)</label>
-                        <input type="number" id="ppCost" value="100000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">1 · Fixed Cash Flow</h2>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group">
+                        <label>Initial Investment</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="sInitial" value="100000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Cash Flow ($)</label>
-                        <p class="text-xs text-gray-500 mb-2">The consistent amount of money generated by the investment each year.</p>
-                        <input type="number" id="ppCashFlow" value="25000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="input-group">
+                        <label>Cash Flow / Year</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="sFlow" value="30000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
                     </div>
+                    <div class="input-group">
+                        <label>Flow Change / Year</label>
+                        <div class="w-[58%] flex gap-1">
+                            <select id="sChangeDir" class="w-1/2 bg-gray-50">
+                                <option value="increase" selected>Increase</option>
+                                <option value="decrease">Decrease</option>
+                            </select>
+                            <input type="number" id="sChange" value="5" step="any" class="w-1/2">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Number of Years</label>
+                        <input type="number" id="sYears" value="5" class="w-[58%]">
+                    </div>
+                    <div class="input-group">
+                        <label>Discount Rate</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="sDisc" value="10" step="any" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <button onclick="calculateSteady()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-3">Calculate</button>
                 </div>
-                <button onclick="calculatePayback()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Payback Period</button>
-
-                <div id="ppResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
-                    <p class="text-sm text-gray-500">Payback Period</p>
-                    <p class="text-4xl font-bold text-[#14B8A6]" id="ppTime">0 Years</p>
-                    <p class="text-sm text-gray-500 mt-2">This is how long it takes to recover your initial investment.</p>
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden lg:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is the Payback Period?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">The payback period is the amount of time it takes to recover the cost of an investment. Simply put, it's the length of time an investment reaches a break-even point. The desirability of an investment is directly related to its payback period. Shorter paybacks mean more attractive investments.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="lg:w-3/5">
+                <div id="resultsSteady"></div>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+        <hr class="my-10 border-gray-200">
+
+        <h2 class="text-xl font-bold text-gray-800 mb-4">2 · Irregular Cash Flow Each Year</h2>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group">
+                        <label>Initial Investment</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="iInitial" value="100000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Discount Rate</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="iDisc" value="10" step="any" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <p class="font-bold text-gray-700 mt-3 mb-2">Cash Flow by Year:</p>
+                    <div id="iRows"></div>
+                    <button onclick="addYearRow()" class="text-[#3F51B5] font-semibold text-sm hover:underline mt-1">+ Add year</button>
+                    <button onclick="calculateIrregular()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-4">Calculate</button>
+                </div>
             </div>
-        </aside>
+            <div class="lg:w-3/5">
+                <div id="resultsIrregular"></div>
+            </div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Payback, Discounted Payback, and the Cash Flows Beneath Them</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Cash flow</strong> — the movement of cash in and out of a project over a period, usually tallied net — is
+                the raw material of every measure on this page, and its study is a quick read on solvency: adequate
+                cash reserves are a basic sign of financial health. <strong>Discounted cash flow (DCF)</strong> analysis goes
+                further, restating forecast future flows in today's dollars via the time value of money; companies
+                typically discount at their WACC, the weighted average cost of capital, because it prices the true
+                opportunity cost of the money tied up. The <strong>discount rate</strong> itself is an inverse interest rate: it
+                answers "what sum today, grown at this rate, reproduces those future payments?" — collapsing
+                payments from different periods onto one comparable point in time.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The payback period</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Used most in capital budgeting, the payback period is the time to the break-even point where
+                cumulative cash flow crosses zero. A $2,000 investment returning $1,500 in year one and $500 in
+                year two pays back in exactly two years. For an even stream it collapses to a division:
+            </p>
+            <div class="formula">Payback Period = Initial Investment ÷ Cash Flow per Year &nbsp;·&nbsp; $100 ÷ $20 = 5 years</div>
+            <p class="text-gray-700 leading-7 mb-4">
+                The rule of thumb — shorter is better — survives because payback is really a risk and liquidity
+                screen: the sooner capital is back, the less of it was ever truly at hazard. Its ease of use made
+                it the common language of return in many boardrooms, but it ignores the time value of money
+                entirely, so it belongs in conjunction with other metrics, never alone.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The discounted payback period</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Discounted payback (DPP) repairs that flaw: break-even is computed on the NPV of the flows, so a
+                flow counts only for what it's worth today. The first $20 of the example above is worth
+                $20/1.10 = $18.18, the second $20/1.10² = $16.53, and so on — for a level stream the closed form is
+                DPP = −ln(1 − I·r/CF) / ln(1 + r), giving <strong>7.27 years</strong> against the plain 5. DPP is therefore
+                (almost) always the longer, more honest number, and it yields a clean decision rule: if discounted
+                payback is shorter than the asset's useful life — or any cutoff you've set — the investment at
+                least returns its cost in present-value terms; if longer, it generally shouldn't be considered.
+                Comparing projects, shorter DPPs are the more enticing. (The schedules above interpolate within
+                the crossing year, so uneven flows are handled exactly rather than by formula.)
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                Both measures share two remaining blind spots: they say nothing about what happens <em>after</em>
+                break-even (a gold mine opening in year six is invisible to them), and neither prices risk or
+                opportunity cost directly — which is why DCF analysis and IRR, the discount rate that zeroes a
+                project's NPV, remain the senior partners in any serious evaluation.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Can payback be less than a year?</h4>
+                    <p class="text-gray-700">Yes — the within-year fraction is computed proportionally (the schedules assume each year's flow accrues evenly across that year), so a project recovering its cost seven months in shows about 0.58 years.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What if the investment never pays back?</h4>
+                    <p class="text-gray-700">The results say so plainly and show how much remains unrecovered at the end of the horizon — extend the years or raise the flows to see when (or whether) it crosses. A discounted stream can fail to break even even when the plain one succeeds; that's the time value of money delivering its verdict.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Average annual return — how is it defined here?</h4>
+                    <p class="text-gray-700">As a simple companion figure: total net profit over the horizon, divided by the years, divided by the initial investment (an ARR-style measure). It's deliberately plain — for a timing-aware rate, use IRR.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. Within-year recovery is interpolated assuming each year's cash flow accrues evenly.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="irr.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">IRR Calculator</h3>
+                <p class="text-sm text-gray-600">The rate payback can't give you.</p>
+            </a>
+            <a href="investment.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Investment Calculator</h3>
+                <p class="text-sm text-gray-600">Project the flows first, then judge them.</p>
+            </a>
+            <a href="average-return.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Average Return Calculator</h3>
+                <p class="text-sm text-gray-600">Money-weighted returns from real account flows.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculatePayback() {
-            const cost = parseFloat(document.getElementById('ppCost').value);
-            const cashFlow = parseFloat(document.getElementById('ppCashFlow').value);
+        window.addEventListener('DOMContentLoaded', () => {
+            [5000, 25000, 35000, 40000, 30000, 10000].forEach(v => addYearRow(v));
+            prefillFromURL();
+            calculateSteady(); calculateIrregular();
+        });
 
-            if (isNaN(cost) || isNaN(cashFlow) || cost <= 0 || cashFlow <= 0) {
-                alert("Please enter valid numbers. Cost and Cash Flow must be greater than 0.");
-                return;
-            }
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? NaN : v; }
 
-            const paybackYears = cost / cashFlow;
-            
-            let displayString = "";
-            
-            if (paybackYears >= 1) {
-                const years = Math.floor(paybackYears);
-                const months = Math.round((paybackYears - years) * 12);
-                
-                if (months > 0) {
-                    displayString = years + " Years, " + months + " Months";
-                } else {
-                    displayString = years + " Years";
-                }
-            } else {
-                const months = Math.round(paybackYears * 12);
-                displayString = months + " Months";
-            }
-
-            document.getElementById('ppTime').textContent = displayString;
-            document.getElementById('ppResults').classList.remove('hidden');
+        function paybackCalc(initial, flows, discPct) {
+            const r = discPct / 100;
+            let cum = 0, cumD = 0, pb = null, dpb = null;
+            const sched = flows.map((cf, i) => {
+                const t = i + 1, d = cf / Math.pow(1 + r, t);
+                if (pb === null && cf > 0 && cum + cf >= initial) pb = i + (initial - cum) / cf;
+                if (dpb === null && d > 0 && cumD + d >= initial) dpb = i + (initial - cumD) / d;
+                cum += cf; cumD += d;
+                return { t, cf, cum, d, cumD };
+            });
+            return { pb, dpb, total: cum, npv: cumD - initial, sched };
         }
+
+        function renderResult(elId, title, res, initial, years) {
+            const out = document.getElementById(elId);
+            const pbTxt = res.pb === null ? 'Not recovered' : res.pb.toFixed(3) + ' years';
+            const dpbTxt = res.dpb === null ? 'Not recovered' : res.dpb.toFixed(3) + ' years';
+            const avgRet = years > 0 ? ((res.total - initial) / years / initial * 100) : 0;
+            const rows = res.sched.map(s => `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${s.t}</td><td class="py-1.5 px-2 text-right">${formatMoney(s.cf)}</td><td class="py-1.5 px-2 text-right">${formatMoney(s.cum)}</td><td class="py-1.5 px-2 text-right">${formatMoney(s.d)}</td><td class="py-1.5 px-2 text-right">${formatMoney(s.cumD)}</td></tr>`).join('');
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">${title}</p>
+                    <p class="text-4xl font-bold">${pbTxt}</p>
+                    <p class="text-sm opacity-90 mt-1">Discounted payback: <strong>${dpbTxt}</strong></p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Payback Period:</span> <span class="font-bold">${pbTxt}</span></p>
+                    <p class="flex justify-between mb-2"><span>Discounted Payback Period:</span> <span class="font-bold">${dpbTxt}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total Cash Inflow:</span> <span class="font-bold">${formatMoney(res.total)}</span></p>
+                    <p class="flex justify-between mb-2"><span>NPV at Discount Rate:</span> <span class="font-bold">${formatMoney(res.npv)}</span></p>
+                    <p class="flex justify-between"><span>Average Annual Return (simple):</span> <span class="font-bold">${avgRet.toFixed(2)}%</span></p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Recovery Schedule</h3>
+                    <div class="overflow-x-auto" style="max-height:22rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">Year</th><th class="py-2 px-2 border-b text-right">Cash Flow</th><th class="py-2 px-2 border-b text-right">Cumulative</th><th class="py-2 px-2 border-b text-right">Discounted CF</th><th class="py-2 px-2 border-b text-right">Cum. Discounted</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>
+                </div>`;
+        }
+
+        function calculateSteady() {
+            const out = document.getElementById('resultsSteady');
+            const initial = num('sInitial'), flow0 = num('sFlow'), change = num('sChange') || 0;
+            const years = Math.round(num('sYears')), disc = num('sDisc') || 0;
+            if (!(initial > 0) || isNaN(flow0) || !(years > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter an initial investment, a cash flow, and at least one year.</div>'; return; }
+            const g = (document.getElementById('sChangeDir').value === 'increase' ? 1 : -1) * change / 100;
+            const flows = [];
+            for (let t = 1; t <= years; t++) flows.push(flow0 * Math.pow(1 + g, t - 1));
+            renderResult('resultsSteady', 'Payback Period', paybackCalc(initial, flows, disc), initial, years);
+            updateURL();
+        }
+
+        let yearCount = 0;
+        function addYearRow(val) {
+            yearCount++;
+            const div = document.createElement('div');
+            div.className = 'grid grid-cols-12 gap-2 mb-2 items-center i-row';
+            div.innerHTML = `
+                <span class="col-span-3 text-gray-600">Year <span class="i-yr">${yearCount}</span></span>
+                <span class="col-span-8"><input type="number" step="any" class="fld i-amt" value="${val === undefined ? '' : val}"></span>
+                <span class="col-span-1"><button onclick="removeYearRow(this)" class="text-red-500 font-bold" title="Remove">×</button></span>`;
+            document.getElementById('iRows').appendChild(div);
+        }
+        function removeYearRow(btn) {
+            btn.closest('.i-row').remove();
+            document.querySelectorAll('.i-row .i-yr').forEach((el, i) => el.textContent = i + 1);
+        }
+
+        function calculateIrregular() {
+            const out = document.getElementById('resultsIrregular');
+            const initial = num('iInitial'), disc = num('iDisc') || 0;
+            if (!(initial > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter an initial investment greater than zero.</div>'; return; }
+            const flows = [];
+            document.querySelectorAll('.i-row').forEach(row => {
+                const v = parseFloat(row.querySelector('.i-amt').value);
+                flows.push(isNaN(v) ? 0 : v);
+            });
+            while (flows.length && flows[flows.length - 1] === 0) flows.pop();
+            if (!flows.length) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Enter at least one yearly cash flow.</div>'; return; }
+            renderResult('resultsIrregular', 'Payback Period', paybackCalc(initial, flows, disc), initial, flows.length);
+            updateURL();
+        }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            p.set('si', document.getElementById('sInitial').value);
+            p.set('sf', document.getElementById('sFlow').value);
+            p.set('scd', document.getElementById('sChangeDir').value);
+            p.set('sc', document.getElementById('sChange').value);
+            p.set('sy', document.getElementById('sYears').value);
+            p.set('sd', document.getElementById('sDisc').value);
+            p.set('ii', document.getElementById('iInitial').value);
+            p.set('id', document.getElementById('iDisc').value);
+            const yrs = [];
+            document.querySelectorAll('.i-row .i-amt').forEach(el => yrs.push(el.value));
+            p.set('yrs', yrs.join(','));
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            const set = (id, key) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); };
+            set('sInitial', 'si'); set('sFlow', 'sf'); set('sChangeDir', 'scd'); set('sChange', 'sc');
+            set('sYears', 'sy'); set('sDisc', 'sd'); set('iInitial', 'ii'); set('iDisc', 'id');
+            if (q.get('yrs')) {
+                document.getElementById('iRows').innerHTML = ''; yearCount = 0;
+                q.get('yrs').split(',').forEach(v => addYearRow(v));
+            }
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-</html>
+    </html>
