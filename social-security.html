@@ -4,134 +4,388 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Social Security Calculator - CalcNova</title>
+    <meta name="description" content="Find the financially ideal age to claim Social Security (62–70) for your birth year, life expectancy, and investment return — and compare any two claiming ages head to head.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/social-security">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Social Security Calculator - CalcNova">
+    <meta property="og:description" content="When should you claim? Every age from 62 to 70, priced in present value.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/social-security">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Social Security Calculator - CalcNova">
+    <meta name="twitter:description" content="The ideal Social Security claiming age, and two-age comparisons.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Social Security Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/social-security" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is full retirement age (FRA)?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The age at which you're entitled to 100% of your benefit: 67 for anyone born in 1960 or later, between 66 and 67 for births from 1943 to 1959, and 66 for 1943–1954. Claiming at 62 (the earliest) cuts the benefit by up to 30%; delaying past FRA adds 8% per year in delayed retirement credits until 70, reaching 124% for the FRA-67 generation." }
+            },
+            {
+                "@type": "Question",
+                "name": "When is the best age to claim Social Security?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Financially, it depends on how long you'll live and what your money could earn meanwhile. Delaying wins if you live long and your investment return is low; claiming early wins if your return is high or your life expectancy is short. Non-financial factors matter too: cash needs now, whether you're still working (the earnings test trims benefits before FRA), marital status, and a spouse's health and earnings — a higher earner delaying also raises the survivor benefit a longer-lived spouse will inherit." }
+            },
+            {
+                "@type": "Question",
+                "name": "How is Social Security funded and taxed?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Pay-as-you-go, mainly by the 12.4% FICA payroll tax split between employee and employer (the self-employed pay both halves), on earnings up to a cap — $184,500 in 2026, so the maximum employee share is $11,439. Benefits themselves can be taxed: depending on combined income (AGI + nontaxable interest + half of benefits), 0%, up to 50%, or up to 85% of benefits are taxable, with single-filer thresholds at $25,000 and $34,000 ($32,000/$44,000 married)." }
+            },
+            {
+                "@type": "Question",
+                "name": "How many work credits do I need?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Typically 40 credits — about 10 years of work — earning up to 4 per year. In 2026, one credit requires $1,890 of taxed earnings, so $7,560 earns the full year's four. Credits, once earned, are never lost." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 46%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .sect { font-weight: 700; color: #3F51B5; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; margin: 0.9rem 0 0.4rem; }
+        tr.best td { background: #ECFDF5; font-weight: 700; }
+        @media print { nav, footer, .no-print, .calc-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Social Security</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Social Security Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Social Security Calculator</h1>
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-2">
+            <h1 class="text-2xl font-bold text-[#3F51B5]">Social Security Calculator</h1>
+            <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">Print</button>
+        </div>
+        <p class="text-gray-600 text-sm mb-8 max-w-3xl">The SSA's own calculators estimate your benefit at each age, but not which age is financially ideal. This tool answers that question — and compares any two claiming ages head to head. Intended for U.S. Social Security purposes only.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Age</label>
-                        <input type="number" id="ssAge" value="35" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Average Annual Income ($)</label>
-                        <input type="number" id="ssIncome" value="75000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Years Worked</label>
-                        <input type="number" id="ssYearsWorked" value="20" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Planned Retirement Age</label>
-                        <select id="ssRetireAge" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="62">62 (Early)</option>
-                            <option value="67" selected>67 (Full Retirement Age)</option>
-                            <option value="70">70 (Delayed)</option>
-                        </select>
-                    </div>
+        <h2 class="text-xl font-bold text-gray-800 mb-2">1 · Determine the Ideal Application Age</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">Every claiming age from 62 to 70, priced the same way: benefits grow by the COLA, and each age's stream is discounted at your investment return back to age 62. The highest present value wins. Amounts are shown per $1,000 of monthly benefit at full retirement age (your PIA) — multiply by your own PIA ÷ 1,000.</p>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group"><label>Your birth year</label><input type="number" id="bYear" value="1970" class="w-[54%]"></div>
+                    <div class="input-group"><label>Your life expectancy</label><input type="number" id="bLife" value="83" class="w-[54%]"></div>
+                    <div class="input-group"><label>Your investment return /yr</label><div class="w-[54%] flex gap-1"><input type="number" id="bRet" value="5" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Cost-of-living adjustment /yr</label><div class="w-[54%] flex gap-1"><input type="number" id="bCola" value="3" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <button onclick="calculateBest()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-2">Calculate</button>
                 </div>
-                <button onclick="calculateSS()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Estimate Benefit</button>
-
-                <div id="ssResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
-                    <p class="text-sm text-gray-500">Estimated Monthly Benefit</p>
-                    <p class="text-4xl font-bold text-[#14B8A6]" id="ssMonthlyBenefit">$0</p>
-                    <p class="text-sm text-gray-500 mt-2">Estimated Annual Benefit</p>
-                    <p class="text-xl font-bold text-[#3F51B5]" id="ssAnnualBenefit">$0</p>
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden lg:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Social Security Works</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Social Security benefits are calculated based on your highest 35 years of earnings. If you retire early (at 62), your benefit is permanently reduced. If you delay retirement until age 70, your benefit increases. This calculator provides a very rough estimate; for exact figures, you should check your official statement on the SSA.gov website.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
-            </div>
+            <div class="lg:w-3/5"><div id="resultsBest"></div></div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+        <hr class="my-10 border-gray-200">
+
+        <h2 class="text-xl font-bold text-gray-800 mb-2">2 · Compare Two Application Ages</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">Enter the SSA's estimated monthly payment at each of two claiming ages (from <span class="font-medium">ssa.gov</span>) and see the financial difference between them.</p>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <p class="sect" style="margin-top:0;">Claim Option 1</p>
+                    <div class="input-group"><label>Retirement age</label><input type="number" id="cAge1" value="62" class="w-[54%]"></div>
+                    <div class="input-group"><label>Monthly payment</label><input type="number" id="cAmt1" value="1600" class="w-[54%]"></div>
+                    <p class="sect">Claim Option 2 (Work Longer)</p>
+                    <div class="input-group"><label>Retirement age</label><input type="number" id="cAge2" value="70" class="w-[54%]"></div>
+                    <div class="input-group"><label>Monthly payment</label><input type="number" id="cAmt2" value="2810" class="w-[54%]"></div>
+                    <p class="sect">Other Information</p>
+                    <div class="input-group"><label>Your investment return /yr</label><div class="w-[54%] flex gap-1"><input type="number" id="cRet" value="5" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Cost-of-living adjustment /yr</label><div class="w-[54%] flex gap-1"><input type="number" id="cCola" value="3" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <button onclick="calculateCompare()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-2">Calculate</button>
+                </div>
             </div>
-        </aside>
+            <div class="lg:w-3/5"><div id="resultsCompare"></div></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Social Security: The System Behind the Claiming Decision</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Before 1935, caring for America's elderly and disabled was a family, municipal, or state affair.
+                The Social Security Act of that year (signed by Franklin Roosevelt; first taxes collected January
+                1937) made it federal — retirement benefits at first, survivors' benefits for spouses and children
+                from 1939, disability from 1956. Today the system (formally OASDI: Old-Age, Survivors, and
+                Disability Insurance) is the main income source for most retired Americans, and the <em>only</em>
+                source for a significant share — though it was designed to replace only about <strong>40% of the
+                average worker's pre-retirement income</strong>, based on the average of their 35 highest-earning
+                years. About 169 million Americans pay in; about 65 million — one in five — collect; more than
+                three in five beneficiaries rely on it for over half their income; administration costs roughly
+                1% of outlays.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">The tax that funds it, and the tax on it</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Social Security runs pay-as-you-go: today's workers fund today's beneficiaries through the 12.4%
+                FICA payroll tax, split evenly between employee and employer (the self-employed pay both halves),
+                on wages up to a cap that rises with inflation — <strong>$184,500 in 2026</strong>, making the maximum
+                employee share $11,439 and the self-employed maximum $22,878; earnings above the cap are untaxed
+                (one reason the tax is regressive, and why lower-wage earners receive higher relative benefits).
+                Payroll taxes supply roughly 90% of revenue; the rest comes from interest on the trust funds'
+                Treasury bonds and from taxing benefits themselves — since 1983, higher-income retirees pay
+                income tax on up to 50% of benefits (combined income $25,000–$34,000 single / $32,000–$44,000
+                married) or up to 85% (above those bands); combined income means AGI plus nontaxable interest
+                plus half of benefits, and Roth IRA withdrawals don't count. Of each FICA dollar, roughly 72¢
+                funds retirement benefits, 16¢ disability, 9¢ survivors, and under 1¢ administration. Exempt from
+                the tax: certain religious groups, some state and local employees covered by their own public
+                pension systems, nonresident aliens, and students working at their own school. Benefits get a
+                yearly <strong>COLA</strong> tied to the CPI-W (third quarter to third quarter; no increase, no COLA) to
+                protect purchasing power.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Full retirement age, the earnings test, and when to claim</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Full retirement age</strong> is 67 for those born in 1960 or later, between 66 and 67 for births in
+                1943–1959 (survivor benefits use a different FRA; widows and widowers can claim from 60).
+                Benefits can start at 62 — you may apply from 61 years 9 months, since the SSA processes
+                applications up to four months early — reduced by 5/9 of 1% per month for the first 36 months
+                early and 5/12 of 1% beyond that, or grow by 8% a year of delay past FRA until 70, after which
+                delay buys nothing. Working while claiming before FRA triggers the earnings test: $1 of benefits
+                is withheld per $2 earned above the annual limit (the withholding stops at FRA, whatever you
+                earn). The ideal claiming age turns on cash needs, life expectancy, current earnings, marital
+                status, and a spouse's age, income, and health — a struggling 62-year-old with a short horizon
+                should claim; a healthy higher-earner with a longer-lived spouse often gains by waiting, since
+                the delayed benefit becomes the survivor's too. If you claim and regret it, the SSA allows one
+                withdrawal of the application within 12 months, provided every dollar is repaid. Eligibility
+                itself needs <strong>credits</strong>: four a year at most, 40 in total (about ten years of work), each 2026
+                credit earned with $1,890 of taxed wages — $7,560 buys the year's maximum — and credits, once
+                earned, never expire. Benefits can be received while living abroad (Medicare cannot), with tax
+                returns still due.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Disability, spouses, and survivors</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The SSA's disability standard is strict — total disability only: you cannot do your previous
+                work, cannot adjust to other work because of the condition, and it has lasted or will last at
+                least a year or end in death. SSDI pays after a five-month waiting period (severe cases can be
+                fast-tracked by compassionate allowance) and requires 6–40 work credits depending on age —
+                typically 40, with 20 in the last ten years; at FRA, disability benefits convert to retirement
+                benefits at the same amount, and the two can't be collected together. SSI, funded from general
+                revenue rather than FICA, serves those with limited means (one screen: $2,000 or less in cash and
+                bank balances) regardless of work history, usually bringing Medicaid with it; some people
+                qualify for both. Spouses 62+ can claim up to 50% of a working spouse's benefit once that spouse
+                has filed; a widow or widower can take a survivor benefit from 60 if the marriage lasted over
+                nine months (waived when caring for a child under 16), keeps the larger of the two benefits —
+                never both — and can switch strategically between their own and the survivor benefit.
+                Divorced spouses married 10+ years, now unmarried, whose own benefit is smaller, can claim on
+                an ex-spouse's record from 62 — even if the ex hasn't filed yet, provided both are over 62.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Why does the calculator use a $1,000 benefit?</h4>
+                    <p class="text-gray-700">Claiming-age rankings don't depend on the size of your benefit — every age's stream scales with your primary insurance amount — so the table is normalized to a $1,000 FRA benefit. To get your dollars, divide each figure by 1,000 and multiply by your actual FRA benefit from your SSA statement.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Why do the two break-evens in calculator 2 differ?</h4>
+                    <p class="text-gray-700">The classic break-even compares raw totals: the age at which the bigger late checks repay the checks you skipped. The present-value break-even also charges the late strategy for the investment return the early checks could have earned. At a 0% return the two coincide; the higher your return, the further apart they spread — and the more the early claim is favored.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: These calculators provide estimates for educational purposes only and do not constitute financial
+                advice. Calculator 1 applies the statutory reduction and delayed-credit formulas to whole-year claiming ages
+                and assumes the stated life expectancy; monthly claiming ages, spousal/survivor optimization, taxes, and the
+                earnings test are not modeled. Get personalized figures from the SSA before deciding.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="retirement.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Retirement Calculator</h3>
+                <p class="text-sm text-gray-600">Enter Social Security as "other income" there.</p>
+            </a>
+            <a href="pension.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Pension Calculator</h3>
+                <p class="text-sm text-gray-600">The same claiming-age logic for private pensions.</p>
+            </a>
+            <a href="401k.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">401(k) Calculator</h3>
+                <p class="text-sm text-gray-600">The savings that cover what Social Security won't.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateSS() {
-            const age = parseFloat(document.getElementById('ssAge').value);
-            const income = parseFloat(document.getElementById('ssIncome').value);
-            const yearsWorked = parseFloat(document.getElementById('ssYearsWorked').value);
-            const retireAge = parseInt(document.getElementById('ssRetireAge').value);
+        window.addEventListener('DOMContentLoaded', () => { prefillFromURL(); calculateBest(); calculateCompare(); });
 
-            if (isNaN(age) || isNaN(income) || isNaN(yearsWorked) || income <= 0) {
-                alert("Please enter valid numbers.");
-                return;
-            }
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? NaN : v; }
 
-            // This is a highly simplified approximation model
-            // Real Social Security uses a complex bend-point formula (AIME and PIA)
-            
-            // Step 1: Estimate Primary Insurance Amount (PIA) at Full Retirement Age (67)
-            // Assuming a rough replacement rate of 40% for middle-income earners
-            let pia = (income * 0.40) / 12; 
-
-            // Step 2: Adjust for Early or Delayed Retirement
-            let adjustmentFactor = 1.0;
-            if (retireAge === 62) {
-                adjustmentFactor = 0.70; // 30% reduction for retiring 5 years early
-            } else if (retireAge === 67) {
-                adjustmentFactor = 1.0;  // Full benefit
-            } else if (retireAge === 70) {
-                adjustmentFactor = 1.24; // 24% increase for delaying 3 years past FRA
-            }
-
-            // Step 3: Adjust for years worked (if less than 35 years, benefit is reduced proportionally)
-            let yearsFactor = 1.0;
-            if (yearsWorked < 35) {
-                yearsFactor = yearsWorked / 35;
-            }
-
-            const monthlyBenefit = pia * adjustmentFactor * yearsFactor;
-            const annualBenefit = monthlyBenefit * 12;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('ssMonthlyBenefit').textContent = formatter.format(monthlyBenefit);
-            document.getElementById('ssAnnualBenefit').textContent = formatter.format(annualBenefit);
-
-            document.getElementById('ssResults').classList.remove('hidden');
+        function fraMonths(by) {
+            if (isNaN(by)) return 67 * 12;
+            if (by <= 1937) return 65 * 12;
+            if (by <= 1942) return 65 * 12 + (by - 1937) * 2;
+            if (by <= 1954) return 66 * 12;
+            if (by <= 1959) return 66 * 12 + (by - 1954) * 2;
+            return 67 * 12;
         }
+        function fraLabel(by) {
+            const m = fraMonths(by), y = Math.floor(m / 12), mm = m % 12;
+            return mm ? `${y} years, ${mm} months` : `${y}`;
+        }
+        function benefitFactor(claimAgeYears, fraM) {
+            const diff = Math.round(claimAgeYears * 12) - fraM;
+            if (diff < 0) {
+                const early = -diff;
+                const red = Math.min(early, 36) * (5 / 9) + Math.max(early - 36, 0) * (5 / 12);
+                return 1 - red / 100;
+            }
+            return 1 + diff * (2 / 3) / 100;
+        }
+        function streamPV(monthly, cola, r, delayMonths, months) {
+            const im = Math.pow(1 + r, 1 / 12) - 1;
+            let pv = 0, total = 0;
+            for (let m = 0; m < months; m++) {
+                const pay = monthly * Math.pow(1 + cola, Math.floor(m / 12));
+                pv += pay / Math.pow(1 + im, delayMonths + m + 1);
+                total += pay;
+            }
+            return { pv, total };
+        }
+
+        function calculateBest() {
+            const out = document.getElementById('resultsBest');
+            const by = Math.round(num('bYear')), life = num('bLife');
+            const r = (num('bRet') || 0) / 100, cola = (num('bCola') || 0) / 100;
+            if (!(by >= 1920 && by <= 2010) || !(life > 70)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter a birth year and a life expectancy above 70.</div>'; return; }
+            const fraM = fraMonths(by);
+            const data = [];
+            for (let a = 62; a <= 70; a++) {
+                const f = benefitFactor(a, fraM);
+                const s = streamPV(1000 * f, cola, r, (a - 62) * 12, Math.round((life - a) * 12));
+                data.push({ a, f, monthly: 1000 * f, total: s.total, pv: s.pv });
+            }
+            const best = data.reduce((m, d) => d.pv > m.pv ? d : m, data[0]);
+            const rows = data.map(d => `
+                <tr class="border-b hover:bg-gray-50 ${d.a === best.a ? 'best' : ''}">
+                    <td class="py-1.5 px-2">${d.a}${d.a === best.a ? ' ★' : ''}</td>
+                    <td class="py-1.5 px-2 text-right">${(d.f * 100).toFixed(2)}%</td>
+                    <td class="py-1.5 px-2 text-right">${formatMoney(d.monthly)}</td>
+                    <td class="py-1.5 px-2 text-right">${formatMoney(d.total)}</td>
+                    <td class="py-1.5 px-2 text-right">${formatMoney(d.pv)}</td>
+                </tr>`).join('');
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Financially Ideal Claiming Age</p>
+                    <p class="text-4xl font-bold">${best.a}</p>
+                    <p class="text-sm opacity-90 mt-1">for a life expectancy of ${life} and a ${(r * 100).toFixed(1)}% investment return · your full retirement age is ${fraLabel(by)}</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">All Claiming Ages (per $1,000/month at full retirement age)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700"><tr><th class="py-2 px-2 border-b">Claim Age</th><th class="py-2 px-2 border-b text-right">% of Full Benefit</th><th class="py-2 px-2 border-b text-right">Monthly</th><th class="py-2 px-2 border-b text-right">Total to Age ${life}</th><th class="py-2 px-2 border-b text-right">Present Value</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>
+                    <p class="text-gray-600 mt-2 text-sm">Totals are nearly flat across ages — Social Security is designed to be roughly actuarially fair. Present value breaks the tie: it credits early claims for the years of extra checks and charges late claims for the wait. Lower your investment return or raise your life expectancy and the ideal age moves later; raise the return and it moves earlier.</p>
+                </div>`;
+            updateURL();
+        }
+
+        function calculateCompare() {
+            const out = document.getElementById('resultsCompare');
+            const age1 = num('cAge1'), amt1 = num('cAmt1'), age2 = num('cAge2'), amt2 = num('cAmt2');
+            const r = (num('cRet') || 0) / 100, cola = (num('cCola') || 0) / 100;
+            if (!(age2 > age1) || !(amt1 > 0) || !(amt2 > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Option 2 must start later than option 1, with positive payments.</div>'; return; }
+            const im = Math.pow(1 + r, 1 / 12) - 1, delay = Math.round((age2 - age1) * 12);
+            let pv1 = 0, pv2 = 0, tot1 = 0, tot2 = 0, crossPV = null, crossTot = null;
+            for (let m = 0; m < 60 * 12; m++) {
+                const p1 = amt1 * Math.pow(1 + cola, Math.floor(m / 12));
+                pv1 += p1 / Math.pow(1 + im, m + 1); tot1 += p1;
+                if (m >= delay) {
+                    const p2 = amt2 * Math.pow(1 + cola, Math.floor((m - delay) / 12));
+                    pv2 += p2 / Math.pow(1 + im, m + 1); tot2 += p2;
+                }
+                if (crossPV === null && m >= delay && pv2 >= pv1) crossPV = age1 + (m + 1) / 12;
+                if (crossTot === null && m >= delay && tot2 >= tot1) crossTot = age1 + (m + 1) / 12;
+            }
+            const horizons = [80, 85, 90, 95].filter(A => A > age2).map(A => {
+                const a = streamPV(amt1, cola, r, 0, Math.round((A - age1) * 12));
+                const b = streamPV(amt2, cola, r, delay, Math.round((A - age2) * 12));
+                return `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${A}</td><td class="py-1.5 px-2 text-right">${formatMoney(a.pv)}</td><td class="py-1.5 px-2 text-right">${formatMoney(b.pv)}</td><td class="py-1.5 px-2 text-right font-semibold">${b.pv >= a.pv ? 'Option 2' : 'Option 1'}</td></tr>`;
+            }).join('');
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Break-Even Ages</p>
+                    <p class="text-4xl font-bold">${crossTot !== null ? crossTot.toFixed(1) : '—'} <span class="text-lg font-semibold">in total dollars</span> · ${crossPV !== null ? crossPV.toFixed(1) : 'never'} <span class="text-lg font-semibold">in present value</span></p>
+                    <p class="text-sm opacity-90 mt-1">Option 2 (${formatMoney(amt2)}/mo from ${age2}) overtakes option 1 (${formatMoney(amt1)}/mo from ${age1}) at those ages</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Present Value of Benefits Received by Age (discounted to age ${age1})</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700"><tr><th class="py-2 px-2 border-b">Live to</th><th class="py-2 px-2 border-b text-right">Option 1 (claim ${age1})</th><th class="py-2 px-2 border-b text-right">Option 2 (claim ${age2})</th><th class="py-2 px-2 border-b text-right">Ahead</th></tr></thead>
+                            <tbody>${horizons}</tbody>
+                        </table>
+                    </div>
+                    <p class="text-gray-600 mt-2 text-sm">The famous break-even near the early 80s counts raw dollars. In present value — crediting the early checks with the ${(r * 100).toFixed(1)}% they could earn invested — the late claim needs far longer to catch up. Both lenses are shown; which one governs depends on whether the early money would truly be invested.</p>
+                </div>`;
+            updateURL();
+        }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            ['bYear','bLife','bRet','bCola','cAge1','cAmt1','cAge2','cAmt2','cRet','cCola'].forEach(id => p.set(id, document.getElementById(id).value));
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            [...q.keys()].forEach(k => { const el = document.getElementById(k); if (el) el.value = q.get(k); });
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-</html>
+                </html>
