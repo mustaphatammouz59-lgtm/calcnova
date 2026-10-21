@@ -4,143 +4,399 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roth IRA Calculator - CalcNova</title>
+    <meta name="description" content="Estimate Roth IRA growth and compare it with a regular taxable account — balance at retirement, total interest, total tax, and the tax-drag difference, year by year.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/roth-ira">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Roth IRA Calculator - CalcNova">
+    <meta property="og:description" content="The same deposits, two tax treatments: what the Roth wrapper is worth by retirement age.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/roth-ira">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Roth IRA Calculator - CalcNova">
+    <meta name="twitter:description" content="Roth IRA vs taxable account growth comparison with chart and schedule.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Roth IRA Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/roth-ira" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Why does the Roth IRA end up ahead if both accounts get the same deposits?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Tax drag. The taxable account pays tax on each year's interest at your marginal rate, so at a 6% return and a 25% tax rate it compounds at only 4.5% net. Over the 35 years of the default example that drag costs $152,915 in tax and $315,098 in final balance: Roth $1,066,343 versus taxable $751,245 on identical $292,500 of principal." }
+            },
+            {
+                "@type": "Question",
+                "name": "What does 'maximize contributions' do?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It replaces your annual contribution with the IRS limit for your age each year: $7,500 below age 50 and the $8,600 catch-up limit from the year you turn 50 (2026 limits, held flat rather than indexed for inflation). On the defaults that raises total principal from $292,500 to $310,100 and the Roth balance at 65 to $1,094,583." }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I withdraw Roth IRA money before retirement?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Your contributions — yes, at any age, tax-free and penalty-free, because they went in after tax. Earnings are different: they come out tax-free only for a qualified distribution, which requires the account to be at least five years old and you to be 59½ (or disabled, deceased, or using up to $10,000 toward a first home)." }
+            },
+            {
+                "@type": "Question",
+                "name": "Does a Roth IRA have required minimum distributions?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. The original owner never has to take RMDs from a Roth IRA at any age, unlike traditional IRAs and 401(k)s. That makes the Roth the only major retirement account that can compound untouched for a whole lifetime and pass to heirs, who then follow their own distribution rules." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .formula { text-align: center; font-size: 1.05rem; font-weight: 600; color: #1F2937; background: #F3F4F6; border-radius: 0.5rem; padding: 0.75rem; margin: 0.75rem 0; }
+        canvas.chart { width: 100%; height: auto; display: block; }
+        @media print { nav, footer, .no-print, .calc-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Roth IRA</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Roth IRA Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Roth IRA Calculator</h1>
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-2">
+            <h1 class="text-2xl font-bold text-[#3F51B5]">Roth IRA Calculator</h1>
+            <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">Print</button>
+        </div>
+        <p class="text-gray-600 text-sm mb-8 max-w-3xl">Estimate the balance of a Roth IRA at retirement and compare it with the same saving done in a regular taxable account. Mainly intended for U.S. residents; for other IRA types, see the IRA Calculator when it joins this suite.</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Age</label>
-                        <input type="number" id="rothAge" value="30" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group">
+                        <label>Current Balance</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="rBalance" value="30000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Retirement Age</label>
-                        <input type="number" id="rothRetireAge" value="65" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="input-group" id="rowContrib">
+                        <label>Annual Contribution</label>
+                        <div class="w-[58%] flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                            <input type="number" id="rContrib" value="7500" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Balance ($)</label>
-                        <input type="number" id="rothBalance" value="10000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="input-group">
+                        <label>Maximize Contributions?</label>
+                        <div class="w-[58%] flex gap-1">
+                            <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="rMax" value="y" class="mr-1" onchange="toggleMax()"> Yes</label>
+                            <label class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md cursor-pointer py-1"><input type="radio" name="rMax" value="n" checked class="mr-1" onchange="toggleMax()"> No</label>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Contribution ($)</label>
-                        <p class="text-xs text-gray-500 mb-1">Limit is $7,000 for 2024 (under 50)</p>
-                        <input type="number" id="rothContrib" value="6000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <p class="text-gray-500 text-xs" id="maxNote" style="display:none;">Contributing the IRS maximum each year: $7,500 under 50, $8,600 at 50+ (2026 limits).</p>
+                    <div class="input-group">
+                        <label>Expected Rate of Return</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="rReturn" value="6" step="any" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
                     </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Expected Annual Return (%)</label>
-                        <input type="number" id="rothReturn" value="7" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    <div class="input-group">
+                        <label>Current Age</label>
+                        <input type="number" id="rAgeNow" value="30" class="w-[58%]">
                     </div>
+                    <div class="input-group">
+                        <label>Retirement Age</label>
+                        <input type="number" id="rAgeRet" value="65" class="w-[58%]">
+                    </div>
+                    <div class="input-group">
+                        <label>Marginal Tax Rate</label>
+                        <div class="w-[58%] flex gap-1">
+                            <input type="number" id="rTax" value="25" step="any" class="w-2/3">
+                            <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-500 text-xs">Combined federal + state/local marginal rate — it taxes the taxable account's interest each year.</p>
+                    <button onclick="calculate()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-3">Calculate</button>
                 </div>
-                <button onclick="calculateRothIRA()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Roth IRA Growth</button>
-
-                <div id="rothResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Contributions</p>
-                            <p class="text-xl font-bold text-gray-800" id="rothTotalContrib">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Tax-Free Earnings</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="rothTotalInterest">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Balance at Retirement</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="rothFinalBalance">$0</p>
-                        </div>
-                    </div>
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden lg:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Why Choose a Roth IRA?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A Roth IRA is a retirement account funded with after-tax dollars. This means you pay taxes on the money before you put it in. The major benefit is that when you withdraw the money in retirement (after age 59½ and holding the account for 5 years), your withdrawals are completely tax-free, including all the earnings. This calculator uses annual contributions to estimate your final balance.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="lg:w-3/5">
+                <div id="results"></div>
             </div>
         </div>
-
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">The Roth Bargain: Tax Now, Never Again</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                A <strong>Roth IRA</strong> — created by the Taxpayer Relief Act of 1997 and named for Senator William Roth — flips the
+                usual retirement-account deal. A traditional IRA pays you up front (a deduction today) and taxes every dollar
+                on the way out. A Roth gives nothing up front: contributions are made with after-tax money. In exchange,
+                everything that happens afterwards is free — growth is never taxed, and qualified withdrawals in retirement
+                are never taxed either. This calculator prices that bargain by running the <em>same</em> deposits through both a
+                Roth and an ordinary taxable brokerage account and letting the tax treatment be the only difference.
+            </p>
+            <div class="formula">Taxable account's net growth = return × (1 − tax rate) &nbsp;·&nbsp; defaults: 6% × (1 − 25%) = 4.5%</div>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <p class="text-gray-700 leading-7 mb-4">
+                The mechanism on the taxable side is <strong>tax drag</strong>: each year's interest is taxed at your marginal rate as it
+                is earned, so less is left to compound. A drag of 1.5 percentage points sounds minor; stretched over the
+                defaults' 35 years it removes <strong>$152,915</strong> in tax and, with the compounding those dollars would have done,
+                <strong>$315,098</strong> of final balance — the Roth ends at $1,066,343 against $751,245, on identical principal of
+                $292,500. Note what the comparison assumes: the taxable account's return arrives entirely as annually-taxed
+                interest. A buy-and-hold equity account taxed later at capital-gains rates would land somewhere between the
+                two lines — the Roth line, however, is a ceiling no taxable account can cross.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Contribution rules (2026)</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                For 2026 the limit is <strong>$7,500</strong> if you are under 50 and <strong>$8,600</strong> at 50 or older, across all your IRAs
+                combined — modest next to the 401(k)'s $24,500, which is the Roth's most-cited drawback. You must have earned
+                income (wages, tips, bonuses, self-employment) at least equal to what you contribute, and high earners are
+                phased out: direct contributions end at an AGI of <strong>$168,000</strong> for single and head-of-household filers and
+                <strong>$252,000</strong> for married filing jointly (up from $165,000 and $246,000 in 2025). Contributions for a tax year
+                can be made until the April filing deadline of the following year. One consolation for lower earners: the
+                Saver's Credit (Form 8880) can refund 10%–50% of the first $2,000 contributed, though it is non-refundable.
+                The maximize toggle on this page holds the 2026 limits flat for every future year rather than guessing at
+                inflation adjustments.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Getting money out</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The Roth's signature flexibility is that <strong>contributions come back out at any time, tax- and penalty-free</strong> —
+                they were already taxed once. That makes the account double as a deep emergency reserve, with one sting: money
+                withdrawn cannot be put back beyond the normal annual limit. <strong>Earnings</strong> are stricter. They are tax-free only
+                in a <em>qualified distribution</em>: the account at least five years old <em>and</em> you are 59½, disabled, deceased (the
+                money goes to a beneficiary), or using up to a $10,000 lifetime amount toward a first home. The same exceptions
+                can waive the 10% early penalty in some non-qualified cases while leaving the tax itself due. And uniquely
+                among retirement accounts, a Roth IRA has <strong>no required minimum distributions</strong> for its owner — nothing ever
+                forces the compounding to stop.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Pros, cons, and the conversion door</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Beyond the headline tax-free retirement income, a Roth offers tax diversification (tax-free withdrawals do not
+                count as income, so they can keep you out of a higher bracket or under Medicare premium thresholds), wide
+                investment choice at any major institution, account values that are not reported as assets on the FAFSA, and
+                heir-friendly treatment since inherited Roth distributions are income-tax-free. The cons are the mirror image:
+                tax is paid at today's rates with no deduction, the contribution limit is low, high earners are locked out of
+                direct contributions, earnings face the five-year clock, and money earmarked for charity is wasted in a Roth —
+                charities pay no tax anyway, so pre-tax dollars are worth more to them (a traditional IRA's qualified charitable
+                distribution is the sharper tool). If the income limit locks you out, the <strong>backdoor</strong> remains: contribute to a
+                traditional IRA and convert it. Conversions have no income limit and no amount limit — same-trustee transfer,
+                different-trustee transfer, or a 60-day rollover — but the converted pre-tax money is taxed in the year of
+                conversion, each conversion starts its own five-year clock for penalty purposes, RMDs cannot be converted, and
+                the tax bill should be paid from funds <em>outside</em> the IRA, or the conversion shrinks the very balance it was
+                meant to shelter.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Roth or traditional — which wins?</h4>
+                    <p class="text-gray-700">It reduces to one comparison: your tax rate now versus your tax rate in retirement. Pay the lower one. This calculator's Roth-vs-taxable comparison is the extreme case of the same logic — the Roth wins here because the alternative pays the full marginal rate on growth every single year.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">When does the five-year clock start?</h4>
+                    <p class="text-gray-700">On January 1 of the tax year of your first Roth contribution — a contribution made in April 2027 for tax year 2026 starts the clock on January 1, 2026. Conversions run on separate clocks, one per conversion year.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial or tax advice. Contribution limits and income thresholds shown are for the 2026 tax year and are held flat in projections.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="retirement.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Retirement Calculator</h3>
+                <p class="text-sm text-gray-600">The full plan around the account: need, saving rate, withdrawals.</p>
+            </a>
+            <a href="401k.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">401K Calculator</h3>
+                <p class="text-sm text-gray-600">The workplace plan — and what its employer match is worth.</p>
+            </a>
+            <a href="investment.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Investment Calculator</h3>
+                <p class="text-sm text-gray-600">The same compounding with no tax wrapper at all.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateRothIRA() {
-            const age = parseFloat(document.getElementById('rothAge').value);
-            const retireAge = parseFloat(document.getElementById('rothRetireAge').value);
-            const balance = parseFloat(document.getElementById('rothBalance').value);
-            const annualContrib = parseFloat(document.getElementById('rothContrib').value);
-            const returnRate = parseFloat(document.getElementById('rothReturn').value) / 100;
+        window.addEventListener('DOMContentLoaded', () => { prefillFromURL(); toggleMax(); calculate(); });
 
-            if (isNaN(age) || isNaN(retireAge) || isNaN(balance) || isNaN(annualContrib) || isNaN(returnRate)) {
-                alert("Please enter valid numbers.");
-                return;
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? NaN : v; }
+        function fmt0(a) { return '$' + Math.round(a).toLocaleString('en-US'); }
+
+        function rothSim(B0, C, maxMode, rPct, taxPct, age0, ageR) {
+            const r = rPct / 100, t = taxPct / 100;
+            let roth = B0, tx = B0, prin = B0, grossTxInt = 0, totTax = 0;
+            const rows = [{ age: age0, prin: B0, roth: B0, tx: B0 }];
+            for (let age = age0 + 1; age <= ageR; age++) {
+                const c = maxMode ? (age >= 50 ? 8600 : 7500) : C;
+                roth += roth * r + c;
+                const ti = tx * r, tp = ti * t;
+                tx += ti - tp + c;
+                grossTxInt += ti; totTax += tp; prin += c;
+                rows.push({ age, prin, roth, tx });
             }
-
-            if (retireAge <= age) {
-                alert("Retirement age must be greater than current age.");
-                return;
-            }
-
-            const years = retireAge - age;
-            
-            // Future Value of Current Balance
-            const fvBalance = balance * Math.pow(1 + returnRate, years);
-
-            // Future Value of Annual Contributions (Annuity)
-            let fvContribs = 0;
-            if (returnRate > 0) {
-                fvContribs = annualContrib * ((Math.pow(1 + returnRate, years) - 1) / returnRate);
-            } else {
-                fvContribs = annualContrib * years;
-            }
-
-            const finalBalance = fvBalance + fvContribs;
-            const totalContributions = balance + (annualContrib * years);
-            const totalInterest = finalBalance - totalContributions;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('rothTotalContrib').textContent = formatter.format(totalContributions);
-            document.getElementById('rothTotalInterest').textContent = formatter.format(totalInterest);
-            document.getElementById('rothFinalBalance').textContent = formatter.format(finalBalance);
-
-            document.getElementById('rothResults').classList.remove('hidden');
+            return { roth, tx, prin, rothInt: roth - prin, grossTxInt, totTax, rows };
         }
+
+        function calculate() {
+            const out = document.getElementById('results');
+            const B0 = num('rBalance'), C = num('rContrib'), rPct = num('rReturn'), taxPct = num('rTax');
+            const age0 = Math.round(num('rAgeNow')), ageR = Math.round(num('rAgeRet'));
+            const maxMode = document.querySelector('input[name="rMax"]:checked').value === 'y';
+            if (isNaN(B0) || isNaN(C) || isNaN(rPct) || isNaN(taxPct) || isNaN(age0) || isNaN(ageR)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please complete all fields.</div>'; return; }
+            if (!(ageR > age0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Retirement age must be after your current age.</div>'; return; }
+            const s = rothSim(B0, C, maxMode, rPct, taxPct, age0, ageR);
+            const diff = s.roth - s.tx;
+            const rowsHtml = s.rows.map(rw => `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${rw.age}</td><td class="py-1.5 px-2 text-right">${fmt0(rw.prin)}</td><td class="py-1.5 px-2 text-right">${fmt0(rw.roth)}</td><td class="py-1.5 px-2 text-right">${fmt0(rw.tx)}</td></tr>`).join('');
+            out.innerHTML = `
+                <div class="bg-green-600 text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-base">The Roth IRA can accumulate <strong>${fmt0(diff)} more</strong> than a regular taxable account by age ${ageR}.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <table class="w-full text-sm">
+                        <thead><tr class="border-b"><th class="py-2 px-2 text-left"></th><th class="py-2 px-2 text-right">Roth IRA</th><th class="py-2 px-2 text-right">Taxable Account</th></tr></thead>
+                        <tbody>
+                            <tr class="border-b bg-gray-50 font-bold"><td class="py-2 px-2">Balance at age ${ageR}</td><td class="py-2 px-2 text-right">${fmt0(s.roth)}</td><td class="py-2 px-2 text-right">${fmt0(s.tx)}</td></tr>
+                            <tr class="border-b"><td class="py-2 px-2">Total principal</td><td class="py-2 px-2 text-right">${fmt0(s.prin)}</td><td class="py-2 px-2 text-right">${fmt0(s.prin)}</td></tr>
+                            <tr class="border-b"><td class="py-2 px-2">Total interest</td><td class="py-2 px-2 text-right">${fmt0(s.rothInt)}</td><td class="py-2 px-2 text-right">${fmt0(s.grossTxInt)}</td></tr>
+                            <tr><td class="py-2 px-2">Total tax</td><td class="py-2 px-2 text-right">${fmt0(0)}</td><td class="py-2 px-2 text-right">${fmt0(s.totTax)}</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="text-xs text-gray-500 mt-2">Total interest is the gross interest earned; the taxable account's balance is what remains after its tax is paid along the way.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Balance Accumulation Graph</h3>
+                    <canvas id="riChart" class="chart" width="640" height="300" role="img" aria-label="Roth versus taxable balance by age"></canvas>
+                    <div class="flex flex-wrap gap-4 text-xs mt-2 text-gray-600">
+                        <span><span class="inline-block w-3 h-3 rounded-sm mr-1" style="background:#2b7ddb"></span>Roth IRA</span>
+                        <span><span class="inline-block w-3 h-3 rounded-sm mr-1" style="background:#8bbc21"></span>Taxable account</span>
+                        <span><span class="inline-block w-3 h-3 rounded-sm mr-1" style="background:#910000"></span>Principal</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Annual Schedule</h3>
+                    <div class="overflow-x-auto" style="max-height:22rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">Age</th><th class="py-2 px-2 border-b text-right">Principal (End)</th><th class="py-2 px-2 border-b text-right">Roth IRA (End)</th><th class="py-2 px-2 border-b text-right">Taxable Account (End)</th></tr></thead>
+                            <tbody>${rowsHtml}</tbody>
+                        </table>
+                    </div>
+                </div>`;
+            drawLines('riChart', s.rows);
+            updateURL();
+        }
+
+        function toggleMax() {
+            const maxMode = document.querySelector('input[name="rMax"]:checked').value === 'y';
+            document.getElementById('rowContrib').style.display = maxMode ? 'none' : 'flex';
+            document.getElementById('maxNote').style.display = maxMode ? 'block' : 'none';
+        }
+
+        function drawLines(id, rows) {
+            const cv = document.getElementById(id); if (!cv) return;
+            const ctx = cv.getContext('2d');
+            const W = 640, H = 300, padL = 64, padB = 26, padT = 10;
+            const iw = W - padL - 8, ih = H - padB - padT;
+            const maxV = Math.max(...rows.map(r => r.roth), 1);
+            const a0 = rows[0].age, a1 = rows[rows.length - 1].age, span = Math.max(a1 - a0, 1);
+            ctx.clearRect(0, 0, W, H);
+            ctx.font = '11px Inter, sans-serif'; ctx.fillStyle = '#6B7280'; ctx.strokeStyle = '#E5E7EB';
+            for (let g = 0; g <= 4; g++) {
+                const v = maxV * g / 4, y = padT + ih - ih * g / 4;
+                ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - 8, y); ctx.stroke();
+                ctx.textAlign = 'right'; ctx.fillText(shortMoney(v), padL - 6, y + 4);
+            }
+            const series = [[r => r.roth, '#2b7ddb'], [r => r.tx, '#8bbc21'], [r => r.prin, '#910000']];
+            series.forEach(([get, color]) => {
+                ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+                rows.forEach((r, idx) => {
+                    const x = padL + iw * ((r.age - a0) / span), y = padT + ih - (get(r) / maxV) * ih;
+                    if (idx === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                });
+                ctx.stroke(); ctx.lineWidth = 1;
+            });
+            ctx.fillStyle = '#6B7280'; ctx.strokeStyle = '#E5E7EB'; ctx.textAlign = 'center';
+            [a0, Math.round((a0 + a1) / 2), a1].forEach(av => {
+                const x = padL + iw * ((av - a0) / span);
+                ctx.fillText(av, x, H - 8);
+            });
+            ctx.fillStyle = '#374151'; ctx.fillText('Age', padL + iw / 2, H - 8 + 0);
+        }
+        function shortMoney(v) {
+            if (v >= 1000000) return '$' + (v / 1000000).toFixed(2).replace(/\.?0+$/, '') + 'M';
+            if (v >= 1000) return '$' + (v / 1000).toFixed(v >= 10000 ? 0 : 1).replace(/\.0$/, '') + 'K';
+            return '$' + Math.round(v);
+        }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            p.set('b', document.getElementById('rBalance').value);
+            p.set('c', document.getElementById('rContrib').value);
+            p.set('max', document.querySelector('input[name="rMax"]:checked').value);
+            p.set('r', document.getElementById('rReturn').value);
+            p.set('a0', document.getElementById('rAgeNow').value);
+            p.set('a1', document.getElementById('rAgeRet').value);
+            p.set('t', document.getElementById('rTax').value);
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            const set = (id, key) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); };
+            set('rBalance', 'b'); set('rContrib', 'c'); set('rReturn', 'r'); set('rAgeNow', 'a0'); set('rAgeRet', 'a1'); set('rTax', 't');
+            if (q.get('max')) { const el = document.querySelector(`input[name="rMax"][value="${q.get('max')}"]`); if (el) el.checked = true; }
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-</html>
+                        </html>
