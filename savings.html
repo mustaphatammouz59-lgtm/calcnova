@@ -4,120 +4,491 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Savings Calculator - CalcNova</title>
+    <meta name="description" content="Estimate the end balance and interest of a savings account with annual and monthly contributions that can grow each year, any compounding frequency, and tax on interest.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/savings">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Savings Calculator - CalcNova">
+    <meta property="og:description" content="Savings growth with escalating contributions — model a raise: contributions that rise a few percent every year, plus tax on interest.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/savings">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Savings Calculator - CalcNova">
+    <meta name="twitter:description" content="End balance, total contributions and after-tax interest for any savings plan.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Savings Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/savings" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is the contribution increase for?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It models a raise. If you expect your income — and therefore what you can save — to grow about 3% a year, enter 3% and the calculator steps each year's contributions up by that amount: a $5,000 annual contribution becomes $5,150 in year two and $6,523.87 by year ten. Over long horizons this escalation is usually worth more than chasing a slightly higher interest rate." }
+            },
+            {
+                "@type": "Question",
+                "name": "What tax rate should I enter?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Your marginal income tax rate — the rate on your next dollar of income — because interest is taxed on top of your other income (and in the U.S. it is ordinary income, plus state tax in most states). Enter 0 if the account is tax-sheltered or you only want the pre-tax picture. The tax is skimmed from interest as it accrues." }
+            },
+            {
+                "@type": "Question",
+                "name": "How is this different from the Interest Calculator?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The Interest Calculator has beginning/end-of-period timing and an inflation (buying power) result, but flat contributions. This Savings Calculator is built around escalating contributions — annual and monthly amounts that each grow at their own yearly percentage — and deposits are modeled at the end of each period." }
+            },
+            {
+                "@type": "Question",
+                "name": "Can contributions be negative?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes — a negative contribution models a planned withdrawal or a net drain on the account. It is a legitimate way to ask how long a balance survives a fixed annual draw, though a dedicated drawdown plan usually deserves the retirement tools." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 42%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .input-group input:focus { border-color: #3F51B5; }
+        @media print {
+            nav, footer, .no-print, #calculator-form { display: none !important; }
+            #scheduleWrap { max-height: none !important; overflow: visible !important; }
+        }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Savings</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Savings Calculator</span>
     </div>
 
     <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Savings Calculator</h1>
+        <div class="md:w-2/5 no-print" id="calculator-form">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold text-[#3F51B5]">Savings Calculator</h1>
+                <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 flex items-center gap-1 text-sm font-semibold shadow-sm">Print</button>
+            </div>
+            <p class="text-gray-600 text-sm mb-4">Estimate the end balance and interest of a savings account — with annual and monthly contributions that can each <strong>grow by a percentage every year</strong>, any compounding frequency, and tax on interest. Contributions land at the end of each period; negative values are allowed (they model withdrawals).</p>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Initial Savings ($)</label>
-                        <input type="number" id="savInitial" value="5000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Monthly Contribution ($)</label>
-                        <input type="number" id="savMonthly" value="500" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
-                        <input type="number" id="savRate" value="4" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Target Goal ($)</label>
-                        <input type="number" id="savGoal" value="50000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 text-sm">
+                <div class="input-group">
+                    <label>Initial Deposit</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="initial" value="20000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
                     </div>
                 </div>
-                <button onclick="calculateSavings()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Savings Goal</button>
+                <div class="input-group">
+                    <label>Annual Contribution</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="annual" value="5000" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label class="text-right pr-3">↳ increase</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="annualInc" value="3" step="0.1" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%/year</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Monthly Contribution</label>
+                    <div class="w-[58%] flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 font-bold">$</span>
+                        <input type="number" id="monthly" value="0" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border border-gray-300 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label class="text-right pr-3">↳ increase</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="monthlyInc" value="0" step="0.1" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%/year</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Interest Rate</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="rate" value="3" step="0.01" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Compound</label>
+                    <select id="compound" class="w-[58%] bg-gray-50">
+                        <option value="1" selected>Annually</option>
+                        <option value="2">Semiannually</option>
+                        <option value="4">Quarterly</option>
+                        <option value="12">Monthly</option>
+                        <option value="24">Semimonthly</option>
+                        <option value="26">Biweekly</option>
+                        <option value="52">Weekly</option>
+                        <option value="365">Daily</option>
+                        <option value="0">Continuously</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Years to Save</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="years" value="10" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">years</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Tax Rate</label>
+                    <div class="w-[58%] flex gap-1">
+                        <input type="number" id="tax" value="0" step="0.1" class="w-2/3">
+                        <span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Your marginal tax rate applies to the interest. Enter 0 for tax-sheltered accounts or a pre-tax view.</p>
 
-                <div id="savResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200 text-center">
-                    <p class="text-sm text-gray-500">Time Required to Reach Goal</p>
-                    <p class="text-3xl font-bold text-[#14B8A6]" id="savTime">0 Years</p>
-                    <p class="text-sm text-gray-500 mt-2">Total Amount Saved</p>
-                    <p class="text-xl font-bold text-gray-800" id="savTotal">$0</p>
+                <div class="flex gap-2 mt-5">
+                    <button onclick="calculateSavings()" class="w-2/3 bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md">Calculate</button>
+                    <button onclick="clearForm()" class="w-1/3 bg-gray-300 text-gray-700 font-bold py-2 rounded-md hover:bg-gray-400 transition">Clear</button>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Reaching Your Savings Goal</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">This calculator estimates how long it will take to reach your savings goal based on your initial deposit, monthly contributions, and the interest rate offered by your bank. It compounds interest monthly to give you a highly accurate estimate.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden md:block">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(300x250 Banner)</p>
             </div>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
+        <div class="md:w-3/5">
+            <div id="resultsArea"></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Saving on Purpose</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                People save toward named things — a home, a car, tuition, a wedding, a trip, a retirement — or
+                against unnamed ones: the job loss, the medical bill, the transmission. Either way, the households
+                that end up funded are usually the ones that turned the goal into a schedule beforehand; the ones
+                that "meant to save what's left" discover that nothing is ever left. This calculator exists to make
+                the schedule concrete, including the most realistic feature of real incomes: contributions that
+                rise a little every year.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Savings accounts, and how they differ from checking</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                A U.S. savings account is a deposit account at a bank or credit union, insured by the FDIC up to
+                $250,000, that pays interest (quoted as APY) on money you mostly leave alone. Banks often bundle
+                them with checking — fee waivers for holding both — but the jobs differ. Checking is for motion:
+                highly liquid, penalty-free withdrawals, and little or no interest. Savings is for storage:
+                historically subject to withdrawal limits (the old federal rule of six outgoing transfers a month
+                was <strong>suspended by the Federal Reserve in 2020</strong>, though some banks still impose their own), often
+                with minimum balances to dodge fees, and a meaningfully higher rate. Compared with cashing out
+                bonds, raiding a retirement account, or selling stock, savings is still easy to reach in an
+                emergency — which is the point. A common and sensible arrangement is both accounts at once:
+                checking for the month's spending, savings quietly compounding next door. For money you can lock
+                up, CDs and Treasury bills offer a step up in yield at similar risk.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Money market accounts</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Money market accounts are savings' close cousins, offered by the same institutions. They typically
+                pay more than plain savings because deposits fund short-term securities rather than sitting against
+                low-yield assets — which also means a touch more exposure to market hiccups. Many come with debit
+                cards or check-writing, features plain savings lacks; the convenience versions sometimes pay a
+                little less for it. For calculator purposes they behave identically: an initial deposit, periodic
+                contributions, a rate, and time.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">How much? The standard guidelines</h3>
+            <ol class="list-decimal pl-6 text-gray-700 leading-7 mb-4 space-y-2">
+                <li><strong>The emergency-fund rule:</strong> keep three to six months of living expenses in savings. It doubles as insurance — medical bills, car repairs — and as a bridge long enough to find a new job after a layoff.</li>
+                <li><strong>The 10% rule:</strong> route a tenth of every paycheck to savings before anything else gets a vote.</li>
+                <li><strong>The 50-30-20 rule:</strong> roughly 50% of take-home pay to necessities (housing, food, bills), 30% to wants (dining, entertainment), 20% to debt payoff and savings combined.</li>
+                <li><strong>A starter target:</strong> a first milestone around $2,000 covers the typical emergency for many households — a reasonable first rung before the full three-to-six months.</li>
+            </ol>
+            <p class="text-gray-700 leading-7 mb-4">
+                Treat all four as starting points, not verdicts: the right number depends on your income stability,
+                dependents, debts, and what you're saving <em>for</em>. The increase fields in this calculator encode the
+                most underused guideline of all — whatever you save this year, plan to save a bit more next year as
+                your pay rises; a 3% annual step turns a flat $5,000 habit into $57,319 contributed over a decade
+                instead of $50,000.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Can you save too much?</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Deposits have no legal limit, but insurance does: the FDIC covers $250,000 per depositor, per
+                institution — beyond that, spread banks. The subtler excess is opportunity cost. Savings yields
+                usually trail inflation, so a balance that sits for decades is quietly losing purchasing power even
+                as it "earns interest" (the tax field above makes the drag worse — interest is taxed as ordinary
+                income). Once the emergency fund is full and near-term goals are covered, surplus cash generally
+                works harder in investments — stocks, bonds, real estate — that have historically outpaced savings
+                rates over long periods. Save for safety first; then let the overflow graduate.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Why does the increase matter so much?</h4>
+                    <p class="text-gray-700">Because it compounds twice: bigger contributions, each earning interest for longer. At the defaults, the 3% step adds $7,319 of contributions over ten years — and every added dollar also earns interest from the year it lands.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What tax rate do I use?</h4>
+                    <p class="text-gray-700">Your marginal rate (federal, plus state where it applies) — interest is taxed as ordinary income on top of your salary. Use 0 for IRAs and other sheltered accounts.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Savings vs Interest Calculator — which one?</h4>
+                    <p class="text-gray-700">Escalating contributions: this one. Beginning-of-period timing or an after-inflation buying-power result: the <a href="interest.html" class="text-[#3F51B5] font-semibold hover:underline">Interest Calculator</a>.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Negative contributions?</h4>
+                    <p class="text-gray-700">Allowed — they model planned withdrawals. If the balance would go below zero the plan is spending faster than it grows; shorten the horizon or shrink the draw.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: This calculator provides estimates for educational purposes only and does not constitute financial
+                advice. Savings rates are variable in practice and may change at the bank's discretion.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Interest Calculator</h3>
+                <p class="text-sm text-gray-600">Same engine plus timing options and inflation.</p>
+            </a>
+            <a href="investment.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Investment Calculator</h3>
+                <p class="text-sm text-gray-600">Solve for the contribution your target requires.</p>
+            </a>
+            <a href="compound-interest.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Compound Interest Calculator</h3>
+                <p class="text-sm text-gray-600">Convert the rate between compounding frequencies.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateSavings() {
-            const initial = parseFloat(document.getElementById('savInitial').value);
-            const monthly = parseFloat(document.getElementById('savMonthly').value);
-            const rate = parseFloat(document.getElementById('savRate').value) / 100 / 12; // Monthly rate
-            const goal = parseFloat(document.getElementById('savGoal').value);
+        let chartInstance = null, barChartInstance = null;
 
-            if (isNaN(initial) || isNaN(monthly) || isNaN(rate) || isNaN(goal) || goal <= initial) {
-                alert("Please enter valid numbers. Target goal must be greater than initial savings.");
-                return;
-            }
+        window.addEventListener('DOMContentLoaded', () => { prefillFromURL(); calculateSavings(); });
 
-            let currentBalance = initial;
-            let months = 0;
-            const maxMonths = 1200; // Limit to 100 years to prevent infinite loops
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
 
-            while (currentBalance < goal && months < maxMonths) {
-                // Add interest
-                currentBalance *= (1 + rate);
-                // Add monthly contribution
-                currentBalance += monthly;
-                months++;
-            }
-
-            const years = Math.floor(months / 12);
-            const remainingMonths = months % 12;
-
-            const timeString = years + " Years and " + remainingMonths + " Months";
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('savTime').textContent = timeString;
-            document.getElementById('savTotal').textContent = formatter.format(currentBalance);
-            
-            document.getElementById('savResults').classList.remove('hidden');
+        function clearForm() {
+            document.getElementById('initial').value = '';
+            document.getElementById('resultsArea').innerHTML = '';
         }
+
+        function effMonthly(ratePct, freq) {
+            const r = ratePct / 100;
+            if (freq === 0) return Math.exp(r / 12) - 1;
+            return Math.pow(1 + r / freq, freq / 12) - 1;
+        }
+
+        function calculateSavings() {
+            const out = document.getElementById('resultsArea');
+            const P = num('initial'), A = num('annual'), gA = num('annualInc'), M = num('monthly'), gM = num('monthlyInc');
+            const rate = num('rate'), years = Math.round(num('years')), taxPct = num('tax');
+            const freq = parseInt(document.getElementById('compound').value, 10);
+            if (years <= 0) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter at least 1 year to save.</div>'; return; }
+
+            const rm = effMonthly(rate, freq);
+            let bal = P, totInt = 0, totTax = 0, totC = 0;
+            const rows = [];
+            for (let m = 1; m <= years * 12; m++) {
+                const yr = Math.ceil(m / 12);
+                let c = M * Math.pow(1 + gM / 100, yr - 1);
+                if (m % 12 === 0) c += A * Math.pow(1 + gA / 100, yr - 1);
+                const gross = bal * rm;
+                const taxAmt = gross * taxPct / 100;
+                const interest = gross - taxAmt;
+                bal += interest + c;
+                totInt += interest; totTax += taxAmt; totC += c;
+                rows.push({ m, dep: c + (m === 1 ? P : 0), interest, bal });
+            }
+
+            const yearMap = {};
+            rows.forEach(row => {
+                const y = Math.ceil(row.m / 12);
+                if (!yearMap[y]) yearMap[y] = { dep: 0, interest: 0, balance: row.bal };
+                yearMap[y].dep += row.dep; yearMap[y].interest += row.interest; yearMap[y].balance = row.bal;
+            });
+            let cumC = 0;
+            Object.keys(yearMap).forEach(y => { cumC += (yearMap[y].dep - (y === '1' ? P : 0)); yearMap[y].contribCum = cumC; });
+
+            const schedRows = rows.map(row =>
+                `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${row.m}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.dep)}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.interest)}</td><td class="py-1.5 px-2 text-right">${formatMoney(row.bal)}</td></tr>`
+            ).join('');
+            const yearRows = Object.keys(yearMap).map(y => {
+                const v = yearMap[y];
+                return `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${y}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.dep)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.interest)}</td><td class="py-1.5 px-2 text-right">${formatMoney(v.balance)}</td></tr>`;
+            }).join('');
+
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">End Balance</p>
+                    <p class="text-4xl font-bold">${formatMoney(bal)}</p>
+                    <p class="text-sm opacity-90 mt-1">after ${years} years at ${rate}%${taxPct > 0 ? ' · interest shown after ' + taxPct + '% tax' : ''}</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>End Balance:</span> <span class="font-bold">${formatMoney(bal)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Initial Deposit:</span> <span class="font-bold">${formatMoney(P)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total Contributions:</span> <span class="font-bold">${formatMoney(totC)}</span></p>
+                    <p class="flex justify-between"><span>Total Interest Earned${taxPct > 0 ? ' (after tax)' : ''}:</span> <span class="font-bold">${formatMoney(totInt)}</span></p>
+                    ${taxPct > 0 ? '<p class="flex justify-between mt-2 text-gray-500"><span>Tax paid on interest:</span> <span class="font-bold">' + formatMoney(totTax) + '</span></p>' : ''}
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <canvas id="barChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                        <h3 class="font-bold text-gray-800">Accumulation Schedule</h3>
+                        <div class="flex gap-2 no-print">
+                            <button id="schedMonthlyBtn" onclick="setSchedView('m')" class="bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold">Monthly</button>
+                            <button id="schedYearlyBtn" onclick="setSchedView('y')" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold">Yearly</button>
+                        </div>
+                    </div>
+                    <div id="scheduleWrap" class="overflow-x-auto" style="max-height:26rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">#</th><th class="py-2 px-2 border-b text-right">Deposit</th><th class="py-2 px-2 border-b text-right">Interest</th><th class="py-2 px-2 border-b text-right">Ending Balance</th></tr></thead>
+                            <tbody id="schedMonthly">${schedRows}</tbody>
+                            <tbody id="schedYearly" class="hidden">${yearRows}</tbody>
+                        </table>
+                    </div>
+                    <button id="schedToggle" onclick="toggleSchedule()" class="mt-3 bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">View Full Schedule</button>
+                </div>
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="copyShareLink()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">🔗 Copy Share Link</button>
+                    <button onclick="downloadCSV()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm font-semibold shadow-sm">⬇ Download CSV</button>
+                </div>`;
+
+            window._savRows = rows;
+
+            const pc = document.getElementById('pieChart');
+            if (pc) {
+                if (chartInstance) chartInstance.destroy();
+                chartInstance = new Chart(pc.getContext('2d'), {
+                    type: 'doughnut',
+                    data: { labels: ['Initial Deposit', 'Contributions', 'Interest'], datasets: [{ data: [Math.round(P), Math.round(totC), Math.round(totInt)], backgroundColor: ['#3F51B5', '#14B8A6', '#F59E0B'] }] },
+                    options: { responsive: true, plugins: { legend: { position: 'right' }, title: { display: true, text: 'Where the End Balance Comes From' }, tooltip: { callbacks: { label: c => ' ' + c.label + ': ' + formatMoney(c.parsed) } } } }
+                });
+            }
+            const bc = document.getElementById('barChart');
+            if (bc) {
+                if (barChartInstance) barChartInstance.destroy();
+                const ys = Object.keys(yearMap);
+                barChartInstance = new Chart(bc.getContext('2d'), {
+                    type: 'bar',
+                    data: { labels: ys, datasets: [
+                        { label: 'Initial Deposit', data: ys.map(() => Math.round(P)), backgroundColor: '#3F51B5' },
+                        { label: 'Contributions', data: ys.map(y => Math.round(yearMap[y].contribCum)), backgroundColor: '#14B8A6' },
+                        { label: 'Interest', data: ys.map(y => Math.round(yearMap[y].balance - P - yearMap[y].contribCum)), backgroundColor: '#F59E0B' }
+                    ]},
+                    options: { responsive: true, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Accumulation by Year' } }, scales: { x: { stacked: true, title: { display: true, text: 'Year' } }, y: { stacked: true, ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'K' } } } }
+                });
+            }
+            updateURL();
+        }
+
+        let schedExpanded = false;
+        function toggleSchedule() {
+            const wrap = document.getElementById('scheduleWrap');
+            const btn = document.getElementById('schedToggle');
+            schedExpanded = !schedExpanded;
+            wrap.style.maxHeight = schedExpanded ? 'none' : '26rem';
+            btn.textContent = schedExpanded ? 'Show Less' : 'View Full Schedule';
+        }
+        function setSchedView(v) {
+            document.getElementById('schedMonthly').classList.toggle('hidden', v !== 'm');
+            document.getElementById('schedYearly').classList.toggle('hidden', v !== 'y');
+            const bm = document.getElementById('schedMonthlyBtn'), by = document.getElementById('schedYearlyBtn');
+            bm.className = v === 'm' ? 'bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold' : 'bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold';
+            by.className = v === 'y' ? 'bg-[#3F51B5] text-white px-3 py-1 rounded-md text-sm font-semibold' : 'bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold';
+        }
+
+        function downloadCSV() {
+            const rows = window._savRows || [];
+            if (!rows.length) return;
+            let csv = 'Month,Deposit,Interest,Ending Balance\n';
+            rows.forEach(r => { csv += [r.m, r.dep.toFixed(2), r.interest.toFixed(2), r.bal.toFixed(2)].join(',') + '\n'; });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'savings-schedule.csv';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        const PARAMS = [['initial', 'i'], ['annual', 'a'], ['annualInc', 'ai'], ['monthly', 'm'], ['monthlyInc', 'mi'], ['rate', 'r'], ['compound', 'f'], ['years', 'y'], ['tax', 't']];
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            PARAMS.forEach(([id, key]) => { p.set(key, document.getElementById(id).value); });
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            PARAMS.forEach(([id, key]) => { if (q.get(key) !== null) document.getElementById(id).value = q.get(key); });
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function copyShareLink() {
+            const url = window.location.href.split('?')[0] + '?' + buildShareParams();
+            const btn = window.event && window.event.target ? window.event.target : null;
+            const done = () => { if (btn) { const o = btn.textContent; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = o, 2000); } };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else fallbackCopy(url, done);
+        }
+        function fallbackCopy(text, done) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(ta); done();
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-</html>
+                </html>
