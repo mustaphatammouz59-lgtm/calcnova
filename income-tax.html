@@ -1,152 +1,816 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Income Tax Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Income Tax Calculator — Federal Refund or Amount Owed | CalcNova</title>
+<meta name="description" content="Free income tax calculator: estimate your U.S. federal tax refund or amount owed for 2025 or 2026, with the new tips, overtime, car-loan and senior deductions, child tax credit, EITC, self-employment tax and capital gains rates.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/income-tax">
+<meta property="og:title" content="Income Tax Calculator — Federal Refund or Amount Owed | CalcNova">
+<meta property="og:description" content="Your estimated federal refund or balance due, with a full breakdown of income, deductions, credits and payroll taxes for 2025 and 2026.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/income-tax">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Income Tax Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/income-tax"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How is a tax refund calculated?","acceptedAnswer":{"@type":"Answer","text":"Add up everything you already paid toward your federal tax bill — withholding from paychecks plus any estimated payments — and add refundable credits such as the Earned Income Tax Credit. If that total is more than your final tax liability, the IRS refunds the difference. If it is less, you owe the difference. Example: $9,000 withheld against a $9,049 liability leaves $49 owed."}},
+{"@type":"Question","name":"What is the standard deduction for 2025 and 2026?","acceptedAnswer":{"@type":"Answer","text":"For 2025, after the One Big Beautiful Bill Act: $15,750 single, $31,500 married filing jointly, $23,625 head of household. For 2026: $16,100 single, $32,200 married filing jointly, $24,150 head of household. Taxpayers 65 or older get an additional $2,000 (2025) or $2,050 (2026) per person — $1,600 or $1,650 per spouse on a joint return — plus the new $6,000 senior deduction (2025–2028) subject to an income phase-out."}},
+{"@type":"Question","name":"What are the new deductions for tips, overtime, car loans and seniors?","acceptedAnswer":{"@type":"Answer","text":"For 2025 through 2028, the One Big Beautiful Bill Act added four deductions taken on top of the standard or itemized deduction: up to $25,000 of qualified tips, up to $12,500 of overtime pay ($25,000 joint), up to $10,000 of interest on a loan for a qualified new vehicle, and $6,000 per taxpayer aged 65 or older. Each phases out above a modified AGI threshold ($150,000/$300,000 for tips and overtime, $100,000/$200,000 for car interest, $75,000/$150,000 for seniors)."}},
+{"@type":"Question","name":"How much is the Child Tax Credit for 2025 and 2026?","acceptedAnswer":{"@type":"Answer","text":"Up to $2,200 per child under age 17, of which up to $1,700 per child can be refundable as the Additional Child Tax Credit. A $500 nonrefundable credit applies to other dependents. Both credits phase out starting at $200,000 of modified AGI ($400,000 for joint filers), reduced by $50 for each $1,000 above the threshold."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Income Tax Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Income Tax</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Income Tax Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Estimate the refund or amount owed on your U.S. federal tax return — for employees and the self-employed alike. The calculator runs both the <strong>2025</strong> rules (return filed in 2026) and the <strong>2026</strong> rules (filed in 2027), including the One Big Beautiful Bill Act brackets and the new deductions for tips, overtime, car-loan interest and seniors.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Income Tax Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+        <section class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 class="text-lg font-bold text-[#3F51B5] mb-5">Your return</h2>
+            <div class="space-y-4">
+                <div>
+                    <label for="iStatus" class="block text-sm font-medium text-gray-700 mb-1">Filing status</label>
+                    <select id="iStatus" onchange="syncForm()" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5]">
+                        <option value="Single" selected>Single</option>
+                        <option value="MarriedJoint">Married Filing Jointly</option>
+                        <option value="MarriedSeparately">Married Filing Separately</option>
+                        <option value="HeadofHousehold">Head of Household</option>
+                        <option value="Widow">Qualified Surviving Spouse</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Gross Income ($)</label>
-                        <input type="number" id="taxIncome" value="75000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                        <label for="iYoung" class="block text-sm font-medium text-gray-700 mb-1">Young dependents <span class="text-gray-400 font-normal">(age 0–16)</span></label>
+                        <input id="iYoung" type="number" value="0" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Filing Status</label>
-                        <select id="taxStatus" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="single" selected>Single</option>
-                            <option value="married">Married Filing Jointly</option>
-                        </select>
+                        <label for="iOld" class="block text-sm font-medium text-gray-700 mb-1">Other dependents <span class="text-gray-400 font-normal">(age 17+)</span></label>
+                        <input id="iOld" type="number" value="0" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
                     </div>
                 </div>
-                <button onclick="calculateIncomeTax()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Tax</button>
-
-                <div id="taxResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-red-500">
-                            <p class="text-sm text-gray-500">Estimated Federal Tax</p>
-                            <p class="text-2xl font-bold text-red-500" id="taxAmount">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Effective Tax Rate</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="taxEffectiveRate">0%</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Net Income (Take-Home)</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="taxNetIncome">$0</p>
-                        </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-700 mb-1">Tax year</span>
+                    <div class="flex flex-col gap-1 text-sm pt-1">
+                        <label class="flex items-center gap-2"><input type="radio" name="tyear" value="2026" class="accent-[#3F51B5]"> 2026 <span class="text-gray-400">(return filed in 2027)</span></label>
+                        <label class="flex items-center gap-2"><input type="radio" name="tyear" value="2025" checked class="accent-[#3F51B5]"> 2025 <span class="text-gray-400">(return filed in 2026)</span></label>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Income Tax is Calculated</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">The U.S. uses a progressive tax system, meaning your income is divided into "brackets." You don't pay a single tax rate on all your income; instead, different portions of your income are taxed at increasing rates. This calculator uses the 2024 federal tax brackets (simplified) and assumes the standard deduction.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
+            <div class="bg-gray-100 text-gray-800 font-bold text-sm px-3 py-2 rounded mt-6" id="p1Label">Earned Income</div>
+            <div class="space-y-4 mt-4">
+                <div>
+                    <label for="iAge1" class="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                    <input id="iAge1" type="number" value="30" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                </div>
+                <div>
+                    <label for="iWages1" class="block text-sm font-medium text-gray-700 mb-1">Wages, tips, other compensation <span class="text-gray-400 font-normal">(W-2 box 1)</span></label>
+                    <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                    <input id="iWages1" type="number" value="80000" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                </div>
+                <div>
+                    <label for="iFed1" class="block text-sm font-medium text-gray-700 mb-1">Federal income tax withheld <span class="text-gray-400 font-normal">(W-2 box 2)</span></label>
+                    <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                    <input id="iFed1" type="number" value="9000" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="iState1" class="block text-sm font-medium text-gray-700 mb-1">State tax withheld <span class="text-gray-400 font-normal">(box 17)</span></label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iState1" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                    <div>
+                        <label for="iLocal1" class="block text-sm font-medium text-gray-700 mb-1">Local tax withheld <span class="text-gray-400 font-normal">(box 19)</span></label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iLocal1" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-700 mb-1">Has business or self-employment income?</span>
+                    <div class="flex gap-6 text-sm pt-1">
+                        <label class="flex items-center gap-2"><input type="radio" name="biz1" value="y" onchange="syncForm()" class="accent-[#3F51B5]"> Yes</label>
+                        <label class="flex items-center gap-2"><input type="radio" name="biz1" value="n" checked onchange="syncForm()" class="accent-[#3F51B5]"> No</label>
+                    </div>
+                </div>
+                <div id="bizBlock1" class="space-y-4 hidden">
+                    <div>
+                        <label for="iBiz1" class="block text-sm font-medium text-gray-700 mb-1">Business income <span class="text-gray-400 font-normal">(net, Schedule C)</span></label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iBiz1" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                    <div>
+                        <label for="iEst1" class="block text-sm font-medium text-gray-700 mb-1">Estimated tax paid</label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iEst1" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                    <div>
+                        <label for="iMed1" class="block text-sm font-medium text-gray-700 mb-1">Medicare wages <span class="text-gray-400 font-normal">(W-2 box 5; 0 if no W-2)</span></label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iMed1" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+            <div id="person2" class="hidden">
+                <div class="bg-gray-100 text-gray-800 font-bold text-sm px-3 py-2 rounded mt-6">Person 2 (Spouse) Earned Income</div>
+                <div class="space-y-4 mt-4">
+                    <div>
+                        <label for="iAge2" class="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                        <input id="iAge2" type="number" value="30" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                    </div>
+                    <div>
+                        <label for="iWages2" class="block text-sm font-medium text-gray-700 mb-1">Wages, tips, other compensation <span class="text-gray-400 font-normal">(W-2 box 1)</span></label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iWages2" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                    <div>
+                        <label for="iFed2" class="block text-sm font-medium text-gray-700 mb-1">Federal income tax withheld <span class="text-gray-400 font-normal">(W-2 box 2)</span></label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iFed2" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label for="iState2" class="block text-sm font-medium text-gray-700 mb-1">State tax withheld <span class="text-gray-400 font-normal">(box 17)</span></label>
+                            <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                            <input id="iState2" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                        </div>
+                        <div>
+                            <label for="iLocal2" class="block text-sm font-medium text-gray-700 mb-1">Local tax withheld <span class="text-gray-400 font-normal">(box 19)</span></label>
+                            <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                            <input id="iLocal2" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="block text-sm font-medium text-gray-700 mb-1">Has business or self-employment income?</span>
+                        <div class="flex gap-6 text-sm pt-1">
+                            <label class="flex items-center gap-2"><input type="radio" name="biz2" value="y" onchange="syncForm()" class="accent-[#3F51B5]"> Yes</label>
+                            <label class="flex items-center gap-2"><input type="radio" name="biz2" value="n" checked onchange="syncForm()" class="accent-[#3F51B5]"> No</label>
+                        </div>
+                    </div>
+                    <div id="bizBlock2" class="space-y-4 hidden">
+                        <div>
+                            <label for="iBiz2" class="block text-sm font-medium text-gray-700 mb-1">Business income <span class="text-gray-400 font-normal">(net, Schedule C)</span></label>
+                            <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                            <input id="iBiz2" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                        </div>
+                        <div>
+                            <label for="iEst2" class="block text-sm font-medium text-gray-700 mb-1">Estimated tax paid</label>
+                            <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                            <input id="iEst2" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                        </div>
+                        <div>
+                            <label for="iMed2" class="block text-sm font-medium text-gray-700 mb-1">Medicare wages <span class="text-gray-400 font-normal">(W-2 box 5; 0 if no W-2)</span></label>
+                            <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                            <input id="iMed2" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </aside>
-    </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            <div class="bg-gray-100 text-gray-800 font-bold text-sm px-3 py-2 rounded mt-6">Other Family Income</div>
+            <div class="space-y-4 mt-4">
+                <div>
+                    <label for="iSS" class="block text-sm font-medium text-gray-700 mb-1">Social Security income <span class="text-gray-400 font-normal">(SSA-1099)</span></label>
+                    <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                    <input id="iSS" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="iInterest" class="block text-sm font-medium text-gray-700 mb-1">Interest income <span class="text-gray-400 font-normal">(1099-INT)</span></label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iInterest" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                    <div>
+                        <label for="iOther" class="block text-sm font-medium text-gray-700 mb-1">Other income <span class="text-gray-400 font-normal">(1099-G, 1099-R…)</span></label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iOther" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="iOrdDiv" class="block text-sm font-medium text-gray-700 mb-1">Ordinary dividends</label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iOrdDiv" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                    <div>
+                        <label for="iQualDiv" class="block text-sm font-medium text-gray-700 mb-1">Qualified dividends <span class="text-gray-400 font-normal">(1099-DIV)</span></label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iQualDiv" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                </div>
+                <div>
+                    <label for="iPassive" class="block text-sm font-medium text-gray-700 mb-1">Passive income <span class="text-gray-400 font-normal">(rentals, royalties…)</span></label>
+                    <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                    <input id="iPassive" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="iST" class="block text-sm font-medium text-gray-700 mb-1">Short-term capital gains</label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iST" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                    <div>
+                        <label for="iLT" class="block text-sm font-medium text-gray-700 mb-1">Long-term capital gains</label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iLT" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                </div>
+                <div>
+                    <label for="iStateRate" class="block text-sm font-medium text-gray-700 mb-1">State + local tax rate <span class="text-gray-400 font-normal">(for the state estimate)</span></label>
+                    <div class="relative">
+                    <input id="iStateRate" type="number" step="any" value="0" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 pr-8 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                    <span class="absolute right-3 top-2.5 text-gray-400">%</span></div>
+                </div>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <div class="bg-gray-100 text-gray-800 font-bold text-sm px-3 py-2 rounded mt-6">Deductions &amp; Credits</div>
+            <div class="space-y-4 mt-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="iTips" class="block text-sm font-medium text-gray-700 mb-1">Tips income</label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iTips" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                    <div>
+                        <label for="iOvertime" class="block text-sm font-medium text-gray-700 mb-1">Overtime income</label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iOvertime" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="iCar" class="block text-sm font-medium text-gray-700 mb-1">Car loan interest <span class="text-gray-400 font-normal">(max $10,000)</span></label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iCar" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                    <div>
+                        <label for="iIRA" class="block text-sm font-medium text-gray-700 mb-1">Traditional IRA contributions</label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iIRA" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="iRETax" class="block text-sm font-medium text-gray-700 mb-1">Real estate tax paid</label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iRETax" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                    <div>
+                        <label for="iMortInt" class="block text-sm font-medium text-gray-700 mb-1">Mortgage interest paid</label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iMortInt" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="iDonations" class="block text-sm font-medium text-gray-700 mb-1">Charitable donations</label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iDonations" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                    <div>
+                        <label for="iStudentLoan" class="block text-sm font-medium text-gray-700 mb-1">Student loan interest <span class="text-gray-400 font-normal">(max $2,500)</span></label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iStudentLoan" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                </div>
+                <div>
+                    <label for="iChildcare" class="block text-sm font-medium text-gray-700 mb-1">Child &amp; dependent care expenses <span class="text-gray-400 font-normal">(max $3,000/person, $6,000 total)</span></label>
+                    <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                    <input id="iChildcare" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">College tuition &amp; fees paid <span class="text-gray-400 font-normal">(per student)</span></label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iTuition1" type="number" value="0" placeholder="Student 1" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iTuition2" type="number" value="0" placeholder="Student 2" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iTuition3" type="number" value="0" placeholder="Student 3" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iTuition4" type="number" value="0" placeholder="Student 4" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                    </div>
+                </div>
+                <div>
+                    <label for="iOtherDed" class="block text-sm font-medium text-gray-700 mb-1">Other itemized deductions</label>
+                    <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                    <input id="iOtherDed" type="number" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                </div>
+            </div>
+
+            <div class="flex gap-3 mt-6">
+                <button onclick="calculate()" class="flex-1 bg-[#4CAF50] hover:bg-green-600 text-white font-bold py-3 rounded-lg transition shadow-md">Calculate</button>
+                <button onclick="shareLink(this)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg transition text-sm">Copy share link</button>
+            </div>
+            <p class="text-xs text-gray-400 mt-4">Estimate only, based on IRS Rev. Proc. 2024-40 (2025) and Rev. Proc. 2025-32 (2026) and the One Big Beautiful Bill Act. Tax is computed with the rate schedules directly; it does not run the AMT, the net investment income tax, or state-specific rules. Not tax advice.</p>
+        </section>
+
+        <div class="lg:col-span-3 space-y-8">
+            <section id="results" class="scroll-mt-24"></section>
+
+            <!-- AdSense: 300x250 beside the form / above results on mobile -->
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+
+            <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 prose max-w-none prose-gray prose-headings:text-[#3F51B5]">
+                <h2>How this estimate is built</h2>
+                <p>A federal return is a pipeline. Start with <strong>total income</strong>: wages, business profit, interest, dividends, capital gains, rentals, and the taxable share of Social Security benefits (0%, 50% or up to 85% of benefits, depending on your provisional income). Subtract <strong>above-the-line adjustments</strong> — traditional IRA contributions, student-loan interest (up to $2,500, phased out between $85,000 and $100,000 of modified AGI, $170,000–$200,000 joint in 2025 and $175,000–$205,000 in 2026) and half of any self-employment tax — to reach <strong>adjusted gross income (AGI)</strong>. From AGI, subtract the larger of the standard or itemized deduction, then the new 2025–2028 deductions described below. What remains is <strong>taxable income</strong>, taxed through the brackets. Credits then cut the tax itself, and your withholding and estimated payments settle the difference: overpay and you get a refund; underpay and you owe.</p>
+                <p>Worked example, the calculator's defaults: single filer, 2025, $80,000 of wages. The standard deduction of $15,750 leaves taxable income of $64,250. Tax = 10% × $11,925 + 12% × $36,550 + 22% × $15,775 = <strong>$9,049</strong>. With $9,000 withheld, the return shows <strong>$49 owed</strong> — a reminder that a small balance due is not a mistake; it usually means withholding tracked the liability closely.</p>
+
+                <h3>Federal brackets — 2025 (filed in 2026)</h3>
+                <table>
+                    <thead><tr><th>Rate</th><th>Single</th><th>Married filing jointly</th><th>Head of household</th><th>Married filing separately</th></tr></thead>
+                    <tbody>
+                    <tr><td>10%</td><td>$0 – $11,925</td><td>$0 – $23,850</td><td>$0 – $17,000</td><td>$0 – $11,925</td></tr>
+                    <tr><td>12%</td><td>$11,925 – $48,475</td><td>$23,850 – $96,950</td><td>$17,000 – $64,850</td><td>$11,925 – $48,475</td></tr>
+                    <tr><td>22%</td><td>$48,475 – $103,350</td><td>$96,950 – $206,700</td><td>$64,850 – $103,350</td><td>$48,475 – $103,350</td></tr>
+                    <tr><td>24%</td><td>$103,350 – $197,300</td><td>$206,700 – $394,600</td><td>$103,350 – $197,300</td><td>$103,350 – $197,300</td></tr>
+                    <tr><td>32%</td><td>$197,300 – $250,525</td><td>$394,600 – $501,050</td><td>$197,300 – $250,500</td><td>$197,300 – $250,525</td></tr>
+                    <tr><td>35%</td><td>$250,525 – $626,350</td><td>$501,050 – $751,600</td><td>$250,500 – $626,350</td><td>$250,525 – $375,800</td></tr>
+                    <tr><td>37%</td><td>over $626,350</td><td>over $751,600</td><td>over $626,350</td><td>over $375,800</td></tr>
+                    </tbody>
+                </table>
+                <h3>Federal brackets — 2026 (filed in 2027)</h3>
+                <table>
+                    <thead><tr><th>Rate</th><th>Single</th><th>Married filing jointly</th><th>Head of household</th><th>Married filing separately</th></tr></thead>
+                    <tbody>
+                    <tr><td>10%</td><td>$0 – $12,400</td><td>$0 – $24,800</td><td>$0 – $17,700</td><td>$0 – $12,400</td></tr>
+                    <tr><td>12%</td><td>$12,400 – $50,400</td><td>$24,800 – $100,800</td><td>$17,700 – $67,450</td><td>$12,400 – $50,400</td></tr>
+                    <tr><td>22%</td><td>$50,400 – $105,700</td><td>$100,800 – $211,400</td><td>$67,450 – $105,700</td><td>$50,400 – $105,700</td></tr>
+                    <tr><td>24%</td><td>$105,700 – $201,775</td><td>$211,400 – $403,550</td><td>$105,700 – $201,750</td><td>$105,700 – $201,775</td></tr>
+                    <tr><td>32%</td><td>$201,775 – $256,225</td><td>$403,550 – $512,450</td><td>$201,750 – $256,200</td><td>$201,775 – $256,225</td></tr>
+                    <tr><td>35%</td><td>$256,225 – $640,600</td><td>$512,450 – $768,700</td><td>$256,200 – $640,600</td><td>$256,225 – $384,350</td></tr>
+                    <tr><td>37%</td><td>over $640,600</td><td>over $768,700</td><td>over $640,600</td><td>over $384,350</td></tr>
+                    </tbody>
+                </table>
+                <p>Brackets apply to <em>taxable</em> income, and only the slice of income inside a bracket is taxed at that bracket's rate — your <strong>marginal rate</strong>. The <strong>effective rate</strong> — total tax divided by total income — is always lower. Long-term capital gains and qualified dividends get their own schedule stacked on top of ordinary income: 0% up to taxable income of $48,350 single / $96,700 joint in 2025 ($49,450 / $98,900 in 2026), then 15%, then 20% above $533,400 / $600,050 (2025) or $545,500 / $613,700 (2026).</p>
+
+                <h3>Standard deduction, and the four new deductions</h3>
+                <p>The One Big Beautiful Bill Act raised the standard deduction above the originally published 2025 figures and made the rate structure permanent: <strong>2025</strong> — $15,750 single, $31,500 joint, $23,625 head of household; <strong>2026</strong> — $16,100, $32,200 and $24,150. Add $2,000 per person 65 or older in 2025 ($1,600 per spouse on joint returns), $2,050 / $1,650 in 2026. Itemizing only wins if your itemized total — state and local taxes (the SALT deduction, capped at $40,000 in 2025 and $40,400 in 2026, phasing down toward $10,000 above $500,000 / $505,000 of MAGI), mortgage interest and charitable gifts — beats it; the calculator takes the larger automatically.</p>
+                <p>On top of either deduction, 2025–2028 brings four new ones, each with its own cap and phase-out:</p>
+                <ul>
+                    <li><strong>Tips</strong> — up to $25,000 of qualified tips; reduced $100 per $1,000 of MAGI over $150,000 ($300,000 joint).</li>
+                    <li><strong>Overtime</strong> — up to $12,500 of qualified overtime pay ($25,000 joint); same $100-per-$1,000 phase-out over $150,000 / $300,000.</li>
+                    <li><strong>Car-loan interest</strong> — up to $10,000 of interest on a loan for a qualified new vehicle; reduced $200 per $1,000 over $100,000 ($200,000 joint).</li>
+                    <li><strong>Seniors</strong> — $6,000 per taxpayer aged 65+ ($12,000 if both spouses qualify); reduced by 6% of MAGI over $75,000 ($150,000 joint).</li>
+                </ul>
+
+                <h3>Credits: where the real money is</h3>
+                <p>A credit cuts tax dollar for dollar, which makes it worth more than a deduction of the same size. The <strong>Child Tax Credit</strong> pays up to $2,200 per child under 17 (up to $1,700 of it refundable per child through the Additional Child Tax Credit, once earned income passes $2,500), plus $500 per other dependent; both phase out from $200,000 of MAGI ($400,000 joint) at $50 per $1,000. The <strong>Earned Income Tax Credit</strong> is fully refundable and peaks at $649 with no children, $4,328 with one, $7,152 with two and $8,046 with three or more in 2025 (2026: $664 / $4,427 / $7,316 / $8,231) — but investment income over $11,950 (2025) or $12,200 (2026) disqualifies you. The <strong>American Opportunity Credit</strong> returns up to $2,500 per student on the first $4,000 of tuition and fees, 40% of it refundable; the <strong>child and dependent care credit</strong> covers 20–35% of up to $3,000 of care expenses for one dependent ($6,000 for two or more). Nonrefundable credits can take your income tax to zero but not below; refundable ones — EITC, the refundable slice of the child and education credits — can push the return into refund territory on their own.</p>
+
+                <h3>Self-employment and payroll taxes</h3>
+                <p>Business profit is taxed twice over: as ordinary income, and through the <strong>self-employment tax</strong> — 15.3% on 92.35% of net earnings, with the 12.4% Social Security part stopping at the wage base ($176,100 in 2025, $184,500 in 2026, reduced by any W-2 wages), plus a 0.9% additional Medicare tax at higher incomes. Half of the SE tax (excluding the 0.9% surtax) comes back as an above-the-line deduction. Employees instead pay FICA through withholding — 6.2% Social Security to the same wage base and 1.45% Medicare, plus the 0.9% surtax on wages over $200,000 — which this calculator shows separately so you can see your full tax burden and estimated take-home pay, alongside a rough state estimate at the flat rate you enter.</p>
+
+                <h3>Frequently asked questions</h3>
+                <h4>How is a tax refund calculated?</h4>
+                <p>Payments (withholding + estimated payments) plus refundable credits, minus your final liability. Positive difference: refund. Negative: amount owed. $9,000 withheld against a $9,049 liability = $49 owed.</p>
+                <h4>What is the standard deduction for 2025 and 2026?</h4>
+                <p>2025: $15,750 single / $31,500 joint / $23,625 head of household. 2026: $16,100 / $32,200 / $24,150. Plus $2,000 (2025) or $2,050 (2026) per person 65+, and the separate $6,000 senior deduction with its phase-out.</p>
+                <h4>What are the new deductions for tips, overtime, car loans and seniors?</h4>
+                <p>Four deductions for 2025–2028, taken on top of the standard or itemized deduction: tips up to $25,000, overtime up to $12,500 ($25,000 joint), car-loan interest up to $10,000, and $6,000 per senior — each phasing out above its MAGI threshold.</p>
+                <h4>How much is the Child Tax Credit?</h4>
+                <p>Up to $2,200 per child under 17 (up to $1,700 refundable per child), $500 per other dependent, phasing out from $200,000 / $400,000 of MAGI.</p>
+            </section>
+
+            <section>
+                <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <a href="ira.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                        <div class="font-bold text-[#3F51B5]">IRA Calculator</div>
+                        <p class="text-sm text-gray-500 mt-1">The above-the-line deduction that starts on this page, projected to retirement.</p>
+                    </a>
+                    <a href="401k.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                        <div class="font-bold text-[#3F51B5]">401K Calculator</div>
+                        <p class="text-sm text-gray-500 mt-1">Pre-tax contributions shrink this year's taxable wages — see what they grow into.</p>
+                    </a>
+                    <a href="retirement.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                        <div class="font-bold text-[#3F51B5]">Retirement Calculator</div>
+                        <p class="text-sm text-gray-500 mt-1">Turn this year's refund into a plan: how much you need and how long it lasts.</p>
+                    </a>
+                </div>
+            </section>
         </div>
-    </footer>
+    </div>
+</main>
 
-    <script>
-        function calculateIncomeTax() {
-            const income = parseFloat(document.getElementById('taxIncome').value);
-            const status = document.getElementById('taxStatus').value;
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (isNaN(income) || income < 0) {
-                alert("Please enter a valid income.");
-                return;
-            }
+<script>
+// CalcNova Income Tax engine — model first (will be embedded in income-tax.html)
+const TAX = {
+  2025: {
+    brackets: {
+      Single:   [11925, 48475, 103350, 197300, 250525, 626350],
+      MarriedJoint: [23850, 96950, 206700, 394600, 501050, 751600],
+      MarriedSeparately: [11925, 48475, 103350, 197300, 250525, 375800],
+      HeadofHousehold: [17000, 64850, 103350, 197300, 250500, 626350],
+      Widow:    [23850, 96950, 206700, 394600, 501050, 751600]
+    },
+    std: { Single: 15750, MarriedJoint: 31500, MarriedSeparately: 15750, HeadofHousehold: 23625, Widow: 31500 },
+    addl65: { Single: 2000, HeadofHousehold: 2000, MarriedJoint: 1600, Widow: 1600, MarriedSeparately: 1600 }, // per person 65+
+    cg0:  { Single: 48350, MarriedJoint: 96700, HeadofHousehold: 64750, MarriedSeparately: 48350, Widow: 96700 },
+    cg15: { Single: 533400, MarriedJoint: 600050, HeadofHousehold: 566700, MarriedSeparately: 300000, Widow: 600050 },
+    wageBase: 176100,
+    saltCap: 40000, saltThreshold: 500000,
+    slPhase: { Single: [85000, 100000], HeadofHousehold: [85000, 100000], Widow: [85000, 100000], MarriedJoint: [170000, 200000] },
+    actcCap: 1700, ctcPer: 2200,
+    eitc: {
+      max: [649, 4328, 7152, 8046], eiAmt: [8490, 12730, 17880, 17880],
+      inRate: [0.0765, 0.34, 0.40, 0.45], outRate: [0.0765, 0.1598, 0.2106, 0.2106],
+      thrSingle: [10620, 23350, 23350, 23350], thrJoint: [17730, 30470, 30470, 30470], invCap: 11950
+    }
+  },
+  2026: {
+    brackets: {
+      Single:   [12400, 50400, 105700, 201775, 256225, 640600],
+      MarriedJoint: [24800, 100800, 211400, 403550, 512450, 768700],
+      MarriedSeparately: [12400, 50400, 105700, 201775, 256225, 384350],
+      HeadofHousehold: [17700, 67450, 105700, 201750, 256200, 640600],
+      Widow:    [24800, 100800, 211400, 403550, 512450, 768700]
+    },
+    std: { Single: 16100, MarriedJoint: 32200, MarriedSeparately: 16100, HeadofHousehold: 24150, Widow: 32200 },
+    addl65: { Single: 2050, HeadofHousehold: 2050, MarriedJoint: 1650, Widow: 1650, MarriedSeparately: 1650 },
+    cg0:  { Single: 49450, MarriedJoint: 98900, HeadofHousehold: 66200, MarriedSeparately: 49450, Widow: 98900 },
+    cg15: { Single: 545500, MarriedJoint: 613700, HeadofHousehold: 579600, MarriedSeparately: 306850, Widow: 613700 },
+    wageBase: 184500,
+    saltCap: 40400, saltThreshold: 505000,
+    slPhase: { Single: [85000, 100000], HeadofHousehold: [85000, 100000], Widow: [85000, 100000], MarriedJoint: [175000, 205000] },
+    actcCap: 1700, ctcPer: 2200,
+    eitc: {
+      max: [664, 4427, 7316, 8231], eiAmt: [8680, 13020, 18290, 18290],
+      inRate: [0.0765, 0.34, 0.40, 0.45], outRate: [0.0765, 0.1598, 0.2106, 0.2106],
+      thrSingle: [10860, 23890, 23890, 23890], thrJoint: [18140, 31160, 31160, 31160], invCap: 12200
+    }
+  }
+};
+const RATES = [0.10, 0.12, 0.22, 0.24, 0.32, 0.35, 0.37];
 
-            // 2024 Standard Deductions
-            const standardDeduction = status === 'single' ? 14600 : 29200;
-            
-            // Taxable Income
-            let taxableIncome = income - standardDeduction;
-            if (taxableIncome < 0) taxableIncome = 0;
+function bracketTax(taxable, thresholds) {
+  let tax = 0, prev = 0;
+  for (let i = 0; i < RATES.length; i++) {
+    const top = i < thresholds.length ? thresholds[i] : Infinity;
+    if (taxable > prev) tax += (Math.min(taxable, top) - prev) * RATES[i];
+    prev = top;
+  }
+  return tax;
+}
+function marginalRate(taxable, thresholds) {
+  for (let i = 0; i < thresholds.length; i++) if (taxable <= thresholds[i]) return RATES[i];
+  return 0.37;
+}
+// Capital-gains worksheet (simplified stacking): preferential income P sits on top of ordinary income.
+function taxWithGains(taxable, pref, status, yr) {
+  const th = TAX[yr].brackets[status];
+  const ordinary = Math.max(0, taxable - pref);
+  let tax = bracketTax(ordinary, th);
+  if (pref > 0) {
+    const cap0 = TAX[yr].cg0[status], cap15 = TAX[yr].cg15[status];
+    const at0 = Math.max(0, Math.min(pref, cap0 - ordinary));
+    const at15 = Math.max(0, Math.min(pref - at0, cap15 - ordinary - at0));
+    const at20 = Math.max(0, pref - at0 - at15);
+    tax += at15 * 0.15 + at20 * 0.20;
+  }
+  return tax;
+}
+function taxableSS(ss, otherAGI, status) {
+  if (ss <= 0) return 0;
+  const joint = status === 'MarriedJoint' || status === 'Widow';
+  const b1 = status === 'MarriedSeparately' ? 0 : joint ? 32000 : 25000;
+  const b2 = status === 'MarriedSeparately' ? 0 : joint ? 44000 : 34000;
+  const pi = otherAGI + 0.5 * ss;
+  if (pi <= b1) return 0;
+  if (pi <= b2) return Math.min(0.5 * ss, 0.5 * (pi - b1));
+  return Math.min(0.85 * ss, 0.85 * (pi - b2) + Math.min(0.5 * ss, 0.5 * (b2 - b1)));
+}
 
-            let taxOwed = 0;
+function computeTax(inp) {
+  const yr = TAX[inp.year], status = inp.status;
+  const joint = status === 'MarriedJoint';
+  const p2 = joint ? inp.p2 : { age: 0, wages: 0, fedWh: 0, stateWh: 0, localWh: 0, hasBiz: false, biz: 0, estTax: 0, medWages: 0 };
+  const p1 = inp.p1;
+  const persons = [p1, p2].slice(0, joint ? 2 : 1);
 
-            // 2024 Tax Brackets
-            if (status === 'single') {
-                if (taxableIncome <= 11600) {
-                    taxOwed = taxableIncome * 0.10;
-                } else if (taxableIncome <= 47150) {
-                    taxOwed = 1160 + (taxableIncome - 11600) * 0.12;
-                } else if (taxableIncome <= 100525) {
-                    taxOwed = 5426 + (taxableIncome - 47150) * 0.22;
-                } else if (taxableIncome <= 191950) {
-                    taxOwed = 17168.50 + (taxableIncome - 100525) * 0.24;
-                } else {
-                    // Simplified for higher brackets
-                    taxOwed = 39110.50 + (taxableIncome - 191950) * 0.32; 
-                }
-            } else if (status === 'married') {
-                if (taxableIncome <= 23200) {
-                    taxOwed = taxableIncome * 0.10;
-                } else if (taxableIncome <= 94300) {
-                    taxOwed = 2320 + (taxableIncome - 23200) * 0.12;
-                } else if (taxableIncome <= 201050) {
-                    taxOwed = 10852 + (taxableIncome - 94300) * 0.22;
-                } else if (taxableIncome <= 383900) {
-                    taxOwed = 34337 + (taxableIncome - 201050) * 0.24;
-                } else {
-                    // Simplified for higher brackets
-                    taxOwed = 78221 + (taxableIncome - 383900) * 0.32;
-                }
-            }
+  // --- Self-employment tax, per person ---
+  let seTaxTotal = 0, halfSE = 0, netSETotal = 0;
+  const addlMedThr = status === 'MarriedJoint' || status === 'Widow' ? 250000 : status === 'MarriedSeparately' ? 125000 : 200000;
+  let totalWages = 0;
+  persons.forEach(p => { totalWages += Math.max(0, p.wages); });
+  persons.forEach(p => {
+    if (!p.hasBiz || !p.biz) return;
+    const net = Math.max(0, p.biz) * 0.9235;
+    netSETotal += net;
+    const ssBase = Math.max(0, yr.wageBase - Math.max(0, p.medWages));
+    seTaxTotal += 0.124 * Math.min(net, ssBase) + 0.029 * net;
+    halfSE += 0.5 * (0.124 * Math.min(net, ssBase) + 0.029 * net);
+  });
+  const addlMedSE = 0.009 * Math.max(0, totalWages + netSETotal - addlMedThr) - 0.009 * Math.max(0, totalWages - addlMedThr);
+  const seTax = seTaxTotal + Math.max(0, addlMedSE);
 
-            const netIncome = income - taxOwed;
-            const effectiveRate = (taxOwed / income) * 100;
+  // --- Gross income ---
+  const bizIncome = persons.reduce((s, p) => s + (p.hasBiz ? (p.biz || 0) : 0), 0);
+  const nonSS = totalWages + bizIncome + inp.interest + inp.ordDiv + inp.passive + inp.stGain + inp.ltGain + inp.otherIncome;
+  const ssTaxable = taxableSS(inp.ssIncome, nonSS - halfSE - inp.iraContrib, status); // approx: PI on AGI excl. SS
+  const gross = nonSS + ssTaxable;
 
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+  // --- AGI ---
+  const agiBeforeSL = gross - inp.iraContrib - halfSE;
+  let slDed = 0;
+  if (status !== 'MarriedSeparately' && inp.studentLoan > 0) {
+    const magi = agiBeforeSL + Math.min(2500, inp.studentLoan);
+    const ph = yr.slPhase[status] || yr.slPhase.Single;
+    const base = Math.min(2500, inp.studentLoan);
+    if (magi <= ph[0]) slDed = base;
+    else if (magi < ph[1]) slDed = base * (1 - (magi - ph[0]) / (ph[1] - ph[0]));
+  }
+  const agi = agiBeforeSL - slDed;
+  const magi = agi + slDed; // for phase-outs below, MAGI ~= AGI (+SL addback where relevant)
 
-            document.getElementById('taxAmount').textContent = formatter.format(taxOwed);
-            document.getElementById('taxEffectiveRate').textContent = effectiveRate.toFixed(2) + "%";
-            document.getElementById('taxNetIncome').textContent = formatter.format(netIncome);
+  // --- Deductions ---
+  const num65 = persons.filter(p => (p.age || 0) >= 65).length;
+  const stdDed = yr.std[status] + num65 * yr.addl65[status];
+  const saltPaid = inp.realEstateTax + persons.reduce((s, p) => s + (p.stateWh || 0) + (p.localWh || 0), 0);
+  const saltCapEff = Math.max(status === 'MarriedSeparately' ? 5000 : 10000,
+    (status === 'MarriedSeparately' ? yr.saltCap / 2 : yr.saltCap)
+    - 0.30 * Math.max(0, magi - (status === 'MarriedSeparately' ? yr.saltThreshold / 2 : yr.saltThreshold)));
+  const saltDed = Math.min(saltPaid, saltCapEff);
+  const itemized = saltDed + inp.mortgageInt + inp.donations + (inp.otherDed || 0);
+  const mainDed = Math.max(stdDed, itemized);
+  const itemizing = itemized > stdDed;
 
-            document.getElementById('taxResults').classList.remove('hidden');
-        }
-    </script>
+  // OBBBA deductions (2025-2028), below the line, stack on top of standard/itemized
+  const tipsThr = joint || status === 'Widow' ? 300000 : 150000;
+  const tipsDed = Math.max(0, Math.min(inp.tips, 25000) - (magi > tipsThr ? 100 * Math.ceil((magi - tipsThr) / 1000) : 0));
+  const otCap = joint || status === 'Widow' ? 25000 : 12500;
+  const otDed = Math.max(0, Math.min(inp.overtime, otCap) - (magi > tipsThr ? 100 * Math.ceil((magi - tipsThr) / 1000) : 0));
+  const carThr = joint || status === 'Widow' ? 200000 : 100000;
+  const carDed = Math.max(0, Math.min(inp.carInterest, 10000) - (magi > carThr ? 200 * Math.ceil((magi - carThr) / 1000) : 0));
+  const senThr = joint || status === 'Widow' ? 150000 : 75000;
+  const seniorDed = Math.max(0, num65 * 6000 - 0.06 * Math.max(0, magi - senThr));
+  const obbba = tipsDed + otDed + carDed + seniorDed;
+
+  const totalDed = mainDed + obbba;
+  const taxable = Math.max(0, agi - totalDed);
+
+  // --- Tax ---
+  const pref = Math.min(taxable, Math.max(0, inp.qualDiv) + Math.max(0, inp.ltGain));
+  const taxBefore = taxWithGains(taxable, pref, status, inp.year);
+
+  // --- Nonrefundable credits ---
+  const ctcThr = joint || status === 'Widow' ? 400000 : 200000;
+  let ctcPool = yr.ctcPer * inp.youngDeps + 500 * inp.otherDeps;
+  if (magi > ctcThr) ctcPool = Math.max(0, ctcPool - 50 * Math.ceil((magi - ctcThr) / 1000));
+  const deps = inp.youngDeps + inp.otherDeps;
+  let careCredit = 0;
+  if (inp.childcare > 0 && deps > 0) {
+    const cap = deps >= 2 ? 6000 : 3000;
+    let pct = 0.35 - Math.floor(Math.max(0, agi - 15000) / 2000) * 0.01;
+    pct = Math.max(0.20, Math.min(0.35, pct));
+    careCredit = Math.min(inp.childcare, cap) * pct;
+  }
+  let aotcNonref = 0, aotcRef = 0;
+  if (status !== 'MarriedSeparately') {
+    const aotcThr = joint || status === 'Widow' ? [160000, 180000] : [80000, 90000];
+    inp.tuitions.forEach(t => {
+      if (t <= 0) return;
+      let c = Math.min(t, 2000) + 0.25 * Math.min(Math.max(0, t - 2000), 2000);
+      if (magi > aotcThr[0]) c *= Math.max(0, 1 - (magi - aotcThr[0]) / (aotcThr[1] - aotcThr[0]));
+      aotcRef += 0.4 * c; aotcNonref += 0.6 * c;
+    });
+  }
+  const nonrefTotal = ctcPool + careCredit + aotcNonref;
+  const nonrefUsed = Math.min(taxBefore, nonrefTotal);
+  const nrefCTC = Math.min(ctcPool, taxBefore);
+  const nrefCare = Math.min(careCredit, Math.max(0, taxBefore - nrefCTC));
+  const nrefAOTC = Math.max(0, nonrefUsed - nrefCTC - nrefCare);
+  const taxAfterNonref = taxBefore - nonrefUsed;
+
+  // --- Refundable credits ---
+  const earned = totalWages + persons.reduce((s, p) => s + (p.hasBiz ? Math.max(0, p.biz) * 0.9235 : 0), 0);
+  let actc = 0;
+  const ctcUnused = ctcPool - Math.min(ctcPool, nonrefUsed); // approx: CTC consumed first within pool
+  if (inp.youngDeps > 0) actc = Math.min(ctcUnused, yr.actcCap * inp.youngDeps, 0.15 * Math.max(0, earned - 2500));
+  let eitc = 0;
+  const kids = Math.min(3, inp.youngDeps);
+  const invInc = inp.interest + inp.ordDiv + Math.max(0, inp.stGain) + Math.max(0, inp.ltGain) + Math.max(0, inp.passive);
+  if (status !== 'MarriedSeparately' && invInc <= yr.eitc.invCap && earned > 0) {
+    const E = yr.eitc;
+    let credit = Math.min(earned * E.inRate[kids], E.max[kids]);
+    const thr = (joint || status === 'Widow') ? E.thrJoint[kids] : E.thrSingle[kids];
+    const measure = Math.max(agi, earned);
+    if (measure > thr) credit = Math.max(0, credit - E.outRate[kids] * (measure - thr));
+    if (kids === 0 && !((p1.age >= 25 && p1.age <= 64))) credit = 0;
+    eitc = credit;
+  }
+  const refundable = actc + aotcRef + eitc;
+
+  // --- Payments & settlement ---
+  const payments = persons.reduce((s, p) => s + (p.fedWh || 0) + (p.hasBiz ? (p.estTax || 0) : 0), 0);
+  const totalLiability = taxAfterNonref + seTax;
+  const settlement = payments + refundable - totalLiability; // + refund, - owed
+
+  // --- Payroll taxes (employee FICA), for burden/take-home ---
+  let ficaSS = 0, ficaMed = 0;
+  persons.forEach(p => {
+    const w = Math.max(0, p.wages);
+    ficaSS += 0.062 * Math.min(w, yr.wageBase);
+    ficaMed += 0.0145 * w + 0.009 * Math.max(0, w - 200000);
+  });
+  const stateEst = inp.stateRate / 100 * taxable;
+  const totalIncome = gross;
+  const takeHome = totalIncome - totalLiability - ficaSS - ficaMed - stateEst;
+  return {
+    gross, ssTaxable, agi, halfSE, slDed, nrefCTC, nrefCare, nrefAOTC, stdDed, itemized, itemizing, saltDed, mainDed, tipsDed, otDed, carDed, seniorDed, obbba,
+    totalDed, taxable, pref, taxBefore, ctcPool, careCredit, aotcNonref, nonrefUsed, taxAfterNonref,
+    seTax, actc, eitc, aotcRef, refundable, payments, totalLiability, settlement,
+    ficaSS, ficaMed, stateEst, takeHome,
+    marginal: marginalRate(taxable, yr.brackets[status]),
+    effective: totalIncome > 0 ? totalLiability / totalIncome : 0
+  };
+}
+
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmt = n => (n < 0 ? "-$" : "$") + Math.abs(Math.round(n)).toLocaleString("en-US");
+const radio = name => { const r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : ""; };
+const STATUS_LABEL = { Single: "Single", MarriedJoint: "Married Filing Jointly", MarriedSeparately: "Married Filing Separately", HeadofHousehold: "Head of Household", Widow: "Qualified Surviving Spouse" };
+
+function readPerson(n) {
+  return { age: Math.round(num("iAge" + n)), wages: num("iWages" + n), fedWh: num("iFed" + n),
+    stateWh: num("iState" + n), localWh: num("iLocal" + n), hasBiz: radio("biz" + n) === "y",
+    biz: num("iBiz" + n), estTax: num("iEst" + n), medWages: num("iMed" + n) };
+}
+function readInputs() {
+  const qd = num("iQualDiv"), od = num("iOrdDiv");
+  return { year: parseInt(radio("tyear"), 10) || 2025, status: $("iStatus").value,
+    youngDeps: Math.max(0, Math.round(num("iYoung"))), otherDeps: Math.max(0, Math.round(num("iOld"))),
+    p1: readPerson(1), p2: readPerson(2),
+    ssIncome: num("iSS"), interest: num("iInterest"), ordDiv: Math.max(od, qd), qualDiv: qd,
+    passive: num("iPassive"), stGain: num("iST"), ltGain: num("iLT"), otherIncome: num("iOther"),
+    stateRate: num("iStateRate"), tips: num("iTips"), overtime: num("iOvertime"), carInterest: num("iCar"),
+    iraContrib: num("iIRA"), realEstateTax: num("iRETax"), mortgageInt: num("iMortInt"), donations: num("iDonations"),
+    studentLoan: num("iStudentLoan"), childcare: num("iChildcare"),
+    tuitions: [num("iTuition1"), num("iTuition2"), num("iTuition3"), num("iTuition4")], otherDed: num("iOtherDed") };
+}
+
+function syncForm() {
+  const joint = $("iStatus").value === "MarriedJoint";
+  $("person2").classList.toggle("hidden", !joint);
+  $("p1Label").textContent = joint ? "Person 1 (Spouse 1) Earned Income" : "Earned Income";
+  $("bizBlock1").classList.toggle("hidden", radio("biz1") !== "y");
+  $("bizBlock2").classList.toggle("hidden", radio("biz2") !== "y");
+}
+
+function drawDonut(parts) {
+  const cv = $("taxDonut"); if (!cv) return;
+  const ctx = cv.getContext("2d");
+  const total = parts.reduce((s, p) => s + Math.max(0, p.v), 0);
+  const cx = cv.width / 2, cy = cv.height / 2, R = Math.min(cx, cy) - 6, r = R * 0.62;
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  if (total <= 0) return;
+  let a = -Math.PI / 2;
+  parts.forEach(p => {
+    const frac = Math.max(0, p.v) / total; if (frac <= 0) return;
+    const a2 = a + frac * Math.PI * 2;
+    ctx.beginPath(); ctx.arc(cx, cy, R, a, a2); ctx.arc(cx, cy, r, a2, a, true); ctx.closePath();
+    ctx.fillStyle = p.c; ctx.fill(); a = a2;
+  });
+  ctx.fillStyle = "#334155"; ctx.font = "bold 13px Inter, sans-serif"; ctx.textAlign = "center";
+  ctx.fillText("Gross income", cx, cy - 4);
+  ctx.font = "12px Inter, sans-serif";
+  ctx.fillText(fmt(total), cx, cy + 14);
+}
+
+function calculate() {
+  const inp = readInputs();
+  const r = computeTax(inp);
+  const refund = r.settlement >= 0;
+  const row = (label, v, opt) => {
+    opt = opt || {};
+    if (opt.hideZero && Math.abs(v) < 0.5) return "";
+    const cls = opt.bold ? "font-bold text-gray-900" : "";
+    return '<tr class="border-b border-gray-100"><td class="py-2 pr-3 ' + cls + '">' + label + '</td><td class="py-2 text-right num ' + cls + '">' + fmt(v) + "</td></tr>";
+  };
+  const sub = (label, v) => Math.abs(v) < 0.5 ? "" :
+    '<tr class="border-b border-gray-50 text-sm text-gray-500"><td class="py-1.5 pr-3 pl-5">' + label + '</td><td class="py-1.5 text-right num">' + fmt(v) + "</td></tr>";
+  let html = "";
+  html += '<div class="' + (refund ? "bg-[#4CAF50]" : "bg-[#3F51B5]") + ' text-white rounded-xl p-6 shadow-md">'
+    + '<div class="text-sm uppercase tracking-wide opacity-80">' + (refund ? "Estimated tax refund" : "Estimated amount owed") + "</div>"
+    + '<div class="text-4xl sm:text-5xl font-extrabold mt-1 num">' + fmt(Math.abs(r.settlement)) + "</div>"
+    + '<div class="text-sm opacity-80 mt-1">Tax year ' + inp.year + " · " + STATUS_LABEL[inp.status] + " · " + (refund ? "You overpaid through withholding, estimates and refundable credits." : "Your payments and refundable credits fall short of your liability.") + "</div></div>";
+
+  html += '<div class="grid grid-cols-2 xl:grid-cols-4 gap-4">'
+    + '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center"><div class="text-xs text-gray-500">Taxable income</div><div class="text-xl font-bold mt-1 num">' + fmt(r.taxable) + "</div></div>"
+    + '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center"><div class="text-xs text-gray-500">Total federal tax</div><div class="text-xl font-bold mt-1 num">' + fmt(r.totalLiability) + "</div></div>"
+    + '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center"><div class="text-xs text-gray-500">Effective rate</div><div class="text-xl font-bold mt-1 num">' + (r.effective * 100).toFixed(1) + "%</div></div>"
+    + '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center"><div class="text-xs text-gray-500">Marginal rate</div><div class="text-xl font-bold mt-1 num">' + Math.round(r.marginal * 100) + "%</div></div></div>";
+
+  html += '<section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"><h3 class="font-bold text-[#3F51B5] mb-3">Federal breakdown</h3><table class="w-full text-[15px]"><tbody>';
+  html += row("Total income", r.gross, { bold: true });
+  html += sub("of which taxable Social Security benefits", r.ssTaxable);
+  html += row("Traditional IRA contributions", -inp.iraContrib, { hideZero: true });
+  html += row("Student loan interest deduction", -r.slDed, { hideZero: true });
+  html += row("Half of self-employment tax", -r.halfSE, { hideZero: true });
+  html += row("Adjusted gross income (AGI)", r.agi, { bold: true });
+  html += row(r.itemizing ? "Itemized deduction (incl. SALT " + fmt(r.saltDed) + ")" : "Standard deduction", -r.mainDed);
+  html += sub("New tips deduction", -r.tipsDed); html += sub("New overtime deduction", -r.otDed);
+  html += sub("New car-loan interest deduction", -r.carDed); html += sub("New senior deduction (65+)", -r.seniorDed);
+  html += row("Taxable income", r.taxable, { bold: true });
+  html += row("Tax before credits" + (r.pref > 0 ? " (incl. capital-gains rates on " + fmt(r.pref) + ")" : ""), r.taxBefore);
+  html += sub("Child tax credit / other dependent credit", -r.nrefCTC);
+  html += sub("Child & dependent care credit", -r.nrefCare);
+  html += sub("American Opportunity credit (nonrefundable part)", -r.nrefAOTC);
+  html += row("Self-employment tax", r.seTax, { hideZero: true });
+  html += row("Total federal tax", r.totalLiability, { bold: true });
+  html += row("Withholding & estimated payments", -r.payments);
+  html += sub("Earned Income Tax Credit (refundable)", -r.eitc);
+  html += sub("Additional Child Tax Credit (refundable)", -r.actc);
+  html += sub("American Opportunity credit (refundable part)", -r.aotcRef);
+  html += row(refund ? "Estimated refund" : "Estimated amount owed", Math.abs(r.settlement), { bold: true });
+  html += "</tbody></table>";
+
+  html += '<h3 class="font-bold text-[#3F51B5] mt-6 mb-3">Payroll, state & take-home</h3><table class="w-full text-[15px]"><tbody>';
+  html += row("Social Security tax (6.2% of wages)", r.ficaSS, { hideZero: true });
+  html += row("Medicare tax (1.45% of wages, +0.9% surtax)", r.ficaMed, { hideZero: true });
+  html += row("Estimated state & local tax (" + inp.stateRate + "% of taxable income)", r.stateEst, { hideZero: inp.stateRate <= 0 });
+  html += row("Estimated take-home (after all taxes above)", Math.max(0, r.takeHome), { bold: true });
+  html += "</tbody></table></section>";
+
+  const parts = [
+    { label: "Take-home", v: Math.max(0, r.takeHome), c: "#2b7ddb" },
+    { label: "Federal income & SE tax", v: r.totalLiability, c: "#910000" },
+    { label: "Payroll taxes (FICA)", v: r.ficaSS + r.ficaMed, c: "#e36c0a" },
+    { label: "State & local (est.)", v: r.stateEst, c: "#8bbc21" }
+  ].filter(p => p.v > 0);
+  html += '<section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"><h3 class="font-bold text-[#3F51B5] mb-4">Where the income goes</h3><div class="flex flex-col sm:flex-row items-center gap-6"><canvas id="taxDonut" width="220" height="220" class="shrink-0"></canvas><ul class="space-y-2 text-sm w-full">'
+    + parts.map(p => '<li class="flex items-center justify-between gap-3"><span><span class="inline-block w-3 h-3 rounded-sm mr-2" style="background:' + p.c + '"></span>' + p.label + '</span><span class="num font-semibold">' + fmt(p.v) + "</span></li>").join("")
+    + "</ul></div></section>";
+
+  $("results").innerHTML = html;
+  drawDonut(parts);
+}
+
+const FIELDS = ["iYoung","iOld","iAge1","iWages1","iFed1","iState1","iLocal1","iBiz1","iEst1","iMed1","iAge2","iWages2","iFed2","iState2","iLocal2","iBiz2","iEst2","iMed2","iSS","iInterest","iOther","iOrdDiv","iQualDiv","iPassive","iST","iLT","iStateRate","iTips","iOvertime","iCar","iIRA","iRETax","iMortInt","iDonations","iStudentLoan","iChildcare","iTuition1","iTuition2","iTuition3","iTuition4","iOtherDed"];
+function shareLink(btn) {
+  const p = new URLSearchParams();
+  p.set("status", $("iStatus").value); p.set("tyear", radio("tyear")); p.set("biz1", radio("biz1")); p.set("biz2", radio("biz2"));
+  FIELDS.forEach(id => { const v = $(id).value; if (v !== "" && v !== "0") p.set(id.slice(1).toLowerCase(), v); });
+  const url = location.origin + location.pathname + "?" + p.toString();
+  history.replaceState(null, "", url);
+  if (navigator.clipboard) navigator.clipboard.writeText(url);
+  const old = btn.textContent; btn.textContent = "Copied!"; setTimeout(() => btn.textContent = old, 1600);
+}
+function prefill() {
+  const q = new URLSearchParams(location.search);
+  if (q.get("status")) $("iStatus").value = q.get("status");
+  ["tyear", "biz1", "biz2"].forEach(n => { const v = q.get(n); if (v) { const el = document.querySelector('input[name="' + n + '"][value="' + v + '"]'); if (el) el.checked = true; } });
+  FIELDS.forEach(id => { const v = q.get(id.slice(1).toLowerCase()); if (v !== null) $(id).value = v; });
+}
+syncForm();
+prefill();
+syncForm();
+calculate();
+
+</script>
 </body>
-</html>
+    </html>
