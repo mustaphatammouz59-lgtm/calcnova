@@ -4,153 +4,498 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retirement Calculator - CalcNova</title>
+    <meta name="description" content="Plan retirement with inflation, other income, and life expectancy factored in: how much you need, how to save it, how much you can withdraw, and how long your money can last.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/retirement">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Retirement Calculator - CalcNova">
+    <meta property="og:description" content="Four retirement planners: the nest egg you need, the savings to build it, the withdrawals it supports, and how long it lasts.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/retirement">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Retirement Calculator - CalcNova">
+    <meta name="twitter:description" content="Retirement planning with inflation, Social Security, and life expectancy included.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Financial Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/financial" },
+            { "@type": "ListItem", "position": 3, "name": "Retirement Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/retirement" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How much do I need to retire?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It depends on the income you want, how long you'll live, inflation, and other income like Social Security. Three popular yardsticks: save 10–15% of pre-tax income every working year; plan to replace 70–80% of pre-retirement income; or divide your target annual retirement income by 4% — needing $100,000 a year implies a $2.5 million nest egg. The calculator above prices your specific version of the question." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is the 4% rule?",
+                "acceptedAnswer": { "@type": "Answer", "text": "A rule of thumb that a retiree can withdraw 4% of the nest egg in the first year (then inflation-adjusted amounts) with a good historical chance of not outliving the money over ~30 years. Inverted, it sizes the target: annual spending ÷ 4% = nest egg needed. It is a planning shortcut, not a guarantee — market sequence and longevity can break it." }
+            },
+            {
+                "@type": "Question",
+                "name": "How does inflation change retirement planning?",
+                "acceptedAnswer": { "@type": "Answer", "text": "At the long-run U.S. inflation rate, a dollar's purchasing power halves roughly every 25–30 years, so a retirement 30 years away needs far more nominal money than today's spending suggests, and withdrawals must keep rising during retirement itself. Every calculation on this page inflates the target and the withdrawals rather than pretending prices stand still." }
+            },
+            {
+                "@type": "Question",
+                "name": "How much does Social Security replace?",
+                "acceptedAnswer": { "@type": "Answer", "text": "By design, roughly 40% of the average worker's wages — and the replacement share falls as income rises, because benefits grow more slowly than earnings (a $20,000 earner might receive about $800/month; a $100,000 earner about $2,000/month). It is a floor to build on, not a full plan: about half of current retirees nevertheless expect it to be their major income source." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .input-group label { width: 46%; font-size: 0.875rem; color: #374151; }
+        .input-group input, .input-group select { border: 1px solid #D1D5DB; border-radius: 0.375rem; padding: 0.4rem; outline: none; font-size: 0.875rem; }
+        .sect { font-weight: 700; color: #3F51B5; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; margin: 0.9rem 0 0.4rem; }
+        @media print { nav, footer, .no-print, .calc-form { display: none !important; } }
+    </style>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
         <div class="container mx-auto flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
             <div class="space-x-4 hidden md:flex font-medium">
                 <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
             </div>
         </div>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Retirement</span>
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Retirement Calculator</span>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Retirement Calculator</h1>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Age</label>
-                        <input type="number" id="retCurrentAge" value="30" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Retirement Age</label>
-                        <input type="number" id="retRetireAge" value="65" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Savings ($)</label>
-                        <input type="number" id="retCurrentSavings" value="50000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Monthly Contribution ($)</label>
-                        <input type="number" id="retMonthly" value="500" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Expected Annual Return (%)</label>
-                        <input type="number" id="retReturn" value="7" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Expected Inflation (%)</label>
-                        <input type="number" id="retInflation" value="3" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-                <button onclick="calculateRetirement()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Retirement Savings</button>
-
-                <div id="retResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-4">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Savings at Retirement</p>
-                            <p class="text-2xl font-bold text-[#3F51B5]" id="retTotalSavings">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Inflation-Adjusted Value</p>
-                            <p class="text-2xl font-bold text-red-500" id="retRealValue">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Years in Retirement</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="retYears">0 Years</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Why Calculate Retirement Savings?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Planning for retirement is one of the most important financial steps you can take. This calculator estimates how much you will have saved by the time you retire, taking into account your current savings, monthly contributions, and expected investment returns. It also factors in inflation to show you the "real" purchasing power of your future savings.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
-            </div>
+    <main class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold text-[#3F51B5]">Retirement Calculator</h1>
+            <button onclick="window.print()" class="bg-white border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 text-sm font-semibold shadow-sm no-print">Print</button>
         </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+        <!-- ============ CALC 1 ============ -->
+        <h2 class="text-xl font-bold text-gray-800 mb-2">1 · How Much Do You Need to Retire?</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">See where you stand: the nest egg your target retirement income requires, what your current plan is on track to build, and the savings rate that closes any gap.</p>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group"><label>Your current age</label><input type="number" id="nAge" value="35" class="w-[54%]"></div>
+                    <div class="input-group"><label>Planned retirement age</label><input type="number" id="nRetAge" value="67" class="w-[54%]"></div>
+                    <div class="input-group"><label>Life expectancy</label><input type="number" id="nLife" value="85" class="w-[54%]"></div>
+                    <div class="input-group"><label>Current pre-tax income /yr</label><input type="number" id="nIncome" value="70000" class="w-[54%]"></div>
+                    <p class="sect">Assumptions</p>
+                    <div class="input-group"><label>Income increase /yr</label><div class="w-[54%] flex gap-1"><input type="number" id="nInc" value="3" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Income needed after retirement</label><div class="w-[54%] flex gap-1"><input type="number" id="nNeed" value="75" step="any" class="w-2/3"><select id="nNeedUnit" class="w-1/3 bg-gray-50"><option value="p" selected>%</option><option value="d">$</option></select></div></div>
+                    <p class="text-gray-500 text-xs -mt-1 mb-2" id="nNeedDesc">% of current income</p>
+                    <div class="input-group"><label>Average investment return</label><div class="w-[54%] flex gap-1"><input type="number" id="nRet" value="6" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Inflation rate</label><div class="w-[54%] flex gap-1"><input type="number" id="nInfl" value="3" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <p class="sect">Optional</p>
+                    <div class="input-group"><label>Other income after retirement /mo</label><input type="number" id="nOther" value="0" class="w-[54%]"></div>
+                    <p class="text-gray-500 text-xs -mt-1 mb-2">Social Security, pension, rent — the amount at retirement age, not today's money.</p>
+                    <div class="input-group"><label>Current retirement savings</label><input type="number" id="nSaveNow" value="30000" class="w-[54%]"></div>
+                    <div class="input-group"><label>Future retirement savings</label><div class="w-[54%] flex gap-1"><input type="number" id="nSave" value="10" step="any" class="w-2/3"><select id="nSaveUnit" class="w-1/3 bg-gray-50"><option value="p" selected>%</option><option value="d">$</option></select></div></div>
+                    <p class="text-gray-500 text-xs -mt-1 mb-2" id="nSaveDesc">% of income per year</p>
+                    <button onclick="calculateNeed()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-2">Calculate</button>
+                </div>
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 mt-6 hidden lg:block">
+                    <p class="font-medium">AdSense Space</p>
+                    <p class="text-sm">(300x250 Banner)</p>
+                </div>
             </div>
-        </aside>
+            <div class="lg:w-3/5"><div id="resultsNeed"></div></div>
+        </div>
+
+        <hr class="my-10 border-gray-200">
+
+        <!-- ============ CALC 2 ============ -->
+        <h2 class="text-xl font-bold text-gray-800 mb-2">2 · How Can You Save for Retirement?</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">Potential savings plans based on the amount you want waiting for you at retirement.</p>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group"><label>Your age now</label><input type="number" id="sAge" value="35" class="w-[54%]"></div>
+                    <div class="input-group"><label>Planned retirement age</label><input type="number" id="sRetAge" value="67" class="w-[54%]"></div>
+                    <div class="input-group"><label>Amount needed at retirement</label><input type="number" id="sNeed" value="600000" class="w-[54%]"></div>
+                    <div class="input-group"><label>Retirement savings now</label><input type="number" id="sNow" value="30000" class="w-[54%]"></div>
+                    <div class="input-group"><label>Average investment return</label><div class="w-[54%] flex gap-1"><input type="number" id="sRet" value="6" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <button onclick="calculateSave()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-2">Calculate</button>
+                </div>
+            </div>
+            <div class="lg:w-3/5"><div id="resultsSave"></div></div>
+        </div>
+
+        <hr class="my-10 border-gray-200">
+
+        <!-- ============ CALC 3 ============ -->
+        <h2 class="text-xl font-bold text-gray-800 mb-2">3 · How Much Can You Withdraw After Retirement?</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">The monthly amount your savings can pay you through retirement, with withdrawals rising with inflation.</p>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group"><label>Your age now</label><input type="number" id="wAge" value="35" class="w-[54%]"></div>
+                    <div class="input-group"><label>Planned retirement age</label><input type="number" id="wRetAge" value="67" class="w-[54%]"></div>
+                    <div class="input-group"><label>Life expectancy</label><input type="number" id="wLife" value="85" class="w-[54%]"></div>
+                    <div class="input-group"><label>Retirement savings today</label><input type="number" id="wNow" value="30000" class="w-[54%]"></div>
+                    <div class="input-group"><label>Annual contribution</label><input type="number" id="wAnn" value="0" class="w-[54%]"></div>
+                    <div class="input-group"><label>Monthly contribution</label><input type="number" id="wMon" value="500" class="w-[54%]"></div>
+                    <div class="input-group"><label>Average investment return</label><div class="w-[54%] flex gap-1"><input type="number" id="wRet" value="6" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <div class="input-group"><label>Inflation rate (annual)</label><div class="w-[54%] flex gap-1"><input type="number" id="wInfl" value="3" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <button onclick="calculateWithdraw()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-2">Calculate</button>
+                </div>
+            </div>
+            <div class="lg:w-3/5"><div id="resultsWithdraw"></div></div>
+        </div>
+
+        <hr class="my-10 border-gray-200">
+
+        <!-- ============ CALC 4 ============ -->
+        <h2 class="text-xl font-bold text-gray-800 mb-2">4 · How Long Can Your Money Last?</h2>
+        <p class="text-gray-600 text-sm mb-4 max-w-3xl">How long a lump sum can sustain a fixed monthly withdrawal.</p>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="lg:w-2/5 calc-form no-print">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-sm">
+                    <div class="input-group"><label>The amount you have</label><input type="number" id="lAmt" value="600000" class="w-[54%]"></div>
+                    <div class="input-group"><label>You plan to withdraw /month</label><input type="number" id="lWd" value="5000" class="w-[54%]"></div>
+                    <div class="input-group"><label>Average investment return</label><div class="w-[54%] flex gap-1"><input type="number" id="lRet" value="6" step="any" class="w-2/3"><span class="w-1/3 flex items-center justify-center bg-gray-50 border border-gray-300 rounded-md">%</span></div></div>
+                    <button onclick="calculateLast()" class="w-full bg-[#4CAF50] text-white font-bold py-2 rounded-md hover:bg-green-600 transition shadow-md mt-2">Calculate</button>
+                </div>
+            </div>
+            <div class="lg:w-3/5"><div id="resultsLast"></div></div>
+        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Retirement: What It Is, How Much to Save, and Where the Money Comes From</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                To retire is to withdraw from active working life — usually for good, and usually somewhere between
+                55 and 70, though health, disability, job strain, or simple readiness can move the date either way,
+                and some people semi-retire on reduced hours first. The gating question is rarely desire; it is
+                whether retirement is financially possible at all. Retiring on Social Security alone is technically
+                possible and distressingly common in the U.S., but the program was designed to replace only about
+                <strong>40% of the average worker's wages</strong> — a floor, not a lifestyle.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">How much to save: three rules of thumb</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                There is no universally right number — it depends on the income you want, your health and life
+                expectancy, other income, and even whether leaving an inheritance matters to you — but three
+                guidelines frame most plans. The <strong>10% rule</strong>: save 10–15% of pre-tax income every working
+                year ($5,000–$7,500 on a $50,000 salary); at that pace from age 25, a $1 million nest egg by
+                retirement is genuinely possible. The <strong>80% rule</strong>: most retirees can maintain their standard
+                of living on 70–80% of pre-retirement income — $70,000–$80,000 a year replacing a $100,000
+                salary — though the right figure swings with the retirement you picture, yacht or cabin. The
+                <strong>4% rule</strong>: divide the annual income you want by 4% to size the nest egg — $100,000 a year
+                demands $2.5 million. Experts who prefer multiples land in the same neighborhood: roughly 15–25×
+                current annual income. The first calculator above converts these abstractions into your numbers.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Inflation, the quiet tax</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                U.S. inflation has averaged roughly 2.6–3.5% over long horizons, which means a dollar 30 years
+                from now buys what about 40 cents buys today — the single most common reason retirement needs get
+                underestimated. Inflation is unpredictable and outside anyone's control, so most planning
+                focuses on steady total return rather than on inflation itself; those who do want a hedge reach
+                for Treasury Inflation-Protected Securities (TIPS), commodities such as gold, real estate, or
+                dividend-paying stocks over short-term bonds. The calculators here handle inflation the honest
+                way: targets and withdrawals are inflated, so the numbers are in the dollars you'll actually
+                spend.
+            </p>
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Where retirement money comes from</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Social Security</strong> is the base layer — a government insurance program funded by FICA payroll
+                taxes, paying benefits loosely tied to past earnings but deliberately progressive: a $20,000
+                earner might receive ~$800/month, a $100,000 earner ~$2,000/month, so lower earners replace a
+                larger share of their income. <strong>401(k), 403(b), and 457 plans</strong> are the main private engine:
+                employer plans, often with a matching contribution (say 3% of pay — $1,800 on a $60,000 salary;
+                only about 6% of sponsoring companies contribute nothing), built from pre-tax dollars that grow
+                untaxed until withdrawals are taxed as ordinary income, usually in a lower retirement bracket.
+                Always contribute at least enough to capture the full match — it is an instant 100% return.
+                <strong>IRAs</strong> apply the same shelter individually: traditional IRAs take pre-tax contributions and
+                tax withdrawals; Roth IRAs invert it — after-tax money in, tax-free money out. <strong>Pensions</strong>, the
+                pooled employer-managed funds once common in the private sector and still standard for many
+                public servants, have faded as longevity rose and each retiree is supported by fewer workers;
+                at retirement they pay out as fixed income or a lump sum convertible to an annuity.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                Beyond the shelters sit ordinary <strong>investments</strong> — mutual and index funds, stocks, bonds, real
+                estate, commodities, and CDs — used both inside the tax-advantaged accounts and, once their
+                annual limits are maxed, outside them; and plain <strong>personal savings</strong>, essential as an
+                emergency fund but a poor long-term retirement vehicle since liquid accounts rarely beat
+                inflation after tax. Other sources fill specific gaps: <strong>home equity</strong> (including reverse
+                mortgages, which pay retirees to stay in their homes until ownership transfers at the end),
+                <strong>annuities</strong> — immediate (one premium, payments from next month) or deferred (an accumulation
+                phase, then lifetime payouts) — <strong>passive income</strong> from rentals, businesses, dividends, or
+                royalties, and <strong>inheritances</strong>, which may still carry estate, inheritance (six U.S. states levy
+                their own), or capital-gains tax before they can fund anyone's retirement.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Why does calculator 1 ask for "other income" in retirement-age dollars?</h4>
+                    <p class="text-gray-700">Because that's how those benefits are quoted — a Social Security estimate or pension figure is a promise in future dollars. The spending target, by contrast, is anchored to today's income and inflated forward, so both sides meet in the same dollars at retirement. Enter other income as the monthly amount you expect to actually receive at your retirement age.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What return should I assume?</h4>
+                    <p class="text-gray-700">Something honest for your asset mix: diversified stock-heavy portfolios have historically returned more than bond-heavy or cash ones, but with far deeper drawdowns on the way. Stress-test your plan at 2 points below your first guess — a plan that only works at optimistic returns isn't a plan yet.</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-400 leading-5 mt-8 border-t pt-4">
+                Disclaimer: These calculators provide estimates for educational purposes only and do not constitute financial
+                advice. Model assumptions: contributions are made at each year-end (monthly where stated) and grow with
+                income where a percentage is chosen; retirement withdrawals occur at the start of each year and grow with
+                inflation; other income starts at the entered monthly amount at retirement and also grows with inflation.
+                Returns are assumed constant, which real markets are not.
+            </p>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 pb-8 no-print">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="investment.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Investment Calculator</h3>
+                <p class="text-sm text-gray-600">The growth engine underneath every plan here.</p>
+            </a>
+            <a href="savings.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Savings Calculator</h3>
+                <p class="text-sm text-gray-600">Escalating deposits, year by year.</p>
+            </a>
+            <a href="present-value.html" class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 block hover:shadow-md transition">
+                <h3 class="font-bold text-[#3F51B5] mb-1">Present Value Calculator</h3>
+                <p class="text-sm text-gray-600">What future retirement money is worth today.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="financial.html" class="hover:text-white">Financial</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        function calculateRetirement() {
-            const currentAge = parseFloat(document.getElementById('retCurrentAge').value);
-            const retireAge = parseFloat(document.getElementById('retRetireAge').value);
-            const currentSavings = parseFloat(document.getElementById('retCurrentSavings').value);
-            const monthlyCont = parseFloat(document.getElementById('retMonthly').value);
-            const returnRate = parseFloat(document.getElementById('retReturn').value) / 100;
-            const inflationRate = parseFloat(document.getElementById('retInflation').value) / 100;
+        window.addEventListener('DOMContentLoaded', () => {
+            syncNeedUnit(); syncSaveUnit(); prefillFromURL();
+            calculateNeed(); calculateSave(); calculateWithdraw(); calculateLast();
+        });
+        document.getElementById('nNeedUnit').addEventListener('change', syncNeedUnit);
+        document.getElementById('nSaveUnit').addEventListener('change', syncSaveUnit);
 
-            if (isNaN(currentAge) || isNaN(retireAge) || isNaN(currentSavings) || isNaN(monthlyCont) || isNaN(returnRate) || isNaN(inflationRate)) {
-                alert("Please enter valid numbers.");
-                return;
+        function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? NaN : v; }
+        function syncNeedUnit() { document.getElementById('nNeedDesc').textContent = document.getElementById('nNeedUnit').value === 'p' ? '% of current income' : '$ per year, in today\'s money'; }
+        function syncSaveUnit() { document.getElementById('nSaveDesc').textContent = document.getElementById('nSaveUnit').value === 'p' ? '% of income per year' : '$ per year (grows with income increases)'; }
+
+        function calculateNeed() {
+            const out = document.getElementById('resultsNeed');
+            const age = num('nAge'), retAge = num('nRetAge'), life = num('nLife'), income = num('nIncome');
+            const inc = (num('nInc') || 0) / 100, r = (num('nRet') || 0) / 100, infl = (num('nInfl') || 0) / 100;
+            const otherMo = num('nOther') || 0, saveNow = num('nSaveNow') || 0;
+            const Y = retAge - age, L = life - retAge;
+            if (!(Y > 0) || !(L > 0) || !(income > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please check the ages (retirement after today, life expectancy after retirement) and income.</div>'; return; }
+            const needVal = num('nNeed') || 0;
+            const S0 = document.getElementById('nNeedUnit').value === 'p' ? needVal / 100 * income : needVal;
+            const W1 = S0 * Math.pow(1 + infl, Y) - otherMo * 12;
+            const q = (1 + infl) / (1 + r);
+            let needed;
+            if (Math.abs(1 - q) < 1e-12) needed = W1 * L; else needed = W1 * (1 - Math.pow(q, L)) / (1 - q);
+            if (W1 <= 0) needed = 0;
+            const fvSaveNow = saveNow * Math.pow(1 + r, Y);
+            const saveVal = num('nSave') || 0;
+            const c1 = document.getElementById('nSaveUnit').value === 'p' ? saveVal / 100 * income : saveVal;
+            const growFactor = (den => Math.abs(den) < 1e-12 ? Y * Math.pow(1 + r, Y - 1) : (Math.pow(1 + r, Y) - Math.pow(1 + inc, Y)) / den)(r - inc);
+            const fvContrib = c1 * growFactor;
+            const projected = fvSaveNow + fvContrib;
+            const gap = needed - projected;
+            const reqBase = needed - fvSaveNow;
+            const reqPct = reqBase > 0 ? reqBase / (income * growFactor) : 0;
+            const reqFirst = reqPct * income;
+            let bal = saveNow, rows = '';
+            for (let t = 1; t <= Y; t++) {
+                const inc_t = income * Math.pow(1 + inc, t - 1);
+                const c = document.getElementById('nSaveUnit').value === 'p' ? saveVal / 100 * inc_t : c1 * Math.pow(1 + inc, t - 1);
+                bal = bal * (1 + r) + c;
+                rows += `<tr class="border-b hover:bg-gray-50"><td class="py-1.5 px-2">${age + t}</td><td class="py-1.5 px-2 text-right">${formatMoney(inc_t)}</td><td class="py-1.5 px-2 text-right">${formatMoney(c)}</td><td class="py-1.5 px-2 text-right">${formatMoney(bal)}</td><td class="py-1.5 px-2 text-right">—</td></tr>`;
             }
-
-            if (retireAge <= currentAge) {
-                alert("Retirement age must be greater than current age.");
-                return;
+            let balR = projected;
+            for (let y = 1; y <= L; y++) {
+                const gross = S0 * Math.pow(1 + infl, Y + y - 1);
+                const other = otherMo * 12 * Math.pow(1 + infl, y - 1);
+                const w = gross - other;
+                balR = (balR - w) * (1 + r);
+                rows += `<tr class="border-b hover:bg-gray-50 ${y === 1 ? 'border-t-4 border-t-[#3F51B5]' : ''}"><td class="py-1.5 px-2">${retAge + y - 1} → ${retAge + y}</td><td class="py-1.5 px-2 text-right">—</td><td class="py-1.5 px-2 text-right">${formatMoney(-w)}</td><td class="py-1.5 px-2 text-right">${formatMoney(Math.max(balR, 0))}${balR < 0 ? ' (runs out)' : ''}</td><td class="py-1.5 px-2 text-right">${formatMoney(other)}</td></tr>`;
+                if (balR < 0 && y < L) { /* keep table complete but flagged */ }
             }
-
-            const yearsToRetire = retireAge - currentAge;
-            const monthsToRetire = yearsToRetire * 12;
-            const monthlyRate = returnRate / 12;
-
-            // Future Value of Current Savings
-            const fvCurrentSavings = currentSavings * Math.pow(1 + monthlyRate, monthsToRetire);
-
-            // Future Value of Monthly Contributions
-            let fvContributions = 0;
-            if (monthlyRate > 0) {
-                fvContributions = monthlyCont * ((Math.pow(1 + monthlyRate, monthsToRetire) - 1) / monthlyRate);
-            } else {
-                fvContributions = monthlyCont * monthsToRetire;
-            }
-
-            const totalSavings = fvCurrentSavings + fvContributions;
-
-            // Inflation-Adjusted Value (Real Value)
-            const realValue = totalSavings / Math.pow(1 + inflationRate, yearsToRetire);
-
-            // Life Expectancy Assumption (e.g., 85 years)
-            const retirementYears = 85 - retireAge;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('retTotalSavings').textContent = formatter.format(totalSavings);
-            document.getElementById('retRealValue').textContent = formatter.format(realValue);
-            document.getElementById('retYears').textContent = retirementYears + " Years";
-
-            document.getElementById('retResults').classList.remove('hidden');
+            const verdict = gap <= 0
+                ? `<p class="text-green-700 font-semibold mt-2">On track — your plan projects a surplus of ${formatMoney(-gap)} at retirement.</p>`
+                : `<p class="text-red-700 font-semibold mt-2">Shortfall of ${formatMoney(gap)} at retirement. Saving <strong>${(reqPct * 100).toFixed(2)}% of income</strong> (${formatMoney(reqFirst)} in the first year, growing with income) instead would close it.</p>`;
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">You Will Need at Retirement (age ${retAge})</p>
+                    <p class="text-4xl font-bold">${formatMoney(Math.max(needed, 0))}</p>
+                    <p class="text-sm opacity-90 mt-1">Projected from your current plan: <strong>${formatMoney(projected)}</strong></p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Annual income needed in retirement (first year, at age ${retAge}):</span> <span class="font-bold">${formatMoney(S0 * Math.pow(1 + infl, Y))}</span></p>
+                    <p class="flex justify-between mb-2"><span>Less: other income (first year):</span> <span class="font-bold">${formatMoney(otherMo * 12)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Net withdrawal needed (first year):</span> <span class="font-bold">${formatMoney(Math.max(W1, 0))}</span></p>
+                    <p class="flex justify-between mb-2"><span>Current savings, grown to retirement:</span> <span class="font-bold">${formatMoney(fvSaveNow)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Future savings, grown to retirement:</span> <span class="font-bold">${formatMoney(fvContrib)}</span></p>
+                    <p class="flex justify-between"><span>Required savings rate to fully fund the target:</span> <span class="font-bold">${(reqPct * 100).toFixed(2)}% of income</span></p>
+                    ${verdict}
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-3">Year-by-Year Projection</h3>
+                    <div class="overflow-x-auto" style="max-height:24rem; overflow-y:auto;">
+                        <table class="w-full text-xs sm:text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-700 sticky top-0"><tr><th class="py-2 px-2 border-b">Age</th><th class="py-2 px-2 border-b text-right">Income</th><th class="py-2 px-2 border-b text-right">Save / Withdraw</th><th class="py-2 px-2 border-b text-right">End Balance</th><th class="py-2 px-2 border-b text-right">Other Income</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">The projection spends from the <em>projected</em> balance, so a shortfall shows as "runs out" in the drawdown years.</p>
+                </div>`;
+            updateURL();
         }
+
+        function calculateSave() {
+            const out = document.getElementById('resultsSave');
+            const Y = num('sRetAge') - num('sAge'), need = num('sNeed'), now = num('sNow'), r = (num('sRet') || 0) / 100;
+            if (!(Y > 0) || isNaN(need) || isNaN(now)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please check the ages and amounts.</div>'; return; }
+            const fvNow = now * Math.pow(1 + r, Y);
+            const gap = need - fvNow;
+            let annual, monthly, lump;
+            if (gap <= 0) { annual = 0; monthly = 0; lump = 0; }
+            else if (r === 0) { annual = gap / Y; monthly = gap / (Y * 12); lump = gap; }
+            else {
+                annual = gap * r / (Math.pow(1 + r, Y) - 1);
+                const im = Math.pow(1 + r, 1 / 12) - 1;
+                monthly = gap * im / (Math.pow(1 + r, Y) - 1);
+                lump = need / Math.pow(1 + r, Y) - now;
+            }
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Save Per Year</p>
+                    <p class="text-4xl font-bold">${formatMoney(annual)}</p>
+                    <p class="text-sm opacity-90 mt-1">or ${formatMoney(monthly)} per month, for ${Y} years</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Target at retirement:</span> <span class="font-bold">${formatMoney(need)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Current savings grown to retirement:</span> <span class="font-bold">${formatMoney(fvNow)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Remaining gap to fill:</span> <span class="font-bold">${formatMoney(Math.max(gap, 0))}</span></p>
+                    <p class="flex justify-between"><span>Or add one lump sum today:</span> <span class="font-bold">${formatMoney(Math.max(lump, 0))}</span></p>
+                    ${gap <= 0 ? '<p class="text-green-700 font-semibold mt-2">Your current savings alone are on track to exceed the target — no additional saving required at this return.</p>' : ''}
+                </div>`;
+            updateURL();
+        }
+
+        function calculateWithdraw() {
+            const out = document.getElementById('resultsWithdraw');
+            const Y = num('wRetAge') - num('wAge'), L = num('wLife') - num('wRetAge');
+            const now = num('wNow') || 0, ann = num('wAnn') || 0, mon = num('wMon') || 0;
+            const r = (num('wRet') || 0) / 100, infl = (num('wInfl') || 0) / 100;
+            if (!(Y > 0) || !(L > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please check the ages (retirement after today, life expectancy after retirement).</div>'; return; }
+            const im = Math.pow(1 + r, 1 / 12) - 1, gm = Math.pow(1 + infl, 1 / 12) - 1;
+            let balRet = now * Math.pow(1 + r, Y);
+            if (r === 0) balRet += ann * Y + mon * 12 * Y;
+            else balRet += ann * (Math.pow(1 + r, Y) - 1) / r + (im === 0 ? 0 : mon * (Math.pow(1 + r, Y) - 1) / im);
+            const M = L * 12, qm = (1 + gm) / (1 + im);
+            let W;
+            if (Math.abs(1 - qm) < 1e-12) W = balRet / M; else W = balRet * (1 - qm) / (1 - Math.pow(qm, M));
+            const Wtoday = W / Math.pow(1 + infl, Y);
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">You Can Withdraw Per Month in Retirement</p>
+                    <p class="text-4xl font-bold">${formatMoney(Wtoday)}</p>
+                    <p class="text-sm opacity-90 mt-1">in today's money — the first actual monthly withdrawal at retirement is ${formatMoney(W)}, rising with inflation for ${L} years</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Savings today:</span> <span class="font-bold">${formatMoney(now)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total contributions before retirement:</span> <span class="font-bold">${formatMoney(ann * Y + mon * 12 * Y)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Balance at retirement:</span> <span class="font-bold">${formatMoney(balRet)}</span></p>
+                    <p class="flex justify-between"><span>Total withdrawn over ${L} years:</span> <span class="font-bold">${formatMoney(W * (Math.abs(1 - (1 + gm)) < 1e-12 ? M : (Math.pow(1 + gm, M) - 1) / gm))}</span></p>
+                </div>`;
+            updateURL();
+        }
+
+        function calculateLast() {
+            const out = document.getElementById('resultsLast');
+            const amt = num('lAmt'), wd = num('lWd'), r = (num('lRet') || 0) / 100;
+            if (!(amt > 0) || !(wd > 0)) { out.innerHTML = '<div class="bg-red-50 border border-red-300 text-red-800 p-4 rounded-xl text-sm">Please enter the amount you have and a monthly withdrawal.</div>'; return; }
+            const im = Math.pow(1 + r, 1 / 12) - 1;
+            const firstInterest = amt * im;
+            if (im > 0 && wd <= firstInterest) {
+                out.innerHTML = `
+                    <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                        <p class="text-sm opacity-90">Your Money Can Last</p>
+                        <p class="text-4xl font-bold">Forever</p>
+                        <p class="text-sm opacity-90 mt-1">The monthly interest alone (${formatMoney(firstInterest)}) covers the ${formatMoney(wd)} withdrawal — the principal is never touched.</p>
+                    </div>`;
+                updateURL(); return;
+            }
+            let bal = amt, months = 0, lastPay = 0, total = 0;
+            while (bal > 0 && months < 1200) {
+                const grown = bal * (1 + im);
+                if (grown >= wd) { bal = grown - wd; total += wd; months++; }
+                else { lastPay = grown; total += grown; months++; bal = 0; }
+            }
+            const yrs = Math.floor(months / 12), mos = months % 12;
+            out.innerHTML = `
+                <div class="bg-[#3F51B5] text-white p-4 rounded-xl shadow-md text-center mb-4">
+                    <p class="text-sm opacity-90">Your Money Can Last</p>
+                    <p class="text-4xl font-bold">${yrs} years, ${mos} month${mos === 1 ? '' : 's'}</p>
+                    <p class="text-sm opacity-90 mt-1">${months} monthly withdrawals in total</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6 text-sm">
+                    <p class="flex justify-between mb-2"><span>Starting amount:</span> <span class="font-bold">${formatMoney(amt)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Interest earned along the way:</span> <span class="font-bold">${formatMoney(total - amt)}</span></p>
+                    <p class="flex justify-between mb-2"><span>Total withdrawn:</span> <span class="font-bold">${formatMoney(total)}</span></p>
+                    ${lastPay > 0 && lastPay < wd ? `<p class="flex justify-between"><span>Final (partial) withdrawal:</span> <span class="font-bold">${formatMoney(lastPay)}</span></p>` : ''}
+                </div>`;
+            updateURL();
+        }
+
+        function buildShareParams() {
+            const p = new URLSearchParams();
+            ['nAge','nRetAge','nLife','nIncome','nInc','nNeed','nRet','nInfl','nOther','nSaveNow','nSave'].forEach(id => p.set(id, document.getElementById(id).value));
+            p.set('nNeedUnit', document.getElementById('nNeedUnit').value);
+            p.set('nSaveUnit', document.getElementById('nSaveUnit').value);
+            ['sAge','sRetAge','sNeed','sNow','sRet'].forEach(id => p.set(id, document.getElementById(id).value));
+            ['wAge','wRetAge','wLife','wNow','wAnn','wMon','wRet','wInfl'].forEach(id => p.set(id, document.getElementById(id).value));
+            ['lAmt','lWd','lRet'].forEach(id => p.set(id, document.getElementById(id).value));
+            return p.toString();
+        }
+        function prefillFromURL() {
+            const q = new URLSearchParams(window.location.search);
+            if (![...q.keys()].length) return;
+            [...q.keys()].forEach(k => { const el = document.getElementById(k); if (el) el.value = q.get(k); });
+            syncNeedUnit(); syncSaveUnit();
+        }
+        function updateURL() {
+            try { history.replaceState(null, '', window.location.href.split('?')[0] + '?' + buildShareParams()); } catch (e) {}
+        }
+        function formatMoney(a) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a); }
     </script>
 </body>
-</html>
+                                                                                      </html>
