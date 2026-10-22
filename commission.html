@@ -1,164 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commission Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commission Calculator — Simple, Tiered &amp; Base-Plus Commission | CalcNova</title>
+<meta name="description" content="Free commission calculator: solve price, rate or commission for a simple percentage; or model tiered commission structures with a base commission and per-tier breakdown.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/commission">
+<meta property="og:title" content="Commission Calculator — Simple & Tiered | CalcNova">
+<meta property="og:description" content="Percentage commission solved any direction, plus tiered structures with base pay and a tier-by-tier breakdown.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/commission">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Commission Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/commission"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How is tiered commission calculated?","acceptedAnswer":{"@type":"Answer","text":"Like tax brackets — marginally. Each tier's rate applies only to the slice of sales inside that tier: at 3% up to $20,000, 5% to $25,000 and 10% beyond, a $27,000 month earns $20,000×3% + $5,000×5% + $2,000×10% = $1,050 — not 10% of $27,000. Crossing into a higher tier never re-prices the sales below it."}},
+{"@type":"Question","name":"What is a typical commission rate?","acceptedAnswer":{"@type":"Answer","text":"It varies enormously by industry: real estate commonly totals 5–6% of the sale price (often split between two agents), car sales around 20–30% of the deal's gross profit rather than price, retail and SaaS anywhere from 5% to 30% of revenue. What matters for comparison is the effective rate — total commission divided by total sales — which this calculator reports for tiered plans."}},
+{"@type":"Question","name":"What is the difference between a base commission and a base salary?","acceptedAnswer":{"@type":"Answer","text":"On this page, a base commission is a guaranteed amount (flat, or a percentage of sales) paid on top of the tiered or fixed commission regardless of performance. A base salary is broader employment pay; plans described as 'base salary plus commission' work the same way here — enter the base as a flat $ base commission and the percentage as the fixed commission."}},
+{"@type":"Question","name":"Why would a tier pay a flat dollar amount instead of a percentage?","acceptedAnswer":{"@type":"Answer","text":"Flat tiers act as milestone bonuses: reach the level, earn the amount. They are common in plans that reward crossing volume thresholds. In this calculator a $ tier pays its full amount as soon as sales enter the tier, while a % tier pays on the slice of sales within it."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Commission Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Commission</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Commission Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Two tools in one: a <strong>simple percentage commission</strong> solved in any direction — give any two of price, rate and commission — and a <strong>tiered commission calculator</strong> for real pay plans, with an optional base commission, up to eight marginal tiers, and a tier-by-tier breakdown of where the money comes from.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Commission Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Calculation Type</label>
-                    <select id="commType" class="w-full border border-gray-300 rounded-md p-2 outline-none mb-4">
-                        <option value="findCommission">Calculate Commission Amount</option>
-                        <option value="findPrice">Calculate Required Sale Price</option>
-                    </select>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="font-bold text-lg text-gray-800 mb-4">Simple Percentage Commission</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Sales price</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="s_price" type="number" value="200000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="editedS('price')"></div></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Commission rate</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="s_rate" type="number" value="3" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="editedS('rate')"><span class="text-gray-400">%</span></div></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Commission</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="s_comm" type="number" value="" min="0" step="any" placeholder="solve for me" class="w-full p-2.5 outline-none num" oninput="editedS('commission')"></div></label>
                 </div>
-
-                <!-- Inputs for finding commission -->
-                <div id="commInputs1" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Sale Price ($)</label>
-                        <input type="number" id="commPrice" value="5000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Commission Rate (%)</label>
-                        <input type="number" id="commRate" value="5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-
-                <!-- Inputs for finding price -->
-                <div id="commInputs2" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 hidden">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Desired Commission ($)</label>
-                        <input type="number" id="commDesired" value="500" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Commission Rate (%)</label>
-                        <input type="number" id="commRate2" value="5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-
-                <button onclick="calculateCommission()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate</button>
-
-                <div id="commResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500" id="commLabel1">Commission Earned</p>
-                            <p class="text-3xl font-bold text-[#14B8A6]" id="commResult1">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500" id="commLabel2">Sale Price</p>
-                            <p class="text-2xl font-bold text-[#3F51B5]" id="commResult2">$0</p>
-                        </div>
-                    </div>
-                </div>
+                <button onclick="calcS()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+                <div id="s_results" class="mt-5"></div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Commission Works</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A commission is a sum of money paid to an employee upon completion of a task, usually selling a certain amount of goods or services. It is often calculated as a percentage of the total sale value. This calculator can help salespeople determine their earnings or help businesses figure out what price they need to sell at to achieve a specific commission goal.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="font-bold text-lg text-gray-800 mb-4">Tiered Commission Calculator</h2>
+                <label class="block max-w-xs"><span class="text-sm font-medium text-gray-600">Sales price</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="t_price" type="number" value="200000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc2()"></div></label>
+                <div class="mt-5">
+                    <span class="text-sm font-medium text-gray-700">Has a base commission?</span>
+                    <span class="ml-3 text-sm"><label class="cursor-pointer mr-3"><input type="radio" name="t_hasbc" value="y" class="accent-[#3F51B5]" onchange="calc2()"> Yes</label><label class="cursor-pointer"><input type="radio" name="t_hasbc" value="n" checked class="accent-[#3F51B5]" onchange="calc2()"> No</label></span>
+                    <div id="t_bcbox" class="hidden mt-3 flex items-center gap-2 max-w-md">
+                        <div class="flex-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="t_bc" type="number" value="1000" min="0" step="any" class="w-full p-2 outline-none num" oninput="calc2()"></div>
+                        <select id="t_bcunit" class="border border-gray-300 rounded-lg p-2 text-sm" onchange="bcUnitChange()"><option value="p">%</option><option value="d" selected>$</option></select>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">A base commission is paid regardless of whether a sale occurs.</p>
                 </div>
+                <div class="mt-5">
+                    <span class="text-sm font-medium text-gray-700">Commission varies with price?</span>
+                    <span class="ml-3 text-sm"><label class="cursor-pointer mr-3"><input type="radio" name="t_vary" value="y" checked class="accent-[#3F51B5]" onchange="calc2()"> Yes — tiered</label><label class="cursor-pointer"><input type="radio" name="t_vary" value="n" class="accent-[#3F51B5]" onchange="calc2()"> No — fixed</label></span>
+                    <div id="t_fixedbox" class="hidden mt-3 flex items-center gap-2 max-w-md">
+                        <span class="text-sm text-gray-600">Commission</span>
+                        <div class="flex-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="t_fc" type="number" value="3" min="0" step="any" class="w-full p-2 outline-none num" oninput="calc2()"></div>
+                        <select id="t_fcunit" class="border border-gray-300 rounded-lg p-2 text-sm" onchange="fcUnitChange()"><option value="p" selected>%</option><option value="d">$</option></select>
+                    </div>
+                    <div id="t_tiersbox" class="mt-3">
+                        <p class="text-sm text-gray-500 mb-2">Define the tiers — each rate applies only to the slice of sales inside its tier. Leave a "To" blank for no upper limit. A <strong>$</strong> tier pays that flat amount when the tier is reached.</p>
+                        <div class="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-1"><div class="w-24">From</div><div class="flex-1">To</div><div class="w-24">Commission</div><div class="w-[62px]"></div></div>
+                        <div class="space-y-2">
+<div class="flex items-center gap-2">
+        <div class="w-24 text-sm text-gray-500 num" id="cm_from1">$0</div>
+        <div class="flex-1 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="cm_t1" type="number" value="20000" min="0" step="any" placeholder="no limit" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <div class="w-24 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="cm_c1" type="number" value="3" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <select id="cm_u1" class="border border-gray-300 rounded-lg p-2 text-sm" onchange="calc2()"><option value="p" selected>%</option><option value="d">$</option></select>
+    </div>
+<div class="flex items-center gap-2">
+        <div class="w-24 text-sm text-gray-500 num" id="cm_from2"></div>
+        <div class="flex-1 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="cm_t2" type="number" value="" min="0" step="any" placeholder="no limit" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <div class="w-24 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="cm_c2" type="number" value="5" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <select id="cm_u2" class="border border-gray-300 rounded-lg p-2 text-sm" onchange="calc2()"><option value="p" selected>%</option><option value="d">$</option></select>
+    </div>
+<div class="flex items-center gap-2">
+        <div class="w-24 text-sm text-gray-500 num" id="cm_from3"></div>
+        <div class="flex-1 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="cm_t3" type="number" value="" min="0" step="any" placeholder="no limit" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <div class="w-24 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="cm_c3" type="number" value="" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <select id="cm_u3" class="border border-gray-300 rounded-lg p-2 text-sm" onchange="calc2()"><option value="p" selected>%</option><option value="d">$</option></select>
+    </div>
+<div class="flex items-center gap-2">
+        <div class="w-24 text-sm text-gray-500 num" id="cm_from4"></div>
+        <div class="flex-1 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="cm_t4" type="number" value="" min="0" step="any" placeholder="no limit" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <div class="w-24 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="cm_c4" type="number" value="" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <select id="cm_u4" class="border border-gray-300 rounded-lg p-2 text-sm" onchange="calc2()"><option value="p" selected>%</option><option value="d">$</option></select>
+    </div>
+<div class="flex items-center gap-2">
+        <div class="w-24 text-sm text-gray-500 num" id="cm_from5"></div>
+        <div class="flex-1 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="cm_t5" type="number" value="" min="0" step="any" placeholder="no limit" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <div class="w-24 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="cm_c5" type="number" value="" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <select id="cm_u5" class="border border-gray-300 rounded-lg p-2 text-sm" onchange="calc2()"><option value="p" selected>%</option><option value="d">$</option></select>
+    </div>
+<div class="flex items-center gap-2">
+        <div class="w-24 text-sm text-gray-500 num" id="cm_from6"></div>
+        <div class="flex-1 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="cm_t6" type="number" value="" min="0" step="any" placeholder="no limit" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <div class="w-24 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="cm_c6" type="number" value="" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <select id="cm_u6" class="border border-gray-300 rounded-lg p-2 text-sm" onchange="calc2()"><option value="p" selected>%</option><option value="d">$</option></select>
+    </div>
+<div class="flex items-center gap-2">
+        <div class="w-24 text-sm text-gray-500 num" id="cm_from7"></div>
+        <div class="flex-1 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="cm_t7" type="number" value="" min="0" step="any" placeholder="no limit" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <div class="w-24 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="cm_c7" type="number" value="" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <select id="cm_u7" class="border border-gray-300 rounded-lg p-2 text-sm" onchange="calc2()"><option value="p" selected>%</option><option value="d">$</option></select>
+    </div>
+<div class="flex items-center gap-2">
+        <div class="w-24 text-sm text-gray-500 num" id="cm_from8"></div>
+        <div class="flex-1 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="cm_t8" type="number" value="" min="0" step="any" placeholder="no limit" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <div class="w-24 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="cm_c8" type="number" value="" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc2()"></div>
+        <select id="cm_u8" class="border border-gray-300 rounded-lg p-2 text-sm" onchange="calc2()"><option value="p" selected>%</option><option value="d">$</option></select>
+    </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="calc2()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+                <div id="t_results" class="mt-5"></div>
             </div>
         </div>
-
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">Marginal, not average</div>
+                <p>Tiers work like tax brackets: selling $27,000 under a 3%/5%/10% plan earns <strong>$1,050</strong>, not 10% of $27,000. The higher rate only ever touches the dollars inside its own tier — which is exactly why tiered plans motivate the next sale instead of punishing it.</p>
             </div>
-        </aside>
-    </main>
-
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
         </div>
-    </footer>
+    </div>
 
-    <script>
-        // تغيير الحقول بناءً على نوع الحساب
-        document.getElementById('commType').addEventListener('change', function() {
-            const type = this.value;
-            const inputs1 = document.getElementById('commInputs1');
-            const inputs2 = document.getElementById('commInputs2');
-            const lbl1 = document.getElementById('commLabel1');
-            const lbl2 = document.getElementById('commLabel2');
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>Commission Structures, and What Each One Motivates</h2>
+        <p>A commission ties a salesperson's pay to what they sell, aligning their income with the business's revenue. In its simplest form it is a percentage of the sale — 3% of a $100 sale pays $3 — but structures vary because each one motivates different behavior: plans that cut commission on discounted sales discourage discounting; plans that pay on repeat customers reward retention; plans based on profit rather than revenue reward selling the <em>right</em> things. Three structures cover most of the real world, and all three are computed on this page.</p>
+        <h3>Commission Only</h3>
+        <p>Pay is entirely a percentage of sales: <strong>compensation = sales price × commission rate</strong>. A real-estate agent at 3% on a $500,000 house earns $15,000 — and earns nothing in a month with no closing. The motivation is maximal and so is the income risk, which is why pure-commission roles cluster where individual effort visibly moves results.</p>
+        <h3>Base Salary Plus Commission</h3>
+        <p>A guaranteed base softens the risk while the percentage keeps the incentive: <strong>compensation = base + total sales × rate</strong>. A rep with a $500 monthly base at 1.5% who sells one $25,000 car earns $875; two cars, $1,250; a $25,000 car plus two at $33,000, $1,865. The base is typically lower than a comparable pure salary — selling remains necessary — but a bad month is survivable. Model it above with a flat-$ base commission and the fixed (non-tiered) commission.</p>
+        <h3>Tiered Commission</h3>
+        <p>The rate itself rises with volume, applied marginally: <strong>(t₁ × c₁) + (t₂ − t₁) × c₂ + … + (sales − tₙ₋₁) × cₙ</strong>, where each tier's rate prices only its own slice. The design goal is acceleration — every additional dollar of sales earns at least as much as the previous one, so the plan pushes hardest exactly where a flat plan would let a rep coast: just past each threshold. Employers should note the mirror image: a tier boundary is also where gaming concentrates (pulling next month's sales forward, splitting or bundling deals), and a well-drawn plan audits for it.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>Is commission taxed differently from salary?</h4>
+        <p>In the U.S., no — commissions are ordinary income, often withheld at a flat supplemental rate (22% federal) when paid separately, then trued up on the annual return. The Income Tax and Take-Home Paycheck calculators here can model the net.</p>
+        <h4>What is a draw against commission?</h4>
+        <p>An advance the employer pays before commissions are earned, then claws back from future commission checks. It smooths income like a base salary but is a loan, not pay — if you leave with a negative draw balance, many agreements require repaying it.</p>
+        <h4>Do both real-estate agents share one commission?</h4>
+        <p>Typically yes: a total commission (often 5–6%) is split between the buyer's and seller's brokerages and then with the individual agents, which is why a "3% commission" on a listing usually means half of a 6% total. Enter the rate that applies to the side you are computing.</p>
+    </section>
 
-            if (type === 'findCommission') {
-                inputs1.classList.remove('hidden');
-                inputs2.classList.add('hidden');
-                lbl1.textContent = "Commission Earned";
-                lbl2.textContent = "Sale Price";
-            } else {
-                inputs1.classList.add('hidden');
-                inputs2.classList.remove('hidden');
-                lbl1.textContent = "Required Sale Price";
-                lbl2.textContent = "Commission Earned";
-            }
-        });
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="salary.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Salary Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Convert the whole package — base plus commission — across pay periods.</p>
+            </a>
+            <a href="margin.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Margin Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The employer's side: what a commission does to the margin.</p>
+            </a>
+            <a href="take-home-paycheck.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Take-Home Paycheck Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">What a commission check nets after withholding.</p>
+            </a>
+            <a href="discount.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Discount Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The discount a rep offers comes out of someone's number — see whose.</p>
+            </a>
+        </div>
+    </section>
+</main>
 
-        function calculateCommission() {
-            const type = document.getElementById('commType').value;
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-            
-            if (type === 'findCommission') {
-                const price = parseFloat(document.getElementById('commPrice').value);
-                const rate = parseFloat(document.getElementById('commRate').value) / 100;
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-                if (isNaN(price) || isNaN(rate) || price < 0 || rate < 0) {
-                    alert("Please enter valid positive numbers.");
-                    return;
-                }
-
-                const commission = price * rate;
-
-                document.getElementById('commResult1').textContent = formatter.format(commission);
-                document.getElementById('commResult2').textContent = formatter.format(price);
-            } else {
-                const desired = parseFloat(document.getElementById('commDesired').value);
-                const rate = parseFloat(document.getElementById('commRate2').value) / 100;
-
-                if (isNaN(desired) || isNaN(rate) || desired < 0 || rate <= 0) {
-                    alert("Please enter valid positive numbers. Commission rate must be greater than 0.");
-                    return;
-                }
-
-                const requiredPrice = desired / rate;
-
-                document.getElementById('commResult1').textContent = formatter.format(requiredPrice);
-                document.getElementById('commResult2').textContent = formatter.format(desired);
-            }
-
-            document.getElementById('commResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const el = $(id); if (!el) return 0; const v = parseFloat(String(el.value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const filled = id => String($(id).value).trim() !== '' && !isNaN(parseFloat($(id).value));
+const fmtC = v => '$' + (Number.isInteger(Math.round(v * 100) / 100) ? Math.round(v).toLocaleString('en-US') : v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+const fmtPct = v => (Math.round(v * 1000) / 1000).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 3 }) + '%';
+const r2 = v => Math.round(v * 100) / 100;
+/* ---------- simple ---------- */
+let givensS = ['price', 'rate'];
+const SF = { price: 's_price', rate: 's_rate', commission: 's_comm' };
+function editedS(f) { givensS = [f].concat(givensS.filter(x => x !== f)).slice(0, 2); calcS(); }
+function calcS() {
+  const out = $('s_results');
+  let g = givensS.filter(f => filled(SF[f]));
+  for (const f of ['price', 'rate', 'commission']) if (!g.includes(f) && filled(SF[f])) g.push(f);
+  g = g.slice(0, 2);
+  if (g.length < 2) { out.innerHTML = ''; updateShare(); return; }
+  const v = { price: null, rate: null, commission: null };
+  for (const f of g) v[f] = num(SF[f]);
+  if (v.price !== null && v.rate !== null) v.commission = v.price * v.rate / 100;
+  else if (v.price !== null && v.commission !== null) { if (!(v.price > 0)) { out.innerHTML = ''; return; } v.rate = v.commission / v.price * 100; }
+  else if (v.rate !== null && v.commission !== null) { if (!(v.rate > 0)) { out.innerHTML = '<p class="text-sm text-gray-500">A 0% rate earns $0 at any price — add the price instead.</p>'; return; } v.price = v.commission / (v.rate / 100); }
+  $('s_price').value = r2(v.price); $('s_rate').value = Math.round(v.rate * 1000) / 1000; $('s_comm').value = r2(v.commission);
+  out.innerHTML = '<div class="bg-[#3F51B5] text-white rounded-xl p-5"><div class="text-sm opacity-80">Commission</div><div class="text-3xl font-extrabold mt-1">' + fmtC(v.commission) + '</div><div class="text-sm opacity-80 mt-1">' + fmtPct(v.rate) + ' of ' + fmtC(v.price) + ' in sales.</div></div>';
+  updateShare();
+}
+/* ---------- tiered ---------- */
+function bcUnitChange() { calc2(); }
+function fcUnitChange() { calc2(); }
+function refreshFroms() {
+  let prev = null;
+  for (let k = 1; k <= 8; k++) {
+    if (k > 1) $('cm_from' + k).textContent = prev === null || prev === '' ? '' : '$' + Number(prev).toLocaleString('en-US');
+    prev = String($('cm_t' + k).value).trim();
+  }
+}
+function calc2() {
+  refreshFroms();
+  const price = num('t_price');
+  const hasbc = document.querySelector('input[name="t_hasbc"]:checked').value === 'y';
+  const vary = document.querySelector('input[name="t_vary"]:checked').value === 'y';
+  $('t_bcbox').classList.toggle('hidden', !hasbc);
+  $('t_bcbox').classList.toggle('flex', hasbc);
+  $('t_fixedbox').classList.toggle('hidden', vary);
+  $('t_fixedbox').classList.toggle('flex', !vary);
+  $('t_tiersbox').classList.toggle('hidden', !vary);
+  const out = $('t_results');
+  if (price < 0) { out.innerHTML = ''; updateShare(); return; }
+  const lines = [];
+  let total = 0;
+  if (hasbc) {
+    const bcv = num('t_bc'), bcAmt = $('t_bcunit').value === 'p' ? price * bcv / 100 : bcv;
+    lines.push(['Base commission', bcAmt]); total += bcAmt;
+  }
+  if (!vary) {
+    const fcv = num('t_fc'), amt = $('t_fcunit').value === 'p' ? price * fcv / 100 : fcv;
+    lines.push(['Additional commission', amt]); total += amt;
+  } else {
+    let from = 0;
+    for (let k = 1; k <= 8; k++) {
+      const cRaw = String($('cm_c' + k).value).trim();
+      if (cRaw === '') { const tNext = String($('cm_t' + k).value).trim(); if (tNext !== '') from = parseFloat(tNext); continue; }
+      const cVal = parseFloat(cRaw), unit = $('cm_u' + k).value;
+      const tRaw = String($('cm_t' + k).value).trim();
+      const to = tRaw === '' ? Infinity : parseFloat(tRaw);
+      if (price > from) {
+        const slice = Math.min(price, to) - from;
+        const amt = unit === 'p' ? slice * cVal / 100 : cVal;
+        if (slice > 0 || unit === 'd') lines.push(['Commission of $' + from.toLocaleString('en-US') + (to === Infinity ? '+' : ' - $' + to.toLocaleString('en-US')), amt]);
+        total += amt;
+      }
+      if (to === Infinity) break;
+      from = to;
+    }
+  }
+  const eff = price > 0 ? total / price * 100 : 0;
+  out.innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-5"><div class="text-sm opacity-80">Total commission</div><div class="text-3xl font-extrabold mt-1">' + fmtC(total) + '</div><div class="text-sm opacity-80 mt-1">an effective rate of ' + fmtPct(eff) + ' on ' + fmtC(price) + ' of sales.</div></div>' +
+    (lines.length ? '<table class="w-full text-sm mt-4">' + lines.map(l => '<tr class="border-b border-gray-100"><td class="py-1.5">' + l[0] + '</td><td class="text-right num font-medium">' + fmtC(l[1]) + '</td></tr>').join('') + '<tr><td class="py-1.5 font-bold">Total:</td><td class="text-right num font-bold">' + fmtC(total) + '</td></tr></table>' : '');
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ sp: $('s_price').value, sr: $('s_rate').value, sc: $('s_comm').value, tp: $('t_price').value });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  const set = (id, key) => { if (q.get(key)) $(id).value = q.get(key); };
+  set('s_price', 'sp'); set('s_rate', 'sr'); set('s_comm', 'sc'); set('t_price', 'tp');
+  calcS(); calc2();
+})();
+</script>
 </body>
 </html>
