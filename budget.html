@@ -1,170 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Budget Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Budget Calculator — Income, Expenses, Net &amp; Debt-to-Income Ratio | CalcNova</title>
+<meta name="description" content="Free budget calculator: every income and expense line in one plan, with after-tax income, monthly and annual net, an expense breakdown, and front-end and back-end DTI ratios.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/budget">
+<meta property="og:title" content="Budget Calculator — Plan Income & Expenses, See Your DTI | CalcNova">
+<meta property="og:description" content="A full household budget: 41 income and expense lines, tax-adjusted savings, and lender-grade DTI ratios.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/budget">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Budget Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/budget"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a good debt-to-income ratio?","acceptedAnswer":{"@type":"Answer","text":"Lenders generally want a back-end DTI (housing plus all recurring debt payments, over gross income) below 36%, and many mortgage programs cap it at 43–45%. Below 20% is comfortable; 36–49% is workable but tight; 50% and above is risky territory where new credit gets expensive or unavailable. The front-end ratio counts housing costs only — the classic guideline is 28% or less."}},
+{"@type":"Question","name":"Why is my 401(k) counted at less than I contribute?","acceptedAnswer":{"@type":"Answer","text":"Because pre-tax contributions are tax-adjusted in this budget, matching the reference model: a $10,000 contribution at a 28% tax rate reduces take-home pay by only $7,200 (the contribution itself skips the tax), so $7,200 is what the budget feels. The account still receives the full $10,000. The same adjustment applies to college saving entered as a pre-tax contribution."}},
+{"@type":"Question","name":"What share of income should each category take?","acceptedAnswer":{"@type":"Answer","text":"Common guardrails: housing at or under 30% of gross income, car payment under 10%, total transportation under 15%, food and dining under 15%, and savings at 15% or more. The breakdown table shows each category as a share of your after-tax income so you can spot the one line that is quietly eating the budget."}},
+{"@type":"Question","name":"Should I budget monthly or annually?","acceptedAnswer":{"@type":"Answer","text":"Both, which is why every line here takes a monthly or yearly entry: monthly for the rhythm of bills, annual for the expenses that ambush — insurance premiums, vacations, car maintenance. Entering lumpy costs annually and letting the calculator monthly-average them is the simplest defense against 'surprise' expenses that were never surprises."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Budget Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Budget</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Budget Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">A whole household budget on one page: income <strong>before tax</strong>, a single effective tax rate, and forty expense lines across eight categories — each entered monthly or yearly, as it actually arrives. The results give your after-tax income, the monthly and annual net, a category breakdown against income, and the <strong>debt-to-income ratios</strong> lenders judge you by.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Monthly Budget Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="mb-6">
-                    <label class="block text-lg font-semibold text-[#3F51B5] mb-2">Monthly Net Income ($)</label>
-                    <input type="number" id="budIncome" value="4000" class="w-full border border-gray-300 rounded-md p-3 outline-none text-xl font-bold">
-                </div>
+    <div id="bg_results" class="mb-8"></div>
 
-                <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Monthly Expenses</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Housing (Rent/Mortgage) ($)</label>
-                        <input type="number" id="budHousing" value="1200" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Utilities (Electric, Water, Internet) ($)</label>
-                        <input type="number" id="budUtilities" value="300" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Groceries & Food ($)</label>
-                        <input type="number" id="budFood" value="500" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Transportation (Gas, Car Payment) ($)</label>
-                        <input type="number" id="budTransport" value="400" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Insurance (Health, Car, Life) ($)</label>
-                        <input type="number" id="budInsurance" value="200" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Debt Payments (Loans, Credit Cards) ($)</label>
-                        <input type="number" id="budDebt" value="150" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Entertainment, Dining Out & Miscellaneous ($)</label>
-                        <input type="number" id="budMisc" value="300" class="w-full border border-gray-300 rounded-md p-2 outline-none expense-input">
-                    </div>
-                </div>
-                <button onclick="calculateBudget()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Budget</button>
-
-                <div id="budResults" class="hidden mt-8 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Expenses</p>
-                            <p class="text-xl font-bold text-red-500" id="budTotalExpenses">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Remaining Money (Savings)</p>
-                            <p class="text-3xl font-bold text-[#14B8A6]" id="budRemaining">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Savings Rate</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="budSavingsRate">0%</p>
-                        </div>
-                    </div>
-                    <div class="mt-4 text-center" id="budStatusContainer">
-                        <p class="text-lg font-semibold" id="budStatus">Result</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">The 50/30/20 Rule</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A popular budgeting guideline is the 50/30/20 rule. It suggests you should spend 50% of your net income on <strong>needs</strong> (housing, food, utilities), 30% on <strong>wants</strong> (entertainment, dining out), and save the remaining 20% for <strong>savings and debt repayment</strong>. This calculator helps you see where your money is going.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+    <div class="space-y-5 mb-10">
+        <div class="border-2 border-[#3F51B5] rounded-xl p-4 bg-white">
+            <div class="font-bold text-[#3F51B5] mb-3">Incomes (Before Tax)</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Salary & Earned Income</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_salary" type="number" value="80000" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_salary" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Pension & Social Security</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_pension" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_pension" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Investments & Savings</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_investment" type="number" value="1000" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">interest, capital gains, dividends, rental income…</span></label><select id="u_investment" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Other Income</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_otherincome" type="number" value="2000" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">gifts, alimony, child support, tax refunds…</span></label><select id="u_otherincome" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div><div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm font-medium text-gray-700">Income Tax Rate</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="f_taxrate" type="number" value="28" min="0" max="100" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"><span class="text-gray-400 text-sm">%</span></div><span class="block text-xs text-gray-400 mt-0.5">federal + state + local, as one effective rate</span></label><div class="w-[76px]"></div></div>
             </div>
         </div>
+<div class="border border-gray-200 rounded-xl p-4"><div class="font-bold text-[#3F51B5] mb-3">Housing & Utilities</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Mortgage</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_mortgage" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_mortgage" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Property Tax</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_propertytax" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_propertytax" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Rent</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_rental" type="number" value="1400" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_rental" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Insurance</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_houseinsurance" type="number" value="200" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">homeowners, renters, home warranty…</span></label><select id="u_houseinsurance" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">HOA/Co-Op Fee</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_hoafee" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_hoafee" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Home Maintenance</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_homemaintenance" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">repairs, landscaping, cleaning, furniture, appliances…</span></label><select id="u_homemaintenance" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Utilities</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_utilities" type="number" value="250" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">electricity, gas, water, phone, cable, heating…</span></label><select id="u_utilities" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div></div></div>
+<div class="border border-gray-200 rounded-xl p-4"><div class="font-bold text-[#3F51B5] mb-3">Transportation</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Auto Loan</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_autoloan" type="number" value="250" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_autoloan" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Auto Insurance</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_autoinsurance" type="number" value="700" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_autoinsurance" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Gasoline</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_gasoline" type="number" value="100" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_gasoline" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Auto Maintenance</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_automaintenance" type="number" value="600" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_automaintenance" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Parking/Tolls</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_parkingtoll" type="number" value="20" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_parkingtoll" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Other Transportation</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_othertransportation" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">tickets, taxis, registration…</span></label><select id="u_othertransportation" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div></div></div>
+<div class="border border-gray-200 rounded-xl p-4"><div class="font-bold text-[#3F51B5] mb-3">Other Debt & Loan Payments</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Credit Card</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_creditcard" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">the recurring payment toward the balance only</span></label><select id="u_creditcard" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Student Loan</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_studentloan" type="number" value="250" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_studentloan" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Other Loans & Liabilities</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_otherloan" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">personal loans, store cards…</span></label><select id="u_otherloan" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div></div></div>
+<div class="border border-gray-200 rounded-xl p-4"><div class="font-bold text-[#3F51B5] mb-3">Living Expenses</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Food</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_food" type="number" value="400" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_food" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Clothing</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_clothing" type="number" value="100" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_clothing" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Household Supplies</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_grocery" type="number" value="100" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_grocery" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Meals Out</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_mealout" type="number" value="200" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_mealout" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Other</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_otherliving" type="number" value="200" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">laundry, haircuts, beauty, alcohol, tobacco…</span></label><select id="u_otherliving" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div></div></div>
+<div class="border border-gray-200 rounded-xl p-4"><div class="font-bold text-[#3F51B5] mb-3">Healthcare</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Medical Insurance</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_medicalinsurance" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_medicalinsurance" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Medical Spending</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_medicalspending" type="number" value="200" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">copays, uncovered visits or drugs…</span></label><select id="u_medicalspending" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div></div></div>
+<div class="border border-gray-200 rounded-xl p-4"><div class="font-bold text-[#3F51B5] mb-3">Children & Education</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Child & Personal Care</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_childcare" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_childcare" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Tuition & Supplies</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_tuition" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_tuition" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Child Support Payments</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_childsupport" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_childsupport" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Other Spending</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_othereducation" type="number" value="100" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">books, software, magazines, devices…</span></label><select id="u_othereducation" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div></div></div>
+<div class="border border-gray-200 rounded-xl p-4"><div class="font-bold text-[#3F51B5] mb-3">Savings & Investments</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">401k & IRA</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_ira401k" type="number" value="10000" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">pre-tax contribution — counted at its after-tax cost</span></label><select id="u_ira401k" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">College Saving</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_collegesaving" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">pre-tax contribution — counted at its after-tax cost</span></label><select id="u_collegesaving" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Investments</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_stockbond" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">stocks, bonds, funds, real estate…</span></label><select id="u_stockbond" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Emergency Fund & Other</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_othersavings" type="number" value="0" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">savings, CDs, a house or major purchase…</span></label><select id="u_othersavings" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div></div></div>
+<div class="border border-gray-200 rounded-xl p-4"><div class="font-bold text-[#3F51B5] mb-3">Miscellaneous Expenses</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Pet</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_pet" type="number" value="200" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_pet" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Gifts & Donations</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_giftdonation" type="number" value="300" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_giftdonation" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Hobbies & Sports</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_hobbiesport" type="number" value="100" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div><span class="block text-xs text-gray-400 mt-0.5">including tickets, gym memberships…</span></label><select id="u_hobbiesport" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Entertainment & Tickets</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_entertainment" type="number" value="100" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_entertainment" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Travel & Vacation</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_vacation" type="number" value="2000" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_vacation" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m">/mo</option><option value="y" selected>/yr</option></select></div>
+<div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Other Expenses</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_allother" type="number" value="100" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_allother" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div></div></div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <div class="flex justify-center mb-10">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] w-[336px]">Advertisement — 300 × 250</div>
+    </div>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>How to Budget: Live Within Your Means, Plan for the Future</h2>
+        <p>A budget is simply a plan for income and expenditure built to reach goals — clearing card balances, hitting a savings target, getting a household back on track. The method matters less than the adherence: the calculator, the spreadsheet, the app all work if used, and none works if abandoned. Two ideas carry the whole practice. <strong>Living within your means</strong> fails, when it fails, for recognizable reasons: spending past income until debt snowballs; keeping up with the Joneses through conspicuous consumption; leaning on credit to fund a lifestyle income doesn't support; and plain gaps in financial knowledge. <strong>Planning for the future</strong> is what turns a budget from a diet into a strategy — forecasting income and expenses so that misfortunes, heavy-debt seasons, a house purchase, children's education, insurance, and retirement are prepared for instead of improvised. Corporations employ whole departments to do this; the page above is the household version.</p>
+        <h3>Reading the Categories</h3>
+        <p><strong>Housing</strong> is normally the largest line; the standing guideline is at most ~30% of gross income, and budgets far above it usually need structural answers — refinancing, relocating, downsizing, a rented spare room — though efficient technology shaves the utilities edge. <strong>Transportation</strong> bends more easily: keep the car payment under ~10% of gross income and the whole category under ~15%, consider whether public transit, carpooling, cycling or a more efficient car fits, and maintain what you own (tires inflated, oil changed, driving legal — fines and premium hikes are budget items too). <strong>Debt payments</strong> demand one discipline above all: never double-count — a dinner belongs in Meals Out or in the credit-card repayment line, not both, and tuition is not also a student-loan payment. <strong>Living expenses</strong> look small and add up quietly; food and meals out together should stay under ~15% of income, and cooking more is the single largest lever most budgets have. <strong>Healthcare</strong> has little give — in the U.S. it averages roughly $10,000 per person per year — but in-network care, generic drugs, HSA accounts and basic health habits trim it. <strong>Children &amp; education</strong> is less about cutting than about planning: education correlates strongly with lifetime income, and aid is more accessible than most families assume. <strong>Savings &amp; investments</strong> is the category healthy budgets protect first — an emergency fund is routinely the difference between a bad month and a debt spiral — with 15% of income the recommended floor. And <strong>miscellaneous</strong> is the most pliable section of all: pets, trips, hobbies and tickets are legitimate joys when feasible, and the first place to look when a budget is failing.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>Why does the plan show a small deficit even when I "feel" balanced?</h4>
+        <p>Usually the annual lines: insurance premiums, vacations, gifts and car maintenance average into every month whether they land there or not. The defaults on this page run an $80 annual deficit for exactly that reason — a useful warning, delivered gently.</p>
+        <h4>Where should a raise or windfall go first?</h4>
+        <p>The budget answers it mechanically: if the DTI is above 36%, debt payments buy the most relief per dollar; if savings are under 15% of income, the emergency fund does; otherwise the category furthest past its guardrail is the leak to plug.</p>
+        <h4>How often should I redo this?</h4>
+        <p>Monthly is the rhythm the reference template is built for: run the calculator, compare each category with last month, and let the annual net line — not willpower — tell you whether the plan is working.</p>
+    </section>
+
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="debt-to-income.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Debt-to-Income Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The DTI deep-dive: front-end and back-end ratios on their own.</p>
+            </a>
+            <a href="credit-card.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Credit Card Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">What the card line in this budget really costs over time.</p>
+            </a>
+            <a href="take-home-paycheck.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Take-Home Paycheck Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Replace the flat tax-rate estimate with a real paycheck.</p>
+            </a>
+            <a href="college-cost.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">College Cost Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Size the education line years before it arrives.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        function calculateBudget() {
-            const income = parseFloat(document.getElementById('budIncome').value);
-            
-            // جمع كل النفقات
-            const inputs = document.querySelectorAll('.expense-input');
-            let totalExpenses = 0;
-            
-            inputs.forEach(input => {
-                const val = parseFloat(input.value);
-                if (!isNaN(val)) {
-                    totalExpenses += val;
-                }
-            });
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (isNaN(income) || income <= 0) {
-                alert("Please enter a valid monthly income.");
-                return;
-            }
-
-            const remaining = income - totalExpenses;
-            const savingsRate = (remaining / income) * 100;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('budTotalExpenses').textContent = formatter.format(totalExpenses);
-            
-            const remEl = document.getElementById('budRemaining');
-            remEl.textContent = formatter.format(remaining);
-            
-            const rateEl = document.getElementById('budSavingsRate');
-            rateEl.textContent = savingsRate.toFixed(1) + "%";
-
-            const statusEl = document.getElementById('budStatus');
-            if (remaining < 0) {
-                remEl.className = "text-3xl font-bold text-red-500";
-                statusEl.textContent = "Warning: You are spending more than you earn!";
-                statusEl.className = "text-lg font-semibold text-red-600";
-            } else if (savingsRate < 20) {
-                remEl.className = "text-3xl font-bold text-yellow-500";
-                statusEl.textContent = "Good, but try to save at least 20% of your income.";
-                statusEl.className = "text-lg font-semibold text-yellow-600";
-            } else {
-                remEl.className = "text-3xl font-bold text-[#14B8A6]";
-                statusEl.textContent = "Excellent! You are on track with your savings.";
-                statusEl.className = "text-lg font-semibold text-green-600";
-            }
-
-            document.getElementById('budResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const el = $(id); if (!el) return 0; const v = parseFloat(String(el.value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmtW = v => (v < 0 ? '$-' : '$') + Math.abs(Math.round(v)).toLocaleString('en-US');
+const fmt2 = v => (v < 0 ? '$-' : '$') + Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const CATS = [];
+CATS.push({name:'Housing & Utilities', ids:['mortgage','propertytax','rental','houseinsurance','hoafee','homemaintenance','utilities']});CATS.push({name:'Transportation', ids:['autoloan','autoinsurance','gasoline','automaintenance','parkingtoll','othertransportation']});CATS.push({name:'Other Debt & Loan Payments', ids:['creditcard','studentloan','otherloan']});CATS.push({name:'Living Expenses', ids:['food','clothing','grocery','mealout','otherliving']});CATS.push({name:'Healthcare', ids:['medicalinsurance','medicalspending']});CATS.push({name:'Children & Education', ids:['childcare','tuition','childsupport','othereducation']});CATS.push({name:'Savings & Investments', ids:['ira401k','collegesaving','stockbond','othersavings']});CATS.push({name:'Miscellaneous Expenses', ids:['pet','giftdonation','hobbiesport','entertainment','vacation','allother']})
+const INCOME_IDS = ['salary', 'pension', 'investment', 'otherincome'];
+const PRETAX_ADJ = { ira401k: 1, collegesaving: 1 };
+const DONUT_COLORS = ['#2b7ddb', '#8bbc21', '#910000', '#e8a33d', '#7e57c2', '#26a69a', '#5c6bc0', '#ab47bc'];
+function annual(id) { const v = num('f_' + id); return $('u_' + id).value === 'y' ? v : v * 12; }
+function donutN(parts) {
+  const total = parts.reduce((s, p) => s + p[0], 0), R = 42, C = 2 * Math.PI * R;
+  let acc = 0, circles = '', ly = 12;
+  for (const [val, color] of parts) {
+    const frac = total > 0 ? val / total : 0;
+    if (frac > 0.003) circles += '<circle cx="50" cy="50" r="' + R + '" fill="none" stroke="' + color + '" stroke-width="15" stroke-dasharray="' + Math.max(frac * C - 1.2, 0.5) + ' ' + C.toFixed(2) + '" transform="rotate(' + (-90 + acc * 360) + ' 50 50)"/>';
+    acc += frac;
+  }
+  const legend = parts.map(([val, color, name]) => { const t = '<text x="97" y="' + ly + '" font-size="10.5" fill="' + color + '" font-weight="700">' + name + ' ' + Math.round(total > 0 ? val / total * 100 : 0) + '%</text>'; ly += 13.5; return t; }).join('');
+  return '<svg width="275" height="112" viewBox="0 0 275 112">' + circles + legend + '</svg>';
+}
+function dtiVerdict(dti) {
+  if (dti < 36) return 'Your DTI ratio is good.';
+  if (dti < 50) return 'Your DTI ratio is OK with room for improvement. Consider taking actions to improve it.';
+  return 'Your DTI ratio is very high, and may put you in more financially-risky situations. We recommend taking actions to lower it.';
+}
+function calc() {
+  const taxR = Math.min(Math.max(num('f_taxrate'), 0), 100) / 100;
+  const gross = INCOME_IDS.reduce((s, id) => s + annual(id), 0);
+  const afterTax = gross * (1 - taxR);
+  const catTotals = CATS.map(c => c.ids.reduce((s, id) => s + annual(id) * (PRETAX_ADJ[id] ? (1 - taxR) : 1), 0));
+  const totalExp = catTotals.reduce((a, b) => a + b, 0);
+  const net = afterTax - totalExp;
+  const housingFront = annual('mortgage') + annual('propertytax') + annual('rental') + annual('houseinsurance') + annual('hoafee');
+  const debtPays = annual('mortgage') + annual('autoloan') + annual('creditcard') + annual('studentloan') + annual('otherloan');
+  const front = gross > 0 ? housingFront / gross * 100 : 0;
+  const dti = gross > 0 ? (housingFront + annual('autoloan') + annual('creditcard') + annual('studentloan') + annual('otherloan')) / gross * 100 : 0;
+  const pctInc = v => afterTax > 0 ? (v / afterTax * 100).toFixed(2) + '% of income' : '—';
+  const foodMeals = annual('food') + annual('mealout');
+  const detail = [
+    ['Housing & Utilities', catTotals[0], ''], ['Transportation', catTotals[1], ''],
+    ['Living Expenses', catTotals[3], ''], ['Food & Meals Out', foodMeals, 'Part of living expenses'],
+    ['Debt & Loan Payments', debtPays, 'Mortgage and auto loan included'], ['Healthcare', catTotals[4], ''],
+    ['Children & Education', catTotals[5], ''], ['Savings & Investments', catTotals[6], '401k, IRA and college saving tax-adjusted — aim for 15% or higher'],
+    ['Miscellaneous Expenses', catTotals[7], ''],
+  ];
+  const sumRow = (label, annualV) => '<div class="flex justify-between py-1.5 border-b border-gray-100 last:border-0"><span>' + label + '</span><span class="num"><strong>' + fmtW(annualV) + '</strong> <span class="text-gray-400">/yr · ' + fmtW(annualV / 12) + ' /mo</span></span></div>';
+  $('bg_results').innerHTML =
+    '<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">' +
+    '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"><div class="font-bold text-lg text-gray-800 mb-3">Summary</div>' +
+    sumRow('Total before-tax income', gross) + sumRow('Total after-tax income', afterTax) + sumRow('Total expenses', totalExp) +
+    '<div class="flex justify-between py-2 mt-1"><span class="font-bold">Net ' + (net < 0 ? '(deficit)' : '(surplus)') + '</span><span class="num font-extrabold ' + (net < 0 ? 'text-red-600' : 'text-green-600') + '">' + fmtW(net) + ' <span class="font-medium text-gray-400">/yr · ' + fmtW(net / 12) + ' /mo</span></span></div>' +
+    '<div class="mt-4 bg-gray-50 rounded-lg p-4"><div class="text-sm text-gray-500">Debt-to-Income (DTI) Ratio</div><div class="text-2xl font-extrabold num">' + dti.toFixed(2) + '%</div><div class="text-sm text-gray-600 mt-1">' + dtiVerdict(dti) + '</div>' +
+    '<div class="text-sm mt-3"><span class="text-gray-500">Front-End DTI Ratio:</span> <strong class="num">' + front.toFixed(2) + '%</strong> <span class="text-gray-400">(housing costs ÷ gross income)</span></div></div></div>' +
+    '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"><div class="font-bold text-lg text-gray-800 mb-3">Expenses Breakdown</div>' +
+    '<div class="bg-gray-50 rounded-lg p-2 inline-block">' + donutN(CATS.map((c, ix) => [catTotals[ix], DONUT_COLORS[ix], c.name.replace(' & ', ' & ')])) + '</div>' +
+    '<table class="w-full text-sm mt-4"><thead><tr class="text-left text-gray-500"><th class="py-1">Category</th><th class="text-right">Annual</th><th class="text-right">Monthly</th><th class="text-right">Share</th></tr></thead><tbody>' +
+    detail.map(d => '<tr class="border-t border-gray-100"><td class="py-1.5">' + d[0] + (d[2] ? '<span class="block text-xs text-gray-400">' + d[2] + '</span>' : '') + '</td><td class="text-right num">' + fmtW(d[1]) + '</td><td class="text-right num">' + fmtW(d[1] / 12) + '</td><td class="text-right num">' + pctInc(d[1]) + '</td></tr>').join('') +
+    '</tbody></table></div></div>';
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams();
+  for (const id of INCOME_IDS.concat(CATS.flatMap(c => c.ids))) { q.set(id, $('f_' + id).value); q.set('u' + id, $('u_' + id).value); }
+  q.set('taxrate', $('f_taxrate').value);
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  for (const id of INCOME_IDS.concat(CATS.flatMap(c => c.ids))) {
+    if (q.get(id)) $('f_' + id).value = q.get(id);
+    if (q.get('u' + id)) $('u_' + id).value = q.get('u' + id);
+  }
+  if (q.get('taxrate')) $('f_taxrate').value = q.get('taxrate');
+  calc();
+})();
+</script>
 </body>
-                  </html>
+                                      </html>
