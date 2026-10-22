@@ -1,128 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Margin Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Margin Calculator — Profit Margin, Stock Margin &amp; FX Margin | CalcNova</title>
+<meta name="description" content="Three free margin calculators: profit margin and markup from any two values, the cash required for a stock purchase on margin, and the margin required for a currency trade at any leverage.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/margin">
+<meta property="og:title" content="Margin Calculator — Profit, Stock & Currency Margin | CalcNova">
+<meta property="og:description" content="Margin vs markup, margin required for stocks, and FX margin by leverage — three calculators in one.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/margin">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Margin Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/margin"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is the difference between margin and markup?","acceptedAnswer":{"@type":"Answer","text":"They measure the same profit against different bases. Margin divides profit by revenue (the selling price); markup divides profit by cost. A $40 profit on a $120 cost sold for $160 is a 25% margin but a 33.33% markup. Convert any markup to margin with margin = markup ÷ (1 + markup), and any margin to markup with markup = margin ÷ (1 − margin). Confusing the two is one of the most common pricing errors in small business."}},
+{"@type":"Question","name":"How much can I borrow to buy stock on margin?","acceptedAnswer":{"@type":"Answer","text":"Under Federal Reserve Regulation T, the initial margin requirement is 50%: you can borrow up to half the purchase price. After the purchase, FINRA's maintenance requirement is at least 25% equity, and most brokers demand 30–40%. At a 30% requirement, buying 100 shares at $18.30 needs $549 of your own money in the account."}},
+{"@type":"Question","name":"What does 20:1 leverage mean in forex?","acceptedAnswer":{"@type":"Answer","text":"Your broker lets a deposit control a position twenty times its size: a 5% margin requirement. Buying 100 units at an exchange rate of 1.30 (a $130 position) at 20:1 requires just $6.50 of margin. Leverage multiplies losses exactly as it multiplies gains, and if losses eat the margin, the broker issues a margin call and can close the position."}},
+{"@type":"Question","name":"Can profit margin exceed 100%?","acceptedAnswer":{"@type":"Answer","text":"No — margin is profit as a share of revenue, and profit cannot exceed the revenue it is part of (that ceiling is approached only as cost nears zero). Markup, measured against cost, has no ceiling: a $1 item sold for $100 carries a 9,900% markup but a 99% margin."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Margin Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Margin</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Margin Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">"Margin" means three different things in finance, so this page carries three calculators: the <strong>profit margin</strong> on something you make or sell, the <strong>cash a broker requires</strong> to buy stock on margin, and the <strong>deposit a currency trade ties up</strong> at a given leverage.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Margin Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Cost of Goods Sold (COGS) ($)</label>
-                        <p class="text-xs text-gray-500 mb-1">How much you paid for the item</p>
-                        <input type="number" id="mCost" value="50" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Selling Price / Revenue ($)</label>
-                        <p class="text-xs text-gray-500 mb-1">How much you sold it for</p>
-                        <input type="number" id="mRevenue" value="100" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-                <button onclick="calculateMargin()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Margin</button>
-
-                <div id="mResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Profit Margin</p>
-                            <p class="text-3xl font-bold text-[#14B8A6]" id="mProfitMargin">0%</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Gross Profit ($)</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="mGrossProfit">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Markup Percentage</p>
-                            <p class="text-xl font-bold text-gray-800" id="mMarkup">0%</p>
-                        </div>
-                    </div>
-                </div>
+    <h2 class="text-xl font-bold text-gray-900 mb-3">1 · Profit Margin Calculator</h2>
+    <p class="text-sm text-gray-600 mb-4">For making, trading or reselling anything. Provide any two values; the rest are calculated. <em>Margin</em> is profit as a percentage of revenue; <em>markup</em> is profit as a percentage of cost.</p>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label class="block"><span class="text-sm font-medium text-gray-600">Cost</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="p_cost" type="number" value="120" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="editedP('cost')"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Revenue</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="p_rev" type="number" value="160" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="editedP('revenue')"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Margin</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="p_margin" type="number" value="" min="0" step="any" placeholder="solve for me" class="w-full p-2.5 outline-none num" oninput="editedP('margin')"><span class="text-gray-400">%</span></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Profit</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="p_profit" type="number" value="" min="0" step="any" placeholder="solve for me" class="w-full p-2.5 outline-none num" oninput="editedP('profit')"></div></label>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Margin vs. Markup</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">It's important to understand the difference between margin and markup. <strong>Margin</strong> is the ratio of profit to revenue (Sales Price - Cost / Sales Price). <strong>Markup</strong> is the ratio of profit to cost (Sales Price - Cost / Cost). A 50% margin is equivalent to a 100% markup. This calculator provides both to give you a complete financial picture.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <button onclick="calcProfit()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="p_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">Margin ≠ markup</div>
+                <p>The classic pricing trap: a shopkeeper who wants a 25% <em>margin</em> but adds a 25% <em>markup</em> to a $120 cost prices at $150, not $160 — and quietly earns a 20% margin instead. Price from margin with <strong>cost ÷ (1 − margin)</strong>.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+    <h2 class="text-xl font-bold text-gray-900 mb-3">2 · Stock Trading Margin Calculator</h2>
+    <p class="text-sm text-gray-600 mb-4">The minimum of your own money a broker requires for a purchase on margin. (U.S. Regulation T sets the initial requirement at 50%; brokers set their own maintenance levels, commonly 25–40%.)</p>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Stock price</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="s_price" type="number" value="18.3" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calcStock()"></div></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Number of shares</span>
+                        <input id="s_shares" type="number" value="100" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calcStock()"></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Margin requirement</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="s_req" type="number" value="30" min="0" max="100" step="any" class="w-full p-2.5 outline-none num" oninput="calcStock()"><span class="text-gray-400">%</span></div></label>
+                </div>
+                <button onclick="calcStock()" class="mt-4 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
             </div>
-        </aside>
-    </main>
-
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+            <div id="s_results"></div>
         </div>
-    </footer>
+    </div>
 
-    <script>
-        function calculateMargin() {
-            const cost = parseFloat(document.getElementById('mCost').value);
-            const revenue = parseFloat(document.getElementById('mRevenue').value);
+    <h2 class="text-xl font-bold text-gray-900 mb-3">3 · Currency Exchange Margin Calculator</h2>
+    <p class="text-sm text-gray-600 mb-4">The deposit tied up by a currency position: position value divided by the leverage ratio. The exchange rate is quoted in your home currency — 1 EUR = 1.22 USD means a rate of 1.22.</p>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Exchange rate</span>
+                        <input id="f_rate" type="number" value="1.3" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calcFx()"></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Margin ratio (leverage)</span>
+                        <select id="f_ratio" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5" onchange="calcFx()">
+                            <option value="1">1:1</option>
+                            <option value="5">5:1</option>
+                            <option value="10">10:1</option>
+                            <option value="20" selected>20:1</option>
+                            <option value="25">25:1</option>
+                            <option value="30">30:1</option>
+                            <option value="40">40:1</option>
+                            <option value="50">50:1</option>
+                        </select></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Units</span>
+                        <input id="f_units" type="number" value="100" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calcFx()"></label>
+                </div>
+                <button onclick="calcFx()" class="mt-4 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            </div>
+            <div id="f_results"></div>
+        </div>
+    </div>
 
-            if (isNaN(cost) || isNaN(revenue) || cost < 0 || revenue <= 0) {
-                alert("Please enter valid positive numbers. Selling price must be greater than 0.");
-                return;
-            }
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>One Word, Three Margins</h2>
+        <p>In everyday language a margin is an edge or a cushion; in finance the word kept the cushion idea and specialized. It can mean the slice of a selling price that survives as profit, the equity slice an investor must contribute when borrowing to trade, or the deposit slice that secures a leveraged currency position. The three calculators above exist because the three ideas share a name and almost nothing else.</p>
+        <h3>Profit Margin: The Health Gauge</h3>
+        <p>Profit margin — profit divided by revenue — answers a simple question: of every dollar that came in, how much stayed? A 30% margin leaves $30 of profit per $100 of revenue. It is simultaneously a health gauge (a year that dips below a business's usual margin is an early warning, whatever the sales line says), an efficiency measure (profit per revenue dollar, comparable across periods), and a competitive benchmark — but only against genuinely similar businesses: a neighborhood restaurant and a chemical giant live in different margin universes, and comparing them teaches nothing. Margins improve from exactly two directions: raise prices, or cut the cost of what you sell. Its sibling, <strong>markup</strong> (profit ÷ cost), is the number merchants actually add at the pricing desk — which is why the conversion between the two, built into the calculator above, causes so much quiet damage when it's skipped.</p>
+        <h3>Margin Trading: Borrowed Money, Amplified Everything</h3>
+        <p>Buying securities with a broker's money is trading on margin. The collateral is the account itself; the effect is leverage — gains multiply, and so do losses, and a falling position can consume more than the cash originally committed. U.S. rules draw the guardrails: Regulation T caps the borrowed share at 50% of a purchase (the <em>initial</em> margin), and maintenance rules (FINRA floor 25%, brokers typically higher) force the account's equity share to stay above a minimum thereafter. The second calculator works with whatever requirement your broker actually imposes. Treat it as arithmetic, not encouragement: margin investing is genuinely high-risk, and the time to understand a margin call is before one arrives.</p>
+        <h3>Currency Margin and the Margin Call</h3>
+        <p>In foreign exchange, "margin" is a good-faith deposit — a slice of account equity reserved while a position is open, not a fee. Brokers express it as leverage: a 2% requirement is 50:1, 1% is 100:1, and retail traders routinely use 50:1 to 200:1 where regulations allow. If the market moves against the position far enough that the remaining equity can't support it, the broker issues a <strong>margin call</strong>: deposit more, or the positions are closed for you, at market prices, crystallizing the loss and protecting the account from going negative. The required-margin figure the third calculator returns is the amount locked up on day one — the losses it must absorb before the call comes are a separate, sobering calculation.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>Margin or markup for pricing?</h4>
+        <p>Decide the margin you need (it connects directly to your income statement), then convert: required markup = margin ÷ (1 − margin). A 25% margin needs a 33.33% markup.</p>
+        <h4>Is the stock "amount required" the maintenance or initial margin?</h4>
+        <p>Whichever requirement you type in — the calculator multiplies position value by your percentage. Brokers quote both; check which one you're entering.</p>
+        <h4>Why is the FX amount required so small?</h4>
+        <p>Because leverage is doing exactly what it promises: at 20:1, $6.50 controls $130. The $130 is what's really at risk in the market; the $6.50 is just the deposit that stands in front of it.</p>
+    </section>
 
-            // حساب الربح الإجمالي
-            const grossProfit = revenue - cost;
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="depreciation.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Depreciation Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The cost side of the margin: what your equipment loses each year.</p>
+            </a>
+            <a href="vat.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">VAT Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Margins live on the net price — strip the VAT out first.</p>
+            </a>
+            <a href="roi.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">ROI Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Profit against the capital invested, not just the price.</p>
+            </a>
+            <a href="currency.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Currency Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Live exchange rates for the positions the FX calculator sizes.</p>
+            </a>
+        </div>
+    </section>
+</main>
 
-            // حساب هامش الربح (الربح / الإيرادات)
-            const profitMargin = (grossProfit / revenue) * 100;
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            // حساب هامش الربح المضاف (Markup) (الربح / التكلفة)
-            let markup = 0;
-            if (cost > 0) {
-                markup = (grossProfit / cost) * 100;
-            }
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('mGrossProfit').textContent = formatter.format(grossProfit);
-            document.getElementById('mProfitMargin').textContent = profitMargin.toFixed(2) + "%";
-            
-            const markupEl = document.getElementById('mMarkup');
-            if (cost === 0) {
-                markupEl.textContent = "N/A";
-            } else {
-                markupEl.textContent = markup.toFixed(2) + "%";
-            }
-
-            document.getElementById('mResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? null : v; };
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtPct = v => v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
+const r2 = v => Math.round(v * 100) / 100;
+function donut(cost, profit, revenue) {
+  const R = 42, C = 2 * Math.PI * R;
+  const pp = revenue > 0 ? profit / revenue : 0;
+  return '<svg width="137" height="100" viewBox="0 0 137 100"><circle cx="50" cy="50" r="' + R + '" fill="none" stroke="#2b7ddb" stroke-width="16"/>' +
+    '<circle cx="50" cy="50" r="' + R + '" fill="none" stroke="#8bbc21" stroke-width="16" stroke-dasharray="' + (pp * C).toFixed(2) + ' ' + C.toFixed(2) + '" transform="rotate(-90 50 50)"/>' +
+    '<text x="97" y="42" font-size="11" fill="#2b7ddb" font-weight="700">Cost ' + Math.round((1 - pp) * 100) + '%</text>' +
+    '<text x="97" y="60" font-size="11" fill="#8bbc21" font-weight="700">Profit ' + Math.round(pp * 100) + '%</text></svg>';
+}
+function bannerHtml(headline, sub, d) {
+  return '<div class="bg-[#3F51B5] text-white rounded-xl p-5 flex flex-wrap items-center gap-5"><div class="flex-1 min-w-[200px]"><div class="text-2xl font-extrabold">' + headline + '</div><div class="text-sm opacity-80 mt-1">' + sub + '</div></div>' + (d ? '<div class="bg-white rounded-lg p-1">' + d + '</div>' : '') + '</div>';
+}
+function statsHtml(pairs) {
+  return '<div class="grid grid-cols-2 gap-3 mt-4 text-center">' + pairs.map(p => '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">' + p[0] + '</div><div class="font-bold num">' + p[1] + '</div></div>').join('') + '</div>';
+}
+// ---------- 1 · Profit margin (any two of four) ----------
+const PF = { cost: 'p_cost', revenue: 'p_rev', margin: 'p_margin', profit: 'p_profit' };
+let givensP = ['cost', 'revenue'];
+function editedP(field) {
+  givensP = [field].concat(givensP.filter(f => f !== field)).slice(0, 2);
+  calcProfit();
+}
+function calcProfit() {
+  const out = $('p_results');
+  const filled = f => String($(PF[f]).value).trim() !== '' && num(PF[f]) !== null;
+  let g = givensP.filter(filled);
+  for (const f of ['cost', 'revenue', 'margin', 'profit']) if (!g.includes(f) && filled(f)) g.push(f);
+  g = g.slice(0, 2);
+  if (g.length < 2) { out.innerHTML = ''; updateShare(); return; }
+  const v = {};
+  for (const f of ['cost', 'revenue', 'margin', 'profit']) v[f] = g.includes(f) ? num(PF[f]) : null;
+  const has = (...fs) => fs.every(f => v[f] !== null);
+  if (has('cost', 'revenue')) { v.profit = v.revenue - v.cost; }
+  else if (has('cost', 'profit')) { v.revenue = v.cost + v.profit; }
+  else if (has('revenue', 'profit')) { v.cost = v.revenue - v.profit; }
+  else if (has('cost', 'margin')) { if (v.margin >= 100) { out.innerHTML = '<p class="text-sm text-gray-500">A margin of 100% or more leaves no room for cost — reduce the margin.</p>'; return; } v.revenue = v.cost / (1 - v.margin / 100); v.profit = v.revenue - v.cost; }
+  else if (has('revenue', 'margin')) { v.profit = v.revenue * v.margin / 100; v.cost = v.revenue - v.profit; }
+  else if (has('margin', 'profit')) { if (!(v.margin > 0)) { out.innerHTML = '<p class="text-sm text-gray-500">With a margin of 0%, profit fixes nothing else — add a cost or a revenue.</p>'; return; } v.revenue = v.profit / (v.margin / 100); v.cost = v.revenue - v.profit; }
+  if ([v.cost, v.revenue, v.profit].some(x => x === null || !isFinite(x)) || !(v.revenue > 0)) { out.innerHTML = ''; updateShare(); return; }
+  v.margin = v.profit / v.revenue * 100;
+  const markup = v.cost > 0 ? v.profit / v.cost * 100 : 0;
+  $('p_cost').value = r2(v.cost); $('p_rev').value = r2(v.revenue);
+  $('p_margin').value = Math.round(v.margin * 100) / 100; $('p_profit').value = r2(v.profit);
+  out.innerHTML = bannerHtml('Margin: ' + fmtPct(v.margin), 'Profit ' + fmt$(v.profit) + ' on revenue of ' + fmt$(v.revenue) + '.', donut(v.cost, v.profit, v.revenue)) +
+    statsHtml([['Profit', fmt$(v.profit)], ['Markup', fmtPct(markup)], ['Cost', fmt$(v.cost)], ['Revenue', fmt$(v.revenue)]]);
+  updateShare();
+}
+// ---------- 2 · Stock margin ----------
+function calcStock() {
+  const out = $('s_results');
+  const price = num('s_price'), shares = num('s_shares'), req = num('s_req');
+  if (price === null || shares === null || req === null || price <= 0 || shares <= 0) { out.innerHTML = ''; updateShare(); return; }
+  const position = price * shares, required = position * req / 100, borrowed = position - required;
+  out.innerHTML = bannerHtml('Amount required: ' + fmt$(required), 'Your own money needed for a ' + fmt$(position) + ' position at a ' + req + '% margin requirement.', null) +
+    statsHtml([['Position value', fmt$(position)], ['Amount borrowed', fmt$(borrowed)], ['Your equity share', fmtPct(req)], ['Shares', shares.toLocaleString('en-US')]]);
+  updateShare();
+}
+// ---------- 3 · Currency margin ----------
+function calcFx() {
+  const out = $('f_results');
+  const rate = num('f_rate'), units = num('f_units'), ratio = parseFloat($('f_ratio').value);
+  if (rate === null || units === null || rate <= 0 || units <= 0) { out.innerHTML = ''; updateShare(); return; }
+  const position = units * rate, required = position / ratio;
+  out.innerHTML = bannerHtml('Amount required: ' + fmt$(required), 'Margin tied up by a ' + fmt$(position) + ' position at ' + ratio + ':1 leverage.', null) +
+    statsHtml([['Position value (home currency)', fmt$(position)], ['Margin requirement', fmtPct(100 / ratio)], ['Leverage', ratio + ':1'], ['Units', units.toLocaleString('en-US')]]);
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ c: $('p_cost').value, r: $('p_rev').value, m: $('p_margin').value, pf: $('p_profit').value, sp: $('s_price').value, sh: $('s_shares').value, sr: $('s_req').value, fx: $('f_rate').value, fr: $('f_ratio').value, un: $('f_units').value });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  const set = (id, key) => { if (q.get(key)) $(id).value = q.get(key); };
+  set('p_cost', 'c'); set('p_rev', 'r'); set('p_margin', 'm'); set('p_profit', 'pf');
+  set('s_price', 'sp'); set('s_shares', 'sh'); set('s_req', 'sr');
+  set('f_rate', 'fx'); set('f_ratio', 'fr'); set('f_units', 'un');
+  calcProfit(); calcStock(); calcFx();
+})();
+</script>
 </body>
-</html>
+                </html>
