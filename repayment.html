@@ -1,123 +1,298 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repayment Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repayment Calculator — Loan Term or Fixed Installment | CalcNova</title>
+<meta name="description" content="Free repayment calculator: given a balance, rate, compounding and payment frequency, find the installment for a fixed term — or how long a fixed installment takes to clear the debt. With amortization schedule.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/repayment">
+<meta property="og:title" content="Repayment Calculator — Loan Term or Fixed Installment | CalcNova">
+<meta property="og:description" content="Any balance, any compounding, any payment frequency: the installment for your term, or the term for your installment.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/repayment">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Repayment Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/repayment"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why does the compounding period matter if I pay monthly?","acceptedAnswer":{"@type":"Answer","text":"Because the rate is converted, not just divided. On $10,000 over 5 years, a 10% rate compounded annually gives a $210.36 monthly payment, while the same 10% compounded monthly gives $212.47 — monthly compounding grows the rate to an effective 10.47% a year, while annual compounding keeps it at exactly 10%. The compounding setting tells the calculator what the quoted rate really means; the payment frequency then decides how often you pay. Keep the two matched to your loan documents."}},
+{"@type":"Question","name":"Why does the time show a fraction, like 4.9 months?","acceptedAnswer":{"@type":"Answer","text":"With a fixed installment, the exact mathematical payoff time rarely lands on a whole payment: $200 a month clears the default loan in 64.95 months, shown as 5 years and 4.9 months. In practice you make 65 payments, the last one smaller ($189.78 at the defaults). The totals in the results come from that real payment-by-payment schedule."}},
+{"@type":"Question","name":"Do biweekly payments really save money?","acceptedAnswer":{"@type":"Answer","text":"Yes, twice over. Paying half the monthly amount every two weeks puts 26 half-payments — 13 full monthly payments — into each year instead of 12, and each payment lowers the balance (and so the interest) a little sooner. On the default loan, switching the payback to biweekly with a 5-year term drops the installment to about $98 and trims the total interest. Check your lender allows it without fees first."}},
+{"@type":"Question","name":"What is the difference between this and the Loan or Payment calculators?","acceptedAnswer":{"@type":"Answer","text":"Emphasis. The Loan Calculator adds deferred-payment and zero-coupon bond tools; the Payment Calculator focuses on monthly loans. This one is the general repayment workhorse: nine compounding periods and eight payment frequencies, for an existing balance or a brand-new loan, solved either by term or by installment."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Repayment Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Repayment</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Repayment Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Repayment is just two questions wearing different clothes: <strong>what installment clears this balance within my term?</strong> — or <strong>how long does my installment need?</strong> Set the balance, the rate, how it compounds and how often you pay, then solve it either way. Works for an existing debt or a loan you haven't taken yet.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Repayment Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Amount ($)</label>
-                        <input type="number" id="rpAmount" value="15000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Loan balance</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                        <span class="text-gray-400">$</span>
+                        <input id="r_balance" type="number" value="10000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
-                        <input type="number" id="rpRate" value="7.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Interest rate</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                        <input id="r_rate" type="number" value="10" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()">
+                        <span class="text-gray-400">%</span>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Months)</label>
-                        <input type="number" id="rpTerm" value="60" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-                <button onclick="calculateRepayment()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Monthly Payment</button>
-
-                <div id="rpResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Monthly Payment</p>
-                            <p class="text-3xl font-bold text-[#14B8A6]" id="rpMonthly">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest</p>
-                            <p class="text-xl font-bold text-red-500" id="rpInterest">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Repayment</p>
-                            <p class="text-xl font-bold text-gray-800" id="rpTotal">$0</p>
-                        </div>
-                    </div>
-                </div>
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Compound</span>
+                    <select id="r_compound" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5" onchange="calc()">
+                        <option value="1">annually (APY)</option>
+                        <option value="2">semi-annually</option>
+                        <option value="4">quarterly</option>
+                        <option value="12" selected>monthly (APR)</option>
+                        <option value="24">semi-monthly</option>
+                        <option value="26">biweekly</option>
+                        <option value="52">weekly</option>
+                        <option value="365">daily</option>
+                        <option value="0">continuously</option>
+                    </select>
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Pay back</span>
+                    <select id="r_payback" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5" onchange="calc()">
+                        <option value="365">every day</option>
+                        <option value="52">every week</option>
+                        <option value="26">every 2 weeks</option>
+                        <option value="24">every half month</option>
+                        <option value="12" selected>every month</option>
+                        <option value="4">every quarter</option>
+                        <option value="2">every 6 months</option>
+                        <option value="1">every year</option>
+                    </select>
+                </label>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How to Calculate Repayments</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">This calculator uses the standard amortization formula to determine your fixed monthly payment. It shows you exactly how much of your payment goes toward the principal and how much goes toward interest over the life of the loan. Knowing your monthly repayment helps you budget effectively.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="flex gap-2 mt-6">
+                <button id="tab_term" onclick="setMode('term')" class="flex-1 font-bold py-2.5 rounded-lg transition bg-[#3F51B5] text-white">Repay within a fixed time</button>
+                <button id="tab_inst" onclick="setMode('inst')" class="flex-1 font-bold py-2.5 rounded-lg transition bg-gray-100 text-gray-600">Repay with a fixed installment</button>
+            </div>
+
+            <div id="mode_term" class="mt-4 grid grid-cols-2 gap-4">
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Term — years</span>
+                    <input id="r_years" type="number" value="5" min="0" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()">
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">and months</span>
+                    <input id="r_months" type="number" value="0" min="0" max="11" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()">
+                </label>
+            </div>
+            <div id="mode_inst" class="mt-4 hidden">
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Installment amount</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                        <span class="text-gray-400">$</span>
+                        <input id="r_inst" type="number" value="200" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()">
+                        <span id="r_inst_label" class="text-gray-400 whitespace-nowrap">every month</span>
+                    </div>
+                </label>
+            </div>
+
+            <button onclick="calc()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="r_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">Compounding is not a detail</div>
+                <p>The same quoted 10% produces a <strong>$212.47</strong> monthly payment when it compounds monthly, but <strong>$210.36</strong> when it compounds annually — because monthly compounding quietly turns 10% into a 10.47% effective year. Match the Compound setting to your loan documents, not to your payment habit: the two dropdowns answer different questions.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>Repayment, Solved Both Ways</h2>
+        <p>Repayment is the act of returning borrowed money in periodic installments of principal and interest — on a mortgage, an auto loan, a student loan, or a card balance. Lenders quote a rate and a compounding convention; borrowers control a term or an installment. Fix one and the other is determined, which is why this calculator has the same two modes as the loans themselves: a <strong>fixed term</strong> (what must I pay to be done in five years?) and a <strong>fixed installment</strong> (how long does $200 a time take?). Failing to repay as agreed is what damages credit ratings and, at the end of the road, forces bankruptcy — so the honest number matters more than the comfortable one.</p>
+        <h3>Compounding vs. Payment Frequency</h3>
+        <p>Two different clocks run inside every loan. The <strong>compounding</strong> clock says how often interest is added to the balance — annually, monthly, daily, or continuously — and converts the quoted annual rate into the rate each period really carries. The <strong>payment</strong> clock says how often you pay. When they differ, the calculator converts properly: the per-payment rate is the one that grows money at the same speed as the compounding does. This is why a 10% rate can produce different installments for the same term depending on the compounding chosen, and why comparing loan offers without matching compounding conventions misleads.</p>
+        <h3>Repaying Faster</h3>
+        <p>Three strategies recur because they work. <strong>Pay extra:</strong> any amount above the installment goes straight to principal (prepayment penalties aside), shrinking every future interest charge. <strong>Pay biweekly:</strong> half-installments every two weeks add up to thirteen full payments a year instead of twelve, and the balance — hence the interest — falls sooner; try the biweekly payback above and watch the totals. <strong>Refinance:</strong> replace the loan with a cheaper or shorter one when the fee is smaller than the interest saved, which the Debt Consolidation and Refinance calculators on this site judge directly. Behind all three sits the same warning: money sent to a loan cannot be un-sent, so an emergency fund comes first, and a low-rate loan may honestly be worth less than the investment the same cash could make.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>Why does compounding change my payment?</h4>
+        <p>Because it changes what the rate means: 10% compounded monthly is a 10.47% effective year; compounded annually it is exactly 10%. Same sticker, different engine — the annual-compounding payment is the smaller one, $210.36 vs. $212.47 at the defaults.</p>
+        <h4>Why "4.9 months"? Do I pay a partial month?</h4>
+        <p>The fractional figure is the exact mathematical term. In practice you make one more payment than the whole periods — 65 here — and the last is smaller than usual. The totals shown always come from the real schedule.</p>
+        <h4>Do biweekly payments actually save anything?</h4>
+        <p>Yes: 26 half-payments equal 13 monthly payments a year, and earlier payments mean less interest accrues. Confirm your lender applies them without fees.</p>
+        <h4>Which CalcNova calculator do I need?</h4>
+        <p>This one for any balance × compounding × frequency question; the Loan Calculator for deferred or zero-coupon structures; the Payment Calculator for the classic monthly-loan version; the Credit Card Calculator for revolving balances.</p>
+    </section>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Amortized, deferred-payment and zero-coupon loans in one place.</p>
+            </a>
+            <a href="payment.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Payment Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The monthly-loan specialist: fixed term or fixed payment.</p>
+            </a>
+            <a href="credit-card.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Credit Card Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Revolving balances: payoff time or the payment for a deadline.</p>
+            </a>
+            <a href="amortization.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Amortization Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Full schedules with extra payments, month by month or year by year.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        function calculateRepayment() {
-            const amount = parseFloat(document.getElementById('rpAmount').value);
-            const rate = parseFloat(document.getElementById('rpRate').value) / 100 / 12;
-            const months = parseInt(document.getElementById('rpTerm').value);
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (isNaN(amount) || isNaN(rate) || isNaN(months) || amount <= 0 || months <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
-
-            let monthlyPayment = 0;
-            if (rate === 0) {
-                monthlyPayment = amount / months;
-            } else {
-                monthlyPayment = amount * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
-            }
-
-            const totalRepayment = monthlyPayment * months;
-            const totalInterest = totalRepayment - amount;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('rpMonthly').textContent = formatter.format(monthlyPayment);
-            document.getElementById('rpInterest').textContent = formatter.format(totalInterest);
-            document.getElementById('rpTotal').textContent = formatter.format(totalRepayment);
-
-            document.getElementById('rpResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+let mode = 'term';
+const PAY_LABEL = { 365: 'every day', 52: 'every week', 26: 'every 2 weeks', 24: 'every half month', 12: 'every month', 4: 'every quarter', 2: 'every 6 months', 1: 'every year' };
+function setMode(m) {
+  mode = m;
+  $('mode_term').classList.toggle('hidden', m !== 'term');
+  $('mode_inst').classList.toggle('hidden', m !== 'inst');
+  $('tab_term').className = 'flex-1 font-bold py-2.5 rounded-lg transition ' + (m === 'term' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  $('tab_inst').className = 'flex-1 font-bold py-2.5 rounded-lg transition ' + (m === 'inst' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  calc();
+}
+function periodRate(ratePct, m, p) {
+  const r = ratePct / 100;
+  if (m === 0) return Math.exp(r / p) - 1;
+  return Math.pow(1 + r / m, m / p) - 1;
+}
+function donut(principal, interest) {
+  const total = principal + interest, R = 42, C = 2 * Math.PI * R;
+  const ip = total > 0 ? interest / total : 0;
+  const pp = Math.round((1 - ip) * 100), pi = Math.round(ip * 100);
+  return '<svg width="127" height="100" viewBox="0 0 127 100"><circle cx="50" cy="50" r="' + R + '" fill="none" stroke="#2b7ddb" stroke-width="16"/>' +
+    '<circle cx="50" cy="50" r="' + R + '" fill="none" stroke="#8bbc21" stroke-width="16" stroke-dasharray="' + (ip * C).toFixed(2) + ' ' + C.toFixed(2) + '" transform="rotate(-90 50 50)"/>' +
+    '<text x="97" y="42" font-size="11" fill="#2b7ddb" font-weight="700">Principal ' + pp + '%</text>' +
+    '<text x="97" y="60" font-size="11" fill="#8bbc21" font-weight="700">Interest ' + pi + '%</text></svg>';
+}
+function scheduleRows(P, i, pay, cap) {
+  let bal = P, rows = '', n = 0, totInt = 0, last = 0;
+  while (bal > 0.000001 && n < cap) {
+    const it = bal * i, p = Math.min(pay, bal + it), prin = p - it;
+    bal = bal + it - p; totInt += it; n++; last = p;
+    rows += '<tr class="border-t border-gray-100"><td class="p-2">' + n + '</td><td class="p-2 text-right">' + fmt$(p) + '</td><td class="p-2 text-right">' + fmt$(prin) + '</td><td class="p-2 text-right">' + fmt$(it) + '</td><td class="p-2 text-right">' + fmt$(Math.max(bal, 0)) + '</td></tr>';
+  }
+  return { rows, n, totInt, last };
+}
+function statsHtml(pairs) {
+  return '<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 text-center">' + pairs.map(p => '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">' + p[0] + '</div><div class="font-bold num">' + p[1] + '</div></div>').join('') + '</div>';
+}
+function tableHtml(rows) {
+  return '<div class="overflow-auto max-h-72 mt-4 border border-gray-100 rounded-lg"><table class="w-full text-sm num"><thead class="bg-gray-50 sticky top-0"><tr><th class="text-left p-2">#</th><th class="text-right p-2">Payment</th><th class="text-right p-2">Principal</th><th class="text-right p-2">Interest</th><th class="text-right p-2">Balance</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+}
+function timeText(nExact, p) {
+  const years = nExact / p, Y = Math.floor(years), M = (years - Y) * 12;
+  const mStr = Math.abs(M - Math.round(M)) < 0.05 ? String(Math.round(M)) : M.toFixed(1);
+  return (Y ? Y + (Y === 1 ? ' year' : ' years') : '') + (Y && M >= 0.05 ? ' and ' : '') + (M >= 0.05 || !Y ? mStr + ' months' : '');
+}
+function calc() {
+  const P = num('r_balance'), rate = num('r_rate');
+  const m = parseInt($('r_compound').value), p = parseInt($('r_payback').value);
+  const label = PAY_LABEL[p];
+  $('r_inst_label').textContent = label;
+  const out = $('r_results');
+  if (P <= 0) { out.innerHTML = ''; updateShare(); return; }
+  const i = periodRate(rate, m, p);
+  if (mode === 'term') {
+    const yrs = num('r_years') + num('r_months') / 12;
+    const n = Math.round(yrs * p);
+    if (n <= 0) { out.innerHTML = '<p class="text-sm text-gray-500">Enter a term of at least one payment period.</p>'; updateShare(); return; }
+    const pay = i > 0 ? P * i / (1 - Math.pow(1 + i, -n)) : P / n;
+    const total = pay * n, interest = total - P;
+    const s = scheduleRows(P, i, pay, n + 2);
+    out.innerHTML =
+      '<div class="bg-[#3F51B5] text-white rounded-xl p-5 flex flex-wrap items-center gap-5"><div class="flex-1 min-w-[220px]"><div class="text-sm opacity-80">Pay back ' + label + '</div><div class="text-3xl font-extrabold mt-1">' + fmt$(pay) + '</div><div class="text-sm opacity-80 mt-1">' + n + ' payments over ' + timeText(n, p) + '.</div></div><div class="bg-white rounded-lg p-1">' + donut(P, interest) + '</div></div>' +
+      statsHtml([['Total of ' + n + ' payments', fmt$(total)], ['Total interest', fmt$(interest)], ['Per-period rate', (i * 100).toFixed(4).replace(/0+$/, '').replace(/\.$/, '') + '%'], ['Final payment', fmt$(s.last)]]) +
+      tableHtml(s.rows);
+  } else {
+    const pay = num('r_inst');
+    if (pay <= 0) { out.innerHTML = ''; updateShare(); return; }
+    const firstInt = P * i;
+    if (i > 0 && pay <= firstInt) {
+      out.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-5"><div class="font-bold">This installment never pays the loan off.</div><p class="text-sm mt-1">Interest alone is ' + fmt$(firstInt) + ' per period at the start, and the installment is ' + fmt$(pay) + '. Anything above ' + fmt$(firstInt) + ' starts reducing the balance.</p></div>';
+      updateShare(); return;
+    }
+    const nExact = i > 0 ? Math.log(pay / (pay - P * i)) / Math.log(1 + i) : P / pay;
+    const s = scheduleRows(P, i, pay, Math.ceil(nExact) + 2);
+    const total = P + s.totInt;
+    out.innerHTML =
+      '<div class="bg-[#3F51B5] text-white rounded-xl p-5 flex flex-wrap items-center gap-5"><div class="flex-1 min-w-[220px]"><div class="text-sm opacity-80">Paying ' + fmt$(pay) + ' ' + label + ', the loan is paid off in</div><div class="text-3xl font-extrabold mt-1">' + timeText(nExact, p) + '</div><div class="text-sm opacity-80 mt-1">' + s.n + ' payments; the final one is ' + fmt$(s.last) + '.</div></div><div class="bg-white rounded-lg p-1">' + donut(P, s.totInt) + '</div></div>' +
+      statsHtml([['Total of ' + s.n + ' payments', fmt$(total)], ['Total interest', fmt$(s.totInt)], ['Per-period rate', (i * 100).toFixed(4).replace(/0+$/, '').replace(/\.$/, '') + '%'], ['Exact term', nExact.toFixed(2) + ' periods']]) +
+      tableHtml(s.rows);
+  }
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ b: $('r_balance').value, r: $('r_rate').value, c: $('r_compound').value, p: $('r_payback').value, mode, y: $('r_years').value, mo: $('r_months').value, a: $('r_inst').value });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  if (q.get('b')) $('r_balance').value = q.get('b');
+  if (q.get('r')) $('r_rate').value = q.get('r');
+  if (q.get('c')) $('r_compound').value = q.get('c');
+  if (q.get('p')) $('r_payback').value = q.get('p');
+  if (q.get('y')) $('r_years').value = q.get('y');
+  if (q.get('mo')) $('r_months').value = q.get('mo');
+  if (q.get('a')) $('r_inst').value = q.get('a');
+  setMode(q.get('mode') === 'inst' ? 'inst' : 'term');
+})();
+</script>
 </body>
 </html>
