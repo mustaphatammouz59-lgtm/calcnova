@@ -1,141 +1,341 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Loan Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Loan Calculator — Payoff &amp; Projection | CalcNova</title>
+<meta name="description" content="Free student loan calculator: solve any loan from three values, test extra payments against your payoff date, and project your balance at graduation with the grace period included.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/student-loan">
+<meta property="og:title" content="Student Loan Calculator — Payoff & Projection | CalcNova">
+<meta property="og:description" content="The payment for your term, the payoff date for your extras, and the balance you'll really graduate with.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/student-loan">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Student Loan Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/student-loan"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why is my balance higher at graduation than what I borrowed?","acceptedAnswer":{"@type":"Answer","text":"Because on unsubsidized loans, interest accrues while you study and is capitalized — added to the balance — when repayment begins. Borrow $40,000 over two remaining years at 6.8% without paying interest and you graduate owing $44,263.99, then $45,790.44 after the 6-month grace period. From then on you pay interest on the interest, which is why even small in-school interest payments are so powerful."}},
+{"@type":"Question","name":"How much does an extra $150 a month save?","acceptedAnswer":{"@type":"Answer","text":"On a $30,000 balance at 6.8% with a $350 standard payment, adding $150 a month ends the loan in 6 years 2 months instead of 9 years 10 months — 3 years 8 months earlier — and saves $4,421.28 of interest. Federal and private student loans allow penalty-free prepayment, so every extra dollar goes to principal."}},
+{"@type":"Question","name":"What is the grace period?","acceptedAnswer":{"@type":"Answer","text":"The months between leaving school and the first required payment — six months for most federal loans. Interest keeps accruing through it on unsubsidized loans, so the balance that enters repayment is larger than the balance at graduation. Subsidized loans are the exception: the government covers the interest during school and the grace period."}},
+{"@type":"Question","name":"Should I pay interest while I'm still in school?","acceptedAnswer":{"@type":"Answer","text":"If you can afford even the interest-only amount, yes. Paying the accruing interest prevents capitalization, so you start repayment owing exactly what you borrowed. On the projection defaults, that choice cuts the monthly payment from $526.96 to about $476 and removes over $5,700 of total interest."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Student Loan Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Student Loan</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Student Loan Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Three tools for three moments in a student loan's life: <strong>solve</strong> any loan from any three values, <strong>stress-test your payoff</strong> with extra payments, and — if you're still studying — <strong>project</strong> the balance you'll actually graduate with, grace period and capitalized interest included.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Student Loan Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Total Loan Amount ($)</label>
-                        <input type="number" id="slAmount" value="30000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
-                        <input type="number" id="slRate" value="5.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
-                        <input type="number" id="slYears" value="10" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Grace Period (Months)</label>
-                        <p class="text-xs text-gray-500 mb-1">Time before repayment starts</p>
-                        <input type="number" id="slGrace" value="6" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-                <button onclick="calculateStudentLoan()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Repayment</button>
-
-                <div id="slResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Monthly Payment</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="slMonthly">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Paid</p>
-                            <p class="text-xl font-bold text-red-500" id="slTotalInterest">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Amount Paid</p>
-                            <p class="text-xl font-bold text-gray-800" id="slTotalPaid">$0</p>
-                        </div>
-                    </div>
-                    <div class="mt-4 text-center text-sm text-gray-600 bg-blue-50 p-3 rounded border border-blue-100">
-                        <p><strong>Note:</strong> Interest accrues during the grace period and is added to your principal balance.</p>
-                    </div>
-                </div>
+    <h2 class="text-xl font-bold text-gray-900 mb-3">1 · Simple Student Loan Calculator</h2>
+    <p class="text-sm text-gray-600 mb-4">Provide any three values; the fourth is calculated for you.</p>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label class="block"><span class="text-sm font-medium text-gray-600">Loan balance</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="s1_balance" type="number" value="30000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc1()"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Remaining term (years)</span>
+                    <input id="s1_years" type="number" value="10" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc1()"></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Interest rate</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="s1_rate" type="number" value="6.8" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc1()"><span class="text-gray-400">%</span></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Monthly payment <span class="text-gray-400">(leave blank to solve)</span></span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="s1_pay" type="number" value="" min="0" step="any" placeholder="solve for me" class="w-full p-2.5 outline-none num" oninput="calc1()"><span class="text-gray-400 whitespace-nowrap">/month</span></div></label>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Understanding Student Loans</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Student loans are designed to help students pay for post-secondary education and the associated fees, such as tuition, books, and living expenses. Repayment usually begins after a grace period (often 6 months) following graduation. This calculator helps you estimate your monthly payments and the total interest you will pay over the life of the loan.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <button onclick="calc1()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="s1_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">The 6.8% in the examples</div>
+                <p>That was the federal undergraduate Direct Loan rate for 2023–24, and it is still a fair planning rate today. Private loans price off your (or your cosigner's) credit instead — the same balance can carry anything from 4% to 17%, which is why solving for the rate, as this tool can, matters before you sign.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+    <h2 class="text-xl font-bold text-gray-900 mb-3">2 · Student Loan Repayment Calculator</h2>
+    <p class="text-sm text-gray-600 mb-4">Your balance, payment and rate are on your monthly bill. See what extra payments do to the payoff date — or what paying it all off today saves.</p>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Loan balance</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="s2_balance" type="number" value="30000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc2()"></div></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Monthly payment</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="s2_pay" type="number" value="350" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc2()"><span class="text-gray-400 whitespace-nowrap">/mo</span></div></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Interest rate</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="s2_rate" type="number" value="6.8" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc2()"><span class="text-gray-400">%</span></div></label>
+                </div>
+                <div class="mt-5">
+                    <div class="text-sm font-bold text-gray-700 mb-2">Repayment options</div>
+                    <label class="flex items-center gap-2 text-sm py-1"><input type="radio" name="s2_opt" value="altogether" onchange="calc2()"> Pay off altogether today</label>
+                    <label class="flex items-center gap-2 text-sm py-1"><input type="radio" name="s2_opt" value="extra" checked onchange="calc2()"> Repayment with extra payments</label>
+                    <div class="grid grid-cols-3 gap-3 pl-6 mt-1">
+                        <label class="block"><span class="text-xs text-gray-500">Extra per month</span><input id="s2_xm" type="number" value="150" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2 num" oninput="calc2()"></label>
+                        <label class="block"><span class="text-xs text-gray-500">Extra per year</span><input id="s2_xy" type="number" value="0" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2 num" oninput="calc2()"></label>
+                        <label class="block"><span class="text-xs text-gray-500">One-time extra</span><input id="s2_xo" type="number" value="0" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2 num" oninput="calc2()"></label>
+                    </div>
+                    <label class="flex items-center gap-2 text-sm py-1 mt-1"><input type="radio" name="s2_opt" value="original" onchange="calc2()"> Normal repayment</label>
+                </div>
+                <button onclick="calc2()" class="mt-4 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
             </div>
-        </aside>
-    </main>
-
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+            <div id="s2_results"></div>
         </div>
-    </footer>
+    </div>
 
-    <script>
-        function calculateStudentLoan() {
-            const amount = parseFloat(document.getElementById('slAmount').value);
-            const rate = parseFloat(document.getElementById('slRate').value) / 100;
-            const years = parseFloat(document.getElementById('slYears').value);
-            const graceMonths = parseFloat(document.getElementById('slGrace').value);
+    <h2 class="text-xl font-bold text-gray-900 mb-3">3 · Student Loan Projection Calculator</h2>
+    <p class="text-sm text-gray-600 mb-4">Still in school? Estimate the balance and the payment waiting for you after graduation. (Estimating costs first? That's the College Cost Calculator's job — this tool starts from what you'll borrow.)</p>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <label class="block"><span class="text-sm font-medium text-gray-600">To graduate in (years)</span><input id="s3_years" type="number" value="2" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc3()"></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Estimated loan amount / year</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="s3_annual" type="number" value="10000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc3()"></div></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Current balance</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="s3_current" type="number" value="20000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc3()"></div></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Loan term (years)</span><input id="s3_term" type="number" value="10" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc3()"></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Grace period (months)</span><input id="s3_grace" type="number" value="6" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc3()"></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Interest rate</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="s3_rate" type="number" value="6.8" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc3()"><span class="text-gray-400">%</span></div></label>
+                </div>
+                <div class="mt-4 text-sm">
+                    <span class="font-medium text-gray-600">Do you pay interest during school years?</span>
+                    <label class="ml-4"><input type="radio" name="s3_payint" value="yes" onchange="calc3()"> Yes</label>
+                    <label class="ml-3"><input type="radio" name="s3_payint" value="no" checked onchange="calc3()"> No</label>
+                </div>
+                <button onclick="calc3()" class="mt-4 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            </div>
+            <div id="s3_results"></div>
+        </div>
+        <p class="text-xs text-gray-400 mt-4">* The grace period runs between graduation and the first required payment. For subsidized loans, interest does not accrue during school or the grace period. This calculator assumes equal monthly payments starting after the grace period and ignores loan fees.</p>
+    </div>
 
-            if (isNaN(amount) || isNaN(rate) || isNaN(years) || isNaN(graceMonths) || amount <= 0 || years <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>Student Loans in the U.S.: Federal First</h2>
+        <p>More than 90% of U.S. student debt is federal, and for good reason: federal loans carry some of the lowest fixed rates available anywhere, need no cosigner and no credit check beyond basic eligibility, and come with protections no private lender matches. Before borrowing at all, exhaust the money that never needs repaying — grants, scholarships, work-study — and pay what you can from income while studying. Every dollar not borrowed is a dollar that never accrues a decade of interest.</p>
+        <h3>The Federal Family</h3>
+        <p><strong>Direct Subsidized Loans</strong> are need-based undergraduate loans on which the government pays the interest while you're in school at least half-time, through the grace period, and during deferment — the cheapest borrowing most students will ever see. <strong>Direct Unsubsidized Loans</strong> are open regardless of need, but interest accrues from the day of disbursement, which is exactly the capitalization the projection calculator above models. <strong>Direct PLUS Loans</strong> serve graduate students and parents of undergraduates: higher rates, a credit check, and an origination fee of roughly 4%, with borrowing up to the full cost of attendance minus other aid. <strong>Direct Consolidation Loans</strong> merge several federal loans into one payment at the weighted-average rate — simpler, and a gateway to income-driven plans, at the cost of any benefits attached to the original loans.</p>
+        <h3>State and Private Loans</h3>
+        <p>State agencies and nonprofits run their own programs, all different, sometimes with forgiveness for graduates who stay and work in needed professions like nursing or teaching — and with filing deadlines often earlier than the federal one. Private loans from banks go through full underwriting, price off credit (a parent cosigner usually means a much better rate), accrue interest from day one, and are rarely forgivable. They fill the gap when federal limits run out, and their interest may be tax-deductible — but they should be the last resort, not the first form filled in.</p>
+        <h3>Repayment Plans, Briefly</h3>
+        <p>Most borrowers land on the <strong>Standard</strong> plan: fixed payments, done in 10 years, least interest. <strong>Graduated</strong> plans start low and step up every two years. <strong>Extended</strong> plans stretch Direct Loans of $30,000+ to 25 years. The income-driven family — <strong>IBR, PAYE, REPAYE/SAVE-style and ICR</strong> plans — caps payments at 10–20% of discretionary income and forgives whatever remains after 20–25 years, sooner (and tax-free) for public-service workers after 120 qualifying payments. All federal and private student loans allow penalty-free prepayment, which is why the extra-payments test above is worth running before choosing a longer plan: a modest extra often beats a formal restructure.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>Why will I owe more than I borrowed?</h4>
+        <p>Unpaid interest capitalizes. At the projection defaults, $40,000 borrowed becomes $44,263.99 by graduation and $45,790.44 by the first payment — and the 10-year repayment is calculated on that larger number.</p>
+        <h4>Is the extra-payments math the same for private loans?</h4>
+        <p>Yes — amortization is amortization. The difference is contractual: confirm your servicer applies extras to principal and allocates them to your highest-rate loan first.</p>
+        <h4>What if I can't afford the standard payment?</h4>
+        <p>For federal loans, an income-driven plan caps the payment to your earnings and forgives the tail end of the balance; run the numbers both ways, because the lower payment usually means more total interest unless forgiveness arrives.</p>
+    </section>
 
-            // حساب الفائدة المتراكمة خلال فترة السماح
-            // نستخدم فائدة بسيطة لفترة السماح كتقريب
-            const graceInterest = amount * (rate / 12) * graceMonths;
-            const newPrincipal = amount + graceInterest;
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Amortized, deferred-payment and zero-coupon loans in one place.</p>
+            </a>
+            <a href="repayment.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Repayment Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Any compounding, any payment frequency — by term or by installment.</p>
+            </a>
+            <a href="payment.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Payment Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The classic monthly-loan solver: fixed term or fixed payment.</p>
+            </a>
+            <a href="debt-payoff.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Debt Payoff Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Student loans alongside your other debts, in one avalanche plan.</p>
+            </a>
+        </div>
+    </section>
+</main>
 
-            const months = years * 12;
-            const monthlyRate = rate / 12;
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            // حساب الدفعة الشهرية بناءً على المبلغ الجديد (الأصل + فائدة فترة السماح)
-            let monthlyPayment = 0;
-            if (monthlyRate === 0) {
-                monthlyPayment = newPrincipal / months;
-            } else {
-                monthlyPayment = newPrincipal * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
-            }
-
-            const totalPaid = monthlyPayment * months;
-            const totalInterest = totalPaid - amount; // إجمالي الفائدة يشمل فائدة فترة السماح
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('slMonthly').textContent = formatter.format(monthlyPayment);
-            document.getElementById('slTotalInterest').textContent = formatter.format(totalInterest);
-            document.getElementById('slTotalPaid').textContent = formatter.format(totalPaid);
-
-            document.getElementById('slResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const blank = id => String($(id).value).trim() === '';
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const r2 = v => Math.round(v * 100) / 100;
+function timeText(months) {
+  const Y = Math.floor(months / 12), M = months % 12;
+  return (Y ? Y + (Y === 1 ? ' year' : ' years') : '') + (Y && M ? ' and ' : '') + (M || !Y ? M + (M === 1 ? ' month' : ' months') : '');
+}
+function donut(principal, interest) {
+  const total = principal + interest, R = 42, C = 2 * Math.PI * R;
+  const ip = total > 0 ? interest / total : 0;
+  return '<svg width="127" height="100" viewBox="0 0 127 100"><circle cx="50" cy="50" r="' + R + '" fill="none" stroke="#2b7ddb" stroke-width="16"/>' +
+    '<circle cx="50" cy="50" r="' + R + '" fill="none" stroke="#8bbc21" stroke-width="16" stroke-dasharray="' + (ip * C).toFixed(2) + ' ' + C.toFixed(2) + '" transform="rotate(-90 50 50)"/>' +
+    '<text x="97" y="42" font-size="11" fill="#2b7ddb" font-weight="700">Principal ' + Math.round((1 - ip) * 100) + '%</text>' +
+    '<text x="97" y="60" font-size="11" fill="#8bbc21" font-weight="700">Interest ' + Math.round(ip * 100) + '%</text></svg>';
+}
+function statsHtml(pairs) {
+  return '<div class="grid grid-cols-2 gap-3 mt-4 text-center">' + pairs.map(p => '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">' + p[0] + '</div><div class="font-bold num">' + p[1] + '</div></div>').join('') + '</div>';
+}
+function bannerHtml(headline, sub, d) {
+  return '<div class="bg-[#3F51B5] text-white rounded-xl p-5 flex flex-wrap items-center gap-5"><div class="flex-1 min-w-[200px]"><div class="text-2xl font-extrabold">' + headline + '</div><div class="text-sm opacity-80 mt-1">' + sub + '</div></div>' + (d ? '<div class="bg-white rounded-lg p-1">' + d + '</div>' : '') + '</div>';
+}
+function pmtOf(P, i, n) { return i > 0 ? P * i / (1 - Math.pow(1 + i, -n)) : P / n; }
+function iterate(P, i, payFn) {
+  let bal = P, totInt = 0, n = 0, last = 0;
+  while (bal > 0.000001 && n < 3600) {
+    const it = bal * i; totInt += it;
+    const p = Math.min(payFn(n + 1), bal + it); last = p;
+    bal = bal + it - p; n++;
+  }
+  return { n, totInt, total: P + totInt, last };
+}
+// ---------- Calculator 1: solve any one of the four ----------
+function calc1() {
+  const out = $('s1_results');
+  let P = num('s1_balance'), years = num('s1_years'), rate = num('s1_rate'), pay = num('s1_pay');
+  const solved = [];
+  // Decide what to solve: the blank field. If none blank, solve the payment.
+  let target = 'pay';
+  if (blank('s1_balance')) target = 'balance';
+  else if (blank('s1_years')) target = 'years';
+  else if (blank('s1_rate')) target = 'rate';
+  else if (blank('s1_pay')) target = 'pay';
+  if (P <= 0 && target !== 'balance') { out.innerHTML = ''; return; }
+  let i = rate / 100 / 12, n = Math.round(years * 12);
+  if (target === 'pay') {
+    if (n <= 0) { out.innerHTML = ''; return; }
+    pay = pmtOf(P, i, n); $('s1_pay').value = r2(pay); solved.push('monthly payment');
+  } else if (target === 'years') {
+    if (pay <= 0) { out.innerHTML = ''; return; }
+    if (i > 0 && pay <= P * i) { out.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 text-sm">That payment never covers the interest (' + fmt$(P * i) + '/month), so the loan never ends.</div>'; return; }
+    const s = iterate(P, i, () => pay); n = s.n;
+    let totInt = s.totInt, totPay = s.total;
+    if (i > 0) {
+      const nExact = Math.log(pay / (pay - P * i)) / Math.log(1 + i), nRound = Math.round(nExact);
+      if (Math.abs(nExact - nRound) < 0.05 && nRound > 0) { n = nRound; totPay = pay * n; totInt = totPay - P; }
+    }
+    $('s1_years').value = Math.round(n / 12 * 100) / 100; years = n / 12; solved.push('term');
+    out.innerHTML = bannerHtml('Repayment: ' + fmt$(pay) + '/month', 'Term solved: ' + timeText(n) + ' (' + n + ' payments).', donut(P, totInt)) + statsHtml([['Total Interest', fmt$(totInt)], ['Total Payments', fmt$(totPay)]]);
+    updateShare(); return;
+  } else if (target === 'rate') {
+    if (n <= 0 || pay <= 0) { out.innerHTML = ''; return; }
+    if (Math.abs(pay * n - P) < 0.005) rate = 0;
+    else {
+      let lo = 0, hi = 0.10;
+      while (pmtOf(P, hi, n) < pay && hi < 10) hi *= 2;
+      for (let k = 0; k < 200; k++) { const mid = (lo + hi) / 2; if (pmtOf(P, mid, n) < pay) lo = mid; else hi = mid; }
+      rate = (lo + hi) / 2 * 12 * 100;
+    }
+    $('s1_rate').value = Math.round(rate * 10000) / 10000; i = rate / 100 / 12; solved.push('interest rate');
+  } else if (target === 'balance') {
+    if (n <= 0 || pay <= 0) { out.innerHTML = ''; return; }
+    P = i > 0 ? pay * (1 - Math.pow(1 + i, -n)) / i : pay * n;
+    $('s1_balance').value = r2(P); solved.push('loan balance');
+  }
+  const total = pay * n, interest = total - P;
+  out.innerHTML = bannerHtml('Repayment: ' + fmt$(pay) + '/month', 'Over ' + timeText(n) + ' (' + n + ' payments)' + (solved.length ? ' · solved for the ' + solved[0] : '') + '.', donut(P, interest)) + statsHtml([['Total Interest', fmt$(interest)], ['Total Payments', fmt$(total)]]);
+  updateShare();
+}
+// ---------- Calculator 2: payoff options ----------
+function calc2() {
+  const out = $('s2_results');
+  const P = num('s2_balance'), pay = num('s2_pay'), i = num('s2_rate') / 100 / 12;
+  const opt = document.querySelector('input[name="s2_opt"]:checked').value;
+  if (P <= 0 || pay <= 0) { out.innerHTML = ''; return; }
+  if (i > 0 && pay <= P * i) { out.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 text-sm">The monthly payment does not cover the interest (' + fmt$(P * i) + '/month) — the balance would grow forever.</div>'; return; }
+  const orig = iterate(P, i, () => pay);
+  const origTable = '<div class="font-bold text-gray-800 mt-4 mb-1">The original payoff schedule</div>' + statsHtml([['Remaining Term', timeText(orig.n)], ['Total Payments', fmt$(orig.total)], ['Total Interest', fmt$(orig.totInt)]]);
+  if (opt === 'original') {
+    out.innerHTML = bannerHtml('Pay off in ' + timeText(orig.n), 'Normal repayment at ' + fmt$(pay) + '/month.', donut(P, orig.totInt)) + origTable;
+  } else if (opt === 'altogether') {
+    out.innerHTML = bannerHtml('Pay off altogether: ' + fmt$(P) + ' today', 'The remaining term becomes 0 and every future interest charge disappears.', null) +
+      '<p class="text-sm text-gray-600 mt-3">Versus the normal schedule, paying the full balance now saves the entire <strong>' + fmt$(orig.totInt) + '</strong> of interest and ends the loan <strong>' + timeText(orig.n) + '</strong> early.</p>' + origTable;
+  } else {
+    const xm = num('s2_xm'), xy = num('s2_xy'), xo = num('s2_xo');
+    const plan = iterate(P, i, mth => pay + xm + (mth % 12 === 0 ? xy : 0) + (mth === 1 ? xo : 0));
+    const saved = orig.totInt - plan.totInt, earlier = orig.n - plan.n;
+    const bits = [];
+    if (xm > 0) bits.push(fmt$(xm) + ' per month');
+    if (xy > 0) bits.push(fmt$(xy) + ' per year');
+    if (xo > 0) bits.push(fmt$(xo) + ' one time');
+    out.innerHTML = bannerHtml('Pay off in ' + timeText(plan.n), 'The remaining term was ' + timeText(orig.n) + '. Paying extra (' + (bits.join(' + ') || 'nothing extra') + ') finishes <strong>' + timeText(earlier) + ' earlier</strong> and saves <strong>' + fmt$(saved) + '</strong> in interest.', donut(P, plan.totInt)) +
+      '<div class="font-bold text-gray-800 mt-4 mb-1">With the extra payments</div>' + statsHtml([['Remaining Term', timeText(plan.n)], ['Total Payments', fmt$(plan.total)], ['Total Interest', fmt$(plan.totInt)]]) + origTable;
+  }
+  updateShare();
+}
+// ---------- Calculator 3: projection ----------
+function calc3() {
+  const out = $('s3_results');
+  const years = num('s3_years'), annual = num('s3_annual'), current = num('s3_current');
+  const term = num('s3_term'), grace = Math.round(num('s3_grace')), i = num('s3_rate') / 100 / 12;
+  const payInt = document.querySelector('input[name="s3_payint"]:checked').value === 'yes';
+  const borrowed = current + annual * years;
+  if (borrowed <= 0 || term <= 0) { out.innerHTML = ''; return; }
+  let bal = current;
+  const schoolMonths = Math.round(years * 12);
+  for (let mth = 0; mth < schoolMonths; mth++) {
+    bal = payInt ? bal + annual / 12 : bal * (1 + i) + annual / 12;
+  }
+  const afterGrad = bal;
+  for (let g = 0; g < grace; g++) bal = payInt ? bal : bal * (1 + i);
+  const afterGrace = bal;
+  const n = Math.round(term * 12);
+  const pay = pmtOf(afterGrace, i, n);
+  const totalInterest = (afterGrace - borrowed) + (pay * n - afterGrace);
+  out.innerHTML = bannerHtml('Repayment: ' + fmt$(pay) + '/month', 'For ' + timeText(n) + ' after the ' + grace + '-month grace period.', donut(borrowed, totalInterest)) +
+    statsHtml([['Amount Borrowed', fmt$(borrowed)], ['Balance After Graduation', fmt$(afterGrad)], ['Balance After Grace Period', fmt$(afterGrace)], ['Total Interest', fmt$(totalInterest)]]);
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ b1: $('s1_balance').value, y1: $('s1_years').value, r1: $('s1_rate').value, p1: $('s1_pay').value, b2: $('s2_balance').value, p2: $('s2_pay').value, r2v: $('s2_rate').value, xm: $('s2_xm').value, xy: $('s2_xy').value, xo: $('s2_xo').value, gy: $('s3_years').value, an: $('s3_annual').value, cu: $('s3_current').value, tm: $('s3_term').value, gr: $('s3_grace').value, r3: $('s3_rate').value });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  const set = (id, key) => { if (q.get(key)) $(id).value = q.get(key); };
+  set('s1_balance', 'b1'); set('s1_years', 'y1'); set('s1_rate', 'r1'); set('s1_pay', 'p1');
+  set('s2_balance', 'b2'); set('s2_pay', 'p2'); set('s2_rate', 'r2v'); set('s2_xm', 'xm'); set('s2_xy', 'xy'); set('s2_xo', 'xo');
+  set('s3_years', 'gy'); set('s3_annual', 'an'); set('s3_current', 'cu'); set('s3_term', 'tm'); set('s3_grace', 'gr'); set('s3_rate', 'r3');
+  calc1(); calc2(); calc3();
+})();
+</script>
 </body>
 </html>
