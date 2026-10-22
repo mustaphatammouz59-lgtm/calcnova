@@ -1,117 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salary Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salary Calculator — Convert Hourly, Weekly, Monthly &amp; Annual Pay | CalcNova</title>
+<meta name="description" content="Free salary calculator: convert pay between hourly, daily, weekly, bi-weekly, semi-monthly, monthly, quarterly and annual amounts — unadjusted and adjusted for holidays and vacation days.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/salary">
+<meta property="og:title" content="Salary Calculator — Convert Hourly, Weekly, Monthly & Annual Pay | CalcNova">
+<meta property="og:description" content="The same pay, expressed eight ways — with and without holidays and vacation days taken into account.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/salary">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Salary Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/salary"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I convert an hourly wage to an annual salary?","acceptedAnswer":{"@type":"Answer","text":"Multiply the hourly wage by hours worked per week, then by 52 weeks. At $25 an hour and 40 hours a week: $25 × 40 × 52 = $52,000 a year. Reverse it by dividing: a $52,000 salary at 40 hours a week is $52,000 ÷ 52 ÷ 40 = $25 an hour."}},
+{"@type":"Question","name":"What is the difference between bi-weekly and semi-monthly pay?","acceptedAnswer":{"@type":"Answer","text":"Bi-weekly means every two weeks: 26 paychecks a year, sometimes three in a single month. Semi-monthly means twice a month, on fixed dates: exactly 24 paychecks a year. A $52,000 salary is $2,000 bi-weekly but $2,166.67 semi-monthly — the same annual pay in different-sized slices."}},
+{"@type":"Question","name":"What does 'adjusted' salary mean in this calculator?","acceptedAnswer":{"@type":"Answer","text":"The unadjusted figures assume you work every scheduled weekday of the year (260 days at 5 days a week). The adjusted figures account for the holidays and vacation days you enter: with 10 holidays and 15 vacation days you work 235 days, so an hourly-paid job at $25 pays $47,000 instead of $52,000 if that time off is unpaid. Hourly and daily inputs are treated as unadjusted; weekly and longer inputs are treated as adjusted (actual) pay."}},
+{"@type":"Question","name":"How many work hours are in a year?","acceptedAnswer":{"@type":"Answer","text":"A full-time schedule of 40 hours a week for 52 weeks is 2,080 hours (260 workdays). Subtract holidays and vacation to get your real figure: 10 holidays plus 15 vacation days removes 25 days — 200 hours — leaving 1,880 actual working hours."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Salary Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Salary</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Salary Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Convert pay between <strong>hourly, daily, weekly, bi-weekly, semi-monthly, monthly, quarterly and annual</strong> amounts. Results come in two flavors: <strong>unadjusted</strong> — as if you worked every scheduled day of the year — and <strong>adjusted</strong> for the holidays and vacation days you actually take. All figures are gross pay, before taxes; for take-home pay, run the annual figure through the <a href="income-tax.html" class="text-[#3F51B5] font-medium hover:underline">Income Tax Calculator</a>.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Salary Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+        <section class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 class="text-lg font-bold text-[#3F51B5] mb-5">Your pay</h2>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Hourly Wage ($)</label>
-                        <input type="number" id="salWage" value="25" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                        <label for="iAmount" class="block text-sm font-medium text-gray-700 mb-1">Salary amount</label>
+                        <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                        <input id="iAmount" type="number" step="any" value="25" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Hours per Week</label>
-                        <input type="number" id="salHours" value="40" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Weeks per Year</label>
-                        <input type="number" id="salWeeks" value="52" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                        <label for="iUnit" class="block text-sm font-medium text-gray-700 mb-1">Per</label>
+                        <select id="iUnit" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5]">
+                            <option value="Hourly" selected>Hour</option>
+                            <option value="Daily">Day</option>
+                            <option value="Weekly">Week</option>
+                            <option value="Bi-weekly">Bi-weekly</option>
+                            <option value="Semi-monthly">Semi-monthly</option>
+                            <option value="Monthly">Month</option>
+                            <option value="Quarterly">Quarter</option>
+                            <option value="Annual">Year</option>
+                        </select>
                     </div>
                 </div>
-                <button onclick="calculateSalary()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Salary</button>
-
-                <div id="salResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Weekly Pay</p>
-                            <p class="text-xl font-bold text-gray-800" id="salWeekly">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Monthly Pay (Avg)</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="salMonthly">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Annual Salary</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="salAnnual">$0</p>
-                        </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="iHours" class="block text-sm font-medium text-gray-700 mb-1">Hours per week</label>
+                        <input id="iHours" type="number" step="any" value="40" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                    </div>
+                    <div>
+                        <label for="iDays" class="block text-sm font-medium text-gray-700 mb-1">Days per week</label>
+                        <input id="iDays" type="number" step="any" value="5" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="iHolidays" class="block text-sm font-medium text-gray-700 mb-1">Holidays per year</label>
+                        <input id="iHolidays" type="number" value="10" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                    </div>
+                    <div>
+                        <label for="iVacation" class="block text-sm font-medium text-gray-700 mb-1">Vacation days per year</label>
+                        <input id="iVacation" type="number" value="15" class="w-full rounded-lg border-gray-300 border px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
                     </div>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Understanding Your Salary</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">This calculator helps you convert an hourly wage into weekly, monthly, and annual salaries. It assumes a standard work year. Note that this is your gross salary (before taxes and deductions). To see your take-home pay, use our Income Tax Calculator.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="calculate()" class="flex-1 bg-[#4CAF50] hover:bg-green-600 text-white font-bold py-3 rounded-lg transition shadow-md">Calculate</button>
+                <button onclick="shareLink(this)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg transition text-sm">Copy share link</button>
             </div>
+            <p class="text-xs text-gray-400 mt-4">Assumes 52 weeks and 260 weekdays a year at 5 days a week (scaled by the days-per-week you enter). Hourly and daily inputs are treated as unadjusted values; weekly and longer inputs are treated as actual, holidays-and-vacation-adjusted pay. Gross pay only — taxes and deductions are not included.</p>
+        </section>
+
+        <div class="lg:col-span-3 space-y-8">
+            <section id="results" class="scroll-mt-24"></section>
+
+            <!-- AdSense: 300x250 beside the form / above results on mobile -->
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+
+            <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 prose max-w-none prose-gray prose-headings:text-[#3F51B5]">
+                <h2>How pay conversion works</h2>
+                <p>Every conversion on this page runs through one anchor: the <strong>annual salary</strong>. An hourly wage annualizes by multiplying wage × hours per week × 52 — $25 × 40 × 52 = <strong>$52,000</strong>. From the annual figure, everything else is division: ÷ 52 for weekly, ÷ 26 for bi-weekly, ÷ 24 for semi-monthly, ÷ 12 for monthly, ÷ 4 for quarterly, and back down to an hourly rate by dividing by the year's scheduled hours (hours per week × 52 = 2,080 at full time). Going the other way — starting from a monthly salary or an annual offer — the same chain runs in reverse, which is what makes the calculator useful for comparing a job quoted one way against a job quoted another.</p>
+
+                <h3>Unadjusted vs. adjusted: the two columns</h3>
+                <p>The unadjusted column pretends the year has no time off in it: at 5 days a week you work all 260 weekdays. The adjusted column subtracts the holidays and vacation days you entered. Ten federal-style holidays plus fifteen vacation days removes 25 days — 200 hours — leaving <strong>235 working days (1,880 hours)</strong>, a factor of about 0.904. What that factor does depends on how you are paid. For an <strong>hourly worker</strong> whose days off are unpaid, the adjusted column is what actually lands in the bank: $25 an hour becomes $47,000 a year, not $52,000. For a <strong>salaried worker</strong> paid through vacations, the annual figure never changes — instead the adjusted column reveals the effective rate for the days truly worked: that same $52,000 salary is really $27.66 for each hour worked, not $25.00. The calculator follows one convention so the two columns stay comparable: hourly and daily inputs are read as unadjusted rates, while weekly, monthly and annual inputs are read as adjusted (real-world) amounts and grossed up into the unadjusted column.</p>
+
+                <h3>Pay frequencies, untangled</h3>
+                <ul>
+                    <li><strong>Weekly</strong> — 52 paychecks a year. Common for hourly and part-time work.</li>
+                    <li><strong>Bi-weekly</strong> — every two weeks, 26 paychecks. Two months a year contain a third paycheck, which is why bi-weekly × 26, not × 24, gives the annual figure.</li>
+                    <li><strong>Semi-monthly</strong> — twice a month on set dates (the 1st and 15th, say), exactly 24 paychecks. Each check is bigger than a bi-weekly check on the same salary: $2,166.67 vs. $2,000 at $52,000.</li>
+                    <li><strong>Monthly</strong> — 12 paychecks; typical for salaried professionals in many countries.</li>
+                    <li><strong>Daily</strong> — the rate for one scheduled day: hourly wage × hours per day (hours per week ÷ days per week).</li>
+                </ul>
+                <p>Confusing bi-weekly with semi-monthly is the most common salary-math mistake: pricing a $2,000 bi-weekly offer as if it were semi-monthly overstates the salary by $4,000 a year.</p>
+
+                <h3>Salary, wages, and the numbers around them</h3>
+                <p>A <strong>wage</strong> pays for time worked — an hourly rate times hours, with overtime (under the U.S. Fair Labor Standards Act, typically 1.5× the regular rate past 40 hours a week for non-exempt workers) and unpaid time off both moving the total. A <strong>salary</strong> is a fixed annual amount divided across the pay schedule, largely insulated from weekly hours. The federal minimum wage of $7.25 an hour annualizes to $15,080 at full time (many states set higher floors), while the median full-time worker earns well above that — which is why offers are negotiated in annual terms but lived in weekly ones. Two more conversions worth keeping straight: <strong>gross vs. net</strong> — everything here is gross; federal and state taxes, FICA, retirement contributions and premiums come out before the deposit, and the <a href="income-tax.html">Income Tax Calculator</a> estimates what remains — and <strong>paid time off as pay</strong>: 25 days of PTO on a $52,000 salary is worth about $5,000 a year, a real difference when comparing an offer with generous leave against a slightly higher wage with none.</p>
+
+                <h3>Frequently asked questions</h3>
+                <h4>How do I convert an hourly wage to an annual salary?</h4>
+                <p>Wage × hours per week × 52. $25 × 40 × 52 = $52,000. Divide an annual salary by 52, then by hours per week, to go back to hourly.</p>
+                <h4>What is the difference between bi-weekly and semi-monthly pay?</h4>
+                <p>Bi-weekly: every two weeks, 26 checks a year. Semi-monthly: twice a month on fixed dates, 24 checks. Same salary, different slice sizes — $2,000 vs. $2,166.67 at $52,000 a year.</p>
+                <h4>What does "adjusted" mean here?</h4>
+                <p>Adjusted figures remove your holidays and vacation days from the working year. They show what an hourly job actually pays if the time off is unpaid — or, for salaried staff, the effective rate per hour truly worked.</p>
+                <h4>How many work hours are in a year?</h4>
+                <p>2,080 scheduled hours at 40 × 52. With 10 holidays and 15 vacation days: 1,880 hours actually worked.</p>
+            </section>
+
+            <section>
+                <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <a href="income-tax.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                        <div class="font-bold text-[#3F51B5]">Income Tax Calculator</div>
+                        <p class="text-sm text-gray-500 mt-1">Turn this gross salary into take-home pay — federal tax, FICA and your refund or balance due.</p>
+                    </a>
+                    <a href="retirement.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                        <div class="font-bold text-[#3F51B5]">Retirement Calculator</div>
+                        <p class="text-sm text-gray-500 mt-1">How far this salary carries you: what you need, what to save, how long it lasts.</p>
+                    </a>
+                    <a href="401k.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                        <div class="font-bold text-[#3F51B5]">401K Calculator</div>
+                        <p class="text-sm text-gray-500 mt-1">What a percentage-of-salary contribution grows into by retirement, match included.</p>
+                    </a>
+                </div>
+            </section>
         </div>
+    </div>
+</main>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
-
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
         </div>
-    </footer>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-    <script>
-        function calculateSalary() {
-            const wage = parseFloat(document.getElementById('salWage').value);
-            const hours = parseFloat(document.getElementById('salHours').value);
-            const weeks = parseFloat(document.getElementById('salWeeks').value);
+<script>
+const PERIODS = { Hourly: null, Daily: null, Weekly: 52, "Bi-weekly": 26, "Semi-monthly": 24, Monthly: 12, Quarterly: 4, Annual: 1 };
+const ROWS = ["Hourly", "Daily", "Weekly", "Bi-weekly", "Semi-monthly", "Monthly", "Quarterly", "Annual"];
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, "")); return isNaN(v) ? 0 : v; };
+const fmt0 = n => "$" + Math.round(n).toLocaleString("en-US");
+const fmt2 = n => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-            if (isNaN(wage) || isNaN(hours) || isNaN(weeks) || wage <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
+function salaryCalc(amount, unit, hours, days, holidays, vacation) {
+  const scheduledDays = 52 * days;
+  const workdays = Math.max(0, scheduledDays - holidays - vacation);
+  const factor = scheduledDays > 0 ? workdays / scheduledDays : 1;
+  const hoursPerDay = days > 0 ? hours / days : 0;
+  let annualUnadj;
+  if (unit === "Hourly") annualUnadj = amount * hours * 52;
+  else if (unit === "Daily") annualUnadj = amount * days * 52;
+  else annualUnadj = (amount * PERIODS[unit]) / factor;
+  const annualAdj = annualUnadj * factor;
+  const build = annual => ({
+    Hourly: hours > 0 ? annual / (hours * 52) : 0,
+    Daily: days > 0 ? annual / (days * 52) : 0,
+    Weekly: annual / 52, "Bi-weekly": annual / 26, "Semi-monthly": annual / 24,
+    Monthly: annual / 12, Quarterly: annual / 4, Annual: annual
+  });
+  return { unadj: build(annualUnadj), adj: build(annualAdj), factor, workdays, scheduledDays };
+}
 
-            const weekly = wage * hours;
-            const annual = weekly * weeks;
-            const monthly = annual / 12;
+function calculate() {
+  const amount = num("iAmount"), unit = $("iUnit").value;
+  const hours = Math.max(0, num("iHours")), days = Math.max(0, num("iDays"));
+  const holidays = Math.max(0, num("iHolidays")), vacation = Math.max(0, num("iVacation"));
+  const r = salaryCalc(amount, unit, hours, days, holidays, vacation);
+  const hoursYear = hours * 52, hoursWorked = days > 0 ? r.workdays * (hours / days) : 0;
+  let html = "";
+  html += '<div class="bg-[#3F51B5] text-white rounded-xl p-6 shadow-md">'
+    + '<div class="text-sm uppercase tracking-wide opacity-80">Annual salary (unadjusted)</div>'
+    + '<div class="text-4xl sm:text-5xl font-extrabold mt-1 num">' + fmt0(r.unadj.Annual) + "</div>"
+    + '<div class="text-sm opacity-80 mt-1">Adjusted for ' + holidays + " holidays and " + vacation + " vacation days: <strong>" + fmt0(r.adj.Annual) + "</strong> a year · " + fmt0(r.adj.Monthly) + " a month · " + fmt2(r.unadj.Hourly) + " an hour</div></div>";
+  html += '<div class="grid grid-cols-2 xl:grid-cols-4 gap-4">'
+    + '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center"><div class="text-xs text-gray-500">Working days / year</div><div class="text-xl font-bold mt-1 num">' + r.workdays + " of " + r.scheduledDays + "</div></div>"
+    + '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center"><div class="text-xs text-gray-500">Hours worked / year</div><div class="text-xl font-bold mt-1 num">' + Math.round(hoursWorked).toLocaleString("en-US") + " of " + Math.round(hoursYear).toLocaleString("en-US") + "</div></div>"
+    + '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center"><div class="text-xs text-gray-500">Weekly pay</div><div class="text-xl font-bold mt-1 num">' + fmt0(r.unadj.Weekly) + "</div></div>"
+    + '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center"><div class="text-xs text-gray-500">Bi-weekly pay</div><div class="text-xl font-bold mt-1 num">' + fmt0(r.unadj["Bi-weekly"]) + "</div></div></div>";
+  html += '<section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"><h3 class="font-bold text-[#3F51B5] mb-3">Your pay, every way it is quoted</h3>'
+    + '<table class="w-full text-[15px]"><thead><tr class="text-left text-gray-500 border-b border-gray-200"><th class="py-2 pr-3 font-semibold">Pay period</th><th class="py-2 pr-3 font-semibold text-right">Unadjusted</th><th class="py-2 font-semibold text-right">Holidays &amp; vacation adjusted</th></tr></thead><tbody>'
+    + ROWS.map(k => {
+        const f = k === "Hourly" || k === "Daily" ? fmt2 : fmt0;
+        return '<tr class="border-b border-gray-100"><td class="py-2 pr-3">' + k + '</td><td class="py-2 pr-3 text-right num">' + f(r.unadj[k]) + '</td><td class="py-2 text-right num">' + f(r.adj[k]) + "</td></tr>";
+      }).join("")
+    + "</tbody></table>"
+    + '<p class="text-xs text-gray-400 mt-3">Hourly and daily inputs are treated as unadjusted; weekly and longer inputs are treated as adjusted (actual) pay and grossed up into the unadjusted column. Gross pay before taxes — estimate take-home with the <a href="income-tax.html" class="text-[#3F51B5] hover:underline">Income Tax Calculator</a>.</p></section>';
+  $("results").innerHTML = html;
+}
 
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('salWeekly').textContent = formatter.format(weekly);
-            document.getElementById('salMonthly').textContent = formatter.format(monthly);
-            document.getElementById('salAnnual').textContent = formatter.format(annual);
-
-            document.getElementById('salResults').classList.remove('hidden');
-        }
-    </script>
+const FIELDS = ["iAmount", "iHours", "iDays", "iHolidays", "iVacation"];
+function shareLink(btn) {
+  const p = new URLSearchParams();
+  p.set("unit", $("iUnit").value);
+  FIELDS.forEach(id => { const v = $(id).value; if (v !== "") p.set(id.slice(1).toLowerCase(), v); });
+  const url = location.origin + location.pathname + "?" + p.toString();
+  history.replaceState(null, "", url);
+  if (navigator.clipboard) navigator.clipboard.writeText(url);
+  const old = btn.textContent; btn.textContent = "Copied!"; setTimeout(() => btn.textContent = old, 1600);
+}
+function prefill() {
+  const q = new URLSearchParams(location.search);
+  if (q.get("unit")) $("iUnit").value = q.get("unit");
+  FIELDS.forEach(id => { const v = q.get(id.slice(1).toLowerCase()); if (v !== null) $(id).value = v; });
+}
+prefill();
+calculate();
+</script>
 </body>
 </html>
