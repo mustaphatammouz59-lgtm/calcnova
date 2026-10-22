@@ -1,143 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loan Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loan Calculator — Amortized, Deferred Payment &amp; Bond | CalcNova</title>
+<meta name="description" content="Free loan calculator for all three loan types: amortized loans with a full amortization schedule, deferred payment loans due in one lump sum, and bonds (zero-coupon) priced from their face value. Any compounding and payback frequency.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/loan">
+<meta property="og:title" content="Loan Calculator — Amortized, Deferred Payment & Bond | CalcNova">
+<meta property="og:description" content="Payment, total interest and amortization schedule for amortized loans; amount due for deferred loans; present value for bonds.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/loan">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Loan Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/loan"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What are the three types of loans this calculator covers?","acceptedAnswer":{"@type":"Answer","text":"Almost every loan is one of three shapes. An amortized loan is repaid in equal periodic payments of principal and interest until it reaches zero — mortgages, auto loans, student and personal loans. A deferred payment loan makes no payments at all: principal and all accumulated interest come due in a single lump sum at maturity, like many commercial and balloon-style loans. A bond works backwards: the amount due at maturity (the face value) is fixed in advance, and the calculator finds what that promise is worth today — the price of a zero-coupon bond."}},
+{"@type":"Question","name":"What is the difference between APR and APY in the compound setting?","acceptedAnswer":{"@type":"Answer","text":"The rate you enter is a nominal annual rate. Compounded monthly, it behaves like the familiar APR convention (a 6% rate means 0.5% per month). Compounded annually, the same 6% is an effective annual yield — an APY — and produces slightly less interest when you pay monthly, because the monthly rate is derived as 1.06^(1/12) − 1 ≈ 0.4868% instead of 0.5%. This calculator converts the rate properly for every combination of compounding and payback frequency, including continuous compounding."}},
+{"@type":"Question","name":"Why does a longer loan term cost so much more interest?","acceptedAnswer":{"@type":"Answer","text":"Because interest is charged on whatever balance remains, and a longer term keeps the balance higher for longer. Stretching a $100,000 loan at 6% from 10 years to 20 years cuts the monthly payment from $1,110.21 to $716.43 — but total interest climbs from $33,224.60 to $71,943.45, more than doubling. The payment falls by about a third while the interest bill more than doubles; that asymmetry is the real price of a longer term."}},
+{"@type":"Question","name":"How is a zero-coupon bond priced?","acceptedAnswer":{"@type":"Answer","text":"A zero-coupon bond pays no interest along the way, so its price is simply the face value discounted back at the market rate: price = face ÷ (1 + rate ÷ compounds per year)^(compounds × years). A $100,000 face value due in 10 years at 6% compounded annually is worth $55,839.48 today; the $44,160.52 gap is the interest the buyer earns by waiting."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-                <a href="#" class="hover:text-[#14B8A6] transition">Health</a>
-                <a href="#" class="hover:text-[#14B8A6] transition">Math</a>
-                <a href="#" class="hover:text-[#14B8A6] transition">Other</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Loan Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Loan Calculator</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Loan Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">A loan is a contract: the borrower receives principal today and promises to give it back — in one of three shapes. <strong>Amortized loans</strong> are repaid in fixed periodic payments. <strong>Deferred payment loans</strong> come due in a single lump sum at maturity. <strong>Bonds</strong> fix the maturity payment in advance and ask what it is worth at the start. All three calculators are below, with every compounding and payback frequency.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        
-        <!-- Left Column -->
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Loan Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <!-- The Tool -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <!-- ============ 1. AMORTIZED ============ -->
+    <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Amortized Loan — Fixed Payments, Paid Periodically</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start mb-14">
+        <section class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="space-y-4">
+                <div>
+                    <label for="a_amount" class="block text-sm font-medium text-gray-700 mb-1">Loan amount</label>
+                    <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                    <input id="a_amount" type="number" step="any" value="100000" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Amount ($)</label>
-                        <input type="number" id="loanAmount" value="10000" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-[#14B8A6] outline-none">
+                        <label for="a_years" class="block text-sm font-medium text-gray-700 mb-1">Loan term — years</label>
+                        <input id="a_years" type="number" step="any" value="10" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate (%)</label>
-                        <input type="number" id="loanRate" value="5.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-[#14B8A6] outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Months)</label>
-                        <input type="number" id="loanMonths" value="60" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-[#14B8A6] outline-none">
+                        <label for="a_months" class="block text-sm font-medium text-gray-700 mb-1">and months</label>
+                        <input id="a_months" type="number" step="any" value="0" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
                     </div>
                 </div>
-                <button onclick="calculateLoan()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Loan</button>
-
-                <!-- Results -->
-                <div id="loanResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Monthly Payment</p>
-                            <p class="text-xl font-bold text-[#14B8A6]" id="monthlyPay">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest</p>
-                            <p class="text-xl font-bold text-gray-800" id="totalInt">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Cost</p>
-                            <p class="text-xl font-bold text-gray-800" id="totalCost">$0</p>
-                        </div>
-                    </div>
+                <div>
+                    <label for="a_rate" class="block text-sm font-medium text-gray-700 mb-1">Interest rate</label>
+                    <div class="relative"><input id="a_rate" type="number" step="any" value="6" class="w-full rounded-lg border-gray-300 border pl-3 pr-7 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"><span class="absolute right-3 top-2.5 text-gray-400">%</span></div>
+                </div>
+                <div>
+                    <label for="a_compound" class="block text-sm font-medium text-gray-700 mb-1">Compound</label>
+                    <select id="a_compound" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5]">
+                        <option value="annually">Annually (APY)</option>
+                        <option value="semiannually">Semi-annually</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly" selected>Monthly (APR)</option>
+                        <option value="semimonthly">Semi-monthly</option>
+                        <option value="biweekly">Biweekly</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="daily">Daily</option>
+                        <option value="continuously">Continuously</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="a_payback" class="block text-sm font-medium text-gray-700 mb-1">Pay back</label>
+                    <select id="a_payback" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5]">
+                        <option value="daily">Every Day</option>
+                        <option value="weekly">Every Week</option>
+                        <option value="biweekly">Every 2 Weeks</option>
+                        <option value="halfmonth">Every Half Month</option>
+                        <option value="month" selected>Every Month</option>
+                        <option value="quarter">Every Quarter</option>
+                        <option value="halfyear">Every 6 Months</option>
+                        <option value="year">Every Year</option>
+                    </select>
                 </div>
             </div>
-
-            <!-- SEO Content -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is a Loan Calculator?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A loan calculator is a tool that helps you determine the monthly payments, total interest, and total cost of a loan. Whether you are taking out a personal loan, an auto loan, or a student loan, understanding the financial commitment is crucial before signing any agreement.</p>
-                
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
-
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-8">How to Use This Loan Calculator</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Simply enter the total loan amount you need, the annual interest rate offered by your lender, and the term of the loan in months. The calculator will instantly compute your fixed monthly payment using the standard amortization formula.</p>
+            <div class="flex gap-3 mt-6">
+                <button onclick="calcAmortized()" class="flex-1 bg-[#4CAF50] hover:bg-green-600 text-white font-bold py-3 rounded-lg transition shadow-md">Calculate</button>
+                <button onclick="shareLink(this)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg transition text-sm">Copy share link</button>
             </div>
+            <p class="text-xs text-gray-400 mt-4">The everyday loan — mortgages, auto loans, student loans and personal loans all work this way. For loan-specific extras (taxes, PMI, trade-ins, fees), use the dedicated calculators linked below.</p>
+        </section>
+        <div class="lg:col-span-3 space-y-6">
+            <section id="a_results"></section>
+            <!-- AdSense: 300x250 beside the form / below results on mobile -->
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
         </div>
+    </div>
 
-        <!-- Sidebar -->
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-                <p class="text-sm">(300x250 Banner)</p>
+    <!-- ============ 2. DEFERRED ============ -->
+    <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Deferred Payment Loan — One Lump Sum Due at Maturity</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start mb-14">
+        <section class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="space-y-4">
+                <div>
+                    <label for="d_amount" class="block text-sm font-medium text-gray-700 mb-1">Loan amount</label>
+                    <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                    <input id="d_amount" type="number" step="any" value="100000" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="d_years" class="block text-sm font-medium text-gray-700 mb-1">Loan term — years</label>
+                        <input id="d_years" type="number" step="any" value="10" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                    </div>
+                    <div>
+                        <label for="d_months" class="block text-sm font-medium text-gray-700 mb-1">and months</label>
+                        <input id="d_months" type="number" step="any" value="0" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                    </div>
+                </div>
+                <div>
+                    <label for="d_rate" class="block text-sm font-medium text-gray-700 mb-1">Interest rate</label>
+                    <div class="relative"><input id="d_rate" type="number" step="any" value="6" class="w-full rounded-lg border-gray-300 border pl-3 pr-7 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"><span class="absolute right-3 top-2.5 text-gray-400">%</span></div>
+                </div>
+                <div>
+                    <label for="d_compound" class="block text-sm font-medium text-gray-700 mb-1">Compound</label>
+                    <select id="d_compound" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5]">
+                        <option value="annually" selected>Annually (APY)</option>
+                        <option value="semiannually">Semi-annually</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly (APR)</option>
+                        <option value="semimonthly">Semi-monthly</option>
+                        <option value="biweekly">Biweekly</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="daily">Daily</option>
+                        <option value="continuously">Continuously</option>
+                    </select>
+                </div>
             </div>
-        </aside>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
+            <div class="flex gap-3 mt-6">
+                <button onclick="calcDeferred()" class="flex-1 bg-[#4CAF50] hover:bg-green-600 text-white font-bold py-3 rounded-lg transition shadow-md">Calculate</button>
+                <button onclick="shareLink(this)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg transition text-sm">Copy share link</button>
             </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+            <p class="text-xs text-gray-400 mt-4">Nothing is paid until the end — so interest compounds on interest the whole way. Many commercial and short-term loans, and the balloon portion of balloon loans, work like this.</p>
+        </section>
+        <div class="lg:col-span-3">
+            <section id="d_results"></section>
         </div>
-    </footer>
+    </div>
 
-    <!-- JavaScript -->
-    <script>
-        function calculateLoan() {
-            const amount = parseFloat(document.getElementById('loanAmount').value);
-            const rate = parseFloat(document.getElementById('loanRate').value);
-            const months = parseInt(document.getElementById('loanMonths').value);
+    <!-- ============ 3. BOND ============ -->
+    <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">Bond — A Predetermined Amount Due at Maturity</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start mb-14">
+        <section class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="space-y-4">
+                <div>
+                    <label for="b_amount" class="block text-sm font-medium text-gray-700 mb-1">Predetermined due amount (face value)</label>
+                    <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                    <input id="b_amount" type="number" step="any" value="100000" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="b_years" class="block text-sm font-medium text-gray-700 mb-1">Loan term — years</label>
+                        <input id="b_years" type="number" step="any" value="10" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                    </div>
+                    <div>
+                        <label for="b_months" class="block text-sm font-medium text-gray-700 mb-1">and months</label>
+                        <input id="b_months" type="number" step="any" value="0" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                    </div>
+                </div>
+                <div>
+                    <label for="b_rate" class="block text-sm font-medium text-gray-700 mb-1">Interest rate</label>
+                    <div class="relative"><input id="b_rate" type="number" step="any" value="6" class="w-full rounded-lg border-gray-300 border pl-3 pr-7 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"><span class="absolute right-3 top-2.5 text-gray-400">%</span></div>
+                </div>
+                <div>
+                    <label for="b_compound" class="block text-sm font-medium text-gray-700 mb-1">Compound</label>
+                    <select id="b_compound" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5]">
+                        <option value="annually" selected>Annually (APY)</option>
+                        <option value="semiannually">Semi-annually</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly (APR)</option>
+                        <option value="semimonthly">Semi-monthly</option>
+                        <option value="biweekly">Biweekly</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="daily">Daily</option>
+                        <option value="continuously">Continuously</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="calcBond()" class="flex-1 bg-[#4CAF50] hover:bg-green-600 text-white font-bold py-3 rounded-lg transition shadow-md">Calculate</button>
+                <button onclick="shareLink(this)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg transition text-sm">Copy share link</button>
+            </div>
+            <p class="text-xs text-gray-400 mt-4">This prices a zero-coupon bond: no coupon payments, just a deep discount to face value. Coupon bonds are priced in the <a href="bond.html" class="underline">Bond Calculator</a>.</p>
+        </section>
+        <div class="lg:col-span-3">
+            <section id="b_results"></section>
+        </div>
+    </div>
 
-            if (isNaN(amount) || isNaN(rate) || isNaN(months) || amount <= 0 || months <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
+    <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 prose max-w-none prose-gray prose-headings:text-[#3F51B5] mb-10">
+        <h2>Three shapes of the same promise</h2>
+        <p>Strip away the paperwork and every loan is money now against money later — the three calculators above differ only in <em>when</em> the money moves. The <strong>amortized loan</strong> spreads repayment evenly across the term: each payment covers that period's interest first, and the rest chips at principal, which is why early payments are mostly interest and late payments mostly principal. The <strong>deferred payment loan</strong> moves nothing until maturity, so the balance grows by compounding the entire time — the most expensive shape per dollar borrowed, and the reason balloon structures deserve respect. The <strong>bond</strong> runs the deferred loan backwards: the maturity amount is the fixed point, and the unknown is the price today. A lender who will receive $100,000 in ten years at a 6% market rate pays $55,839.48 for that promise; the discount <em>is</em> the interest.</p>
+        <h3>Interest rate, compounding, and the APR/APY distinction</h3>
+        <p>The rate on a loan is the lender's price, but its effect depends on how often it compounds. Interest charged on interest already accrued is what makes balances snowball, and more frequent compounding always means more total interest at the same quoted rate. That is why two quoting conventions coexist: <strong>APR</strong> (annual percentage rate) spreads the rate evenly across the year — 6% APR compounded monthly is simply 0.5% a month, and it is the number consumer loans are advertised with, fees included. <strong>APY</strong> (annual percentage yield) is the effective rate after compounding — the number savings products advertise. In the compound selector above, "Monthly (APR)" and "Annually (APY)" mark exactly this difference: at 6% over 10 years on $100,000 paid monthly, the APR convention costs $33,224.60 of interest while the APY convention costs $32,268.83 — the same headline rate, a $955.77 difference, purely from how the monthly rate is derived. This calculator converts honestly between the two for every frequency pairing, up to continuous compounding.</p>
+        <h3>The term trade-off</h3>
+        <p>A longer term is sold as affordability, and the payment really does fall — but the interest falls never. Because interest accrues on the outstanding balance, a slower payoff keeps the balance fat for years: doubling the term of the example above from 10 to 20 years cuts the payment by about 35% while <em>more than doubling</em> total interest, from $33,224.60 to roughly $71,943. Both numbers are on the results above — whenever a lender stretches a term to hit a monthly-payment target, look at the interest line, not just the payment.</p>
+        <h3>Secured vs. unsecured</h3>
+        <p>Loans are also split by what stands behind them. A <strong>secured</strong> loan is backed by collateral the lender can seize on default — the house behind a mortgage, the car behind an auto loan — so it is cheaper and easier to get, and defaulting costs the asset. An <strong>unsecured</strong> loan (credit cards, most personal and student loans) rests only on the borrower's creditworthiness, judged by lenders through character (credit history), capacity (income versus debts), capital (other assets), collateral where it exists, and conditions (the lending climate and the loan's purpose). With nothing to seize, unsecured credit carries higher rates, lower limits and shorter terms — and unpaid balances usually end with a collection agency rather than a repossession.</p>
+        <h3>Frequently asked questions</h3>
+        <h4>What are the three types of loans here?</h4>
+        <p>Amortized (fixed periodic payments to zero), deferred payment (one lump sum of principal plus all interest at maturity), and bond (a fixed maturity amount, priced backwards to today's value — a zero-coupon bond).</p>
+        <h4>APR or APY — which should I pick in "Compound"?</h4>
+        <p>Match your loan documents. Consumer loans quoted as APR compound monthly in this model; a rate quoted as an effective annual yield compounds annually. The difference at 6% over 10 years is about $956 per $100,000 borrowed.</p>
+        <h4>Why does a longer term cost so much more?</h4>
+        <p>Interest is charged on the remaining balance, and longer terms keep that balance higher for longer. Payments shrink slowly; interest grows fast.</p>
+        <h4>How is a zero-coupon bond priced?</h4>
+        <p>Face value divided by the growth factor: $100,000 due in 10 years at 6% compounded annually is worth $55,839.48 today. The discount is the buyer's interest.</p>
+    </section>
 
-            const monthlyRate = (rate / 100) / 12;
-            let monthlyPayment = 0;
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="mortgage.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Mortgage Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The amortized loan in full dress: taxes, insurance, PMI and extra payments.</p>
+            </a>
+            <a href="amortization.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Amortization Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Schedules with extra payments by date, annual summaries and payoff dates.</p>
+            </a>
+            <a href="auto-loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Auto Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Vehicle price, trade-in, sales tax and fees rolled into the real monthly cost.</p>
+            </a>
+            <a href="apr.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">APR Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The true annual cost of a loan once fees and points are counted.</p>
+            </a>
+        </div>
+    </section>
+</main>
 
-            if (monthlyRate === 0) {
-                monthlyPayment = amount / months;
-            } else {
-                monthlyPayment = amount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
-            }
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            const totalCost = monthlyPayment * months;
-            const totalInterest = totalCost - amount;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('monthlyPay').textContent = formatter.format(monthlyPayment);
-            document.getElementById('totalInt').textContent = formatter.format(totalInterest);
-            document.getElementById('totalCost').textContent = formatter.format(totalCost);
-
-            const resultsDiv = document.getElementById('loanResults');
-            resultsDiv.classList.remove('hidden');
-        }
-    </script>
+<script>
+const COMP = { annually: 1, semiannually: 2, quarterly: 4, monthly: 12, semimonthly: 24, biweekly: 26, weekly: 52, daily: 365, continuously: Infinity };
+const PAY = { daily: 365, weekly: 52, biweekly: 26, halfmonth: 24, month: 12, quarter: 4, halfyear: 2, year: 1 };
+const PAY_LABEL = { daily: "Day", weekly: "Week", biweekly: "2 Weeks", halfmonth: "Half Month", month: "Month", quarter: "Quarter", halfyear: "6 Months", year: "Year" };
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, "")); return isNaN(v) ? 0 : v; };
+const money = n => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function growth(rate, compound, t) { const m = COMP[compound]; return m === Infinity ? Math.exp(rate * t) : Math.pow(1 + rate / m, m * t); }
+function donutSVG(principal, interest) {
+  const total = principal + interest;
+  const pPct = total > 0 ? principal / total : 0, iPct = 1 - pPct;
+  const arc = (frac, startFrac) => {
+    if (frac <= 0) return "";
+    const r = 40, cx = 58.5, cy = 48;
+    const a0 = -Math.PI / 2 + startFrac * 2 * Math.PI, a1 = a0 + Math.min(frac, 0.9999) * 2 * Math.PI;
+    const x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0), x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+    return "M " + cx + " " + cy + " L " + x0.toFixed(3) + " " + y0.toFixed(3) + " A " + r + " " + r + " 0 " + (frac > 0.5 ? 1 : 0) + " 1 " + x1.toFixed(3) + " " + y1.toFixed(3) + " Z";
+  };
+  return '<svg width="220" height="96" role="img" aria-label="Principal versus interest"><path d="' + arc(pPct, 0) + '" fill="#2b7ddb"></path><path d="' + arc(iPct, pPct) + '" fill="#8bbc21"></path>'
+    + '<circle cx="58.5" cy="48" r="12" fill="white"></circle>'
+    + '<rect x="117" y="8" rx="3" ry="3" width="20" height="14" style="fill:#2b7ddb;"></rect><text x="142" y="19" font-size="13" fill="#374151">Principal ' + Math.round(pPct * 100) + '%</text>'
+    + '<rect x="117" y="26" rx="3" ry="3" width="20" height="14" style="fill:#8bbc21;"></rect><text x="142" y="37" font-size="13" fill="#374151">Interest ' + Math.round(iPct * 100) + '%</text></svg>';
+}
+function card(label, val) { return '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center"><div class="text-xs text-gray-500">' + label + '</div><div class="text-xl font-bold mt-1 num">' + val + "</div></div>"; }
+function growthTable(start, rate, compound, t, firstLabel) {
+  let rows = "", prev = start;
+  const fullYears = Math.floor(t + 1e-9);
+  for (let y = 1; y <= fullYears; y++) { const bal = start * growth(rate, compound, y); rows += '<tr class="border-b border-gray-100"><td class="py-2 pr-3">Year ' + y + '</td><td class="py-2 pr-3 text-right num">' + money(bal - prev) + '</td><td class="py-2 text-right num">' + money(bal) + "</td></tr>"; prev = bal; }
+  if (t - fullYears > 1e-9) { const bal = start * growth(rate, compound, t); rows += '<tr class="border-b border-gray-100"><td class="py-2 pr-3">Maturity (' + t.toFixed(2).replace(/\.?0+$/, "") + ' years)</td><td class="py-2 pr-3 text-right num">' + money(bal - prev) + '</td><td class="py-2 text-right num">' + money(bal) + "</td></tr>"; }
+  return '<section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"><h3 class="font-bold text-[#3F51B5] mb-3">Balance growth</h3><table class="w-full text-[15px]"><thead><tr class="text-left text-gray-500 border-b border-gray-200"><th class="py-2 pr-3 font-semibold">Period</th><th class="py-2 pr-3 font-semibold text-right">Interest accrued</th><th class="py-2 font-semibold text-right">Balance</th></tr></thead><tbody>'
+    + '<tr class="border-b border-gray-100"><td class="py-2 pr-3">' + firstLabel + '</td><td class="py-2 pr-3 text-right num">—</td><td class="py-2 text-right num">' + money(start) + "</td></tr>" + rows + "</tbody></table></section>";
+}
+function calcAmortized() {
+  const P = Math.max(0, num("a_amount")), yrs = Math.max(0, num("a_years")), mos = Math.max(0, num("a_months")), ratePct = num("a_rate");
+  const compound = $("a_compound").value, payback = $("a_payback").value;
+  const r = ratePct / 100, m = COMP[compound], p = PAY[payback], t = yrs + mos / 12;
+  const i = m === Infinity ? Math.exp(r / p) - 1 : Math.pow(1 + r / m, m / p) - 1;
+  const n = Math.max(1, Math.round(t * p));
+  const pay = i === 0 ? P / n : P * i / (1 - Math.pow(1 + i, -n));
+  const total = pay * n, interest = total - P;
+  let bal = P, sched = "";
+  for (let k = 1; k <= n; k++) {
+    const intK = bal * i; let prin = pay - intK; let payK = pay;
+    if (k === n || prin >= bal) { prin = bal; payK = bal + intK; }
+    bal -= prin;
+    sched += '<tr class="border-b border-gray-100"><td class="py-1.5 pr-3 num">' + k + '</td><td class="py-1.5 pr-3 text-right num">' + money(payK) + '</td><td class="py-1.5 pr-3 text-right num">' + money(prin) + '</td><td class="py-1.5 pr-3 text-right num">' + money(intK) + '</td><td class="py-1.5 text-right num">' + money(Math.max(0, bal)) + "</td></tr>";
+    if (bal <= 0.000001) break;
+  }
+  $("a_results").innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-6 shadow-md"><div class="text-sm uppercase tracking-wide opacity-80">Payment every ' + PAY_LABEL[payback].toLowerCase() + '</div>'
+    + '<div class="text-4xl sm:text-5xl font-extrabold mt-1 num">' + money(pay) + '</div>'
+    + '<div class="text-sm opacity-90 mt-1">' + n + " payments over " + (t % 1 === 0 ? t + " years" : t.toFixed(2) + " years") + " · effective rate per period " + (i * 100).toFixed(4) + "%.</div></div>"
+    + '<div class="grid grid-cols-2 gap-4">' + card("Loan amount", money(P)) + card("Total Interest", money(interest)) + "</div>"
+    + '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 flex items-center gap-4"><div>' + donutSVG(P, Math.max(0, interest)) + '</div><div class="text-sm text-gray-600">Total of ' + n + " payments: <strong>" + money(total) + "</strong><br>Interest equals " + (P > 0 ? (interest / P * 100).toFixed(2) : "0.00") + "% of the amount borrowed over this term.</div></div>"
+    + '<section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"><h3 class="font-bold text-[#3F51B5] mb-3">Amortization schedule</h3><div class="overflow-y-auto" style="max-height:420px"><table class="w-full text-[15px]"><thead><tr class="text-left text-gray-500 border-b border-gray-200"><th class="py-2 pr-3 font-semibold">#</th><th class="py-2 pr-3 font-semibold text-right">Payment</th><th class="py-2 pr-3 font-semibold text-right">Principal</th><th class="py-2 pr-3 font-semibold text-right">Interest</th><th class="py-2 font-semibold text-right">Balance</th></tr></thead><tbody>' + sched + "</tbody></table></div></section>";
+}
+function calcDeferred() {
+  const P = Math.max(0, num("d_amount")), t = Math.max(0, num("d_years")) + Math.max(0, num("d_months")) / 12, r = num("d_rate") / 100, compound = $("d_compound").value;
+  const due = P * growth(r, compound, t), interest = due - P;
+  $("d_results").innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-6 shadow-md"><div class="text-sm uppercase tracking-wide opacity-80">Amount due at loan maturity</div>'
+    + '<div class="text-4xl sm:text-5xl font-extrabold mt-1 num">' + money(due) + '</div>'
+    + '<div class="text-sm opacity-90 mt-1">One single payment — nothing is paid until the loan matures.</div></div>'
+    + '<div class="grid grid-cols-2 gap-4">' + card("Loan amount", money(P)) + card("Total Interest", money(interest)) + "</div>"
+    + '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">' + donutSVG(P, Math.max(0, interest)) + "</div>"
+    + growthTable(P, r, compound, t, "Loan starts");
+}
+function calcBond() {
+  const FV = Math.max(0, num("b_amount")), t = Math.max(0, num("b_years")) + Math.max(0, num("b_months")) / 12, r = num("b_rate") / 100, compound = $("b_compound").value;
+  const pv = FV / growth(r, compound, t), interest = FV - pv;
+  $("b_results").innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-6 shadow-md"><div class="text-sm uppercase tracking-wide opacity-80">Amount received when the loan starts</div>'
+    + '<div class="text-4xl sm:text-5xl font-extrabold mt-1 num">' + money(pv) + '</div>'
+    + '<div class="text-sm opacity-90 mt-1">The present value of ' + money(FV) + " due at maturity — the discount is the interest.</div></div>"
+    + '<div class="grid grid-cols-2 gap-4">' + card("Due at maturity (face value)", money(FV)) + card("Total Interest (discount)", money(interest)) + "</div>"
+    + '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">' + donutSVG(pv, Math.max(0, interest)) + "</div>"
+    + growthTable(pv, r, compound, t, "Bond issued");
+}
+const KEYS = ["a_amount", "a_years", "a_months", "a_rate", "a_compound", "a_payback", "d_amount", "d_years", "d_months", "d_rate", "d_compound", "b_amount", "b_years", "b_months", "b_rate", "b_compound"];
+function shareLink(btn) {
+  const p = new URLSearchParams();
+  KEYS.forEach(k => p.set(k, $(k).value));
+  const url = location.origin + location.pathname + "?" + p.toString();
+  history.replaceState(null, "", url);
+  if (navigator.clipboard) navigator.clipboard.writeText(url);
+  const old = btn.textContent; btn.textContent = "Copied!"; setTimeout(() => btn.textContent = old, 1600);
+}
+function prefill() {
+  const q = new URLSearchParams(location.search);
+  KEYS.forEach(k => { const v = q.get(k); if (v !== null) $(k).value = v; });
+}
+prefill();
+calcAmortized();
+calcDeferred();
+calcBond();
+</script>
 </body>
 </html>
