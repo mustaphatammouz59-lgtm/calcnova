@@ -1,149 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Tax Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Tax Calculator — Find Tax Amount, Rate or Pre-Tax Price | CalcNova</title>
+<meta name="description" content="Free sales tax calculator: given any two of before-tax price, tax rate and after-tax price, it finds the third — plus the current state sales tax rates and maximum combined local rates for all 50 states.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/sales-tax">
+<meta property="og:title" content="Sales Tax Calculator | CalcNova">
+<meta property="og:description" content="Solve for the before-tax price, the tax rate, or the after-tax price — and look up sales tax rates by state.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/sales-tax">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Sales Tax Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/sales-tax"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I find the price before tax from a total that includes tax?","acceptedAnswer":{"@type":"Answer","text":"Divide the after-tax total by 1 plus the tax rate: before-tax price = total ÷ (1 + rate). At a 6.5% rate, a $106.50 receipt total means a before-tax price of $106.50 ÷ 1.065 = $100.00, and the tax itself was $6.50. This calculator solves it in one step — enter the total and the rate, leave the before-tax price blank."}},
+{"@type":"Question","name":"Which states have no statewide sales tax?","acceptedAnswer":{"@type":"Answer","text":"Five states have no statewide sales tax: Alaska, Delaware, Montana, New Hampshire and Oregon. Alaska still allows local sales taxes of up to 7%, while the other four have no general local sales tax either, so the combined rate there is effectively 0% for most purchases."}},
+{"@type":"Question","name":"Why is the tax on my receipt higher than the state rate?","acceptedAnswer":{"@type":"Answer","text":"Because the state rate is only the floor. Counties, cities and special districts (transit, stadiums, tourism) add their own percentages on top, and the combined rate is what the register charges. In parts of Alabama the combined rate reaches 13.50%, and in New Jersey 12.625% — roughly double the state base rate."}},
+{"@type":"Question","name":"What is the difference between sales tax and VAT?","acceptedAnswer":{"@type":"Answer","text":"A U.S.-style sales tax is charged once, at the final retail sale to the consumer, and businesses in the supply chain do not pay it on their inputs. A value-added tax (VAT), used in more than 160 countries, is charged at every stage of production and distribution on the value each business adds, with each business claiming credit for the VAT it already paid — the consumer still bears the full tax in the end."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Sales Tax Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Sales Tax</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Sales Tax Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Fill in any <strong>two</strong> of the three values — before-tax price, sales tax rate, after-tax price — and the calculator finds the third, along with the exact tax amount. Or pick a state below and its general rate is filled in for you.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Sales Tax Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Calculation Type</label>
-                    <select id="stType" class="w-full border border-gray-300 rounded-md p-2 outline-none mb-4">
-                        <option value="add">Add Tax to Price (Net to Gross)</option>
-                        <option value="remove">Extract Tax from Price (Gross to Net)</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1" id="stPriceLabel">Net Price (Before Tax) ($)</label>
-                        <input type="number" id="stPrice" value="100" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <label class="block mb-4">
+                <span class="text-sm font-medium text-gray-600">Quick fill — U.S. state general rate</span>
+                <select id="s_state" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" onchange="pickState()">
+                    <option value="">Choose a state…</option>
+                    <option value="4">Alabama — 4%</option><option value="0">Alaska — 0%</option><option value="5.6">Arizona — 5.6%</option><option value="6.5">Arkansas — 6.5%</option><option value="7.25">California — 7.25%</option><option value="2.9">Colorado — 2.9%</option><option value="6.35">Connecticut — 6.35%</option><option value="0">Delaware — 0%</option><option value="6">District of Columbia — 6%</option><option value="6">Florida — 6%</option><option value="4">Georgia — 4%</option><option value="4">Guam — 4%</option><option value="4.166">Hawaii — 4.166%</option><option value="6">Idaho — 6%</option><option value="6.25">Illinois — 6.25%</option><option value="7">Indiana — 7%</option><option value="6">Iowa — 6%</option><option value="6.5">Kansas — 6.5%</option><option value="6">Kentucky — 6%</option><option value="4.45">Louisiana — 4.45%</option><option value="5.5">Maine — 5.5%</option><option value="6">Maryland — 6%</option><option value="6.25">Massachusetts — 6.25%</option><option value="6">Michigan — 6%</option><option value="6.875">Minnesota — 6.875%</option><option value="7">Mississippi — 7%</option><option value="4.225">Missouri — 4.225%</option><option value="0">Montana — 0%</option><option value="5.5">Nebraska — 5.5%</option><option value="6.85">Nevada — 6.85%</option><option value="0">New Hampshire — 0%</option><option value="6.625">New Jersey — 6.625%</option><option value="5.125">New Mexico — 5.125%</option><option value="4">New York — 4%</option><option value="4.75">North Carolina — 4.75%</option><option value="5">North Dakota — 5%</option><option value="5.75">Ohio — 5.75%</option><option value="4.5">Oklahoma — 4.5%</option><option value="0">Oregon — 0%</option><option value="6">Pennsylvania — 6%</option><option value="10.5">Puerto Rico — 10.5%</option><option value="7">Rhode Island — 7%</option><option value="6">South Carolina — 6%</option><option value="4">South Dakota — 4%</option><option value="7">Tennessee — 7%</option><option value="6.25">Texas — 6.25%</option><option value="6.1">Utah — 6.1%</option><option value="6">Vermont — 6%</option><option value="5.3">Virginia — 5.3%</option><option value="6.5">Washington — 6.5%</option><option value="6">West Virginia — 6%</option><option value="5">Wisconsin — 5%</option><option value="4">Wyoming — 4%</option>
+                </select>
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Before-tax price</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                        <span class="text-gray-400">$</span>
+                        <input id="s_before" type="number" value="100" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="edited('before'); calc()">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Sales Tax Rate (%)</label>
-                        <input type="number" id="stRate" value="8.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Sales tax rate</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                        <input id="s_rate" type="number" value="6.5" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="edited('rate'); calc()">
+                        <span class="text-gray-400">%</span>
                     </div>
-                </div>
-                <button onclick="calculateSalesTax()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Tax</button>
-
-                <div id="stResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500" id="stNetLabel">Net Price</p>
-                            <p class="text-xl font-bold text-gray-800" id="stNet">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Sales Tax Amount</p>
-                            <p class="text-xl font-bold text-red-500" id="stTaxAmount">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500" id="stGrossLabel">Gross Price (Total)</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="stGross">$0</p>
-                        </div>
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">After-tax price</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                        <span class="text-gray-400">$</span>
+                        <input id="s_after" type="number" step="any" class="w-full p-2.5 outline-none num" placeholder="solved for you" oninput="edited('after'); calc()">
                     </div>
-                </div>
+                </label>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is Sales Tax?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A sales tax is a consumption tax imposed by the government on the sale of goods and services. It is added to the price of the item at the point of sale. This calculator helps you quickly determine the final cost of an item after tax, or how much of your bill is going to taxes.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <button onclick="calc(true)" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="s_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">The three formulas</div>
+                <p class="num">Tax = before-tax price × rate<br>After-tax = before-tax + tax<br>Before-tax = after-tax ÷ (1 + rate)</p>
+                <p class="mt-2">Working backwards from a receipt total is the one people get wrong most often: you divide by (1 + rate) — you do <em>not</em> subtract the rate percentage from the total.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
-
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-10">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Sales Tax Rates by State</h2>
+        <p class="text-sm text-gray-500 mb-4">The general statewide rate, and the highest combined rate reachable once county, city and district taxes are added. Your actual rate depends on exactly where the purchase happens.</p>
+        <div class="overflow-auto max-h-[420px] border border-gray-100 rounded-lg">
+            <table class="w-full text-sm num">
+                <thead class="bg-gray-50 sticky top-0"><tr>
+                    <th class="text-left p-2.5">State</th><th class="text-right p-2.5">General state rate</th><th class="text-right p-2.5">Max with local/city tax</th>
+                </tr></thead>
+                <tbody><tr class="border-t border-gray-100"><td class="p-2.5">Alabama</td><td class="p-2.5 text-right">4%</td><td class="p-2.5 text-right">13.5%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Alaska</td><td class="p-2.5 text-right">0%</td><td class="p-2.5 text-right">7%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Arizona</td><td class="p-2.5 text-right">5.6%</td><td class="p-2.5 text-right">10.725%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Arkansas</td><td class="p-2.5 text-right">6.5%</td><td class="p-2.5 text-right">11.625%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">California</td><td class="p-2.5 text-right">7.25%</td><td class="p-2.5 text-right">10.5%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Colorado</td><td class="p-2.5 text-right">2.9%</td><td class="p-2.5 text-right">10%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Connecticut</td><td class="p-2.5 text-right">6.35%</td><td class="p-2.5 text-right">6.35%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Delaware</td><td class="p-2.5 text-right">0%</td><td class="p-2.5 text-right">0%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">District of Columbia</td><td class="p-2.5 text-right">6%</td><td class="p-2.5 text-right">6%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Florida</td><td class="p-2.5 text-right">6%</td><td class="p-2.5 text-right">7.5%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Georgia</td><td class="p-2.5 text-right">4%</td><td class="p-2.5 text-right">8%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Guam</td><td class="p-2.5 text-right">4%</td><td class="p-2.5 text-right">4%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Hawaii</td><td class="p-2.5 text-right">4.166%</td><td class="p-2.5 text-right">4.712%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Idaho</td><td class="p-2.5 text-right">6%</td><td class="p-2.5 text-right">8.5%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Illinois</td><td class="p-2.5 text-right">6.25%</td><td class="p-2.5 text-right">10.25%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Indiana</td><td class="p-2.5 text-right">7%</td><td class="p-2.5 text-right">7%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Iowa</td><td class="p-2.5 text-right">6%</td><td class="p-2.5 text-right">7%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Kansas</td><td class="p-2.5 text-right">6.5%</td><td class="p-2.5 text-right">11.6%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Kentucky</td><td class="p-2.5 text-right">6%</td><td class="p-2.5 text-right">6%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Louisiana</td><td class="p-2.5 text-right">4.45%</td><td class="p-2.5 text-right">11.45%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Maine</td><td class="p-2.5 text-right">5.5%</td><td class="p-2.5 text-right">5.5%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Maryland</td><td class="p-2.5 text-right">6%</td><td class="p-2.5 text-right">6%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Massachusetts</td><td class="p-2.5 text-right">6.25%</td><td class="p-2.5 text-right">6.25%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Michigan</td><td class="p-2.5 text-right">6%</td><td class="p-2.5 text-right">6%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Minnesota</td><td class="p-2.5 text-right">6.875%</td><td class="p-2.5 text-right">7.875%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Mississippi</td><td class="p-2.5 text-right">7%</td><td class="p-2.5 text-right">7.25%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Missouri</td><td class="p-2.5 text-right">4.225%</td><td class="p-2.5 text-right">10.85%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Montana</td><td class="p-2.5 text-right">0%</td><td class="p-2.5 text-right">0%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Nebraska</td><td class="p-2.5 text-right">5.5%</td><td class="p-2.5 text-right">7.5%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Nevada</td><td class="p-2.5 text-right">6.85%</td><td class="p-2.5 text-right">8.375%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">New Hampshire</td><td class="p-2.5 text-right">0%</td><td class="p-2.5 text-right">0%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">New Jersey</td><td class="p-2.5 text-right">6.625%</td><td class="p-2.5 text-right">12.625%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">New Mexico</td><td class="p-2.5 text-right">5.125%</td><td class="p-2.5 text-right">8.688%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">New York</td><td class="p-2.5 text-right">4%</td><td class="p-2.5 text-right">8.875%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">North Carolina</td><td class="p-2.5 text-right">4.75%</td><td class="p-2.5 text-right">7.5%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">North Dakota</td><td class="p-2.5 text-right">5%</td><td class="p-2.5 text-right">8%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Ohio</td><td class="p-2.5 text-right">5.75%</td><td class="p-2.5 text-right">8%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Oklahoma</td><td class="p-2.5 text-right">4.5%</td><td class="p-2.5 text-right">11%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Oregon</td><td class="p-2.5 text-right">0%</td><td class="p-2.5 text-right">0%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Pennsylvania</td><td class="p-2.5 text-right">6%</td><td class="p-2.5 text-right">8%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Puerto Rico</td><td class="p-2.5 text-right">10.5%</td><td class="p-2.5 text-right">11.5%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Rhode Island</td><td class="p-2.5 text-right">7%</td><td class="p-2.5 text-right">7%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">South Carolina</td><td class="p-2.5 text-right">6%</td><td class="p-2.5 text-right">9%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">South Dakota</td><td class="p-2.5 text-right">4%</td><td class="p-2.5 text-right">6%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Tennessee</td><td class="p-2.5 text-right">7%</td><td class="p-2.5 text-right">9.75%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Texas</td><td class="p-2.5 text-right">6.25%</td><td class="p-2.5 text-right">8.25%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Utah</td><td class="p-2.5 text-right">6.1%</td><td class="p-2.5 text-right">8.35%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Vermont</td><td class="p-2.5 text-right">6%</td><td class="p-2.5 text-right">7%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Virginia</td><td class="p-2.5 text-right">5.3%</td><td class="p-2.5 text-right">7%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Washington</td><td class="p-2.5 text-right">6.5%</td><td class="p-2.5 text-right">10.6%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">West Virginia</td><td class="p-2.5 text-right">6%</td><td class="p-2.5 text-right">7%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Wisconsin</td><td class="p-2.5 text-right">5%</td><td class="p-2.5 text-right">7.9%</td></tr><tr class="border-t border-gray-100"><td class="p-2.5">Wyoming</td><td class="p-2.5 text-right">4%</td><td class="p-2.5 text-right">6%</td></tr></tbody>
+            </table>
         </div>
-    </footer>
+    </section>
 
-    <script>
-        // تغيير العناوين بناءً على نوع الحساب المختار
-        document.getElementById('stType').addEventListener('change', function() {
-            const type = this.value;
-            const priceLabel = document.getElementById('stPriceLabel');
-            const netLabel = document.getElementById('stNetLabel');
-            const grossLabel = document.getElementById('stGrossLabel');
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>What Is a Sales Tax?</h2>
+        <p>A sales tax is a consumption tax collected by a government on the sale of goods and, in many places, services. The seller normally collects it from the buyer at the moment of purchase and passes it on to the state. Because it is charged only once — on the final retail sale — the businesses that manufactured, shipped and wholesaled the product along the way do not pay it on their own transactions. Most of the rest of the world uses the closely related value-added tax (VAT) or goods and services tax (GST) instead, which is collected in slices at every stage of the supply chain but lands on the same person in the end: the final consumer.</p>
+        <h3>Sales Tax in the United States</h3>
+        <p>There is no federal sales tax in the U.S. Forty-five states plus the District of Columbia, Puerto Rico and Guam levy a statewide one; the five exceptions are Alaska, Delaware, Montana, New Hampshire and Oregon. Statewide rates run from 2.9% in Colorado to 7.25% in California and 10.5% in Puerto Rico — and that is only the starting point. Counties, cities and special districts stack their own taxes on top, so the rate that actually applies can reach 13.50% in parts of Alabama. What is taxable also changes across borders: many states exempt groceries and prescription medicine, some tax clothing only above a price threshold, and a few tax services that their neighbors leave alone. Sales tax matters fiscally, too: it supplies roughly a third of all state government revenue, second only to the income tax, and states like Florida, Washington, Tennessee and Texas raise more than half of their tax revenue from it.</p>
+        <h3>A Short, Rocky History</h3>
+        <p>Sales taxes helped spark the country itself: Britain's taxes on goods sold to the American colonies — imposed without colonial representation in Parliament — fed the resentment that produced the Boston Tea Party and, eventually, the Revolution. Broad-based state sales taxes, though, are a Depression-era invention. When income and property tax receipts collapsed after 1929, states needed a levy that followed everyday spending; Mississippi adopted the first modern general sales tax in 1930 (effective 1932), and most states followed within the decade. The tax has been a fixture of state finance ever since, and periodic proposals for a federal version have never survived the politics.</p>
+        <h3>Can You Deduct Sales Tax?</h3>
+        <p>Yes — with conditions. On a federal return you must itemize deductions, and you then choose between deducting state and local <em>income</em> taxes or state and local <em>sales</em> taxes, never both (the combined state-and-local deduction is capped at $10,000). Most people pick whichever is larger, usually income tax. The sales tax route wins mainly in no-income-tax states, or in a year with a big purchase — a car, a boat, an engagement ring, major appliances. You can use your actual receipts, which takes record-keeping, or the IRS's optional tables based on income and state, plus the tax on specified big-ticket items. In practice only a small minority of filers claim it.</p>
+        <h3>Sales Tax vs. VAT</h3>
+        <p>Both are consumption taxes and both are ultimately paid by the consumer; they differ in mechanics. A sales tax is collected once, at retail, on the full price. A VAT is collected at every stage — manufacturer, wholesaler, retailer — with each business charging VAT on its sale price and reclaiming the VAT it paid on inputs, so the government receives the tax in installments that sum to the same amount. VAT's paper trail makes evasion harder and lets it raise more revenue at a given rate, at the cost of heavier bookkeeping for every business in the chain. If you need VAT math instead, the same three-way solving applies: net, rate and gross.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>How do I get the pre-tax price from a total?</h4>
+        <p>Divide the total by (1 + rate): $106.50 ÷ 1.065 = $100.00 at a 6.5% rate. Subtracting 6.5% of the total would give $99.58 — close, but wrong, because the percentage applies to the smaller pre-tax amount.</p>
+        <h4>Which states have no sales tax?</h4>
+        <p>Alaska, Delaware, Montana, New Hampshire and Oregon have no statewide tax. Alaska municipalities can still levy up to 7% locally.</p>
+        <h4>Why is my receipt's rate higher than my state's rate?</h4>
+        <p>Local taxes. County, city and district levies are added to the state base rate, and the register charges the combined rate for that exact location.</p>
+        <h4>Is sales tax the same as VAT?</h4>
+        <p>No. Sales tax hits once, at the final retail sale; VAT is collected stage by stage with input credits. The consumer funds both.</p>
+    </section>
 
-            if (type === 'add') {
-                priceLabel.textContent = "Net Price (Before Tax) ($)";
-                netLabel.textContent = "Net Price";
-                grossLabel.textContent = "Gross Price (Total)";
-            } else {
-                priceLabel.textContent = "Gross Price (Including Tax) ($)";
-                netLabel.textContent = "Net Price (Before Tax)";
-                grossLabel.textContent = "Gross Price";
-            }
-        });
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="income-tax.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Income Tax Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The other big state levy — and the one you choose between when deducting.</p>
+            </a>
+            <a href="take-home-paycheck.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Take-Home-Paycheck Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">What reaches your pocket before any sales tax touches it.</p>
+            </a>
+            <a href="currency.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Currency Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Shopping abroad? Convert the price first, then add the local tax.</p>
+            </a>
+            <a href="inflation.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Inflation Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Why the same basket costs more every year, tax aside.</p>
+            </a>
+        </div>
+    </section>
+</main>
 
-        function calculateSalesTax() {
-            const type = document.getElementById('stType').value;
-            const price = parseFloat(document.getElementById('stPrice').value);
-            const rate = parseFloat(document.getElementById('stRate').value) / 100;
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (isNaN(price) || isNaN(rate) || price < 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
-
-            let netPrice, taxAmount, grossPrice;
-
-            if (type === 'add') {
-                // إضافة الضريبة
-                netPrice = price;
-                taxAmount = price * rate;
-                grossPrice = price + taxAmount;
-            } else {
-                // استخراج الضريبة
-                grossPrice = price;
-                netPrice = price / (1 + rate);
-                taxAmount = grossPrice - netPrice;
-            }
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('stNet').textContent = formatter.format(netPrice);
-            document.getElementById('stTaxAmount').textContent = formatter.format(taxAmount);
-            document.getElementById('stGross').textContent = formatter.format(grossPrice);
-
-            document.getElementById('stResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const STATES = [["Alabama", 4, 13.5], ["Alaska", 0, 7], ["Arizona", 5.6, 10.725], ["Arkansas", 6.5, 11.625], ["California", 7.25, 10.5], ["Colorado", 2.9, 10], ["Connecticut", 6.35, 6.35], ["Delaware", 0, 0], ["District of Columbia", 6, 6], ["Florida", 6, 7.5], ["Georgia", 4, 8], ["Guam", 4, 4], ["Hawaii", 4.166, 4.712], ["Idaho", 6, 8.5], ["Illinois", 6.25, 10.25], ["Indiana", 7, 7], ["Iowa", 6, 7], ["Kansas", 6.5, 11.6], ["Kentucky", 6, 6], ["Louisiana", 4.45, 11.45], ["Maine", 5.5, 5.5], ["Maryland", 6, 6], ["Massachusetts", 6.25, 6.25], ["Michigan", 6, 6], ["Minnesota", 6.875, 7.875], ["Mississippi", 7, 7.25], ["Missouri", 4.225, 10.85], ["Montana", 0, 0], ["Nebraska", 5.5, 7.5], ["Nevada", 6.85, 8.375], ["New Hampshire", 0, 0], ["New Jersey", 6.625, 12.625], ["New Mexico", 5.125, 8.688], ["New York", 4, 8.875], ["North Carolina", 4.75, 7.5], ["North Dakota", 5, 8], ["Ohio", 5.75, 8], ["Oklahoma", 4.5, 11], ["Oregon", 0, 0], ["Pennsylvania", 6, 8], ["Puerto Rico", 10.5, 11.5], ["Rhode Island", 7, 7], ["South Carolina", 6, 9], ["South Dakota", 4, 6], ["Tennessee", 7, 9.75], ["Texas", 6.25, 8.25], ["Utah", 6.1, 8.35], ["Vermont", 6, 7], ["Virginia", 5.3, 7], ["Washington", 6.5, 10.6], ["West Virginia", 6, 7], ["Wisconsin", 5, 7.9], ["Wyoming", 4, 6]];
+const $ = id => document.getElementById(id);
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const get = id => { const t = String($(id).value).trim(); if (t === '') return null; const v = parseFloat(t.replace(/[^0-9.\-]/g, '')); return isNaN(v) ? null : v; };
+let lastEdited = 'after';
+function edited(f) { lastEdited = f; }
+function pickState() {
+  const v = $('s_state').value;
+  if (v === '') return;
+  $('s_rate').value = v;
+  lastEdited = 'rate';
+  calc();
+}
+function calc() {
+  let b = get('s_before'), r = get('s_rate'), a = get('s_after');
+  let solved = null;
+  if (b !== null && r !== null && (a === null || lastEdited !== 'after')) { a = b * (1 + r / 100); solved = 'after'; }
+  else if (b !== null && a !== null && (r === null || lastEdited === 'after')) { if (b > 0) { r = (a / b - 1) * 100; solved = 'rate'; } }
+  else if (r !== null && a !== null && b === null) { b = a / (1 + r / 100); solved = 'before'; }
+  if (b === null || r === null || a === null || b < 0 || r < 0) { $('s_results').innerHTML = '<p class="text-sm text-gray-500">Enter any two values and the third is calculated automatically.</p>'; return; }
+  if (solved === 'after') $('s_after').value = a.toFixed(2);
+  if (solved === 'rate') $('s_rate').value = (Math.round(r * 1000) / 1000).toString();
+  if (solved === 'before') $('s_before').value = b.toFixed(2);
+  const tax = a - b;
+  $('s_results').innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-5"><div class="text-sm opacity-80">After-tax price</div><div class="text-3xl font-extrabold mt-1">' + fmt$(a) + '</div></div>' +
+    '<div class="grid grid-cols-3 gap-3 mt-4 text-center">' +
+      '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">Before tax</div><div class="font-bold num">' + fmt$(b) + '</div></div>' +
+      '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">Sales tax (' + (Math.round(r * 1000) / 1000) + '%)</div><div class="font-bold num">' + fmt$(tax) + '</div></div>' +
+      '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">Tax share of total</div><div class="font-bold num">' + (a > 0 ? (tax / a * 100).toFixed(2) : '0.00') + '%</div></div>' +
+    '</div>' +
+    (solved ? '<p class="text-xs text-gray-400 mt-3">Solved for the ' + { after: 'after-tax price', rate: 'tax rate', before: 'before-tax price' }[solved] + '.</p>' : '');
+  const q = new URLSearchParams({ b: $('s_before').value, r: $('s_rate').value, a: $('s_after').value });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  if (q.get('b')) $('s_before').value = q.get('b');
+  if (q.get('r')) $('s_rate').value = q.get('r');
+  if (q.get('a')) { $('s_after').value = q.get('a'); lastEdited = 'after'; }
+  calc();
+})();
+</script>
 </body>
-</html>
+    </html>
