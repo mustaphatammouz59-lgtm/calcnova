@@ -1,133 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Loan Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Loan Calculator — Monthly Payment, Fees, Insurance &amp; Real APR | CalcNova</title>
+<meta name="description" content="Free personal loan calculator: monthly payment, payoff date and full schedule, plus the origination fee and credit insurance — and the real APR once every cost is counted.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/personal-loan">
+<meta property="og:title" content="Personal Loan Calculator — Payment, Fees & Real APR | CalcNova">
+<meta property="og:description" content="The advertised rate is not the cost. Add the fee and insurance and see the loan's true APR.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/personal-loan">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Personal Loan Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/personal-loan"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What APR should I expect on a personal loan?","acceptedAnswer":{"@type":"Answer","text":"Roughly 6–12% with excellent credit, 12–20% with good-to-fair credit, and 25% or more with poor credit, before fees. Because personal loans are usually unsecured, the lender prices your creditworthiness instead of collateral — and an origination fee adds about 2 points to the APR on a typical five-year loan, which is why comparing APRs beats comparing rates."}},
+{"@type":"Question","name":"Is a personal loan good for consolidating credit-card debt?","acceptedAnswer":{"@type":"Answer","text":"Often — about half of all personal loans are taken for exactly this. The math works when the loan's fee-inclusive APR is clearly below the cards' rates and the fixed schedule ends the debt on a date certain. It fails when the freed-up cards get used again: the result is the loan plus new card balances."}},
+{"@type":"Question","name":"What is credit insurance on a personal loan?","acceptedAnswer":{"@type":"Answer","text":"An optional (occasionally required) policy, charged monthly, that pays the loan if you die, become disabled, or lose your job. It is not required by law, it is usually expensive for the cover provided — $50 a month adds $3,000 and about 5 APR points to the default loan here — and an emergency fund or term life policy usually does the job cheaper."}},
+{"@type":"Question","name":"Deducted or upfront origination fee — which is better?","acceptedAnswer":{"@type":"Answer","text":"Economically they're the same cost; the calculator's APR is identical either way. Deducted means you receive less cash (borrow $20,000, receive $19,000), so if you need the full amount in hand, either pay upfront or borrow slightly more — remembering that you pay interest on the fee for the whole term when it's deducted and financed."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Personal Loan Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Personal Loan</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Personal Loan Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">A personal loan's advertised rate understates its cost: most carry an <strong>origination fee</strong>, and many add monthly <strong>credit insurance</strong>. This calculator shows the payment, the payoff date and the full schedule — then folds the fee and insurance in and reports the <strong>real APR</strong>, the only number worth comparing across lenders.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Personal Loan Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Amount ($)</label>
-                        <input type="number" id="plAmount" value="15000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
-                        <input type="number" id="plRate" value="10.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
-                        <input type="number" id="plYears" value="5" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Origination Fee (%)</label>
-                        <p class="text-xs text-gray-500 mb-1">Optional upfront fee</p>
-                        <input type="number" id="plFee" value="1" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label class="block"><span class="text-sm font-medium text-gray-600">Loan amount</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="p_amount" type="number" value="20000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Interest rate</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="p_rate" type="number" value="10" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"><span class="text-gray-400">%</span></div></label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Term — years</span>
+                        <input id="p_years" type="number" value="5" min="0" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()"></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">and months</span>
+                        <input id="p_months" type="number" value="0" min="0" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()"></label>
                 </div>
-                <button onclick="calculatePersonalLoan()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Loan</button>
-
-                <div id="plResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Monthly Payment</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="plMonthly">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Paid</p>
-                            <p class="text-xl font-bold text-red-500" id="plTotalInterest">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Cost (Inc. Fees)</p>
-                            <p class="text-xl font-bold text-gray-800" id="plTotalCost">$0</p>
-                        </div>
-                    </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Start month</span>
+                        <select id="p_startm" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5" onchange="calc()">
+                            <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10" selected>Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+                        </select></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Start year</span>
+                        <input id="p_starty" type="number" value="2026" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()"></label>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is a Personal Loan?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A personal loan is an unsecured loan, meaning it doesn't require collateral like a house or car. Because they are unsecured, personal loans often have higher interest rates than secured loans. This calculator helps you estimate your monthly payments and the total cost of borrowing, including any upfront origination fees.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
+            <label class="flex items-center gap-2 mt-5 font-bold text-gray-800 cursor-pointer"><input id="p_optional" type="checkbox" class="w-4 h-4 accent-[#3F51B5]" onchange="toggleOptional()"> Add fee and insurance</label>
+            <div id="p_optbox" class="hidden mt-4 border border-gray-200 rounded-lg p-4 bg-gray-50">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Origination fee</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 bg-white focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="p_fee" type="number" value="5" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"><span id="p_fee_unit" class="text-gray-400">%</span></div></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Fee unit</span>
+                        <select id="p_fee_type" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 bg-white" onchange="feeTypeChange()">
+                            <option value="percentage" selected>Percent of loan</option>
+                            <option value="amount">Dollar amount</option>
+                        </select></label>
+                    <div>
+                        <span class="text-sm font-medium text-gray-600">Fee is</span>
+                        <div class="mt-2 space-y-1 text-sm">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="p_feepaid" value="deduct" checked class="accent-[#3F51B5]" onchange="calc()"> deducted from loan</label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="p_feepaid" value="upfront" class="accent-[#3F51B5]" onchange="calc()"> paid upfront</label>
+                        </div>
+                    </div>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Insurance</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 bg-white focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="p_ins" type="number" value="0" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"><span class="text-gray-400">/month</span></div></label>
                 </div>
+            </div>
+            <button onclick="calc()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="p_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">The 2-point rule of thumb</div>
+                <p>A 5% origination fee on a five-year loan adds about <strong>2 points</strong> to the APR (10% becomes ≈12.2%); on a three-year loan it adds over 3. Shorter term, same fee, worse APR — fees are front-loaded costs spread over fewer payments.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>Personal Loans, Up Close</h2>
+        <p>A personal loan is a fixed amount, at a fixed rate, repaid in fixed monthly installments over a set term — typically $5,000 to $35,000 for three or five years in the U.S. Most are <strong>unsecured</strong>: no car or house stands behind them, so the lender prices <em>you</em> — credit score, income, existing debts — instead of collateral, and rates run correspondingly higher, past 25% for weaker credit. (Secured personal loans exist at banks and credit unions, backed by a car, savings, or a CD; the borrower's risk is losing the collateral.) Traditionally the lenders were banks, credit unions, and, at the expensive end, pawnshops and cash-advance stores. The internet added <strong>peer-to-peer lending</strong>: platforms match borrowers with individual investors, take a small cut as middlemen, and — because a website is cheaper than a branch network and the platform itself lends nothing — often quote better terms while the investors bear the default risk.</p>
+        <h3>Why People Take Them</h3>
+        <p>About half of all personal loans consolidate debt, and the arithmetic can be compelling: cards at 19.99% and 24.99% replaced by one loan whose fee-inclusive APR is 14.284% (the worked example in this calculator's lineage: $16,000 at 12% with a 5% fee) ends the balances years sooner at a lower total cost — provided the cards stay at zero afterward. The rest fund medical bills, home renovations, small-business pushes, weddings, vacations and other large purchases: anywhere a fixed payoff date beats an open-ended revolving balance.</p>
+        <h3>The Fee Stack</h3>
+        <p>The <strong>origination fee</strong> (1–5% typically, sometimes called an application fee) covers processing and underwriting. Most lenders deduct it — borrow $10,000 at a 3% fee and $9,700 lands in your account, while payments are computed on $10,000 — though some collect it upfront; the APR comes out the same. A <strong>prepayment fee</strong> punishes early payoff (increasingly rare, always worth checking), and a <strong>late fee</strong> punishes the opposite. Lenders may also push <strong>credit insurance</strong> — monthly premiums covering death, disability, or job loss. It is not required by law; priced against term life insurance and an emergency fund, it is usually poor value, and this calculator shows exactly what it adds to the APR.</p>
+        <h3>Creditworthiness, Applications, and Predators</h3>
+        <p>Your credit profile is the main pricing input: strong scores unlock the low rates; thin or damaged credit means few offers at punishing prices, and defaulting damages the score further. Lenders that look past scores weigh debt-to-income ratio and employment stability instead. Applications are straightforward — identity, employment, income, and credit information, evidenced by tax returns, pay stubs or W-2s, increasingly submitted online with decisions in minutes to days and funding sometimes within 24 hours by direct deposit. One warning deserves emphasis: <strong>a lender who offers money without checking credit history is a red flag, not a favor.</strong> Loans marketed by mail or phone, auto-title loans, cash advances and payday loans cluster at the predatory end — extreme rates, heavy fees, brutally short terms. Before signing anything unsecured, price the alternatives: family or friends, a cosigner with strong credit, a 0% introductory-rate card used with discipline, a secured loan against existing collateral, community nonprofits — even crowdfunding, which needs no repayment at all.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>Does the start date change my payment?</h4>
+        <p>No — it only labels the schedule and sets the payoff date. The payment depends on amount, rate and term; the calendar decides when each installment falls.</p>
+        <h4>Why does the schedule's last payment fall a month before the payoff date?</h4>
+        <p>The payoff date is quoted as start date plus the full term (an October 2026 start on a five-year loan pays off "Oct. 2031"), while the 60th monthly payment itself lands in September 2031. Lenders quote both ways; the money is identical.</p>
+        <h4>Can I use this for a secured personal loan?</h4>
+        <p>Yes — the arithmetic is the same. Just remember the calculator can't price the risk that matters most with secured borrowing: losing the collateral if payments stop.</p>
+    </section>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="credit-card.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Credit Card Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">What the debt you're consolidating is really costing you.</p>
+            </a>
+            <a href="loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Amortized, deferred-payment and zero-coupon structures.</p>
+            </a>
+            <a href="debt-consolidation.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Debt Consolidation Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Many debts vs one loan, verdict included.</p>
+            </a>
+            <a href="business-loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Business Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The same real-APR lens, for company borrowing and SBA loans.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        function calculatePersonalLoan() {
-            const amount = parseFloat(document.getElementById('plAmount').value);
-            const rate = parseFloat(document.getElementById('plRate').value) / 100 / 12;
-            const years = parseFloat(document.getElementById('plYears').value);
-            const feePercent = parseFloat(document.getElementById('plFee').value) / 100;
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (isNaN(amount) || isNaN(rate) || isNaN(years) || isNaN(feePercent) || amount <= 0 || years <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
-
-            const months = years * 12;
-            
-            let monthlyPayment = 0;
-            if (rate === 0) {
-                monthlyPayment = amount / months;
-            } else {
-                monthlyPayment = amount * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
-            }
-
-            const totalRepaid = monthlyPayment * months;
-            const totalInterest = totalRepaid - amount;
-            const originationFee = amount * feePercent;
-            const totalCost = amount + totalInterest + originationFee;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('plMonthly').textContent = formatter.format(monthlyPayment);
-            document.getElementById('plTotalInterest').textContent = formatter.format(totalInterest);
-            document.getElementById('plTotalCost').textContent = formatter.format(totalCost);
-
-            document.getElementById('plResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONDOT = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
+let schedView = 'yearly';
+function toggleOptional() {
+  $('p_optbox').classList.toggle('hidden', !$('p_optional').checked);
+  calc();
+}
+function feeTypeChange() {
+  const amt = num('p_amount'), feeV = num('p_fee'), type = $('p_fee_type').value;
+  if (amt > 0 && feeV > 0) $('p_fee').value = type === 'amount' ? Math.round(amt * feeV) / 100 : Math.round(100000 * feeV / amt) / 1000;
+  $('p_fee_unit').textContent = type === 'amount' ? '' : '%';
+  calc();
+}
+function donutN(parts) {
+  const total = parts.reduce((s, p) => s + p[0], 0), R = 42, C = 2 * Math.PI * R;
+  let acc = 0, circles = '', ly = 26;
+  for (const [val, color] of parts) {
+    const frac = total > 0 ? val / total : 0;
+    if (frac > 0) circles += '<circle cx="50" cy="50" r="' + R + '" fill="none" stroke="' + color + '" stroke-width="16" stroke-dasharray="' + Math.max(frac * C - 1.5, 0.5) + ' ' + C.toFixed(2) + '" transform="rotate(' + (-90 + acc * 360) + ' 50 50)"/>';
+    acc += frac;
+  }
+  const legend = parts.map(([val, color, name]) => { const t = '<text x="97" y="' + ly + '" font-size="11" fill="' + color + '" font-weight="700">' + name + ' ' + Math.round(total > 0 ? val / total * 100 : 0) + '%</text>'; ly += 17; return t; }).join('');
+  return '<svg width="210" height="100" viewBox="0 0 210 100">' + circles + legend + '</svg>';
+}
+function statsHtml(pairs) {
+  return '<div class="grid grid-cols-2 gap-3 mt-4 text-center">' + pairs.map(p => '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">' + p[0] + '</div><div class="font-bold num">' + p[1] + '</div></div>').join('') + '</div>';
+}
+function solveApr(monthlyOutflow, n, net) {
+  if (!(net > 0) || !(monthlyOutflow > 0)) return null;
+  const pv = j => j === 0 ? monthlyOutflow * n : monthlyOutflow * (1 - Math.pow(1 + j, -n)) / j;
+  if (pv(0) <= net) return 0;
+  let lo = 0, hi = 1;
+  while (pv(hi) > net && hi < 64) hi *= 2;
+  for (let k = 0; k < 200; k++) { const mid = (lo + hi) / 2; if (pv(mid) > net) lo = mid; else hi = mid; }
+  return (lo + hi) / 2 * 12 * 100;
+}
+function setSchedView(v) { schedView = v; calc(); }
+function calc() {
+  const P = num('p_amount'), rate = num('p_rate'), i = rate / 1200;
+  const n = Math.round(num('p_years') * 12 + num('p_months'));
+  const sm = parseInt($('p_startm').value), sy = num('p_starty');
+  const out = $('p_results');
+  if (P <= 0 || n <= 0 || sy <= 0) { out.innerHTML = ''; updateShare(); return; }
+  const withOpt = $('p_optional').checked;
+  const fee = withOpt ? ($('p_fee_type').value === 'percentage' ? P * num('p_fee') / 100 : num('p_fee')) : 0;
+  const feePaid = document.querySelector('input[name="p_feepaid"]:checked').value;
+  const ins = withOpt ? num('p_ins') : 0;
+  const pay = i > 0 ? P * i / (1 - Math.pow(1 + i, -n)) : P / n;
+  let bal = P, interest = 0, mRows = '', yInterest = 0, yPrincipal = 0, yRows = '';
+  const dateOf = k => { const t = (sm - 1) + (k - 1); return (t % 12 + 1) + '/' + (sy + Math.floor(t / 12)); };
+  for (let k = 1; k <= n; k++) {
+    const it = bal * i, prin = Math.min(pay - it, bal), payK = prin + it;
+    bal -= prin; interest += it; yInterest += it; yPrincipal += prin;
+    mRows += '<tr class="border-t border-gray-100"><td class="p-2">' + k + '</td><td class="p-2">' + dateOf(k) + '</td><td class="p-2 text-right">' + fmt$(it) + '</td><td class="p-2 text-right">' + fmt$(prin) + '</td><td class="p-2 text-right">' + fmt$(Math.max(bal, 0)) + '</td></tr>';
+    if (k % 12 === 0 || k === n) {
+      const yr = Math.ceil(k / 12), first = dateOf(k - (k % 12 === 0 ? 11 : (k % 12) - 1 || 0));
+      const fromParts = first.split('/'), toParts = dateOf(k).split('/');
+      mRows += '<tr class="bg-gray-50 font-semibold text-center"><td colspan="5" class="p-1.5">End of year ' + yr + '</td></tr>';
+      yRows += '<tr class="border-t border-gray-100"><td class="p-2">' + yr + '</td><td class="p-2">' + fromParts[0] + '/' + String(fromParts[1]).slice(2) + '-' + toParts[0] + '/' + String(toParts[1]).slice(2) + '</td><td class="p-2 text-right">' + fmt$(yInterest) + '</td><td class="p-2 text-right">' + fmt$(yPrincipal) + '</td><td class="p-2 text-right">' + fmt$(Math.max(bal, 0)) + '</td></tr>';
+      yInterest = 0; yPrincipal = 0;
+    }
+  }
+  const totalPay = interest + P, totalIns = ins * n;
+  const net = P - fee;
+  const apr = withOpt && (fee > 0 || ins > 0) ? solveApr(pay + ins, n, net) : null;
+  const payoffT = (sm - 1) + n, payoff = MONDOT[payoffT % 12] + ' ' + (sy + Math.floor(payoffT / 12));
+  const pairs = [];
+  if (withOpt && feePaid === 'deduct' && fee > 0) pairs.push(['Cash received', fmt$(net)]);
+  if (withOpt && ins > 0) pairs.push(['Monthly pay + insurance', fmt$(pay + ins)]);
+  pairs.push(['Total of ' + n + ' loan payments', fmt$(totalPay)], ['Total interest', fmt$(interest)]);
+  if (withOpt && ins > 0) pairs.push(['Total insurance', fmt$(totalIns)]);
+  if (withOpt && fee > 0) pairs.push(['Origination fee', fmt$(fee)]);
+  if (withOpt && (fee > 0 || ins > 0)) { pairs.push(['Cost of loan', fmt$(interest + fee + totalIns)]); if (apr !== null) pairs.push(['APR', apr.toFixed(3) + '%']); }
+  pairs.push(['Payoff date', payoff]);
+  const donutParts = [[P, '#2b7ddb', 'Loan amount'], [interest, '#8bbc21', 'Interest']];
+  if (withOpt && fee > 0) donutParts.push([fee, '#910000', 'Fee']);
+  if (withOpt && totalIns > 0) donutParts.push([totalIns, '#e8a33d', 'Insurance']);
+  const tblHead = '<thead class="bg-gray-50 sticky top-0"><tr><th class="text-left p-2">' + (schedView === 'monthly' ? 'Month' : 'Year') + '</th><th class="text-left p-2">Date</th><th class="text-right p-2">Interest</th><th class="text-right p-2">Principal</th><th class="text-right p-2">Ending Balance</th></tr></thead>';
+  out.innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-5 flex flex-wrap items-center gap-5"><div class="flex-1 min-w-[200px]"><div class="text-sm opacity-80">Monthly pay</div><div class="text-3xl font-extrabold mt-1">' + fmt$(pay) + '</div></div><div class="bg-white rounded-lg p-1">' + donutN(donutParts) + '</div></div>' +
+    statsHtml(pairs) +
+    '<div class="flex items-center gap-3 mt-5"><span class="font-bold text-gray-800">Amortization schedule</span><span class="text-sm"><button onclick="setSchedView(\'monthly\')" class="' + (schedView === 'monthly' ? 'font-bold text-[#3F51B5]' : 'text-gray-500 underline') + '">Monthly</button> · <button onclick="setSchedView(\'yearly\')" class="' + (schedView === 'yearly' ? 'font-bold text-[#3F51B5]' : 'text-gray-500 underline') + '">Annual</button></span></div>' +
+    '<div class="overflow-auto max-h-80 mt-2 border border-gray-100 rounded-lg"><table class="w-full text-sm num">' + tblHead + '<tbody>' + (schedView === 'monthly' ? mRows : yRows) + '</tbody></table></div>';
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ a: $('p_amount').value, r: $('p_rate').value, y: $('p_years').value, mo: $('p_months').value, sm: $('p_startm').value, sy: $('p_starty').value, opt: $('p_optional').checked ? 1 : 0, f: $('p_fee').value, ft: $('p_fee_type').value, fp: document.querySelector('input[name="p_feepaid"]:checked').value, ins: $('p_ins').value });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  const set = (id, key) => { if (q.get(key)) $(id).value = q.get(key); };
+  set('p_amount', 'a'); set('p_rate', 'r'); set('p_years', 'y'); set('p_months', 'mo'); set('p_startm', 'sm'); set('p_starty', 'sy'); set('p_fee', 'f'); set('p_ins', 'ins');
+  if (q.get('ft')) { $('p_fee_type').value = q.get('ft'); $('p_fee_unit').textContent = q.get('ft') === 'amount' ? '' : '%'; }
+  if (q.get('fp')) { const r = document.querySelector('input[name="p_feepaid"][value="' + q.get('fp') + '"]'); if (r) r.checked = true; }
+  if (q.get('opt') === '1') { $('p_optional').checked = true; $('p_optbox').classList.remove('hidden'); }
+  calc();
+})();
+</script>
 </body>
 </html>
