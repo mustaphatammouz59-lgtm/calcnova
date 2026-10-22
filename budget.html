@@ -108,6 +108,11 @@
 <div class="flex items-end gap-2"><label class="flex-1 block"><span class="text-sm text-gray-600">Other Expenses</span><div class="mt-0.5 flex items-center border border-gray-300 rounded-lg px-2.5 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400 text-sm">$</span><input id="f_allother" type="number" value="100" min="0" step="any" class="w-full p-2 outline-none num text-sm" oninput="calc()"></div></label><select id="u_allother" class="border border-gray-300 rounded-lg p-2 text-sm mb-0" onchange="calc()"><option value="m" selected>/mo</option><option value="y">/yr</option></select></div></div></div>
     </div>
 
+    <div class="flex gap-3 mb-10">
+        <button onclick="calc(); window.scrollTo({top: 0, behavior: 'smooth'})" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3.5 rounded-lg transition text-lg">Calculate</button>
+        <button onclick="clearBudget()" class="px-8 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3.5 rounded-lg transition text-lg">Clear</button>
+    </div>
+
     <div class="flex justify-center mb-10">
         <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] w-[336px]">Advertisement — 300 × 250</div>
     </div>
@@ -228,6 +233,11 @@ function updateShare() {
   q.set('taxrate', $('f_taxrate').value);
   history.replaceState(null, '', location.pathname + '?' + q.toString());
 }
+function clearBudget() {
+  for (const id of INCOME_IDS.concat(CATS.flatMap(c => c.ids))) $('f_' + id).value = '';
+  $('f_taxrate').value = '';
+  calc();
+}
 (function init() {
   const q = new URLSearchParams(location.search);
   for (const id of INCOME_IDS.concat(CATS.flatMap(c => c.ids))) {
@@ -239,4 +249,4 @@ function updateShare() {
 })();
 </script>
 </body>
-                                      </html>
+    </html>
