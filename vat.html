@@ -1,170 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VAT Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VAT Calculator — Add or Remove VAT at Any Rate | CalcNova</title>
+<meta name="description" content="Free VAT calculator: provide any two of rate, net price, gross price and tax amount to solve the rest. Country standard-rate quick picks included.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/vat">
+<meta property="og:title" content="VAT Calculator — Add or Remove VAT at Any Rate | CalcNova">
+<meta property="og:description" content="Net, gross and the VAT between them — solved from any two values, at any country's rate.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/vat">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+    .chip { cursor: pointer; }
+    .chip:hover { border-color: #3F51B5; color: #3F51B5; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"VAT Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/vat"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I remove VAT from a gross price?","acceptedAnswer":{"@type":"Answer","text":"Divide by one plus the rate: at 20% VAT, the net inside a $1,440 gross price is $1,440 ÷ 1.20 = $1,200, and the VAT itself is $240. The common mistake is taking 20% of the gross ($288) — that overstates the tax, because VAT is charged on the net price, not on itself."}},
+{"@type":"Question","name":"Which countries use VAT?","acceptedAnswer":{"@type":"Answer","text":"More than 160 countries — every EU member state (which must charge at least 15% at the standard rate), the UK, China, India (as GST), Australia and Canada (also GST), Japan (consumption tax), and most of Africa, Asia and Latin America. The United States is the notable exception among developed economies, using retail sales tax instead."}},
+{"@type":"Question","name":"Why doesn't VAT cascade like a sales tax could?","acceptedAnswer":{"@type":"Answer","text":"Because each business in the chain charges VAT on its selling price but reclaims the VAT it paid on its inputs. Only the value each stage adds is ultimately taxed, the paperwork cross-checks itself between buyer and seller, and the final consumer — who cannot reclaim — bears the full amount."}},
+{"@type":"Question","name":"What is the difference between VAT and GST?","acceptedAnswer":{"@type":"Answer","text":"Mostly the name. Goods and services tax (GST) is what Australia, Canada, India, Singapore and New Zealand call their value-added tax. The mechanics — staged collection with input credits — are essentially the same, and no country runs both systems at once."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">VAT Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">VAT</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">VAT Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Provide <strong>any two</strong> of the four values — VAT rate, net price, gross price, tax amount — and the other two are calculated for you. Adding VAT to a quote, stripping it out of a shelf price, or reverse-engineering the rate on an invoice: it's the same triangle of numbers, solved from whichever corner you know.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">VAT Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Calculation Type</label>
-                    <select id="vatType" class="w-full border border-gray-300 rounded-md p-2 outline-none mb-4">
-                        <option value="add">Add VAT (Net to Gross)</option>
-                        <option value="remove">Remove VAT (Gross to Net)</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1" id="vatAmountLabel">Amount (Excluding VAT) ($)</label>
-                        <input type="number" id="vatAmount" value="1000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">VAT Rate (%)</label>
-                        <select id="vatRateSelect" class="w-full border border-gray-300 rounded-md p-2 outline-none mb-2">
-                            <option value="5">5%</option>
-                            <option value="15">15%</option>
-                            <option value="20" selected>20% (UK/EU Standard)</option>
-                            <option value="custom">Custom Rate</option>
-                        </select>
-                        <input type="number" id="vatRateCustom" placeholder="Enter custom %" class="w-full border border-gray-300 rounded-md p-2 outline-none hidden">
-                    </div>
-                </div>
-                <button onclick="calculateVAT()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate VAT</button>
-
-                <div id="vatResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500" id="vatNetLabel">Net Amount</p>
-                            <p class="text-xl font-bold text-gray-800" id="vatNet">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">VAT Amount</p>
-                            <p class="text-xl font-bold text-red-500" id="vatTax">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500" id="vatGrossLabel">Gross Amount</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="vatGross">$0</p>
-                        </div>
-                    </div>
-                </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label class="block"><span class="text-sm font-medium text-gray-600">VAT rate</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="v_rate" type="number" value="20" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="edited('rate')"><span class="text-gray-400">%</span></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Net price <span class="text-gray-400">(before VAT)</span></span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="v_net" type="number" value="1200" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="edited('net')"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Gross price <span class="text-gray-400">(after VAT)</span></span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="v_gross" type="number" value="" min="0" step="any" placeholder="solve for me" class="w-full p-2.5 outline-none num" oninput="edited('gross')"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Tax amount <span class="text-gray-400">(the VAT itself)</span></span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="v_tax" type="number" value="" min="0" step="any" placeholder="solve for me" class="w-full p-2.5 outline-none num" oninput="edited('tax')"></div></label>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is VAT?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Value Added Tax (VAT) is a consumption tax placed on a product whenever value is added at each stage of the supply chain, from production to the point of sale. The amount of VAT that the user pays is on the cost of the product, less any of the costs of materials used in the product that have already been taxed.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <button onclick="calc()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="v_results" class="mt-5"></div>
+            <div class="mt-6">
+                <div class="text-sm font-bold text-gray-700 mb-2">Standard rates by country — tap to use</div>
+                <div id="v_chips" class="flex flex-wrap gap-2"></div>
+                <p class="text-xs text-gray-400 mt-2">Standard rates only; most countries apply reduced rates to essentials such as food, books, medicines and children's clothing.</p>
             </div>
         </div>
-
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">The mistake this prevents</div>
+                <p>Taking 20% off a VAT-inclusive price does <strong>not</strong> remove 20% VAT: $1,440 − 20% = $1,152, but the true net is $1,440 ÷ 1.20 = <strong>$1,200</strong>. Percentages are anchored to the net; always divide by (1 + rate) to go backwards.</p>
             </div>
-        </aside>
-    </main>
-
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
         </div>
-    </footer>
+    </div>
 
-    <script>
-        // إظهار/إخفاء حقل النسبة المخصصة
-        document.getElementById('vatRateSelect').addEventListener('change', function() {
-            const customInput = document.getElementById('vatRateCustom');
-            if (this.value === 'custom') {
-                customInput.classList.remove('hidden');
-            } else {
-                customInput.classList.add('hidden');
-            }
-        });
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>What Is VAT?</h2>
+        <p>A value-added tax is an indirect consumption tax charged at <em>every</em> stage of a supply chain — production, wholesale, distribution, retail — but only on the value that stage adds. Each business charges VAT on what it sells (output tax) and reclaims the VAT it paid on what it bought (input tax), remitting just the difference. The tax therefore collects itself in slices along the chain, the invoices cross-check between trading partners, and the final consumer, who reclaims nothing, ultimately bears the whole amount. VAT is the world's dominant consumption tax: more than 160 countries run one, it supplies roughly a fifth of global tax revenue, and every EU member state must charge a standard rate of at least 15%. The United States, which uses retail sales tax instead, is the developed world's exception.</p>
+        <h3>A Worked Example: Coffee, Three Ways Taxed Once</h3>
+        <p>Follow a pound of coffee at 10% VAT. The farmer sells beans to the roaster for $5.00 plus $0.50 VAT. The roaster sells them roasted for $10.00 plus $1.00 VAT — but having already paid $0.50 of input VAT, remits only $0.50. The café turns the pound into five $4.00 cups: $20.00 plus $2.00 VAT, remits $1.00 after its own $1.00 credit. Government receipts: $0.50 + $0.50 + $1.00 = $2.00 — exactly 10% of the final $20 price, collected in three slices with no tax-on-tax cascade. That credit mechanism is the whole design: sales tax, charged once at the till, is simpler; VAT is harder to evade and never double-taxes business inputs.</p>
+        <h3>VAT, GST, and Sales Tax</h3>
+        <p>GST — goods and services tax — is the same machine with another badge, used in Australia, Canada, India, New Zealand and Singapore; no country operates both. Sales tax differs structurally: it is charged once, at the final sale, on the full price, with no input credits — which makes it cheaper to administer but allows cascading when business purchases are taxed, and puts the entire evasion risk on one transaction. Rates differ too: retail sales taxes typically run 4–10%, VAT standard rates 15–27%. And the details genuinely differ by country — reduced rates or exemptions for food, books, education, health and exports; special schemes for small businesses; places like the Philippines exempting senior citizens on personal purchases. The rate chips above are standard rates; the law of the country where the sale happens is the final word.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>How do I add VAT to a net price?</h4>
+        <p>Multiply by (1 + rate): $1,200 at 20% → $1,200 × 1.20 = $1,440 gross, of which $240 is VAT.</p>
+        <h4>How do I extract the VAT from a gross price?</h4>
+        <p>Gross × rate ÷ (1 + rate): $1,440 × 0.20 ÷ 1.20 = $240. Or solve for net first (÷ 1.20) and subtract.</p>
+        <h4>Why do businesses care if the consumer pays it all?</h4>
+        <p>Because cash flow and compliance are theirs: they collect, claim and remit on a schedule, face penalties for errors, and price shelf goods VAT-inclusive in most countries — so margins live or die on the net figure this calculator isolates.</p>
+    </section>
 
-        // تغيير العناوين بناءً على نوع الحساب
-        document.getElementById('vatType').addEventListener('change', function() {
-            const type = this.value;
-            const amountLabel = document.getElementById('vatAmountLabel');
-            const netLabel = document.getElementById('vatNetLabel');
-            const grossLabel = document.getElementById('vatGrossLabel');
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="sales-tax.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Sales Tax Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The U.S. counterpart: add or remove state sales tax, with all 50 state rates.</p>
+            </a>
+            <a href="income-tax.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Income Tax Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Federal brackets, deductions and credits for 2025 and 2026.</p>
+            </a>
+            <a href="salary.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Salary Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Hourly, weekly and annual pay, converted every way.</p>
+            </a>
+            <a href="currency.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Currency Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Pricing across borders? Convert first, then apply the local VAT.</p>
+            </a>
+        </div>
+    </section>
+</main>
 
-            if (type === 'add') {
-                amountLabel.textContent = "Amount (Excluding VAT) ($)";
-                netLabel.textContent = "Net Amount";
-                grossLabel.textContent = "Gross Amount";
-            } else {
-                amountLabel.textContent = "Amount (Including VAT) ($)";
-                netLabel.textContent = "Net Amount";
-                grossLabel.textContent = "Gross Amount";
-            }
-        });
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-        function calculateVAT() {
-            const type = document.getElementById('vatType').value;
-            const amount = parseFloat(document.getElementById('vatAmount').value);
-            
-            let rate = 0;
-            const rateSelect = document.getElementById('vatRateSelect').value;
-            if (rateSelect === 'custom') {
-                rate = parseFloat(document.getElementById('vatRateCustom').value) / 100;
-            } else {
-                rate = parseFloat(rateSelect) / 100;
-            }
-
-            if (isNaN(amount) || isNaN(rate) || amount < 0) {
-                alert("Please enter valid numbers.");
-                return;
-            }
-
-            let net, tax, gross;
-
-            if (type === 'add') {
-                net = amount;
-                tax = amount * rate;
-                gross = amount + tax;
-            } else {
-                gross = amount;
-                net = amount / (1 + rate);
-                tax = gross - net;
-            }
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('vatNet').textContent = formatter.format(net);
-            document.getElementById('vatTax').textContent = formatter.format(tax);
-            document.getElementById('vatGross').textContent = formatter.format(gross);
-
-            document.getElementById('vatResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const raw = id => String($(id).value).trim();
+const num = id => { const v = parseFloat(raw(id).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? null : v; };
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const r2 = v => Math.round(v * 100) / 100;
+const FIELDS = { rate: 'v_rate', net: 'v_net', gross: 'v_gross', tax: 'v_tax' };
+let givens = ['rate', 'net'];
+function edited(field) {
+  givens = [field].concat(givens.filter(f => f !== field)).slice(0, 2);
+  calc();
+}
+function donut(net, tax) {
+  const total = net + tax, R = 42, C = 2 * Math.PI * R;
+  const tp = total > 0 ? tax / total : 0;
+  return '<svg width="127" height="100" viewBox="0 0 127 100"><circle cx="50" cy="50" r="' + R + '" fill="none" stroke="#2b7ddb" stroke-width="16"/>' +
+    '<circle cx="50" cy="50" r="' + R + '" fill="none" stroke="#8bbc21" stroke-width="16" stroke-dasharray="' + (tp * C).toFixed(2) + ' ' + C.toFixed(2) + '" transform="rotate(-90 50 50)"/>' +
+    '<text x="97" y="42" font-size="11" fill="#2b7ddb" font-weight="700">Net ' + Math.round((1 - tp) * 100) + '%</text>' +
+    '<text x="97" y="60" font-size="11" fill="#8bbc21" font-weight="700">VAT ' + Math.round(tp * 100) + '%</text></svg>';
+}
+function currentGivens() {
+  const filled = f => raw(FIELDS[f]) !== '' && num(FIELDS[f]) !== null;
+  const g = givens.filter(filled);
+  for (const f of ['rate', 'net', 'gross', 'tax']) if (!g.includes(f) && filled(f)) g.push(f);
+  return g.slice(0, 2);
+}
+function solve() {
+  const g = currentGivens();
+  if (g.length < 2) return null;
+  const v = {};
+  for (const f of ['rate', 'net', 'gross', 'tax']) v[f] = g.includes(f) ? num(FIELDS[f]) : null;
+  if (v.rate === null || v.net === null) {
+    if (v.gross !== null && v.tax !== null) { v.net = v.gross - v.tax; }
+    else if (v.net !== null && v.gross !== null) { v.tax = v.gross - v.net; }
+    else if (v.net !== null && v.tax !== null) { v.gross = v.net + v.tax; }
+  }
+  if (v.net !== null && v.tax !== null && v.rate === null) {
+    if (!(v.net > 0)) return null;
+    v.rate = v.tax / v.net * 100;
+  }
+  if (v.rate !== null && v.net !== null) {
+    v.tax = v.net * v.rate / 100;
+    v.gross = v.net + v.tax;
+  } else if (v.rate !== null && v.gross !== null) {
+    v.net = v.gross / (1 + v.rate / 100);
+    v.tax = v.gross - v.net;
+  } else if (v.rate !== null && v.tax !== null) {
+    if (!(v.rate > 0)) return null;
+    v.net = v.tax / (v.rate / 100);
+    v.gross = v.net + v.tax;
+  }
+  if ([v.rate, v.net, v.gross, v.tax].some(x => x === null || !isFinite(x))) return null;
+  return v;
+}
+function calc() {
+  const out = $('v_results');
+  const v = solve();
+  if (!v) {
+    if (givens.some(f => raw(FIELDS[f]) !== '')) out.innerHTML = '<p class="text-sm text-gray-500">Provide any two values — for example a rate and a net price — and the rest are calculated. (A tax amount of $0 with no other anchor cannot fix the scale.)</p>';
+    else out.innerHTML = '';
+    updateShare(); return;
+  }
+  $('v_rate').value = Math.round(v.rate * 10000) / 10000;
+  $('v_net').value = r2(v.net);
+  $('v_gross').value = r2(v.gross);
+  $('v_tax').value = r2(v.tax);
+  out.innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-5 flex flex-wrap items-center gap-5"><div class="flex-1 min-w-[220px]"><div class="text-sm opacity-80">Gross price (VAT included)</div><div class="text-3xl font-extrabold mt-1">' + fmt$(v.gross) + '</div><div class="text-sm opacity-80 mt-1">' + fmt$(v.net) + ' net + ' + fmt$(v.tax) + ' VAT at ' + (Math.round(v.rate * 100) / 100) + '%.</div></div><div class="bg-white rounded-lg p-1">' + donut(v.net, v.tax) + '</div></div>';
+  updateShare();
+}
+const COUNTRIES = [['Hungary', 27], ['Croatia', 25], ['Denmark', 25], ['Norway', 25], ['Sweden', 25], ['Finland', 25.5], ['Greece', 24], ['Ireland', 23], ['Poland', 23], ['Italy', 22], ['Belgium', 21], ['Netherlands', 21], ['Spain', 21], ['Austria', 20], ['France', 20], ['Morocco', 20], ['United Kingdom', 20], ['Germany', 19], ['Saudi Arabia', 15], ['Egypt', 14], ['Japan', 10], ['Australia (GST)', 10], ['Switzerland', 8.1], ['UAE', 5], ['Canada (GST)', 5]];
+$('v_chips').innerHTML = COUNTRIES.map(c => '<button class="chip border border-gray-300 rounded-full px-3 py-1.5 text-sm bg-white transition" onclick="pickRate(' + c[1] + ')">' + c[0] + ' · ' + c[1] + '%</button>').join('');
+function pickRate(rate) {
+  $('v_rate').value = rate;
+  edited('rate');
+}
+function updateShare() {
+  const q = new URLSearchParams({ r: $('v_rate').value, n: $('v_net').value, g: $('v_gross').value, t: $('v_tax').value, gv: givens.join(',') });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  if (q.get('r')) $('v_rate').value = q.get('r');
+  if (q.get('n')) $('v_net').value = q.get('n');
+  if (q.get('g')) $('v_gross').value = q.get('g');
+  if (q.get('t')) $('v_tax').value = q.get('t');
+  if (q.get('gv')) givens = q.get('gv').split(',').filter(f => FIELDS[f]).slice(0, 2);
+  if (givens.length < 2) givens = ['rate', 'net'];
+  calc();
+})();
+</script>
 </body>
-                  </html>
+    </html>
