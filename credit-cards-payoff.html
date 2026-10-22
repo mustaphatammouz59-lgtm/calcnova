@@ -1,145 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Credit Cards Payoff Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credit Cards Payoff Calculator — Debt Avalanche Planner | CalcNova</title>
+<meta name="description" content="Free credit cards payoff calculator: build a debt avalanche (or snowball) schedule for up to 20 cards — payoff order, months to debt-free, total interest, and the exact payment for every card every month.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/credit-cards-payoff">
+<meta property="og:title" content="Credit Cards Payoff Calculator — Debt Avalanche Planner | CalcNova">
+<meta property="og:description" content="One monthly budget, many cards: the cost-efficient order to pay them off, card by card.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/credit-cards-payoff">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Credit Cards Payoff Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/credit-cards-payoff"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Avalanche or snowball — which pays cards off cheaper?","acceptedAnswer":{"@type":"Answer","text":"The avalanche (highest APR first) always costs the least interest, because every spare dollar works against the most expensive balance. The snowball (smallest balance first) clears individual cards sooner, which some people find motivating enough to stick with. On this calculator's defaults the two orders coincide — Card 2 is both the smallest balance and the highest APR — but with different numbers the avalanche's interest saving is shown side by side if you toggle the method."}},
+{"@type":"Question","name":"What if my budget is less than the minimum payments?","acceptedAnswer":{"@type":"Answer","text":"Then no ordering trick can help yet: the minimums are contractual, and missing them triggers late fees and penalty APRs. The levers are a bigger monthly amount (even temporarily), a balance transfer to cut the interest load, or calling issuers to ask about hardship programs. This calculator warns you when the budget cannot cover the minimums."}},
+{"@type":"Question","name":"Why does a card's payment change partway through the plan?","acceptedAnswer":{"@type":"Answer","text":"Because the budget is fixed. Each card gets its minimum until a higher-priority card is paid off; that card's whole payment then rolls into the next card — the cascade that makes the plan accelerate. If a card is finished mid-month, the leftover money moves to the next card in the very same month."}},
+{"@type":"Question","name":"Should I stop using the cards while paying them off?","acceptedAnswer":{"@type":"Answer","text":"Yes — the schedule assumes no new charges. Every new purchase adds balance at the card's APR and pushes the payoff date out; worse, a card carrying a balance usually loses its grace period, so new purchases accrue interest immediately. Put daily spending on a debit card until the plan finishes."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Credit Cards Payoff Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Credit Cards Payoff</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Credit Cards Payoff Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">One monthly budget spread across many cards, in the order that costs the least: every card gets its minimum, and every spare dollar attacks the most expensive balance — the <strong>debt avalanche</strong>. You get the payoff order, the month each card dies, and the exact payment schedule for each one. For a single card, use the <a href="credit-card.html" class="text-[#3F51B5] underline">Credit Card Calculator</a>.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Credit Cards Payoff Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Total Credit Card Balance ($)</label>
-                        <input type="number" id="ccpBalance" value="10000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Average Interest Rate (APR) (%)</label>
-                        <input type="number" id="ccpRate" value="18" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Monthly Payment ($)</label>
-                        <input type="number" id="ccpPayment" value="300" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <label class="block max-w-sm">
+                <span class="text-sm font-semibold text-gray-700">Monthly budget set aside for credit cards</span>
+                <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                    <span class="text-gray-400">$</span>
+                    <input id="p_budget" type="number" value="500" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()">
                 </div>
-                <button onclick="calculateCCPayoff()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Payoff</button>
-
-                <div id="ccpResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Time to Pay Off</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="ccpTime">0 Months</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Paid</p>
-                            <p class="text-xl font-bold text-red-500" id="ccpTotalInterest">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Amount Paid</p>
-                            <p class="text-xl font-bold text-gray-800" id="ccpTotalPaid">$0</p>
-                        </div>
-                    </div>
-                </div>
+            </label>
+            <div class="flex gap-2 mt-5 max-w-md">
+                <button id="m_avalanche" onclick="setMethod('avalanche')" class="flex-1 font-bold py-2 rounded-lg transition bg-[#3F51B5] text-white text-sm">Avalanche — highest APR first</button>
+                <button id="m_snowball" onclick="setMethod('snowball')" class="flex-1 font-bold py-2 rounded-lg transition bg-gray-100 text-gray-600 text-sm">Snowball — smallest balance first</button>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How to Pay Off Multiple Credit Cards</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">If you have multiple credit cards, paying them off can feel overwhelming. This calculator assumes you combine your balances into one average APR to give you a general estimate. You can also use strategies like the "Debt Snowball" (paying smallest balances first) or "Debt Avalanche" (paying highest interest first) to accelerate your payoff.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="overflow-x-auto mt-5">
+                <table class="w-full text-sm">
+                    <thead><tr class="text-left text-gray-500 border-b border-gray-200">
+                        <th class="p-2 w-8"></th><th class="p-2">Credit card</th><th class="p-2">Balance</th><th class="p-2">Minimum payment</th><th class="p-2">Interest rate</th>
+                    </tr></thead>
+                    <tbody id="card_rows"></tbody>
+                </table>
+            </div>
+            <button id="more_btn" onclick="toggleMore()" class="mt-3 text-sm text-[#3F51B5] font-medium hover:underline">Show more input fields</button>
+            <button onclick="calc()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="p_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">Why the order matters</div>
+                <p>At the defaults — $14,500 across three cards and a $500 budget — the avalanche plan finishes in <strong>38 months</strong> with <strong>$4,471 of interest</strong>. Card 2 dies first (month 16) not because it is smallest but because its 19.99% APR is the priciest debt in the pile; its freed $280 then snowplows into Card 1 the very same month. Paying the cards in the wrong order — cheapest rate first — keeps expensive balances alive longer and quietly adds hundreds of dollars of interest.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>Paying Off Several Cards at Once</h2>
+        <p>Multiple cards are common — the average American carries more than two — and they can be genuinely useful: different rewards for different spending, more total available credit, a backup when one card is declined or stolen, and a lower credit utilization ratio, which helps credit scores. The cost of that convenience appears when balances revolve: several minimums, several due dates, and several APRs compounding at once. A payoff plan turns that pile back into one number — a single monthly budget, deliberately aimed.</p>
+        <h3>The Debt Avalanche</h3>
+        <p>The avalanche is the mathematically cheapest order. First, every card's contractual minimum is paid, protecting you from late fees and penalty rates. Whatever budget remains goes entirely to the card with the <strong>highest interest rate</strong>. When that card reaches zero, its entire payment — minimum and extra together — rolls down to the next-highest rate. Because each dollar of spare payment always works against the most expensive remaining debt, no other ordering of the same budget can produce less total interest. This calculator also assumes what the method requires: no new charges on any card, minimums and rates unchanged for the life of the plan.</p>
+        <h3>The Debt Snowball</h3>
+        <p>The snowball swaps the target: after minimums, spare money goes to the <strong>smallest balance</strong>, whatever its rate. It costs a little more interest, but it deletes whole cards sooner, and for many people that visible progress is the difference between a plan abandoned in month three and a plan finished. Toggle the method above and compare the two schedules on your own numbers — if the interest difference is small, choose whichever order you will actually stay with. The best plan is the finished one.</p>
+        <h3>Managing the Pile While You Pay</h3>
+        <p>Three habits protect the plan. <strong>Align the due dates</strong> — most issuers let you move them, so all payments can leave on one day. <strong>Automate at least the minimums</strong> so a busy month never becomes a late fee and a penalty APR. And <strong>stop charging the cards in the plan</strong>: a revolving balance usually cancels the grace period, so new purchases start accruing interest the day they are made. If a card's APR is the problem, a balance transfer or a lower-rate consolidation loan can cut the interest load — just compare the fee against the interest actually saved, and keep the same monthly budget aimed at the smaller pile.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>Which method is cheaper, avalanche or snowball?</h4>
+        <p>Always the avalanche, by construction — spare dollars kill the most expensive debt first. The snowball trades a modest interest premium for faster small wins.</p>
+        <h4>What if my budget doesn't cover all the minimums?</h4>
+        <p>The plan can't start until it does: minimums are not optional. Raise the amount, cut a balance with a transfer, or ask issuers about hardship arrangements — the calculator flags this case instead of printing a fantasy schedule.</p>
+        <h4>Why does a payment jump in the middle of the schedule?</h4>
+        <p>That's the cascade: a finished card's payment rolls into the next target, sometimes mid-month when the payoff leaves change over. Each jump is the plan accelerating.</p>
+        <h4>Should I close cards as they are paid off?</h4>
+        <p>Usually not right away: closing reduces your total available credit and raises your utilization ratio, which can dent your score. Keep paid-off cards open and unused (or cut them up but leave the accounts), unless an annual fee makes closing worth it.</p>
+    </section>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="credit-card.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Credit Card Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">One card: payoff time at a fixed payment, or the payment for a deadline.</p>
+            </a>
+            <a href="payment.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Payment Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Fixed term vs. fixed payment for any single loan.</p>
+            </a>
+            <a href="loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Price a consolidation loan to replace the cards.</p>
+            </a>
+            <a href="debt-to-income.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Debt-to-Income Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">How the whole pile weighs against your income.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        function calculateCCPayoff() {
-            const balance = parseFloat(document.getElementById('ccpBalance').value);
-            const apr = parseFloat(document.getElementById('ccpRate').value) / 100;
-            const payment = parseFloat(document.getElementById('ccpPayment').value);
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (isNaN(balance) || isNaN(apr) || isNaN(payment) || balance <= 0 || payment <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
-
-            const monthlyRate = apr / 12;
-            
-            if (payment <= balance * monthlyRate) {
-                alert("Your monthly payment is too low to cover the interest. Please increase the payment.");
-                return;
-            }
-
-            let currentBalance = balance;
-            let months = 0;
-            let totalInterest = 0;
-
-            while (currentBalance > 0 && months < 1200) {
-                let interest = currentBalance * monthlyRate;
-                let principal = payment - interest;
-                
-                if (principal > currentBalance) {
-                    principal = currentBalance;
-                }
-
-                totalInterest += interest;
-                currentBalance -= principal;
-                months++;
-            }
-
-            const totalPaid = balance + totalInterest;
-            const years = Math.floor(months / 12);
-            const remainingMonths = months % 12;
-            let timeString = "";
-            if (years > 0) timeString += years + " Years ";
-            if (remainingMonths > 0) timeString += remainingMonths + " Months";
-            if (years === 0 && remainingMonths === 0) timeString = months + " Months";
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('ccpTime').textContent = timeString;
-            document.getElementById('ccpTotalInterest').textContent = formatter.format(totalInterest);
-            document.getElementById('ccpTotalPaid').textContent = formatter.format(totalPaid);
-
-            document.getElementById('ccpResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const MAXC = 20, VISIBLE = 6;
+let showMore = false, method = 'avalanche';
+const numOf = el => { const v = parseFloat(String(el.value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function buildRows() {
+  let h = '';
+  const defaults = { 1: ['Card 1', 4600, 100, 18.99], 2: ['Card 2', 3900, 90, 19.99], 3: ['Card 3', 6000, 120, 15.99] };
+  for (let k = 1; k <= MAXC; k++) {
+    const d = defaults[k] || ['', '', '', ''];
+    h += '<tr class="' + (k > VISIBLE ? 'extra_row hidden' : '') + '"><td class="p-2 text-gray-400">' + k + '.</td>' +
+      '<td class="p-1"><input id="nm' + k + '" type="text" value="' + d[0] + '" class="w-full border border-gray-300 rounded-lg p-2" oninput="calc()"></td>' +
+      '<td class="p-1"><input id="bal' + k + '" type="number" value="' + d[1] + '" min="0" step="any" class="w-full border border-gray-300 rounded-lg p-2 num" oninput="calc()"></td>' +
+      '<td class="p-1"><input id="min' + k + '" type="number" value="' + d[2] + '" min="0" step="any" class="w-full border border-gray-300 rounded-lg p-2 num" oninput="calc()"></td>' +
+      '<td class="p-1"><input id="apr' + k + '" type="number" value="' + d[3] + '" min="0" step="any" class="w-full border border-gray-300 rounded-lg p-2 num" oninput="calc()"></td></tr>';
+  }
+  $('card_rows').innerHTML = h;
+}
+function toggleMore() {
+  showMore = !showMore;
+  document.querySelectorAll('.extra_row').forEach(r => r.classList.toggle('hidden', !showMore));
+  $('more_btn').textContent = showMore ? 'Hide extra fields' : 'Show more input fields';
+}
+function setMethod(m) {
+  method = m;
+  $('m_avalanche').className = 'flex-1 font-bold py-2 rounded-lg transition text-sm ' + (m === 'avalanche' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  $('m_snowball').className = 'flex-1 font-bold py-2 rounded-lg transition text-sm ' + (m === 'snowball' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  calc();
+}
+function termText(n) {
+  const y = Math.floor(n / 12), m = n % 12;
+  return n + ' months (' + ((y ? y + (y === 1 ? ' year' : ' years') : '') + (y && m ? ' and ' : '') + (m ? m + (m === 1 ? ' month' : ' months') : (y ? '' : '0 months'))) + ')';
+}
+function scheduleText(c) {
+  // c.payments: array of [month, amount]; peel the final month, compress the rest into runs
+  const pays = c.payments;
+  if (!pays.length) return '';
+  const lastM = pays[pays.length - 1][0], lastAmt = pays[pays.length - 1][1];
+  const body = pays.slice(0, -1);
+  const parts = [];
+  let s = 0;
+  for (let j = 1; j <= body.length; j++) {
+    if (j === body.length || Math.abs(body[j][1] - body[s][1]) > 0.004) {
+      const amt = body[s][1], until = body[j - 1][0];
+      parts.push((parts.length ? 'then pay ' : 'pay ') + fmt$(amt) + ' until month #' + until);
+      s = j;
+    }
+  }
+  if (!body.length) return 'pay ' + fmt$(lastAmt) + ' at month #' + lastM + ' to pay off';
+  return parts.join('. ') + '. pay ' + fmt$(lastAmt) + ' at month #' + lastM + ' to pay off';
+}
+function simulate(cardsIn, budget) {
+  const cards = cardsIn.map(c => ({ ...c, bal: c.balance, totInt: 0, totPay: 0, payoffMonth: 0, payments: [] }));
+  let month = 0, stuck = false;
+  while (cards.some(c => c.bal > 0.000001)) {
+    month++;
+    if (month > 1200) { stuck = true; break; }
+    let totalBefore = 0;
+    for (const c of cards) if (c.bal > 0) { const it = c.bal * c.rate / 1200; c.bal += it; c.totInt += it; totalBefore += c.bal; }
+    let money = budget;
+    const pay = new Map();
+    for (const c of cards) { if (c.bal <= 0) continue; const p = Math.min(c.min, c.bal, money); if (p > 0) pay.set(c, p); money -= p; }
+    const live = cards.filter(c => c.bal > (pay.get(c) || 0));
+    live.sort((a, b) => method === 'avalanche' ? b.rate - a.rate : a.bal - b.bal);
+    for (const c of live) { if (money <= 0.000001) break; const owed = c.bal - (pay.get(c) || 0); const extra = Math.min(owed, money); if (extra > 0) { pay.set(c, (pay.get(c) || 0) + extra); money -= extra; } }
+    for (const c of cards) { const p = pay.get(c) || 0; if (p > 0) { c.bal -= p; c.totPay += p; c.payoffMonth = month; c.payments.push([month, p]); } }
+    let totalAfter = 0; for (const c of cards) totalAfter += Math.max(c.bal, 0);
+    if (totalAfter >= totalBefore - 0.000001 && month > 1) { /* still shrinking via minimums is fine; only bail at cap */ }
+  }
+  return { cards, months: month, stuck };
+}
+function calc() {
+  const budget = numOf($('p_budget'));
+  const cardsIn = [];
+  for (let k = 1; k <= MAXC; k++) {
+    const bal = numOf($('bal' + k));
+    if (bal > 0) cardsIn.push({ idx: k, name: $('nm' + k).value.trim() || ('Card ' + k), balance: bal, min: numOf($('min' + k)), rate: numOf($('apr' + k)) });
+  }
+  const out = $('p_results');
+  if (!cardsIn.length) { out.innerHTML = ''; updateShare(); return; }
+  const minSum = cardsIn.reduce((s, c) => s + Math.min(c.min, c.balance), 0);
+  if (budget < minSum - 0.000001) {
+    out.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-5"><div class="font-bold">The budget does not cover the minimum payments.</div><p class="text-sm mt-1">The minimums add up to ' + fmt$(minSum) + ' a month, but the budget is ' + fmt$(budget) + '. No payoff order can fix that gap — the amount set aside has to reach the minimums first, or the balances themselves have to shrink (transfer, consolidation, or a hardship arrangement).</p></div>';
+    updateShare(); return;
+  }
+  const r = simulate(cardsIn, budget);
+  if (r.stuck) {
+    out.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-5"><div class="font-bold">This budget never clears the cards.</div><p class="text-sm mt-1">At these rates, the payments are not beating the interest even over 100 years. A larger monthly amount — or a lower rate — is required.</p></div>';
+    updateShare(); return;
+  }
+  const totInt = r.cards.reduce((s, c) => s + c.totInt, 0), totPay = r.cards.reduce((s, c) => s + c.totPay, 0);
+  const ordered = [...r.cards].sort((a, b) => a.payoffMonth - b.payoffMonth);
+  let h = '<div class="bg-[#3F51B5] text-white rounded-xl p-5"><div class="text-sm opacity-80">Paying ' + fmt$(budget) + ' every month (' + (method === 'avalanche' ? 'debt avalanche' : 'debt snowball') + '), you are debt-free in</div><div class="text-3xl font-extrabold mt-1">' + termText(r.months) + '</div><div class="text-sm opacity-80 mt-1">Total paid ' + fmt$(totPay) + ', of which interest is ' + fmt$(totInt) + '.</div></div>';
+  h += '<div class="overflow-x-auto mt-4"><table class="w-full text-sm num"><thead><tr class="text-left text-gray-500 border-b border-gray-200"><th class="p-2">Credit Card</th><th class="p-2">Payoff Length</th><th class="p-2 text-right">Total Interest</th><th class="p-2 text-right">Total Payments</th><th class="p-2">Payment Schedule</th></tr></thead><tbody>';
+  for (const c of ordered) {
+    h += '<tr class="border-b border-gray-100 align-top"><td class="p-2 font-medium">#' + c.idx + ': ' + c.name.replace(/</g, '') + '</td><td class="p-2">' + termText(c.payoffMonth) + '</td><td class="p-2 text-right">' + fmt$(c.totInt) + '</td><td class="p-2 text-right">' + fmt$(c.totPay) + '</td><td class="p-2 text-gray-600">' + scheduleText(c) + '</td></tr>';
+  }
+  h += '</tbody></table></div>';
+  out.innerHTML = h;
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ budget: $('p_budget').value, method });
+  for (let k = 1; k <= MAXC; k++) { if (numOf($('bal' + k)) > 0) { q.set('nm' + k, $('nm' + k).value); q.set('bal' + k, $('bal' + k).value); q.set('min' + k, $('min' + k).value); q.set('apr' + k, $('apr' + k).value); } }
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+buildRows();
+(function init() {
+  const q = new URLSearchParams(location.search);
+  if (q.get('budget')) $('p_budget').value = q.get('budget');
+  let anyExtra = false;
+  for (let k = 1; k <= MAXC; k++) { if (q.get('bal' + k)) { $('bal' + k).value = q.get('bal' + k); if (q.get('nm' + k)) $('nm' + k).value = q.get('nm' + k); if (q.get('min' + k)) $('min' + k).value = q.get('min' + k); if (q.get('apr' + k)) $('apr' + k).value = q.get('apr' + k); if (k > VISIBLE) anyExtra = true; } }
+  if (anyExtra) toggleMore();
+  setMethod(q.get('method') === 'snowball' ? 'snowball' : 'avalanche');
+})();
+</script>
 </body>
 </html>
