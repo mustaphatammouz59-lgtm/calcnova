@@ -1,150 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lease Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lease Calculator — Monthly Payment or Effective Interest Rate | CalcNova</title>
+<meta name="description" content="Free lease calculator: from an interest rate to the monthly payment, or from a quoted payment back to the effective interest rate it's hiding — for cars, equipment and more.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/lease">
+<meta property="og:title" content="Lease Calculator — Payment & Effective Rate | CalcNova">
+<meta property="og:description" content="Two directions: rate → payment, or payment → the effective rate the lease really charges.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/lease">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Lease Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/lease"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is the money factor on a car lease?","acceptedAnswer":{"@type":"Answer","text":"A way of quoting the lease's finance charge as a small decimal instead of a rate: money factor × 2,400 ≈ the equivalent APR. A money factor of 0.00250 is about a 6% APR. Dealers quote it because 0.00250 looks smaller than 6%; multiply before you compare, or run the quoted payment through this calculator's Fixed Payment tab to get the effective rate directly."}},
+{"@type":"Question","name":"Why do I pay interest on the residual value too?","acceptedAnswer":{"@type":"Answer","text":"Because the lessor's money is tied up in the whole asset for the whole term. You amortize only the part you consume (asset value minus residual), but interest accrues on the full outstanding balance, which declines from the asset value to the residual. On the defaults, $2,000 of the $2,582 interest is the cost of financing the depreciation; the rest is the cost of carrying the $8,000 residual for three years."}},
+{"@type":"Question","name":"Is it better to lease or buy?","acceptedAnswer":{"@type":"Answer","text":"Buying wins on total cost over the asset's life almost always — a lease is renting the depreciation plus interest, repeatedly. Leasing wins on cash flow, on always driving or using newer equipment under warranty, and for businesses that can deduct operating-lease payments. The Fixed Payment tab exposes the effective rate so the comparison with a loan rate is honest."}},
+{"@type":"Question","name":"Can a residual value be higher than the starting value?","acceptedAnswer":{"@type":"Answer","text":"For most assets no — longer terms mean lower residuals. Real estate is the standing exception: property can appreciate, so a lease-to-own contract may set a purchase price above today's value. This calculator handles residual below, equal to, or above the asset value."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Lease Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Lease</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Lease Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">A lease charges you for the value an asset loses while you use it, plus interest on the money tied up in it. Know the rate? The <strong>Fixed Rate</strong> tab finds the payment. Know only the payment a dealer quoted? The <strong>Fixed Payment</strong> tab works backwards to the <strong>effective interest rate</strong> the lease is hiding. For U.S. car leases specifically, see the Auto Lease Calculator.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Lease Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Asset Value / MSRP ($)</label>
-                        <input type="number" id="lsValue" value="40000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Negotiated Price ($)</label>
-                        <input type="number" id="lsPrice" value="38000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Down Payment ($)</label>
-                        <input type="number" id="lsDown" value="3000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Residual Value (%)</label>
-                        <p class="text-xs text-gray-500 mb-1">Estimated value at end of lease</p>
-                        <input type="number" id="lsResidual" value="55" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Lease Term (Months)</label>
-                        <select id="lsMonths" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="24">24 Months</option>
-                            <option value="36" selected>36 Months</option>
-                            <option value="48">48 Months</option>
-                            <option value="60">60 Months</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate / APR (%)</label>
-                        <input type="number" id="lsRate" value="6" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-                <button onclick="calculateLease()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Lease Payment</button>
-
-                <div id="lsResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Monthly Lease Payment</p>
-                            <p class="text-3xl font-bold text-[#14B8A6]" id="lsMonthly">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Lease Cost</p>
-                            <p class="text-xl font-bold text-gray-800" id="lsTotalCost">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Depreciation Cost</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="lsDepreciation">$0</p>
-                        </div>
-                    </div>
-                </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex gap-2">
+                <button id="tab_rate" onclick="setMode('fixrate')" class="flex-1 font-bold py-2.5 rounded-lg transition bg-[#3F51B5] text-white">Fixed Rate</button>
+                <button id="tab_pay" onclick="setMode('fixpayment')" class="flex-1 font-bold py-2.5 rounded-lg transition bg-gray-100 text-gray-600">Fixed Payment</button>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Leasing Works</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">When you lease an asset, you are essentially paying for the depreciation that occurs during the time you use it, plus interest (often called the "rent charge" or "money factor"). Leasing often results in lower monthly payments than buying, but you do not own the asset at the end of the term unless you choose to buy it out for the residual value.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
+                <label class="block"><span class="text-sm font-medium text-gray-600">Asset value</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="l_asset" type="number" value="20000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Residual value</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="l_resid" type="number" value="8000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Term — years</span>
+                        <input id="l_years" type="number" value="3" min="0" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()"></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">and months</span>
+                        <input id="l_months" type="number" value="0" min="0" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()"></label>
                 </div>
+                <label class="block" id="w_rate"><span class="text-sm font-medium text-gray-600">Interest rate</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="l_rate" type="number" value="6" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"><span class="text-gray-400">%</span></div></label>
+                <label class="block hidden" id="w_pay"><span class="text-sm font-medium text-gray-600">Monthly payment</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="l_pay" type="number" value="400" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+            </div>
+            <button onclick="calc()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="l_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">Decode the money factor</div>
+                <p>Car dealers quote a "money factor" like 0.00250 instead of a rate. Multiply by <strong>2,400</strong> to get the APR — 0.00250 ≈ 6%. If a quote gives you only a payment, the Fixed Payment tab recovers the rate from first principles.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>Leasing, Residuals, and the Two Kinds of Business Lease</h2>
+        <p>A lease is a contract between a <strong>lessor</strong> (the legal owner) and a <strong>lessee</strong>, who gets the use of the asset for a set term in return for regular payments. (The words are often blurred: strictly, the <em>lease</em> is the contract and the <em>rent</em> is the payment; in neither case does the user build equity.) Almost anything ownable can be leased — apartments, offices, cars, and also storage, conveyor belts, lighting, software, servers, aircraft and cleaning equipment. The lessor's money is in the asset for the whole term, which is why the math at the top of this page charges interest on a balance that falls only to the <strong>residual value</strong>: the asset's estimated worth when the lease ends. A $30,000 car leased for three years might carry a $16,000 residual. Residuals shrink as terms lengthen — with one standing exception, real estate, where appreciation can push the end value above the start.</p>
+        <h3>Cars and Business Equipment</h3>
+        <p>Auto leasing sells a new car every few years, under warranty, without the capital outlay of buying — at a total cost that typically exceeds owning the same car over its life. Payments are set by the gap between the car's price (its capitalized cost) and its forecast residual, plus the finance charge quoted as a <strong>money factor</strong> (× 2,400 ≈ APR), plus deposits and dealer charges; many contracts add a purchase option at the end. Businesses lease for a different reason: use of expensive equipment for a fraction of its price upfront, with the freedom to return, renew, or buy at term's end — vital for young companies short on capital. Accounting splits business leases in two: a <strong>capital (finance) lease</strong> behaves like a purchase — the asset sits on the lessee's balance sheet and depreciates — and suits long terms and durable equipment; an <strong>operating lease</strong> keeps ownership with the lessor, its payments deductible as an operating expense, and suits short terms and fast-obsolescing technology.</p>
+        <h3>Leasing Real Estate</h3>
+        <p>Residential leases cluster around 12 months (3, 6, 18 and 24 are common), sometimes with a lease-to-own option to buy later at an agreed price. Commercial leases run longer and stricter, and the real negotiation is which expenses ride inside the rent. A <strong>gross (full-service) lease</strong> charges one flat rent while the landlord pays taxes, insurance and maintenance — simple budgeting at a premium. A <strong>net lease</strong> shifts expenses to the tenant for a lower base rent, in three grades: <strong>N</strong> (tenant adds property tax), <strong>NN</strong> (adds insurance), and <strong>NNN — triple net</strong> (adds common-area maintenance too), the most common and most landlord-friendly form in U.S. retail and office space; the extreme, a bondable or absolute lease, can't even be terminated when costs spike. <strong>Modified</strong> leases split the difference, dividing expenses by negotiation — which is why the only definition that finally matters is the one in the signed contract.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>What payment does a 0% rate produce?</h4>
+        <p>Pure depreciation, spread evenly: (asset − residual) ÷ months. On the defaults that would be $333.33 — the $405.06 actual payment shows how much of a lease payment is really interest.</p>
+        <h4>Why does the balance end at the residual instead of zero?</h4>
+        <p>Because you never bought that part of the asset. The schedule above runs the value down to the residual; returning the asset (or buying it for the residual) settles the remaining line.</p>
+        <h4>Does a higher residual mean a better lease?</h4>
+        <p>It means a lower payment — you've consumed less value — but if the asset actually ends worth less than the residual, the lessor (or you, on an open-end lease) eats the difference. Closed-end leases push that risk to the lessor, which is their main consumer protection.</p>
+    </section>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="auto-lease.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Auto Lease Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The car-specific version: money factor, mileage, acquisition fees.</p>
+            </a>
+            <a href="auto-loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Auto Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The buy-it alternative, priced for comparison.</p>
+            </a>
+            <a href="depreciation.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Depreciation Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Where residual values come from: value lost year by year.</p>
+            </a>
+            <a href="rent.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Rent Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The residential side: what rent a budget can carry.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        function calculateLease() {
-            const msrp = parseFloat(document.getElementById('lsValue').value);
-            const price = parseFloat(document.getElementById('lsPrice').value);
-            const down = parseFloat(document.getElementById('lsDown').value);
-            const residualPct = parseFloat(document.getElementById('lsResidual').value) / 100;
-            const months = parseInt(document.getElementById('lsMonths').value);
-            const rate = parseFloat(document.getElementById('lsRate').value) / 100;
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (isNaN(msrp) || isNaN(price) || isNaN(down) || isNaN(residualPct) || isNaN(months) || isNaN(rate) || price <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
-
-            // Residual Value
-            const residualValue = msrp * residualPct;
-
-            // Depreciation Fee (Amount to be paid off over the lease term)
-            const depreciationFee = (price - down - residualValue) / months;
-
-            // Money Factor (Interest)
-            const moneyFactor = rate / 2400; 
-            const financeFee = (price - down + residualValue) * moneyFactor;
-
-            // Monthly Payment
-            const monthlyPayment = depreciationFee + financeFee;
-
-            const totalLeaseCost = (monthlyPayment * months) + down;
-            const totalDepreciation = price - residualValue;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('lsMonthly').textContent = formatter.format(monthlyPayment);
-            document.getElementById('lsTotalCost').textContent = formatter.format(totalLeaseCost);
-            document.getElementById('lsDepreciation').textContent = formatter.format(totalDepreciation);
-
-            document.getElementById('lsResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+let mode = 'fixrate';
+function setMode(m) {
+  mode = m;
+  $('tab_rate').className = 'flex-1 font-bold py-2.5 rounded-lg transition ' + (m === 'fixrate' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  $('tab_pay').className = 'flex-1 font-bold py-2.5 rounded-lg transition ' + (m === 'fixpayment' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  $('w_rate').classList.toggle('hidden', m !== 'fixrate');
+  $('w_pay').classList.toggle('hidden', m !== 'fixpayment');
+  calc();
+}
+function donut2(principal, interest) {
+  const total = principal + interest, R = 42, C = 2 * Math.PI * R;
+  const f1 = total > 0 ? principal / total : 0, f2 = total > 0 ? interest / total : 0;
+  return '<svg width="210" height="100" viewBox="0 0 210 100">' +
+    (f1 > 0 ? '<circle cx="50" cy="50" r="' + R + '" fill="none" stroke="#2b7ddb" stroke-width="16" stroke-dasharray="' + Math.max(f1 * C - 1.5, 0.5) + ' ' + C.toFixed(2) + '" transform="rotate(-90 50 50)"/>' : '') +
+    (f2 > 0 ? '<circle cx="50" cy="50" r="' + R + '" fill="none" stroke="#8bbc21" stroke-width="16" stroke-dasharray="' + Math.max(f2 * C - 1.5, 0.5) + ' ' + C.toFixed(2) + '" transform="rotate(' + (-90 + f1 * 360) + ' 50 50)"/>' : '') +
+    '<text x="97" y="43" font-size="11" fill="#2b7ddb" font-weight="700">Principal ' + Math.round(f1 * 100) + '%</text>' +
+    '<text x="97" y="60" font-size="11" fill="#8bbc21" font-weight="700">Interest ' + Math.round(f2 * 100) + '%</text></svg>';
+}
+function statsHtml(pairs) {
+  return '<div class="grid grid-cols-2 gap-3 mt-4 text-center">' + pairs.map(p => '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">' + p[0] + '</div><div class="font-bold num">' + p[1] + '</div></div>').join('') + '</div>';
+}
+function leasePay(asset, resid, n, i) {
+  if (i === 0) return (asset - resid) / n;
+  const v = Math.pow(1 + i, -n);
+  return (asset - resid * v) * i / (1 - v);
+}
+function calc() {
+  const asset = num('l_asset'), resid = num('l_resid');
+  const n = Math.round(num('l_years') * 12 + num('l_months'));
+  const out = $('l_results');
+  if (asset <= 0 || n <= 0) { out.innerHTML = ''; updateShare(); return; }
+  const consumed = asset - resid;
+  let pay, i, ratePct, headLabel, headVal;
+  if (mode === 'fixrate') {
+    ratePct = num('l_rate'); i = ratePct / 1200;
+    pay = leasePay(asset, resid, n, i);
+    headLabel = 'Monthly pay'; headVal = fmt$(pay);
+  } else {
+    pay = num('l_pay');
+    if (pay <= 0) { out.innerHTML = ''; updateShare(); return; }
+    if (pay * n < consumed) { out.innerHTML = '<p class="text-sm text-gray-500">' + n + ' payments of ' + fmt$(pay) + ' total ' + fmt$(pay * n) + ' — less than the ' + fmt$(consumed) + ' of value consumed, so even a 0% lease would cost more. Raise the payment.</p>'; updateShare(); return; }
+    let lo = 0, hi = 0.25;
+    const pv = j => j === 0 ? pay * n + resid : pay * (1 - Math.pow(1 + j, -n)) / j + resid * Math.pow(1 + j, -n);
+    while (pv(hi) > asset && hi < 4) hi *= 2;
+    for (let k = 0; k < 200; k++) { const mid = (lo + hi) / 2; if (pv(mid) > asset) lo = mid; else hi = mid; }
+    i = (lo + hi) / 2; ratePct = i * 1200;
+    headLabel = 'Interest/Return rate'; headVal = ratePct.toFixed(3) + '%';
+  }
+  const totalPay = pay * n, interest = totalPay - consumed;
+  let bal = asset, rows = '';
+  for (let k = 1; k <= n; k++) {
+    const it = bal * i, prin = Math.min(pay - it, bal - resid), payK = prin + it;
+    bal -= prin;
+    rows += '<tr class="border-t border-gray-100"><td class="p-2">' + k + '</td><td class="p-2 text-right">' + fmt$(it) + '</td><td class="p-2 text-right">' + fmt$(prin) + '</td><td class="p-2 text-right">' + fmt$(Math.max(bal, resid)) + '</td></tr>';
+  }
+  out.innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-5 flex flex-wrap items-center gap-5"><div class="flex-1 min-w-[200px]"><div class="text-sm opacity-80">' + headLabel + '</div><div class="text-3xl font-extrabold mt-1">' + headVal + '</div>' + (mode === 'fixpayment' ? '<div class="text-sm opacity-80 mt-1">behind the ' + fmt$(pay) + ' monthly payment</div>' : '') + '</div><div class="bg-white rounded-lg p-1">' + donut2(Math.max(consumed, 0), interest) + '</div></div>' +
+    statsHtml([['Total of ' + n + ' monthly payments', fmt$(totalPay)], ['Total interest', fmt$(interest)], ['Value consumed (asset − residual)', fmt$(consumed)], ['Monthly pay', fmt$(pay)]]) +
+    '<div class="font-bold text-gray-800 mt-5">Amortization schedule <span class="font-normal text-sm text-gray-500">— the balance runs down to the residual, not to zero</span></div>' +
+    '<div class="overflow-auto max-h-72 mt-2 border border-gray-100 rounded-lg"><table class="w-full text-sm num"><thead class="bg-gray-50 sticky top-0"><tr><th class="text-left p-2">Month</th><th class="text-right p-2">Interest</th><th class="text-right p-2">Principal</th><th class="text-right p-2">Ending Balance</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ m: mode, a: $('l_asset').value, rv: $('l_resid').value, y: $('l_years').value, mo: $('l_months').value, r: $('l_rate').value, p: $('l_pay').value });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  const set = (id, key) => { if (q.get(key)) $(id).value = q.get(key); };
+  set('l_asset', 'a'); set('l_resid', 'rv'); set('l_years', 'y'); set('l_months', 'mo'); set('l_rate', 'r'); set('l_pay', 'p');
+  setMode(q.get('m') === 'fixpayment' ? 'fixpayment' : 'fixrate');
+})();
+</script>
 </body>
 </html>
