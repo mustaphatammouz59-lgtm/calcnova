@@ -1,140 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Loan Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Loan Calculator — Payments, Fees &amp; Real APR | CalcNova</title>
+<meta name="description" content="Free business loan calculator: payments at any compounding and payback frequency — including interest-only and balloon — plus origination and documentation fees and the loan's real APR.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/business-loan">
+<meta property="og:title" content="Business Loan Calculator — Payments, Fees & Real APR | CalcNova">
+<meta property="og:description" content="What a business or SBA loan really costs once the fees are in: payment, total interest, and the true APR.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/business-loan">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Business Loan Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/business-loan"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why is the real APR so much higher than the interest rate?","acceptedAnswer":{"@type":"Answer","text":"Because fees shrink what you actually receive. On the default loan you sign for $10,000 at 10%, but a 5% origination fee plus a $750 documentation fee leave you $8,750 of usable money — while the payments are still calculated on $10,000. Solving for the rate that matches those payments to the $8,750 you really got gives a real APR of about 15.9%. The interest rate prices the loan; the APR prices the deal."}},
+{"@type":"Question","name":"What is an SBA loan?","acceptedAnswer":{"@type":"Answer","text":"A loan made by a bank or other lender but partially guaranteed (75–90%) by the U.S. Small Business Administration, which lowers the lender's risk and helps smaller or younger businesses qualify. The main programs are the 7(a) loan (up to $5 million, general purpose), microloans (up to $50,000), CDC/504 loans for real estate and major equipment, and disaster loans. Expect more paperwork, guarantee fees, and a slower approval than a conventional loan."}},
+{"@type":"Question","name":"What fees do business loans carry?","acceptedAnswer":{"@type":"Answer","text":"Most commonly an origination fee (typically 1–6% of the amount, for processing and underwriting) and a documentation fee (a flat charge for the paperwork), plus possibly application, appraisal, annual or administrative fees, and prepayment penalties. This calculator folds the three most common into the real APR."}},
+{"@type":"Question","name":"When does interest-only make sense for a business?","acceptedAnswer":{"@type":"Answer","text":"When cash flow is seasonal or a project pays off in a lump — a property renovation sold at completion, inventory bought for a known selling season. Payments stay tiny (just $83.33 a month on the default loan), but nothing amortizes: the whole principal lands at maturity, and total interest ($5,000 here) is higher than an amortizing loan's ($2,748)."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Business Loan Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Business Loan</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Business Loan Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">The payment a business loan demands — and what it <em>really</em> costs. Beyond the standard amortization (any compounding, any payback frequency, plus interest-only and pay-at-maturity structures), this calculator charges the origination and documentation fees against the proceeds and solves for the <strong>real APR</strong>: the rate you'd quote if the fees were interest, because economically, they are.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Business Loan Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Amount ($)</label>
-                        <input type="number" id="blAmount" value="50000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
-                        <input type="number" id="blRate" value="8" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
-                        <input type="number" id="blYears" value="5" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Origination Fee (%)</label>
-                        <p class="text-xs text-gray-500 mb-1">Upfront fee charged by lender</p>
-                        <input type="number" id="blFee" value="2" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label class="block"><span class="text-sm font-medium text-gray-600">Loan amount</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="b_amount" type="number" value="10000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Interest rate</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="b_rate" type="number" value="10" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"><span class="text-gray-400">%</span></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Compound</span>
+                    <select id="b_compound" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5" onchange="calc()">
+                        <option value="1">Annually (APY)</option>
+                        <option value="2">Semi-annually</option>
+                        <option value="4">Quarterly</option>
+                        <option value="12" selected>Monthly (APR)</option>
+                        <option value="24">Semi-monthly</option>
+                        <option value="26">Biweekly</option>
+                        <option value="52">Weekly</option>
+                        <option value="365">Daily</option>
+                        <option value="0">Continuously</option>
+                    </select></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Pay back</span>
+                    <select id="b_payback" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5" onchange="calc()">
+                        <option value="365">Every Day</option>
+                        <option value="52">Every Week</option>
+                        <option value="26">Every 2 Weeks</option>
+                        <option value="24">Every Half Month</option>
+                        <option value="12" selected>Every Month</option>
+                        <option value="4">Every Quarter</option>
+                        <option value="2">Every 6 Months</option>
+                        <option value="1">Every Year</option>
+                        <option value="interest">Interest Only</option>
+                        <option value="end">In the End</option>
+                    </select></label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="block"><span class="text-sm font-medium text-gray-600">Term — years</span>
+                        <input id="b_years" type="number" value="5" min="0" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()"></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">and months</span>
+                        <input id="b_months" type="number" value="0" min="0" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()"></label>
                 </div>
-                <button onclick="calculateBusinessLoan()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Loan</button>
-
-                <div id="blResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Monthly Payment</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="blMonthly">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Paid</p>
-                            <p class="text-xl font-bold text-red-500" id="blTotalInterest">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Cost (Inc. Fees)</p>
-                            <p class="text-xl font-bold text-gray-800" id="blTotalCost">$0</p>
-                        </div>
-                    </div>
-                </div>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Origination fee</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="b_orig" type="number" value="5" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"><span class="text-gray-400">%</span></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Documentation fee</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="b_doc" type="number" value="750" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Other fees</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="b_other" type="number" value="0" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Understanding Business Loans</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A business loan can help you expand operations, purchase equipment, or manage cash flow. Unlike personal loans, business loans often come with origination fees. This fee is usually deducted from the loan amount upfront, meaning you receive less than the total principal, but you still pay interest on the full principal amount.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <button onclick="calc()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="b_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">A 10% loan at a 15.9% APR</div>
+                <p>The defaults are not a trick: $1,250 of fees on a $10,000 five-year loan is expensive money, and short terms make fees bite harder (the same fees on a 10-year term would add roughly half as much to the APR). Always compare business loans on the real APR, never the headline rate.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>Business Loans and the SBA</h2>
+        <p>Business loans fund starts, acquisitions, equipment, real estate, franchises and plain working capital, and they repay like other loans — principal plus interest, usually monthly, sometimes weekly, daily, interest-only, or in a single balloon at maturity. In the U.S., the defining institution is the Small Business Administration. The SBA doesn't lend directly; it <strong>guarantees 75–90%</strong> of loans made by banks and other lenders, which makes credit available to businesses too young or too small for conventional underwriting — at the price of extra paperwork, guarantee fees, and slower approvals.</p>
+        <h3>The SBA Menu</h3>
+        <p>The <strong>7(a) loan</strong> is the flagship — over three-quarters of SBA lending: up to $5 million for working capital (10 years) or fixed assets (up to 25 years), funding everything from start-ups to debt refinancing. <strong>Microloans</strong> serve the smallest borrowers: up to $50,000 (average nearer $15,000), six years maximum, for anything except real estate or paying off old debt. <strong>CDC/504 loans</strong> finance real estate and major equipment at long fixed rates up to $5.5 million — but never working capital or inventory. <strong>Disaster loans</strong> (up to $2 million) repair assets damaged by a declared disaster. Beyond the SBA, conventional bank loans carry no government guarantee — typically higher rates and shorter terms, but a faster, less regulated process — and the market adds mezzanine, asset-based and invoice financing, merchant cash advances, and, for the smallest needs, personal loans taken in the owner's name.</p>
+        <h3>Fees: Where the Real Rate Hides</h3>
+        <p>The <strong>origination fee</strong> (commonly 1–6% of the amount) pays for processing and underwriting; the <strong>documentation fee</strong> is a flat charge for the paperwork; an application fee may precede both. Over the loan's life, lenders may add administrative or annual fees, service charges, wire fees, late-payment fees, and prepayment penalties. None of these is interest, and all of them are cost — which is why the honest comparison number is the fee-inclusive APR this calculator solves: the rate at which the payments you make equal the proceeds you actually receive. At the defaults, fees lift a 10% loan to a real APR near 15.9%; on a larger, longer loan the same dollar fees would matter far less, which is itself a reason to negotiate fees before rates.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>Do the fees reduce my proceeds or get added to the loan?</h4>
+        <p>Either happens in practice. This calculator follows the conservative reading used for APR disclosure: fees are charged against the amount, so you receive the loan minus fees while paying on the full amount. If your lender instead finances the fees into the balance, the payment — not just the APR — rises.</p>
+        <h4>What payback frequency do real business loans use?</h4>
+        <p>Monthly is standard for bank and SBA loans. Daily and weekly repayment is the signature of merchant cash advances and short-term online loans — structures whose rates look modest per payment and enormous per year; run them through the real-APR math here before signing.</p>
+        <h4>Is an interest-only business loan cheaper?</h4>
+        <p>Per month, much cheaper; in total, more expensive, because the balance never falls. At the defaults it costs $5,000 of interest against $2,748 amortized — and leaves the $10,000 principal due in full at the end.</p>
+    </section>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Amortized, deferred-payment and zero-coupon structures.</p>
+            </a>
+            <a href="apr.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">APR Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The same real-rate logic for general and mortgage loans.</p>
+            </a>
+            <a href="repayment.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Repayment Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The payment engine without the fee layer.</p>
+            </a>
+            <a href="debt-consolidation.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Debt Consolidation Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Refinancing business debts into one loan, judged by real APR.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        function calculateBusinessLoan() {
-            const amount = parseFloat(document.getElementById('blAmount').value);
-            const rate = parseFloat(document.getElementById('blRate').value) / 100 / 12;
-            const years = parseFloat(document.getElementById('blYears').value);
-            const feePercent = parseFloat(document.getElementById('blFee').value) / 100;
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (isNaN(amount) || isNaN(rate) || isNaN(years) || isNaN(feePercent) || amount <= 0 || years <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
-
-            const months = years * 12;
-            
-            // Monthly payment calculation (P&I)
-            let monthlyPayment = 0;
-            if (rate === 0) {
-                monthlyPayment = amount / months;
-            } else {
-                monthlyPayment = amount * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
-            }
-
-            // Total interest paid over the life of the loan
-            const totalRepaid = monthlyPayment * months;
-            const totalInterest = totalRepaid - amount;
-
-            // Upfront origination fee
-            const originationFee = amount * feePercent;
-
-            // Total cost of the loan (Principal + Interest + Upfront Fees)
-            // Note: The fee is paid upfront, so the total cost is technically amount + interest + fee
-            const totalCost = amount + totalInterest + originationFee;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('blMonthly').textContent = formatter.format(monthlyPayment);
-            document.getElementById('blTotalInterest').textContent = formatter.format(totalInterest);
-            document.getElementById('blTotalCost').textContent = formatter.format(totalCost);
-
-            document.getElementById('blResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const PERIOD_NAME = { 365: 'daily', 52: 'weekly', 26: 'biweekly', 24: 'semi-monthly', 12: 'monthly', 4: 'quarterly', 2: 'semi-annually', 1: 'annually' };
+const PAY_LABEL = { 365: 'every day', 52: 'every week', 26: 'every 2 weeks', 24: 'every half month', 12: 'every month', 4: 'every quarter', 2: 'every 6 months', 1: 'every year' };
+function periodRate(ratePct, m, p) {
+  const r = ratePct / 100;
+  if (m === 0) return Math.exp(r / p) - 1;
+  return Math.pow(1 + r / m, m / p) - 1;
+}
+function donut3(principal, interest, fee) {
+  const total = principal + interest + fee, R = 42, C = 2 * Math.PI * R;
+  const parts = [[principal, '#2b7ddb', 'Principal'], [interest, '#8bbc21', 'Interest'], [fee, '#910000', 'Fee']];
+  let acc = 0, circles = '', legend = '';
+  for (const [val, color, name] of parts) {
+    const frac = total > 0 ? val / total : 0;
+    if (frac > 0) circles += '<circle cx="50" cy="50" r="' + R + '" fill="none" stroke="' + color + '" stroke-width="16" stroke-dasharray="' + Math.max(frac * C - 1.5, 0.5) + ' ' + C.toFixed(2) + '" transform="rotate(' + (-90 + acc * 360) + ' 50 50)"/>';
+    acc += frac;
+  }
+  let ly = 30;
+  const legendText = parts.map(([val, color, name]) => { const t = '<text x="97" y="' + ly + '" font-size="11" fill="' + color + '" font-weight="700">' + name + ' ' + Math.round(total > 0 ? val / total * 100 : 0) + '%</text>'; ly += 17; return t; }).join('');
+  return '<svg width="150" height="100" viewBox="0 0 150 100">' + circles + legendText + '</svg>';
+}
+function statsHtml(pairs) {
+  return '<div class="grid grid-cols-2 gap-3 mt-4 text-center">' + pairs.map(p => '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">' + p[0] + '</div><div class="font-bold num">' + p[1] + '</div></div>').join('') + '</div>';
+}
+function tableHtml(rows) {
+  return '<div class="overflow-auto max-h-72 mt-4 border border-gray-100 rounded-lg"><table class="w-full text-sm num"><thead class="bg-gray-50 sticky top-0"><tr><th class="text-left p-2">#</th><th class="text-right p-2">Payment</th><th class="text-right p-2">Principal</th><th class="text-right p-2">Interest</th><th class="text-right p-2">Balance</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+}
+function solveApr(cashflows, net, periodsPerYear) {
+  if (!(net > 0)) return null;
+  const pv = j => cashflows.reduce((s, cf, idx) => s + cf / Math.pow(1 + j, idx + 1), 0);
+  let lo = 0, hi = 1;
+  if (pv(0) <= net) return 0;
+  while (pv(hi) > net && hi < 64) hi *= 2;
+  for (let k = 0; k < 200; k++) { const mid = (lo + hi) / 2; if (pv(mid) > net) lo = mid; else hi = mid; }
+  return (lo + hi) / 2 * periodsPerYear * 100;
+}
+function calc() {
+  const P = num('b_amount'), rate = num('b_rate');
+  const m = parseInt($('b_compound').value);
+  const pbRaw = $('b_payback').value;
+  const termMonths = num('b_years') * 12 + num('b_months');
+  const fees = P * num('b_orig') / 100 + num('b_doc') + num('b_other');
+  const net = P - fees;
+  const out = $('b_results');
+  if (P <= 0 || termMonths <= 0) { out.innerHTML = ''; updateShare(); return; }
+  const T = termMonths / 12;
+  let flows = [], rows = '', interest = 0, headline = '', sub = '', aprLabel = 'Real rate (APR)', aprPeriods = 12, aprN = 0;
+  if (pbRaw === 'end') {
+    const F = m === 0 ? P * Math.exp(rate / 100 * T) : P * Math.pow(1 + rate / 100 / m, m * T);
+    interest = F - P;
+    flows = [F]; aprPeriods = m === 0 ? 12 : m; aprN = Math.max(1, Math.round(aprPeriods * T));
+    // spread the single payment across aprN periods for IRR timing
+    flows = Array(aprN).fill(0); flows[aprN - 1] = F;
+    aprLabel = aprPeriods === 12 ? 'Real rate (APR)' : 'Real rate compound ' + PERIOD_NAME[aprPeriods];
+    headline = 'Pay back ' + fmt$(F);
+    sub = 'You pay ' + fmt$(F) + ' in one payment when the loan matures.';
+    rows = '<tr class="border-t border-gray-100"><td class="p-2">' + aprN + '</td><td class="p-2 text-right">' + fmt$(F) + '</td><td class="p-2 text-right">' + fmt$(P) + '</td><td class="p-2 text-right">' + fmt$(interest) + '</td><td class="p-2 text-right">$0.00</td></tr>';
+  } else if (pbRaw === 'interest') {
+    const mm = m === 0 ? 12 : m;
+    const iPer = periodRate(rate, m, mm);
+    const n = Math.max(1, Math.round(T * mm));
+    const ioPay = P * iPer;
+    interest = ioPay * n;
+    flows = Array(n).fill(ioPay); flows[n - 1] += P;
+    aprPeriods = mm; aprLabel = mm === 12 ? 'Real rate (APR)' : 'Real rate compound ' + PERIOD_NAME[mm];
+    headline = fmt$(ioPay) + ' ' + (PAY_LABEL[mm] || 'per period').replace('every ', 'per ');
+    sub = 'You pay ' + fmt$(ioPay) + ' of interest ' + (PAY_LABEL[mm] || '') + ', and the full ' + fmt$(P) + ' principal at the end.';
+    let bal = P;
+    for (let k = 1; k <= n; k++) {
+      const prin = k === n ? P : 0, pay = ioPay + prin;
+      rows += '<tr class="border-t border-gray-100"><td class="p-2">' + k + '</td><td class="p-2 text-right">' + fmt$(pay) + '</td><td class="p-2 text-right">' + fmt$(prin) + '</td><td class="p-2 text-right">' + fmt$(ioPay) + '</td><td class="p-2 text-right">' + fmt$(bal - prin) + '</td></tr>';
+    }
+  } else {
+    const p = parseInt(pbRaw);
+    const i = periodRate(rate, m, p);
+    const n = Math.max(1, Math.round(T * p));
+    const pay = i > 0 ? P * i / (1 - Math.pow(1 + i, -n)) : P / n;
+    flows = Array(n).fill(pay);
+    let bal = P;
+    for (let k = 1; k <= n; k++) {
+      const it = bal * i, prin = Math.min(pay - it, bal), payK = prin + it;
+      bal -= prin; interest += it;
+      if (k === n) flows[k - 1] = payK;
+      rows += '<tr class="border-t border-gray-100"><td class="p-2">' + k + '</td><td class="p-2 text-right">' + fmt$(payK) + '</td><td class="p-2 text-right">' + fmt$(prin) + '</td><td class="p-2 text-right">' + fmt$(it) + '</td><td class="p-2 text-right">' + fmt$(Math.max(bal, 0)) + '</td></tr>';
+    }
+    aprPeriods = p; aprLabel = p === 12 ? 'Real rate (APR)' : 'Real rate compound ' + PERIOD_NAME[p];
+    headline = 'Payback ' + PAY_LABEL[p] + ': ' + fmt$(pay);
+    sub = 'Total of ' + n + ' loan payments: ' + fmt$(flows.reduce((a, b) => a + b, 0)) + '.';
+  }
+  const apr = solveApr(flows, net, aprPeriods);
+  const totalPaid = flows.reduce((a, b) => a + b, 0);
+  out.innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-5 flex flex-wrap items-center gap-5"><div class="flex-1 min-w-[220px]"><div class="text-2xl font-extrabold">' + headline + '</div><div class="text-sm opacity-80 mt-1">' + sub + '</div></div><div class="bg-white rounded-lg p-1">' + donut3(P, interest, fees) + '</div></div>' +
+    statsHtml([['Interest', fmt$(interest)], ['Total fees', fmt$(fees)], ['Interest + fee', fmt$(interest + fees)], [aprLabel, apr === null ? '—' : apr.toFixed(3) + '%'], ['You actually receive', fmt$(net)], ['Total of all payments', fmt$(totalPaid)]]) +
+    tableHtml(rows);
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ a: $('b_amount').value, r: $('b_rate').value, c: $('b_compound').value, p: $('b_payback').value, y: $('b_years').value, mo: $('b_months').value, o: $('b_orig').value, d: $('b_doc').value, ot: $('b_other').value });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  const set = (id, key) => { if (q.get(key)) $(id).value = q.get(key); };
+  set('b_amount', 'a'); set('b_rate', 'r'); set('b_compound', 'c'); set('b_payback', 'p'); set('b_years', 'y'); set('b_months', 'mo'); set('b_orig', 'o'); set('b_doc', 'd'); set('b_other', 'ot');
+  calc();
+})();
+</script>
 </body>
-</html>
+</html> 
