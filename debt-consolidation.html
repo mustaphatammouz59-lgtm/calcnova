@@ -1,156 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debt Consolidation Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debt Consolidation Calculator — Is It Worth It? | CalcNova</title>
+<meta name="description" content="Free debt consolidation calculator: compare the true APR of your current debts against a consolidation loan with its fees included — monthly payment, payoff time, total interest, upfront cash needed, and a clear verdict on whether consolidation saves you money.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/debt-consolidation">
+<meta property="og:title" content="Debt Consolidation Calculator — Is It Worth It? | CalcNova">
+<meta property="og:description" content="Your debts blended into one APR vs. the consolidation loan's real APR, fees included. Which one actually costs less?">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/debt-consolidation">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Debt Consolidation Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/debt-consolidation"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How can a lower-rate loan still lose money?","acceptedAnswer":{"@type":"Answer","text":"Two ways: fees and time. A 5% upfront fee on the defaults here lifts the loan's real APR from 10.99% to 13.25% before a single payment is made — at a 15% fee it reaches 18.33%, and past roughly a 16% fee it exceeds the debts' 18.92% blended APR entirely and the verdict flips. And a lower monthly payment stretched over a longer term can cost more total interest than the debts it replaces, even at a lower rate. Compare real APRs and total interest, never the advertised rate or the monthly payment alone."}},
+{"@type":"Question","name":"What is the blended APR of my current debts?","acceptedAnswer":{"@type":"Answer","text":"It is the single interest rate that explains your debts' actual payment stream. The calculator first simulates paying your debts with their combined monthly amount, highest rate first; the blended APR is then the rate at which that exact stream of payments would amortize the combined balance. It lands near the balance-weighted average of the rates, adjusted for how long each balance actually survives."}},
+{"@type":"Question","name":"What if the loan doesn't cover all my balances?","acceptedAnswer":{"@type":"Answer","text":"The fee comes off the top: a $25,000 loan at a 5% fee puts $23,750 in your hands. Against $24,000 of balances that leaves a $250 gap the calculator shows as negative upfront cash flow — you would need that much cash (or leave the smallest debt out of the consolidation) to close every account. A loan larger than the balances shows positive upfront cash flow instead: money left over after every debt is paid, which should go straight back into the new loan."}},
+{"@type":"Question","name":"Does consolidating hurt my credit score?","acceptedAnswer":{"@type":"Answer","text":"Briefly, a little: applying is a hard inquiry, and a new account lowers your average account age. But paying off cards with an installment loan usually cuts your credit utilization sharply, which helps, and a run of on-time payments on the single loan rebuilds the rest. The score cost of consolidating is small and temporary next to the score cost of missing payments on five separate debts."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Debt Consolidation Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Debt Consolidation</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Debt Consolidation Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Should you roll your debts into one consolidation loan? This calculator answers with the only fair comparison: the <strong>blended APR of your current debts</strong> — interest, payments and payoff order included — against the <strong>real APR of the new loan with its fee counted</strong>. If the loan's real APR is lower, consolidation saves money; if the fee eats the rate advantage, it doesn't, whatever the advertised rate says. To just pay the debts off in the best order, use the <a href="debt-payoff.html" class="text-[#3F51B5] underline">Debt Payoff Calculator</a>.</p></p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Debt Consolidation Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <!-- Current Debt -->
-                    <div class="space-y-4 border-r-0 md:border-r border-gray-200 pr-0 md:pr-4">
-                        <h2 class="text-xl font-semibold text-[#3F51B5]">Current Debt</h2>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Total Debt Balance ($)</label>
-                            <input type="number" id="dcCurrentBalance" value="20000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="border border-gray-200 rounded-xl p-4 max-w-xl bg-gray-50">
+                <div class="font-bold text-gray-800 mb-3">Consolidation loan</div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <label class="block">
+                        <span class="text-sm font-medium text-gray-600">Loan amount</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 bg-white focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                            <span class="text-gray-400">$</span>
+                            <input id="p_amount" type="number" value="25000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()">
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Current Average APR (%)</label>
-                            <input type="number" id="dcCurrentRate" value="22" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </label>
+                    <label class="block">
+                        <span class="text-sm font-medium text-gray-600">Interest rate</span>
+                        <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 bg-white focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                            <input id="p_lrate" type="number" value="10.99" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()">
+                            <span class="text-gray-400">%</span>
                         </div>
-                    </div>
-
-                    <!-- Consolidation Loan -->
-                    <div class="space-y-4">
-                        <h2 class="text-xl font-semibold text-[#14B8A6]">Consolidation Loan</h2>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">New Loan Amount ($)</label>
-                            <input type="number" id="dcNewBalance" value="20000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                    </label>
+                    <label class="block">
+                        <span class="text-sm font-medium text-gray-600">Loan term — years</span>
+                        <input id="p_lyears" type="number" value="5" min="0" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 bg-white num" oninput="calc()">
+                    </label>
+                    <label class="block">
+                        <span class="text-sm font-medium text-gray-600">and months</span>
+                        <input id="p_lmonths" type="number" value="0" min="0" max="11" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 bg-white num" oninput="calc()">
+                    </label>
+                    <label class="block sm:col-span-2">
+                        <span class="text-sm font-medium text-gray-600">Loan fee / points</span>
+                        <div class="mt-1 flex gap-2">
+                            <input id="p_fee" type="number" value="5" min="0" step="any" class="w-full border border-gray-300 rounded-lg p-2.5 bg-white num" oninput="calc()">
+                            <button id="fee_pct" onclick="setFeeUnit('p')" class="font-bold px-4 rounded-lg transition bg-[#3F51B5] text-white text-sm">%</button>
+                            <button id="fee_usd" onclick="setFeeUnit('d')" class="font-bold px-4 rounded-lg transition bg-gray-100 text-gray-600 text-sm">$</button>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">New Loan APR (%)</label>
-                            <input type="number" id="dcNewRate" value="10" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Months)</label>
-                            <input type="number" id="dcNewTerm" value="60" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                        </div>
-                    </div>
-                </div>
-
-                <button onclick="calculateConsolidation()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Compare Savings</button>
-
-                <div id="dcResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Current Monthly Payment</p>
-                            <p class="text-xl font-bold text-gray-800" id="dcCurrentPayment">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">New Monthly Payment</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="dcNewPayment">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Saved</p>
-                            <p class="text-xl font-bold text-green-600" id="dcInterestSaved">$0</p>
-                        </div>
-                    </div>
+                    </label>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Debt Consolidation Works</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Debt consolidation involves taking out a new loan to pay off multiple high-interest debts (like credit cards). The goal is to get a lower interest rate and combine all your payments into one manageable monthly payment. This calculator compares your current debt scenario with a potential new consolidation loan to show you if it saves you money.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+<div class="overflow-x-auto mt-5">
+                <table class="w-full text-sm">
+                    <thead><tr class="text-left text-gray-500 border-b border-gray-200">
+                        <th class="p-2 w-8"></th><th class="p-2">Debt name</th><th class="p-2">Remaining balance</th><th class="p-2">Monthly or min. payment</th><th class="p-2">Interest rate</th>
+                    </tr></thead>
+                    <tbody id="card_rows"></tbody>
+                </table>
+            </div>
+            <button id="more_btn" onclick="toggleMore()" class="mt-3 text-sm text-[#3F51B5] font-medium hover:underline">Show more input fields</button>
+            <button onclick="calc()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="p_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">The fee is the verdict</div>
+                <p>At the defaults, the new loan advertises 10.99% against debts blending to <strong>18.92%</strong> — an easy yes, until the 5% fee lifts the loan's real APR to <strong>13.25%</strong>. Still a yes. Push the fee past about 16% and the real APR climbs past the debts themselves, and consolidation quietly becomes the expensive option. That is why this calculator compares real APRs — rate plus fees — and never the advertised rate alone.</p>
+</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>Consolidation, Judged on Its Real Cost</h2>
+        <p>Debt consolidation replaces several debts with one new loan. People do it for a lower rate, a lower monthly payment, or simply for one payment instead of many — and a good consolidation loan can deliver all three. The vehicles vary: an unsecured personal loan, a balance-transfer card with a promotional rate, or a secured loan against the home (a home-equity loan, HELOC, or cash-out refinance), which borrows the house's lower rate at the price of putting the house behind the debt. Whatever the vehicle, the judgment is the same: does the new loan, <em>with all its costs</em>, beat the debts it replaces?</p>
+        <h3>Why Real APR Decides</h3>
+        <p>An advertised rate ignores the fee; a real APR doesn't. Origination fees and points are paid before the first payment, so the borrower receives less than the loan amount while owing payments on all of it. Spreading that shortfall over the loan's life gives the real APR — here it turns a 10.99% loan with a 5% fee into a 13.25% loan, the honest number to compare against your debts. The comparison on the other side is honest too: your debts' blended APR is computed from their real payment stream under an avalanche payoff, not from a naive average of rates. If the loan's real APR is lower, consolidation saves money — the table also shows by how much, in total interest. If it's higher, no rearrangement of payments fixes that; the red verdict means walk away or negotiate the fee down.</p>
+        <h3>The Traps Around the Verdict</h3>
+        <p>A green verdict still leaves three traps. <strong>Term stretch:</strong> a lower payment over a much longer term can quietly return the interest saving — watch the payoff-time row, not just the monthly one. <strong>Upfront cash:</strong> the fee comes off the top, so the loan must be sized to cover every balance after fees, or you bring cash to closing (the defaults need $250). <strong>Refill risk:</strong> consolidation empties the cards; if they fill again while the loan is still running, you now own both debts — the classic way consolidation makes things worse. Close or freeze the cards, keep the total monthly outlay at the old level if you can, and the plan works. And fix the root cause — a budget that spends less than it earns — because no loan structure outruns a deficit.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>How can a lower-rate loan still lose?</h4>
+        <p>Fees and time. A big enough fee pushes the real APR above your debts' blended APR (try 20% above), and a long enough term piles the interest back on even at a lower rate.</p>
+        <h4>What is my debts' blended APR?</h4>
+        <p>The single rate that explains your actual combined payment stream — computed by simulating the avalanche payoff of your debts and solving for the rate that amortizes the combined balance with exactly those payments.</p>
+        <h4>What if the loan is smaller than my balances?</h4>
+        <p>After the fee, whatever it doesn't cover stays behind: the upfront-cash-flow row shows the gap as a negative number — cash you'd need, or the smallest debt left out of the deal.</p>
+        <h4>Will consolidating hurt my credit score?</h4>
+        <p>Slightly and briefly (hard inquiry, new account), usually offset by the utilization drop from paying cards off and by the on-time-payment record the single loan creates.</p>
+    </section>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="debt-payoff.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Debt Payoff Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Skip the new loan: the cheapest order to pay the debts you have.</p>
+            </a>
+            <a href="apr.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">APR Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The real APR of any loan once its fees are counted.</p>
+            </a>
+            <a href="loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Price a consolidation loan to replace the cards.</p>
+            </a>
+            <a href="debt-to-income.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Debt-to-Income Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">How the whole pile weighs against your income.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        function calculateConsolidation() {
-            const currentBalance = parseFloat(document.getElementById('dcCurrentBalance').value);
-            const currentApr = parseFloat(document.getElementById('dcCurrentRate').value) / 100;
-            
-            const newBalance = parseFloat(document.getElementById('dcNewBalance').value);
-            const newApr = parseFloat(document.getElementById('dcNewRate').value) / 100;
-            const newTerm = parseFloat(document.getElementById('dcNewTerm').value);
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (isNaN(currentBalance) || isNaN(currentApr) || isNaN(newBalance) || isNaN(newApr) || isNaN(newTerm)) {
-                alert("Please enter valid numbers.");
-                return;
-            }
-
-            // Assume current debt takes 5 years (60 months) to pay off if paying minimums
-            // For a more accurate comparison, we'd need the current monthly payment. 
-            // Here we calculate what the current monthly payment would be over the same new term.
-            const currentMonthlyRate = currentApr / 12;
-            const currentPayment = currentBalance * (currentMonthlyRate * Math.pow(1 + currentMonthlyRate, newTerm)) / (Math.pow(1 + currentMonthlyRate, newTerm) - 1);
-            
-            const newMonthlyRate = newApr / 12;
-            const newPayment = newBalance * (newMonthlyRate * Math.pow(1 + newMonthlyRate, newTerm)) / (Math.pow(1 + newMonthlyRate, newTerm) - 1);
-
-            const currentTotalPaid = currentPayment * newTerm;
-            const newTotalPaid = newPayment * newTerm;
-
-            const interestSaved = currentTotalPaid - newTotalPaid;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('dcCurrentPayment').textContent = formatter.format(currentPayment);
-            document.getElementById('dcNewPayment').textContent = formatter.format(newPayment);
-            
-            const savedEl = document.getElementById('dcInterestSaved');
-            savedEl.textContent = formatter.format(interestSaved);
-            
-            if (interestSaved > 0) {
-                savedEl.className = "text-xl font-bold text-green-600";
-            } else {
-                savedEl.className = "text-xl font-bold text-red-600";
-            }
-
-            document.getElementById('dcResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const MAXC = 20, VISIBLE = 6;
+let showMore = false, feeUnit = 'p';
+const numOf = el => { const v = parseFloat(String(el.value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function buildRows() {
+  let h = '';
+  const defaults = { 1: ['Credit card 1', 10000, 260, 17.99], 2: ['Credit card 2', 7500, 190, 19.99], 3: ['High interest debt', 6500, 180, 18.99] };
+  for (let k = 1; k <= MAXC; k++) {
+    const d = defaults[k] || ['', '', '', ''];
+    h += '<tr class="' + (k > VISIBLE ? 'extra_row hidden' : '') + '"><td class="p-2 text-gray-400">' + k + '.</td>' +
+      '<td class="p-1"><input id="nm' + k + '" type="text" value="' + d[0] + '" class="w-full border border-gray-300 rounded-lg p-2" oninput="calc()"></td>' +
+      '<td class="p-1"><input id="bal' + k + '" type="number" value="' + d[1] + '" min="0" step="any" class="w-full border border-gray-300 rounded-lg p-2 num" oninput="calc()"></td>' +
+      '<td class="p-1"><input id="min' + k + '" type="number" value="' + d[2] + '" min="0" step="any" class="w-full border border-gray-300 rounded-lg p-2 num" oninput="calc()"></td>' +
+      '<td class="p-1"><input id="apr' + k + '" type="number" value="' + d[3] + '" min="0" step="any" class="w-full border border-gray-300 rounded-lg p-2 num" oninput="calc()"></td></tr>';
+  }
+  $('card_rows').innerHTML = h;
+}
+function toggleMore() {
+  showMore = !showMore;
+  document.querySelectorAll('.extra_row').forEach(r => r.classList.toggle('hidden', !showMore));
+  $('more_btn').textContent = showMore ? 'Hide extra fields' : 'Show more input fields';
+}
+function setFeeUnit(u) {
+  if (u !== feeUnit) {
+    const amt = numOf($('p_amount')), v = numOf($('p_fee'));
+    if (amt > 0) $('p_fee').value = u === 'd' ? Math.round(amt * v / 100) : Math.round(10000 * v / amt) / 100;
+    feeUnit = u;
+  }
+  $('fee_pct').className = 'font-bold px-4 rounded-lg transition text-sm ' + (feeUnit === 'p' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  $('fee_usd').className = 'font-bold px-4 rounded-lg transition text-sm ' + (feeUnit === 'd' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  calc();
+}
+function termText(n) {
+  const y = Math.floor(n / 12), m = n % 12;
+  return n + ' months (' + ((y ? y + (y === 1 ? ' year' : ' years') : '') + (y && m ? ' and ' : '') + (m ? m + (m === 1 ? ' month' : ' months') : (y ? '' : '0 months'))) + ')';
+}
+function simulateDebts(debtsIn, pool) {
+  const debts = debtsIn.map(d => ({ ...d, bal: d.balance, totInt: 0, totPay: 0 }));
+  const order = [...debts].sort((a, b) => b.rate - a.rate);
+  let month = 0, stuck = false; const cashflows = [];
+  while (debts.some(d => d.bal > 0.000001)) {
+    month++;
+    if (month > 2400) { stuck = true; break; }
+    for (const d of debts) if (d.bal > 0) { const it = d.bal * d.rate / 1200; d.bal += it; d.totInt += it; }
+    let money = pool; const paid = new Map();
+    for (const d of debts) { if (d.bal <= 0) continue; const p = Math.min(d.pay, d.bal, money); if (p > 0) paid.set(d, p); money -= p; }
+    for (const d of order) { if (money <= 0.000001) break; if (d.bal <= 0) continue; const owed = d.bal - (paid.get(d) || 0); const e = Math.min(owed, money); if (e > 0) { paid.set(d, (paid.get(d) || 0) + e); money -= e; } }
+    let mp = 0;
+    for (const d of debts) { const p = paid.get(d) || 0; if (p > 0) { d.bal -= p; d.totPay += p; mp += p; } }
+    cashflows.push(mp);
+  }
+  return { months: month, totInt: debts.reduce((s, d) => s + d.totInt, 0), totPay: debts.reduce((s, d) => s + d.totPay, 0), cashflows, stuck };
+}
+function irrApr(cashflows, principal) {
+  let lo = 0, hi = 0.2;
+  const npv = i => { let s = -principal; cashflows.forEach((cf, t) => { s += cf / Math.pow(1 + i, t + 1); }); return s; };
+  if (npv(hi) > 0) return null;
+  for (let k = 0; k < 200; k++) { const mid = (lo + hi) / 2; if (npv(mid) > 0) lo = mid; else hi = mid; }
+  return (lo + hi) / 2 * 12 * 100;
+}
+function calc() {
+  const debtsIn = [];
+  for (let k = 1; k <= MAXC; k++) {
+    const bal = numOf($('bal' + k));
+    if (bal > 0) debtsIn.push({ idx: k, name: $('nm' + k).value.trim() || ('Debt ' + k), balance: bal, pay: numOf($('min' + k)), rate: numOf($('apr' + k)) });
+  }
+  const out = $('p_results');
+  if (!debtsIn.length) { out.innerHTML = ''; updateShare(); return; }
+  const totalBal = debtsIn.reduce((s, d) => s + d.balance, 0);
+  const totalPay = debtsIn.reduce((s, d) => s + d.pay, 0);
+  const sim = simulateDebts(debtsIn, totalPay);
+  if (sim.stuck) {
+    out.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-5"><div class="font-bold">These payments never clear the existing debts.</div><p class="text-sm mt-1">The combined payments do not beat the combined interest, so there is no payoff stream to compare. Raise a payment first — then judge the consolidation loan.</p></div>';
+    updateShare(); return;
+  }
+  const debtsApr = irrApr(sim.cashflows, totalBal);
+  const amt = numOf($('p_amount')), lrate = numOf($('p_lrate'));
+  const n = Math.round(numOf($('p_lyears'))) * 12 + Math.round(numOf($('p_lmonths')));
+  const feeVal = numOf($('p_fee'));
+  const fee = feeUnit === 'p' ? amt * feeVal / 100 : feeVal;
+  if (amt <= 0 || n <= 0) { out.innerHTML = '<p class="text-sm text-gray-500">Enter a loan amount and a term of at least one month.</p>'; updateShare(); return; }
+  const li = lrate / 1200;
+  const pmt = li > 0 ? amt * li / (1 - Math.pow(1 + li, -n)) : amt / n;
+  const loanInt = pmt * n - amt;
+  const net = amt - fee;
+  let realApr;
+  if (fee <= 0) realApr = lrate;
+  else if (net <= 0) realApr = Infinity;
+  else { let lo = li, hi2 = li + 0.05; const f = r => net * r / (1 - Math.pow(1 + r, -n)) - pmt; while (f(hi2) < 0 && hi2 < 1) { lo = hi2; hi2 *= 1.5; } for (let k = 0; k < 200; k++) { const mid = (lo + hi2) / 2; if (f(mid) < 0) lo = mid; else hi2 = mid; } realApr = (lo + hi2) / 2 * 12 * 100; }
+  const upfront = net - totalBal;
+  const saves = realApr < debtsApr;
+  const verdictCls = saves ? 'bg-[#4CAF50]' : 'bg-red-500';
+  const verdictTitle = saves ? 'This consolidation loan will save you money.' : 'This consolidation loan costs more than your current debts.';
+  let h = '<div class="' + verdictCls + ' text-white rounded-xl p-5"><div class="text-sm opacity-90">The APR of your current debts is <strong>' + debtsApr.toFixed(2) + '%</strong>. The real APR of the consolidation loan, fee included, is <strong>' + (isFinite(realApr) ? realApr.toFixed(2) + '%' : '—') + '</strong>.</div><div class="text-2xl font-extrabold mt-1">' + verdictTitle + '</div><div class="text-sm opacity-90 mt-1">After the loan fee of ' + fmt$(fee) + ', you receive ' + fmt$(net) + ' toward your remaining debt balance of ' + fmt$(totalBal) + '.' + (upfront < 0 ? ' You will need an additional ' + fmt$(-upfront) + ' to clear every debt.' : upfront > 0 ? ' That leaves ' + fmt$(upfront) + ' over — best sent straight back into the new loan.' : '') + '</div></div>';
+  const row = (label, a, b) => '<tr class="border-b border-gray-100"><td class="p-2 text-gray-500">' + label + '</td><td class="p-2 text-right font-medium">' + a + '</td><td class="p-2 text-right font-medium">' + b + '</td></tr>';
+  h += '<div class="overflow-x-auto mt-4"><table class="w-full text-sm num"><thead><tr class="text-left text-gray-500 border-b border-gray-200"><th class="p-2"></th><th class="p-2 text-right">Existing debts</th><th class="p-2 text-right">Consolidation loan</th></tr></thead><tbody>' +
+    row('APR', debtsApr.toFixed(2) + '%', isFinite(realApr) ? realApr.toFixed(2) + '%' : '—') +
+    row('Monthly pay', fmt$(totalPay), fmt$(pmt)) +
+    row('Time to payoff', termText(sim.months), termText(n)) +
+    row('Loan fee / points', '$0.00', fmt$(fee)) +
+    row('Upfront cash flow for consolidation', '$0.00', (upfront < 0 ? '−' : '') + fmt$(Math.abs(upfront))) +
+    row('Total payments', fmt$(sim.totPay), fmt$(pmt * n)) +
+    row('Total interest', fmt$(sim.totInt), fmt$(loanInt)) +
+    '</tbody></table></div>';
+  h += '<p class="text-xs text-gray-400 mt-2">*The existing-debts figures assume you keep paying ' + fmt$(totalPay) + ' per month in total, highest rate first, until everything is paid off.</p>';
+  out.innerHTML = h;
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ amt: $('p_amount').value, lr: $('p_lrate').value, ly: $('p_lyears').value, lm: $('p_lmonths').value, fee: $('p_fee').value, fu: feeUnit });
+  for (let k = 1; k <= MAXC; k++) { if (numOf($('bal' + k)) > 0) { q.set('nm' + k, $('nm' + k).value); q.set('bal' + k, $('bal' + k).value); q.set('min' + k, $('min' + k).value); q.set('apr' + k, $('apr' + k).value); } }
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+buildRows();
+(function init() {
+  const q = new URLSearchParams(location.search);
+  if (q.get('amt')) $('p_amount').value = q.get('amt');
+  if (q.get('lr')) $('p_lrate').value = q.get('lr');
+  if (q.get('ly')) $('p_lyears').value = q.get('ly');
+  if (q.get('lm')) $('p_lmonths').value = q.get('lm');
+  if (q.get('fee')) $('p_fee').value = q.get('fee');
+  let anyExtra = false;
+  for (let k = 1; k <= MAXC; k++) { if (q.get('bal' + k)) { $('bal' + k).value = q.get('bal' + k); if (q.get('nm' + k)) $('nm' + k).value = q.get('nm' + k); if (q.get('min' + k)) $('min' + k).value = q.get('min' + k); if (q.get('apr' + k)) $('apr' + k).value = q.get('apr' + k); if (k > VISIBLE) anyExtra = true; } }
+  if (anyExtra) toggleMore();
+  if (q.get('fu') === 'd') { feeUnit = 'p'; setFeeUnit('d'); } else calc();
+})();
+</script>
 </body>
 </html>
