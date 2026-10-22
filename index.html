@@ -1,109 +1,405 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CalcNova - Free Online Calculators</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CalcNova — Free Online Calculators: Finance, Real Estate, Tax &amp; More</title>
+<meta name="description" content="Free online calculators for quick calculations: a full scientific calculator plus 71 in-depth financial calculators — mortgage, loans, retirement, taxes, investing and more.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/">
+<meta property="og:title" content="CalcNova — Free Online Calculators">
+<meta property="og:description" content="A scientific calculator and 71 free, in-depth financial calculators. No sign-up, no fees.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    .num { font-variant-numeric: tabular-nums; }
+    #sciInPut { min-height: 1.75rem; word-break: break-all; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"CalcNova","url":"https://calcnova.mustaphatammouz59.workers.dev/","potentialAction":{"@type":"SearchAction","target":"https://calcnova.mustaphatammouz59.workers.dev/financial?q={query}","query-input":"required name=query"}}
+</script>
 </head>
 <body class="text-gray-800">
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="real-estate.html" class="hover:text-[#14B8A6] transition">Real Estate</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
+        </div>
+    </div>
+</nav>
 
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-                <a href="#" class="hover:text-[#14B8A6] transition">Health</a>
-                <a href="#" class="hover:text-[#14B8A6] transition">Math</a>
-                <a href="#" class="hover:text-[#14B8A6] transition">Other</a>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start mb-10">
+        <!-- Scientific calculator -->
+        <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+            <div class="bg-[#F1F5F9] border border-gray-200 rounded-lg px-4 py-3 mb-3 text-right">
+                <div id="sciInPut" class="text-gray-500 text-lg num"></div>
+                <div id="sciOutPut" class="text-3xl font-bold text-gray-900 num">0</div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="grid grid-cols-5 gap-1.5">
+<button onclick="press('sin')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">sin</button>
+<button onclick="press('cos')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">cos</button>
+<button onclick="press('tan')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">tan</button>
+<span class="flex items-center justify-center gap-2 text-sm bg-[#E8EAF6] rounded-lg py-2"><label class="cursor-pointer"><input type="radio" name="anglemode" value="deg" checked class="accent-[#3F51B5]" onchange="angleMode='deg'"> Deg</label><label class="cursor-pointer"><input type="radio" name="anglemode" value="rad" class="accent-[#3F51B5]" onchange="angleMode='rad'"> Rad</label></span>
+<button onclick="press('asin')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">sin⁻¹</button>
+<button onclick="press('acos')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">cos⁻¹</button>
+<button onclick="press('atan')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">tan⁻¹</button>
+<button onclick="press('pi')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">π</button>
+<button onclick="press('e')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">e</button>
+<button onclick="press('pow')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">xʸ</button>
+<button onclick="press('x3')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">x³</button>
+<button onclick="press('x2')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">x²</button>
+<button onclick="press('ex')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">eˣ</button>
+<button onclick="press('10x')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">10ˣ</button>
+<button onclick="press('apow')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">ʸ√x</button>
+<button onclick="press('cbrt')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">∛x</button>
+<button onclick="press('sqrt')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">√x</button>
+<button onclick="press('ln')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">ln</button>
+<button onclick="press('log')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">log</button>
+<button onclick="press('lp')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">(</button>
+<button onclick="press('rp')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">)</button>
+<button onclick="press('inv')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">1/x</button>
+<button onclick="press('pc')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">%</button>
+<button onclick="press('fact')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">n!</button>
+                </div>
+                <div class="grid grid-cols-5 gap-1.5 content-start">
+<button onclick="press('7')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">7</button>
+<button onclick="press('8')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">8</button>
+<button onclick="press('9')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">9</button>
+<button onclick="press('+')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">+</button>
+<button onclick="press('bk')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">Back</button>
+<button onclick="press('4')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">4</button>
+<button onclick="press('5')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">5</button>
+<button onclick="press('6')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">6</button>
+<button onclick="press('-')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">−</button>
+<button onclick="press('ans')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">ans</button>
+<button onclick="press('1')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">1</button>
+<button onclick="press('2')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">2</button>
+<button onclick="press('3')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">3</button>
+<button onclick="press('*')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">×</button>
+<button onclick="press('M+')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">M+</button>
+<button onclick="press('0')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">0</button>
+<button onclick="press('.')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">.</button>
+<button onclick="press('EXP')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">EXP</button>
+<button onclick="press('/')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">÷</button>
+<button onclick="press('M-')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">M-</button>
+<button onclick="press('+/-')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">+/-</button>
+<button onclick="press('RND')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">RND</button>
+<button onclick="press('C')" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold rounded-lg py-2 text-sm sm:text-base transition">AC</button>
+<button onclick="press('=')" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold rounded-lg py-2 text-sm sm:text-base transition">=</button>
+<button onclick="press('MR')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">MR</button>
+                </div>
+            </div>
+            <div id="scihistory" class="mt-3 text-sm text-gray-400 num space-y-0.5"></div>
+        </div>
+        <!-- Title + search -->
+        <div class="lg:col-span-2">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Free Online Calculators</h1>
+            <p class="mt-3 text-gray-600">Use the scientific calculator for quick math, or search 71 in-depth calculators covering mortgages, loans, investing, retirement, taxes and everyday money decisions.</p>
+            <div class="relative mt-5">
+                <div class="flex gap-2">
+                    <input id="calcSearchTerm" type="text" placeholder="Search calculators — try &quot;mortgage&quot;" autocomplete="off"
+                        class="flex-1 border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-[#3F51B5] bg-white"
+                        oninput="calcSearch()" onkeydown="if(event.key==='Enter'){event.preventDefault(); goFirst();}">
+                    <button onclick="goFirst()" class="bg-[#3F51B5] hover:bg-[#303F9F] text-white font-semibold px-5 rounded-lg transition">Search</button>
+                </div>
+                <div id="calcSearchOut" class="absolute z-10 left-0 right-0 mt-1"></div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-2 text-sm">
+                <span class="text-gray-500 py-1">Popular:</span>
+                <a href="mortgage.html" class="bg-white border border-gray-200 rounded-full px-3 py-1 hover:border-[#3F51B5] hover:text-[#3F51B5]">Mortgage</a>
+                <a href="compound-interest.html" class="bg-white border border-gray-200 rounded-full px-3 py-1 hover:border-[#3F51B5] hover:text-[#3F51B5]">Compound Interest</a>
+                <a href="retirement.html" class="bg-white border border-gray-200 rounded-full px-3 py-1 hover:border-[#3F51B5] hover:text-[#3F51B5]">Retirement</a>
+                <a href="currency.html" class="bg-white border border-gray-200 rounded-full px-3 py-1 hover:border-[#3F51B5] hover:text-[#3F51B5]">Currency</a>
+                <a href="budget.html" class="bg-white border border-gray-200 rounded-full px-3 py-1 hover:border-[#3F51B5] hover:text-[#3F51B5]">Budget</a>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <!-- Hero Section -->
-    <header class="bg-white py-16 text-center border-b border-gray-200">
-        <div class="container mx-auto px-4">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-[#3F51B5] mb-4">Free Online Calculators</h1>
-            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">Fast, reliable, and completely free calculators for finance, health, math, and everyday life.</p>
-            
-            <!-- Search Bar Placeholder -->
-            <div class="max-w-xl mx-auto flex bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm">
-                <input type="text" placeholder="Search for a calculator (e.g., Mortgage)..." class="w-full px-4 py-3 outline-none text-gray-700">
-                <button class="bg-[#14B8A6] text-white px-6 font-semibold hover:bg-teal-600 transition">Search</button>
-            </div>
+    <!-- AdSense: leaderboard -->
+    <div class="mb-10 flex justify-center">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center w-full max-w-[728px] min-h-[90px]">Advertisement — 728 × 90</div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <a href="financial.html"><img src="img/financial.jpg" width="135" height="135" alt="Financial Calculators" class="rounded-lg mb-3"></a>
+            <a href="financial.html" class="text-xl font-bold text-gray-800 hover:text-[#3F51B5]">Financial Calculators</a>
+            <ul class="mt-3 space-y-1.5 text-[15px]"><li><a href="mortgage.html" class="text-[#3F51B5] hover:underline">Mortgage Calculator</a></li>
+<li><a href="loan.html" class="text-[#3F51B5] hover:underline">Loan Calculator</a></li>
+<li><a href="auto-loan.html" class="text-[#3F51B5] hover:underline">Auto Loan Calculator</a></li>
+<li><a href="interest.html" class="text-[#3F51B5] hover:underline">Interest Calculator</a></li>
+<li><a href="payment.html" class="text-[#3F51B5] hover:underline">Payment Calculator</a></li>
+<li><a href="retirement.html" class="text-[#3F51B5] hover:underline">Retirement Calculator</a></li>
+<li><a href="amortization.html" class="text-[#3F51B5] hover:underline">Amortization Calculator</a></li>
+<li><a href="investment.html" class="text-[#3F51B5] hover:underline">Investment Calculator</a></li>
+<li><a href="inflation.html" class="text-[#3F51B5] hover:underline">Inflation Calculator</a></li>
+<li><a href="finance.html" class="text-[#3F51B5] hover:underline">Finance Calculator</a></li>
+<li><a href="income-tax.html" class="text-[#3F51B5] hover:underline">Income Tax Calculator</a></li>
+<li><a href="compound-interest.html" class="text-[#3F51B5] hover:underline">Compound Interest Calculator</a></li>
+<li><a href="salary.html" class="text-[#3F51B5] hover:underline">Salary Calculator</a></li>
+<li><a href="interest-rate.html" class="text-[#3F51B5] hover:underline">Interest Rate Calculator</a></li>
+<li><a href="sales-tax.html" class="text-[#3F51B5] hover:underline">Sales Tax Calculator</a></li></ul>
         </div>
-    </header>
-
-    <!-- Categories Grid -->
-    <main class="container mx-auto px-4 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            
-            <!-- Card 1: Financial -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                <h2 class="text-xl font-bold text-[#3F51B5] mb-4 border-b pb-2">Financial</h2>
-                <ul class="space-y-2">
-                    <li><a href="mortgage.html" class="text-gray-600 hover:text-[#14B8A6] transition">Mortgage Calculator</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Loan Calculator</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Auto Loan Calculator</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Interest Calculator</a></li>
-                </ul>
-                <a href="financial.html" class="block mt-4 text-sm font-semibold text-[#14B8A6] hover:underline">View all Financial →</a>
-            </div>
-
-            <!-- Card 2: Health -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                <h2 class="text-xl font-bold text-[#3F51B5] mb-4 border-b pb-2">Fitness & Health</h2>
-                <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">BMI Calculator</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Calorie Calculator</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Body Fat Calculator</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">BMR Calculator</a></li>
-                </ul>
-                <a href="#" class="block mt-4 text-sm font-semibold text-[#14B8A6] hover:underline">View all Health →</a>
-            </div>
-
-            <!-- Card 3: Math -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                <h2 class="text-xl font-bold text-[#3F51B5] mb-4 border-b pb-2">Math</h2>
-                <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Scientific Calculator</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Fraction Calculator</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Percentage Calculator</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Random Number Generator</a></li>
-                </ul>
-                <a href="#" class="block mt-4 text-sm font-semibold text-[#14B8A6] hover:underline">View all Math →</a>
-            </div>
-
-            <!-- Card 4: Other -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                <h2 class="text-xl font-bold text-[#3F51B5] mb-4 border-b pb-2">Other</h2>
-                <ul class="space-y-2">
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Age Calculator</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Date Calculator</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">Time Calculator</a></li>
-                    <li><a href="#" class="text-gray-600 hover:text-[#14B8A6] transition">GPA Calculator</a></li>
-                </ul>
-                <a href="#" class="block mt-4 text-sm font-semibold text-[#14B8A6] hover:underline">View all Other →</a>
-            </div>
-
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <a href="real-estate.html"><img src="img/real-estate.jpg" width="135" height="135" alt="Real Estate Calculators" class="rounded-lg mb-3"></a>
+            <a href="real-estate.html" class="text-xl font-bold text-gray-800 hover:text-[#3F51B5]">Real Estate Calculators</a>
+            <ul class="mt-3 space-y-1.5 text-[15px]"><li><a href="mortgage.html" class="text-[#3F51B5] hover:underline">Mortgage Calculator</a></li>
+<li><a href="house-affordability.html" class="text-[#3F51B5] hover:underline">House Affordability Calculator</a></li>
+<li><a href="amortization.html" class="text-[#3F51B5] hover:underline">Amortization Calculator</a></li>
+<li><a href="refinance.html" class="text-[#3F51B5] hover:underline">Refinance Calculator</a></li>
+<li><a href="rent-vs-buy.html" class="text-[#3F51B5] hover:underline">Rent vs. Buy Calculator</a></li>
+<li><a href="down-payment.html" class="text-[#3F51B5] hover:underline">Down Payment Calculator</a></li>
+<li><a href="fha-loan.html" class="text-[#3F51B5] hover:underline">FHA Loan Calculator</a></li>
+<li><a href="va-mortgage.html" class="text-[#3F51B5] hover:underline">VA Mortgage Calculator</a></li>
+<li><a href="home-equity-loan.html" class="text-[#3F51B5] hover:underline">Home Equity Loan Calculator</a></li>
+<li><a href="heloc.html" class="text-[#3F51B5] hover:underline">HELOC Calculator</a></li>
+<li><a href="rental-property.html" class="text-[#3F51B5] hover:underline">Rental Property Calculator</a></li>
+<li><a href="apr.html" class="text-[#3F51B5] hover:underline">APR Calculator</a></li>
+<li><a href="debt-to-income.html" class="text-[#3F51B5] hover:underline">Debt-to-Income Ratio Calculator</a></li>
+<li><a href="rent.html" class="text-[#3F51B5] hover:underline">Rent Calculator</a></li></ul>
         </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <a href="financial.html"><img src="img/tax-income.jpg" width="135" height="135" alt="Tax & Income Calculators" class="rounded-lg mb-3"></a>
+            <a href="financial.html" class="text-xl font-bold text-gray-800 hover:text-[#3F51B5]">Tax & Income Calculators</a>
+            <ul class="mt-3 space-y-1.5 text-[15px]"><li><a href="income-tax.html" class="text-[#3F51B5] hover:underline">Income Tax Calculator</a></li>
+<li><a href="salary.html" class="text-[#3F51B5] hover:underline">Salary Calculator</a></li>
+<li><a href="take-home-paycheck.html" class="text-[#3F51B5] hover:underline">Take-Home-Paycheck Calculator</a></li>
+<li><a href="marriage-tax.html" class="text-[#3F51B5] hover:underline">Marriage Tax Calculator</a></li>
+<li><a href="estate-tax.html" class="text-[#3F51B5] hover:underline">Estate Tax Calculator</a></li>
+<li><a href="sales-tax.html" class="text-[#3F51B5] hover:underline">Sales Tax Calculator</a></li>
+<li><a href="vat.html" class="text-[#3F51B5] hover:underline">VAT Calculator</a></li>
+<li><a href="currency.html" class="text-[#3F51B5] hover:underline">Currency Calculator</a></li>
+<li><a href="budget.html" class="text-[#3F51B5] hover:underline">Budget Calculator</a></li>
+<li><a href="commission.html" class="text-[#3F51B5] hover:underline">Commission Calculator</a></li></ul>
         </div>
-    </footer>
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <a href="financial.html"><img src="img/loans-debt.jpg" width="135" height="135" alt="Loans & Debt Calculators" class="rounded-lg mb-3"></a>
+            <a href="financial.html" class="text-xl font-bold text-gray-800 hover:text-[#3F51B5]">Loans & Debt Calculators</a>
+            <ul class="mt-3 space-y-1.5 text-[15px]"><li><a href="credit-card.html" class="text-[#3F51B5] hover:underline">Credit Card Calculator</a></li>
+<li><a href="credit-cards-payoff.html" class="text-[#3F51B5] hover:underline">Credit Cards Payoff Calculator</a></li>
+<li><a href="debt-payoff.html" class="text-[#3F51B5] hover:underline">Debt Payoff Calculator</a></li>
+<li><a href="debt-consolidation.html" class="text-[#3F51B5] hover:underline">Debt Consolidation Calculator</a></li>
+<li><a href="repayment.html" class="text-[#3F51B5] hover:underline">Repayment Calculator</a></li>
+<li><a href="personal-loan.html" class="text-[#3F51B5] hover:underline">Personal Loan Calculator</a></li>
+<li><a href="business-loan.html" class="text-[#3F51B5] hover:underline">Business Loan Calculator</a></li>
+<li><a href="student-loan.html" class="text-[#3F51B5] hover:underline">Student Loan Calculator</a></li>
+<li><a href="boat-loan.html" class="text-[#3F51B5] hover:underline">Boat Loan Calculator</a></li>
+<li><a href="lease.html" class="text-[#3F51B5] hover:underline">Lease Calculator</a></li>
+<li><a href="auto-lease.html" class="text-[#3F51B5] hover:underline">Auto Lease Calculator</a></li>
+<li><a href="cash-back-or-low-interest.html" class="text-[#3F51B5] hover:underline">Cash Back or Low Interest Calculator</a></li></ul>
+        </div>
+    </div>
 
+    <!-- AdSense: in-article -->
+    <div class="mb-10">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
+
+    <div class="text-center mb-10">
+        <a href="financial.html" class="inline-block bg-[#3F51B5] hover:bg-[#303F9F] text-white font-bold text-lg px-10 py-4 rounded-xl transition shadow-sm">All 71 Calculators →</a>
+    </div>
+
+    <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 text-gray-600">
+        <h2 class="text-xl font-bold text-gray-800 mb-3">About CalcNova</h2>
+        <p>CalcNova's sole focus is to provide fast, comprehensive, convenient, free online calculators. We currently offer 71 calculators in finance — mortgages and real estate, loans and debt, investing, retirement, taxes and income — each built and tested individually, each with the in-depth explanation its topic deserves, and we are still developing more. Our goal is to become the one-stop, go-to site for people who need to make quick calculations, and we believe the internet should be a source of free information: every tool here is completely free, with no registration required.</p>
+        <p class="mt-3">Every calculator was coded and put through comprehensive testing against published reference results. If you notice even the slightest error, your input is extremely valuable to us — accuracy is the whole point. While most CalcNova calculators are designed to be universally applicable for worldwide usage, some are for specific countries only; for example, the Income Tax Calculator is for United States residents only.</p>
+    </section>
+</main>
+
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="real-estate.html" class="hover:text-white">Real Estate</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+/* ============ scientific calculator (original implementation) ============ */
+let tokens = [], ansVal = 0, memVal = 0, angleMode = 'deg';
+const T = {
+  num: d => ({ k: 'num', d: String(d), val: null }),
+  numv: v => ({ k: 'num', d: fmtVal(v), val: v }),
+  op: (d, v) => ({ k: 'op', d, v }),
+  fn: (d, name) => ({ k: 'fn', d, name }),
+  lp: () => ({ k: 'lp', d: '(' }),
+  rp: () => ({ k: 'rp', d: ')' }),
+  cnst: (d, val) => ({ k: 'const', d, val }),
+  post: (d, kind) => ({ k: 'post', d, kind }),
+};
+function lastTok() { return tokens[tokens.length - 1]; }
+function press(key) {
+  if (/^[0-9]$/.test(key)) {
+    const l = lastTok();
+    if (l && l.k === 'num' && l.val === null) l.d += key;
+    else if (l && l.k === 'rp') { tokens.push(T.op('×', '*'), T.num(key)); }
+    else tokens.push(T.num(key));
+  } else if (key === '.') {
+    const l = lastTok();
+    if (l && l.k === 'num' && l.val === null) { if (!l.d.includes('.')) l.d += '.'; }
+    else tokens.push(T.num('0.'));
+  } else if (['+', '-', '*', '/'].includes(key)) {
+    const d = { '+': '+', '-': '−', '*': '×', '/': '÷' }[key];
+    if (!tokens.length && key !== '-') return render();
+    tokens.push(T.op(d, key));
+  } else if (key === 'pow') tokens.push(T.op('^', '^'));
+  else if (key === 'apow') tokens.push(T.op(' ʸ√ ', 'root'));
+  else if (key === 'EXP') tokens.push(T.op('E', 'exp'));
+  else if (key === 'lp') { const l = lastTok(); if (l && (l.k === 'num' || l.k === 'const' || l.k === 'rp' || l.k === 'post')) tokens.push(T.op('×', '*')); tokens.push(T.lp()); }
+  else if (key === 'rp') tokens.push(T.rp());
+  else if (key === 'pi') tokens.push(T.cnst('π', Math.PI));
+  else if (key === 'e') tokens.push(T.cnst('e', Math.E));
+  else if (key === 'ans') tokens.push(T.numv(ansVal));
+  else if (key === 'MR') tokens.push(T.numv(memVal));
+  else if (['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'ln', 'log', 'sqrt', 'cbrt'].includes(key)) {
+    const d = { sin: 'sin(', cos: 'cos(', tan: 'tan(', asin: 'sin⁻¹(', acos: 'cos⁻¹(', atan: 'tan⁻¹(', ln: 'ln(', log: 'log(', sqrt: '√(', cbrt: '∛(' }[key];
+    tokens.push(T.fn(d, key));
+  }
+  else if (key === 'ex') { tokens.push(T.fn('e^(', 'exp')); }
+  else if (key === '10x') { tokens.push(T.fn('10^(', 'pow10')); }
+  else if (key === 'x2') tokens.push(T.post('²', 'sq'));
+  else if (key === 'x3') tokens.push(T.post('³', 'cb'));
+  else if (key === 'inv') tokens.push(T.post('⁻¹', 'inv'));
+  else if (key === 'pc') tokens.push(T.post('%', 'pct'));
+  else if (key === 'fact') tokens.push(T.post('!', 'fact'));
+  else if (key === 'RND') tokens.push(T.numv(Math.random()));
+  else if (key === '+/-') negateLast();
+  else if (key === 'bk') {
+    const l = lastTok();
+    if (l && l.k === 'num' && l.val === null) { l.d = l.d.slice(0, -1); if (l.d === '' || l.d === '-') tokens.pop(); }
+    else tokens.pop();
+  }
+  else if (key === 'C') { tokens = []; }
+  else if (key === 'M+' || key === 'M-') {
+    const v = tryEval(); if (v !== null) { memVal += (key === 'M+' ? v : -v); flashMem(); }
+    return render(false);
+  }
+  else if (key === '=') {
+    const v = tryEval();
+    if (v !== null) {
+      const expr = tokens.map(t => t.d).join('');
+      ansVal = v;
+      const h = document.getElementById('scihistory');
+      const line = document.createElement('div');
+      line.textContent = expr + ' = ' + fmtVal(v);
+      h.prepend(line);
+      while (h.children.length > 5) h.removeChild(h.lastChild);
+      tokens = [T.numv(v)];
+    }
+    return render(false);
+  }
+  render(true);
+}
+function negateLast() {
+  if (!tokens.length) { tokens.push(T.op('−', '-')); return; }
+  let depth = 0, start = tokens.length - 1;
+  if (lastTok().k === 'rp') { for (let i = tokens.length - 1; i >= 0; i--) { if (tokens[i].k === 'rp') depth++; if (tokens[i].k === 'lp') { depth--; if (depth === 0) { start = i; break; } } if (tokens[i].k === 'fn' && depth === 0) { start = i; break; } } }
+  tokens.splice(start, 0, T.lp(), T.num('-1'), T.op('×', '*'));
+  tokens.push(T.rp());
+}
+function flashMem() { const o = document.getElementById('sciOutPut'); o.style.color = '#3F51B5'; setTimeout(() => o.style.color = '', 350); }
+function gamma(z) { const c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7]; if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gamma(1 - z)); z -= 1; let x = c[0]; for (let i = 1; i < 9; i++) x += c[i] / (z + i); const t = z + 7.5; return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * x; }
+function fact(n) { if (n < 0 && Number.isInteger(n)) return NaN; if (Number.isInteger(n) && n >= 0 && n <= 170) { let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; } return gamma(n + 1); }
+function applyFn(name, x) {
+  const deg = angleMode === 'deg', toRad = v => deg ? v * Math.PI / 180 : v, fromRad = v => deg ? v * 180 / Math.PI : v;
+  switch (name) {
+    case 'sin': return Math.sin(toRad(x)); case 'cos': return Math.cos(toRad(x)); case 'tan': return Math.tan(toRad(x));
+    case 'asin': return fromRad(Math.asin(x)); case 'acos': return fromRad(Math.acos(x)); case 'atan': return fromRad(Math.atan(x));
+    case 'ln': return Math.log(x); case 'log': return Math.log10(x);
+    case 'sqrt': return Math.sqrt(x); case 'cbrt': return Math.cbrt(x);
+    case 'exp': return Math.exp(x); case 'pow10': return Math.pow(10, x);
+  }
+  return NaN;
+}
+function evaluate(toks) {
+  let pos = 0;
+  const peek = () => toks[pos], next = () => toks[pos++];
+  function parseExpr() { let v = parseTerm(); while (peek() && peek().k === 'op' && (peek().v === '+' || peek().v === '-')) { const o = next().v; const r = parseTerm(); v = o === '+' ? v + r : v - r; } return v; }
+  function startsAtom(t) { return t && (t.k === 'num' || t.k === 'const' || t.k === 'lp' || t.k === 'fn'); }
+  function parseTerm() { let v = parseFactor(); for (;;) { const t = peek(); if (t && t.k === 'op' && (t.v === '*' || t.v === '/')) { next(); const r = parseFactor(); v = t.v === '*' ? v * r : v / r; } else if (startsAtom(t)) { v = v * parseFactor(); } else break; } return v; }
+  function parseFactor() {
+    if (peek() && peek().k === 'op' && peek().v === '-') { next(); return -parseFactor(); }
+    if (peek() && peek().k === 'op' && peek().v === '+') { next(); return parseFactor(); }
+    let v = parsePostfixed();
+    const t = peek();
+    if (t && t.k === 'op' && (t.v === '^' || t.v === 'root' || t.v === 'exp')) { next(); const r = parseFactor(); v = t.v === '^' ? Math.pow(v, r) : t.v === 'root' ? Math.pow(r, 1 / v) : v * Math.pow(10, r); }
+    return v;
+  }
+  function parsePostfixed() {
+    let v = parseAtom();
+    while (peek() && peek().k === 'post') { const p = next().kind; v = p === 'sq' ? v * v : p === 'cb' ? v * v * v : p === 'inv' ? 1 / v : p === 'pct' ? v / 100 : fact(v); }
+    return v;
+  }
+  function parseAtom() {
+    const t = next();
+    if (!t) throw new Error('empty');
+    if (t.k === 'num') { const v = t.val !== null ? t.val : parseFloat(t.d); if (isNaN(v)) throw new Error('nan'); return v; }
+    if (t.k === 'const') return t.val;
+    if (t.k === 'fn') { const arg = parsePostfixed(); return applyFn(t.name, arg); }
+    if (t.k === 'lp') { const v = parseExpr(); if (peek() && peek().k === 'rp') next(); return v; }
+    throw new Error('bad token');
+  }
+  const v = parseExpr();
+  return v;
+}
+function closedToks() {
+  const out = tokens.slice();
+  let depth = 0;
+  for (const t of out) { if (t.k === 'lp' || t.k === 'fn') depth++; if (t.k === 'rp') depth--; }
+  while (depth-- > 0) out.push(T.rp());
+  return out;
+}
+function tryEval() { if (!tokens.length) return null; try { const v = evaluate(closedToks()); return (typeof v === 'number' && !isNaN(v)) ? v : null; } catch (e) { return null; } }
+function fmtVal(v) {
+  if (v === null || v === undefined || isNaN(v)) return 'Error';
+  if (!isFinite(v)) return v > 0 ? '∞' : '-∞';
+  const r = parseFloat(v.toPrecision(12));
+  if (r !== 0 && (Math.abs(r) >= 1e15 || Math.abs(r) < 1e-10)) return r.toExponential(7).replace(/(\.\d*?)0+e/, '$1e').replace(/\.e/, 'e');
+  return String(r);
+}
+function render() {
+  document.getElementById('sciInPut').textContent = tokens.map(t => t.d).join('');
+  const out = document.getElementById('sciOutPut');
+  if (!tokens.length) { out.textContent = '0'; return; }
+  const v = tryEval();
+  out.textContent = v !== null ? fmtVal(v) : (tokens.map(t => t.d).join('') || '0');
+}
+document.addEventListener('keydown', e => {
+  if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+  if (/^[0-9.]$/.test(e.key)) press(e.key);
+  else if (['+', '-', '*', '/'].includes(e.key)) press(e.key);
+  else if (e.key === '^') press('pow');
+  else if (e.key === '%') press('pc');
+  else if (e.key === '(') press('lp');
+  else if (e.key === ')') press('rp');
+  else if (e.key === 'Enter' || e.key === '=') { e.preventDefault(); press('='); }
+  else if (e.key === 'Backspace') press('bk');
+  else if (e.key === 'Escape') press('C');
+});
+/* ============ calculator search ============ */
+const CALCS = [{"n": "401K Calculator", "s": "401k.html"}, {"n": "APR Calculator", "s": "apr.html"}, {"n": "Amortization Calculator", "s": "amortization.html"}, {"n": "Annuity Calculator", "s": "annuity.html"}, {"n": "Annuity Payout Calculator", "s": "annuity-payout.html"}, {"n": "Auto Lease Calculator", "s": "auto-lease.html"}, {"n": "Auto Loan Calculator", "s": "auto-loan.html"}, {"n": "Average Return Calculator", "s": "average-return.html"}, {"n": "Boat Loan Calculator", "s": "boat-loan.html"}, {"n": "Bond Calculator", "s": "bond.html"}, {"n": "Budget Calculator", "s": "budget.html"}, {"n": "Business Loan Calculator", "s": "business-loan.html"}, {"n": "CD Calculator", "s": "cd.html"}, {"n": "Cash Back or Low Interest Calculator", "s": "cash-back-or-low-interest.html"}, {"n": "College Cost Calculator", "s": "college-cost.html"}, {"n": "Commission Calculator", "s": "commission.html"}, {"n": "Compound Interest Calculator", "s": "compound-interest.html"}, {"n": "Credit Card Calculator", "s": "credit-card.html"}, {"n": "Credit Cards Payoff Calculator", "s": "credit-cards-payoff.html"}, {"n": "Currency Calculator", "s": "currency.html"}, {"n": "Debt Consolidation Calculator", "s": "debt-consolidation.html"}, {"n": "Debt Payoff Calculator", "s": "debt-payoff.html"}, {"n": "Debt-to-Income Ratio Calculator", "s": "debt-to-income.html"}, {"n": "Depreciation Calculator", "s": "depreciation.html"}, {"n": "Discount Calculator", "s": "discount.html"}, {"n": "Down Payment Calculator", "s": "down-payment.html"}, {"n": "Estate Tax Calculator", "s": "estate-tax.html"}, {"n": "FHA Loan Calculator", "s": "fha-loan.html"}, {"n": "Finance Calculator", "s": "finance.html"}, {"n": "Future Value Calculator", "s": "future-value.html"}, {"n": "HELOC Calculator", "s": "heloc.html"}, {"n": "Home Equity Loan Calculator", "s": "home-equity-loan.html"}, {"n": "House Affordability Calculator", "s": "house-affordability.html"}, {"n": "IRA Calculator", "s": "ira.html"}, {"n": "IRR Calculator", "s": "irr.html"}, {"n": "Income Tax Calculator", "s": "income-tax.html"}, {"n": "Inflation Calculator", "s": "inflation.html"}, {"n": "Interest Calculator", "s": "interest.html"}, {"n": "Interest Rate Calculator", "s": "interest-rate.html"}, {"n": "Investment Calculator", "s": "investment.html"}, {"n": "Lease Calculator", "s": "lease.html"}, {"n": "Loan Calculator", "s": "loan.html"}, {"n": "Margin Calculator", "s": "margin.html"}, {"n": "Marriage Tax Calculator", "s": "marriage-tax.html"}, {"n": "Mortgage Calculator", "s": "mortgage.html"}, {"n": "Mortgage Payoff Calculator", "s": "mortgage-payoff.html"}, {"n": "Mutual Fund Calculator", "s": "mutual-fund.html"}, {"n": "Payback Period Calculator", "s": "payback-period.html"}, {"n": "Payment Calculator", "s": "payment.html"}, {"n": "Pension Calculator", "s": "pension.html"}, {"n": "Personal Loan Calculator", "s": "personal-loan.html"}, {"n": "Present Value Calculator", "s": "present-value.html"}, {"n": "RMD Calculator", "s": "rmd.html"}, {"n": "ROI Calculator", "s": "roi.html"}, {"n": "Real Estate Calculator", "s": "real-estate.html"}, {"n": "Refinance Calculator", "s": "refinance.html"}, {"n": "Rent Calculator", "s": "rent.html"}, {"n": "Rent vs. Buy Calculator", "s": "rent-vs-buy.html"}, {"n": "Rental Property Calculator", "s": "rental-property.html"}, {"n": "Repayment Calculator", "s": "repayment.html"}, {"n": "Retirement Calculator", "s": "retirement.html"}, {"n": "Roth IRA Calculator", "s": "roth-ira.html"}, {"n": "Salary Calculator", "s": "salary.html"}, {"n": "Sales Tax Calculator", "s": "sales-tax.html"}, {"n": "Savings Calculator", "s": "savings.html"}, {"n": "Simple Interest Calculator", "s": "simple-interest.html"}, {"n": "Social Security Calculator", "s": "social-security.html"}, {"n": "Student Loan Calculator", "s": "student-loan.html"}, {"n": "Take-Home-Paycheck Calculator", "s": "take-home-paycheck.html"}, {"n": "VA Mortgage Calculator", "s": "va-mortgage.html"}, {"n": "VAT Calculator", "s": "vat.html"}];
+function calcSearch() {
+  const q = document.getElementById('calcSearchTerm').value.trim().toLowerCase();
+  const box = document.getElementById('calcSearchOut');
+  if (!q) { box.innerHTML = ''; return []; }
+  const hits = CALCS.filter(c => c.n.toLowerCase().includes(q)).slice(0, 8);
+  box.innerHTML = hits.length
+    ? '<div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">' + hits.map(c => '<a href="' + c.s + '" class="block px-4 py-2.5 hover:bg-[#E8EAF6] text-[15px]">' + c.n + '</a>').join('') + '</div>'
+    : '<div class="bg-white border border-gray-200 rounded-lg shadow-lg px-4 py-2.5 text-gray-400 text-[15px]">No calculator matches &quot;' + q + '&quot;</div>';
+  return hits;
+}
+function goFirst() { const hits = calcSearch(); if (hits.length) location.href = hits[0].s; }
+</script>
 </body>
-</html>
+    </html>
