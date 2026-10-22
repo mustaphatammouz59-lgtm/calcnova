@@ -1,178 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Depreciation Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Depreciation Calculator — Straight Line, Declining Balance, SYD | CalcNova</title>
+<meta name="description" content="Free depreciation calculator: straight line, declining balance (including double declining) and sum-of-the-years'-digits schedules, with partial-year conventions and dollar rounding options.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/depreciation">
+<meta property="og:title" content="Depreciation Calculator — Straight Line, Declining Balance, SYD | CalcNova">
+<meta property="og:description" content="Full depreciation schedules by year: beginning book value, rate, depreciation, accumulated and ending book value.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/depreciation">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Depreciation Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/depreciation"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Which depreciation method is best?","acceptedAnswer":{"@type":"Answer","text":"They all depreciate the same total — cost minus salvage — so the choice is about timing and truthfulness. Straight line fits assets that wear evenly. Declining balance (especially double declining) fits assets that lose usefulness or resale value fastest when new, like vehicles and computers. Sum-of-the-years'-digits accelerates too, but more gently and with a guaranteed landing on salvage value. Match the method to how the asset actually ages, and to the rules your tax authority prescribes."}},
+{"@type":"Question","name":"How do I get double declining balance?","acceptedAnswer":{"@type":"Answer","text":"Choose Declining Balance and set the depreciation factor to 2. The annual rate becomes 2 ÷ useful life, applied to the book value (not to cost minus salvage). Depreciation stops when the book value reaches the salvage value."}},
+{"@type":"Question","name":"Why does a partial first year add an extra row?","acceptedAnswer":{"@type":"Answer","text":"Because the asset's service years and your accounting years are offset. If only 2.5/12 of the first service year falls inside the first accounting year, the remaining 9.5/12 of that service year's depreciation lands in the next accounting year — and the spillover pushes a tail of the final service year into one more accounting year. Same total, sliced by the calendar."}},
+{"@type":"Question","name":"Is salvage value always subtracted?","acceptedAnswer":{"@type":"Answer","text":"For straight line and SYD, yes: only cost minus salvage is ever depreciated. For declining balance, salvage is not subtracted in the yearly formula — instead it acts as a floor the book value may not fall below. Either way, the total depreciation over the life equals cost minus salvage."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Depreciation Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Depreciation</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Depreciation Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Accounting depreciation, three ways: <strong>straight line</strong>, <strong>declining balance</strong> (set the factor to 2 for double declining), and <strong>sum of the years' digits</strong> — with optional partial-year conventions for assets that enter service mid-year. Every method depreciates the same total; only the timing differs, and the full schedule shows it year by year.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Depreciation Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Asset Cost ($)</label>
-                        <input type="number" id="depCost" value="10000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Salvage Value ($)</label>
-                        <p class="text-xs text-gray-500 mb-1">Value at the end of its life</p>
-                        <input type="number" id="depSalvage" value="1000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Useful Life (Years)</label>
-                        <input type="number" id="depLife" value="5" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Depreciation Method</label>
-                        <select id="depMethod" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="straight">Straight Line</option>
-                            <option value="declining">Double Declining Balance</option>
-                        </select>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label class="block"><span class="text-sm font-medium text-gray-600">Depreciation method</span>
+                    <select id="d_method" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5" onchange="toggleFactor(); calc()">
+                        <option value="straight" selected>Straight Line</option>
+                        <option value="declining">Declining Balance</option>
+                        <option value="sum">Sum of the Year's Digits</option>
+                    </select></label>
+                <label class="block" id="d_factor_wrap" style="display:none"><span class="text-sm font-medium text-gray-600">Depreciation factor <span class="text-gray-400">(2 = double declining)</span></span>
+                    <input id="d_factor" type="number" value="2" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()"></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Asset cost</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="d_cost" type="number" value="11000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Salvage value</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="d_salvage" type="number" value="1000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Depreciation years (useful life)</span>
+                    <input id="d_years" type="number" value="5" min="1" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()"></label>
+                <div class="block">
+                    <span class="text-sm font-medium text-gray-600">Round to dollars?</span>
+                    <div class="mt-2 text-sm">
+                        <label class="mr-4"><input type="radio" name="d_round" value="yes" checked onchange="calc()"> Yes</label>
+                        <label><input type="radio" name="d_round" value="no" onchange="calc()"> No</label>
                     </div>
                 </div>
-                <button onclick="calculateDepreciation()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Depreciation</button>
-
-                <div id="depResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-4">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Annual Depreciation (Year 1)</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="depAnnual">$0</p>
-                        </div>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white border border-gray-200 text-sm">
-                            <thead class="bg-gray-100">
-                                <tr>
-                                    <th class="py-2 px-4 border-b text-left">Year</th>
-                                    <th class="py-2 px-4 border-b text-left">Depreciation Expense</th>
-                                    <th class="py-2 px-4 border-b text-left">Accumulated Depreciation</th>
-                                    <th class="py-2 px-4 border-b text-left">Book Value</th>
-                                </tr>
-                            </thead>
-                            <tbody id="depTableBody">
-                                <!-- Rows inserted via JS -->
-                            </tbody>
-                        </table>
+                <div class="block">
+                    <span class="text-sm font-medium text-gray-600">Partial year depreciation?</span>
+                    <div class="mt-2 text-sm">
+                        <label class="mr-4"><input type="radio" name="d_partial" value="yes" onchange="togglePartial(); calc()"> Yes</label>
+                        <label><input type="radio" name="d_partial" value="no" checked onchange="togglePartial(); calc()"> No</label>
                     </div>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is Depreciation?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Depreciation is an accounting method of allocating the cost of a tangible asset over its useful life. Businesses depreciate long-term assets for both tax and accounting purposes. The Straight Line method spreads the cost evenly over the years, while the Double Declining method depreciates more heavily in the early years.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div id="d_partial_inputs" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4" style="display:none">
+                <label class="block"><span class="text-sm font-medium text-gray-600">Convention</span>
+                    <select id="d_conv" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5" onchange="calc()">
+                        <option value="day">Count Every Day</option>
+                        <option value="halfmonth" selected>Half-Month</option>
+                        <option value="fullmonth">Full-Month</option>
+                        <option value="halfquarter">Half-Quarter</option>
+                        <option value="fullquarter">Full-Quarter</option>
+                        <option value="halfyear">Half-Year</option>
+                    </select></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Start of asset service</span>
+                    <input id="d_start" type="date" value="2026-10-22" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" onchange="calc()"></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Accounting year starts</span>
+                    <div class="mt-1 flex gap-2">
+                        <select id="d_aym" class="flex-1 border border-gray-300 rounded-lg p-2.5" onchange="calc()"></select>
+                        <select id="d_ayd" class="w-20 border border-gray-300 rounded-lg p-2.5" onchange="calc()"></select>
+                    </div></label>
+            </div>
+            <button onclick="calc()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="d_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">Same total, different story</div>
+                <p>At the defaults, all three methods write off exactly <strong>$10,000</strong>. But year 1 charges <strong>$2,000</strong> (straight line), <strong>$3,333</strong> (SYD) or <strong>$4,400</strong> (double declining) — and since depreciation is tax-deductible, the method quietly moves profit, and tax, between years.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>Depreciation: Spreading a Cost Across a Life</h2>
+        <p>An asset wears out, gets used up, or simply becomes obsolete — depreciation is how accounting spreads its cost across the years it serves, instead of dumping the whole purchase into one year's results. A machine expensed on day one would make its purchase year look disastrous and every later year look free; depreciation matches the cost to the periods that benefit. In the U.S. and most other systems the charge is tax-deductible, which is why the choice of method — pure timing, never total — still matters: accelerated methods pull deductions earlier, flattering later profits and deferring tax.</p>
+        <h3>The Three Methods</h3>
+        <p><strong>Straight line</strong> — the default everywhere: (Cost − Salvage) ÷ Useful Life, the same charge every year. Simple, predictable, and right for assets that serve evenly. <strong>Declining balance</strong> — a fixed rate (factor ÷ life; factor 2 is the famous double declining) applied each year to the <em>book value</em>, so charges shrink as the asset ages. Salvage is not subtracted up front; it is the floor the book value stops at. Best for vehicles, computers and anything worth much less the moment it's used. <strong>Sum of the years' digits</strong> — the depreciable base is multiplied by a falling fraction: year k takes (life − k + 1) ÷ (1 + 2 + … + life) of the base. Accelerated like declining balance, but smoother and arithmetically guaranteed to land exactly on salvage. A fourth family, <strong>units of production</strong>, ties the charge to actual output instead of time — right for machinery whose wear is measured in cycles, and outside this calculator's scope. For U.S. tax filing, note that the IRS's MACRS system prescribes its own lives and conventions (often 200% declining with a switch to straight line); this calculator gives the underlying schedules the accounting is built from.</p>
+        <h3>Partial Years and Conventions</h3>
+        <p>Assets rarely enter service on the first day of an accounting year, so the first service year straddles two accounting years. Conventions decide how much of it counts in year one: <em>count every day</em> is exact; <em>half-month</em> treats the starting month as half used; <em>full-month</em> credits the whole starting month; <em>half/full-quarter</em> do the same by quarters; <em>half-year</em> simply books half a year regardless of the date. Whichever you choose, the leftover slice of the first service year pushes through the schedule and a tail lands in one extra accounting year — the total never changes.</p>
+        <h3>Salvage Value</h3>
+        <p>Salvage (residual, scrap) value is what the asset should be worth at the end of its useful life — saleable parts, trade-in, scrap metal. Only the excess of cost over salvage is ever depreciated; an asset expected to be worthless at the end depreciates its full cost. Estimates matter: overstate salvage and the books carry a value the asset will never realize; understate it and early years absorb charges that belong later.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>Why is year 1 so different between methods?</h4>
+        <p>Because acceleration is the point: double declining front-loads $4,400 of the $10,000 into year 1 at the defaults, straight line spreads $2,000 evenly. Reported profit in year 1 differs by $2,400 with identical economics.</p>
+        <h4>Does declining balance ever reach salvage exactly?</h4>
+        <p>A pure percentage never quite lands, so the final year is capped: depreciation stops the moment book value would cross salvage, and the last charge is exactly the distance remaining.</p>
+        <h4>Book depreciation or tax depreciation?</h4>
+        <p>Often both, on different schedules — companies keep one set of books for reporting and follow the tax authority's prescribed system (like MACRS) for the return. This calculator produces the general accounting schedules.</p>
+    </section>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="rental-property.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Rental Property Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Where depreciation quietly makes or breaks a landlord's tax bill.</p>
+            </a>
+            <a href="income-tax.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Income Tax Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The return those deductions land on.</p>
+            </a>
+            <a href="investment.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Investment Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The other side of the balance sheet: assets that grow instead of wearing out.</p>
+            </a>
+            <a href="roi.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">ROI Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Judge the asset's earnings against the value it's losing.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        function calculateDepreciation() {
-            const cost = parseFloat(document.getElementById('depCost').value);
-            const salvage = parseFloat(document.getElementById('depSalvage').value);
-            const life = parseInt(document.getElementById('depLife').value);
-            const method = document.getElementById('depMethod').value;
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (isNaN(cost) || isNaN(salvage) || isNaN(life) || cost <= 0 || life <= 0 || salvage < 0 || salvage >= cost) {
-                alert("Please enter valid numbers. Cost must be greater than salvage value.");
-                return;
-            }
-
-            let tableHTML = "";
-            let bookValue = cost;
-            let accumulatedDepreciation = 0;
-            let year1Depreciation = 0;
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            if (method === 'straight') {
-                // Straight Line
-                const annualDep = (cost - salvage) / life;
-                year1Depreciation = annualDep;
-
-                for (let year = 1; year <= life; year++) {
-                    accumulatedDepreciation += annualDep;
-                    bookValue -= annualDep;
-                    
-                    // Adjust last year to match salvage exactly
-                    if (year === life) {
-                        bookValue = salvage;
-                    }
-
-                    tableHTML += `<tr>
-                        <td class="py-2 px-4 border-b">${year}</td>
-                        <td class="py-2 px-4 border-b text-red-500">${formatter.format(annualDep)}</td>
-                        <td class="py-2 px-4 border-b text-[#3F51B5]">${formatter.format(accumulatedDepreciation)}</td>
-                        <td class="py-2 px-4 border-b font-semibold">${formatter.format(bookValue)}</td>
-                    </tr>`;
-                }
-            } else {
-                // Double Declining Balance
-                const rate = 2 / life;
-
-                for (let year = 1; year <= life; year++) {
-                    let depExpense = bookValue * rate;
-                    
-                    // Don't depreciate below salvage value
-                    if (bookValue - depExpense < salvage) {
-                        depExpense = bookValue - salvage;
-                    }
-
-                    if (year === 1) year1Depreciation = depExpense;
-
-                    accumulatedDepreciation += depExpense;
-                    bookValue -= depExpense;
-
-                    tableHTML += `<tr>
-                        <td class="py-2 px-4 border-b">${year}</td>
-                        <td class="py-2 px-4 border-b text-red-500">${formatter.format(depExpense)}</td>
-                        <td class="py-2 px-4 border-b text-[#3F51B5]">${formatter.format(accumulatedDepreciation)}</td>
-                        <td class="py-2 px-4 border-b font-semibold">${formatter.format(bookValue)}</td>
-                    </tr>`;
-                }
-            }
-
-            document.getElementById('depAnnual').textContent = formatter.format(year1Depreciation);
-            document.getElementById('depTableBody').innerHTML = tableHTML;
-            document.getElementById('depResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt$0 = v => '$' + Math.round(v).toLocaleString('en-US');
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+function toggleFactor() { $('d_factor_wrap').style.display = $('d_method').value === 'declining' ? '' : 'none'; }
+function togglePartial() { $('d_partial_inputs').style.display = document.querySelector('input[name="d_partial"]:checked').value === 'yes' ? '' : 'none'; }
+function radioVal(name) { return document.querySelector('input[name="' + name + '"]:checked').value; }
+function serviceDeps(method, cost, salvage, n, factor) {
+  const base = cost - salvage, deps = [];
+  if (method === 'straight') {
+    for (let k = 0; k < n; k++) deps.push(base / n);
+  } else if (method === 'sum') {
+    const s = n * (n + 1) / 2;
+    for (let k = 0; k < n; k++) deps.push(base * (n - k) / s);
+  } else {
+    let book = cost;
+    const rate = factor / n;
+    for (let k = 0; k < n; k++) {
+      const d = Math.max(0, Math.min(book * rate, book - salvage));
+      deps.push(d); book -= d;
+    }
+  }
+  return deps;
+}
+function fiscalYearOf(start, aym, ayd) {
+  let fyStart = new Date(start.getFullYear(), aym - 1, ayd);
+  if (fyStart > start) fyStart = new Date(start.getFullYear() - 1, aym - 1, ayd);
+  const fyEnd = new Date(fyStart.getFullYear() + 1, aym - 1, ayd - 1);
+  return { fyStart, fyEnd };
+}
+function firstYearFraction(conv, start, aym, ayd) {
+  const { fyStart, fyEnd } = fiscalYearOf(start, aym, ayd);
+  const DAY = 86400000;
+  const monthIdx = (start.getMonth() - (aym - 1) + 12) % 12;
+  if (conv === 'day') return (Math.round((fyEnd - start) / DAY) + 1) / (Math.round((fyEnd - fyStart) / DAY) + 1);
+  if (conv === 'halfmonth') return (12 - monthIdx - 0.5) / 12;
+  if (conv === 'fullmonth') return (12 - monthIdx) / 12;
+  if (conv === 'halfquarter') return (4 - Math.floor(monthIdx / 3) - 0.5) / 4;
+  if (conv === 'fullquarter') return (4 - Math.floor(monthIdx / 3)) / 4;
+  return 0.5; // halfyear
+}
+function fyLabel(idx, partial, start, aym, ayd) {
+  if (!partial) return 'Year ' + (idx + 1);
+  const { fyStart, fyEnd } = fiscalYearOf(start, aym, ayd);
+  const s = new Date(fyStart.getFullYear() + idx, fyStart.getMonth(), fyStart.getDate());
+  const e = new Date(fyEnd.getFullYear() + idx, fyEnd.getMonth(), fyEnd.getDate());
+  if (aym === 1 && ayd === 1) return String(s.getFullYear());
+  const p2 = v => String(v).padStart(2, '0');
+  const f = d => d.getFullYear() + '/' + p2(d.getMonth() + 1) + '/' + p2(d.getDate());
+  return f(s) + ' – ' + f(e);
+}
+function calc() {
+  const method = $('d_method').value;
+  const cost = num('d_cost'), salvage = num('d_salvage'), n = Math.max(1, Math.round(num('d_years')));
+  const factor = num('d_factor') || 2;
+  const round = radioVal('d_round') === 'yes';
+  const partial = radioVal('d_partial') === 'yes';
+  const out = $('d_results');
+  if (cost <= 0 || salvage < 0 || salvage >= cost) {
+    out.innerHTML = cost > 0 && salvage >= cost ? '<p class="text-sm text-gray-500">Salvage value must be below the asset cost — only the difference can be depreciated.</p>' : '';
+    updateShare(); return;
+  }
+  const base = cost - salvage;
+  const svc = serviceDeps(method, cost, salvage, n, factor);
+  let deps = svc.slice(), labels = [];
+  let start = null, aym = 1, ayd = 1;
+  if (partial) {
+    start = new Date($('d_start').value + 'T12:00:00');
+    aym = parseInt($('d_aym').value); ayd = parseInt($('d_ayd').value);
+    if (isNaN(start.getTime())) { out.innerHTML = ''; return; }
+    const f = firstYearFraction($('d_conv').value, start, aym, ayd);
+    deps = [];
+    for (let k = 0; k < n; k++) deps.push((k === 0 ? 0 : (1 - f) * svc[k - 1]) + f * svc[k]);
+    if (1 - f > 1e-9) deps.push((1 - f) * svc[n - 1]);
+    labels = deps.map((_, k) => fyLabel(k, true, start, aym, ayd));
+  } else {
+    labels = deps.map((_, k) => 'Year ' + (k + 1));
+  }
+  // Apply rounding and the final-year plug; cap at the remaining base.
+  let acc = 0, book = cost;
+  const rows = deps.map((d, k) => {
+    const isLast = k === deps.length - 1;
+    let dep = isLast ? base - acc : d;
+    if (!isLast && round) dep = Math.round(dep);
+    if (!isLast) dep = Math.min(dep, base - acc);
+    if (dep < 0) dep = 0;
+    const beginBook = book;
+    acc += dep; book -= dep;
+    const ratePct = method === 'declining' ? (beginBook > 0 ? dep / beginBook * 100 : 0) : (base > 0 ? dep / base * 100 : 0);
+    return { label: labels[k], beginBook, ratePct, dep, acc, endBook: book };
+  });
+  const money = v => round ? fmt$0(v) : fmt$(v);
+  const maxDep = Math.max(...rows.map(r => r.dep), 1);
+  const bars = rows.map(r => '<div class="flex items-center gap-2 text-xs"><div class="w-28 shrink-0 text-gray-500 truncate">' + r.label + '</div><div class="flex-1 bg-gray-100 rounded h-4"><div class="bg-[#3F51B5] h-4 rounded" style="width:' + Math.max(r.dep / maxDep * 100, r.dep > 0 ? 1.5 : 0) + '%"></div></div><div class="w-24 text-right num font-medium">' + money(r.dep) + '</div></div>').join('');
+  const table = '<div class="overflow-auto max-h-96 mt-4 border border-gray-100 rounded-lg"><table class="w-full text-sm num"><thead class="bg-gray-50 sticky top-0"><tr><th class="text-left p-2">Period</th><th class="text-right p-2">Beginning Book Value</th><th class="text-right p-2">Rate</th><th class="text-right p-2">Depreciation</th><th class="text-right p-2">Accumulated</th><th class="text-right p-2">Ending Book Value</th></tr></thead><tbody>' +
+    rows.map(r => '<tr class="border-t border-gray-100"><td class="p-2 whitespace-nowrap">' + r.label + '</td><td class="p-2 text-right">' + money(r.beginBook) + '</td><td class="p-2 text-right">' + r.ratePct.toFixed(2) + '%</td><td class="p-2 text-right font-medium">' + money(r.dep) + '</td><td class="p-2 text-right">' + money(r.acc) + '</td><td class="p-2 text-right">' + money(r.endBook) + '</td></tr>').join('') +
+    '</tbody></table></div>';
+  const methodName = { straight: 'Straight Line', declining: 'Declining Balance (factor ' + factor + ')', sum: "Sum of the Year's Digits" }[method];
+  out.innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-5"><div class="text-sm opacity-80">' + methodName + '</div><div class="text-3xl font-extrabold mt-1">' + money(base) + ' total depreciation</div><div class="text-sm opacity-80 mt-1">From ' + money(cost) + ' down to the ' + money(salvage) + ' salvage value over ' + rows.length + ' accounting period' + (rows.length > 1 ? 's' : '') + (partial ? ' (partial first year)' : '') + '. First period: ' + money(rows[0].dep) + '.</div></div>' +
+    '<div class="mt-4 space-y-1.5">' + bars + '</div>' + table;
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ m: $('d_method').value, c: $('d_cost').value, s: $('d_salvage').value, y: $('d_years').value, f: $('d_factor').value, r: radioVal('d_round'), p: radioVal('d_partial'), cv: $('d_conv').value, sd: $('d_start').value, am: $('d_aym').value, ad: $('d_ayd').value });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  $('d_aym').innerHTML = MONTHS.map((m, i) => '<option value="' + (i + 1) + '"' + (i === 0 ? ' selected' : '') + '>' + m + '</option>').join('');
+  $('d_ayd').innerHTML = Array.from({ length: 31 }, (_, i) => '<option value="' + (i + 1) + '"' + (i === 0 ? ' selected' : '') + '>' + (i + 1) + '</option>').join('');
+  const q = new URLSearchParams(location.search);
+  const set = (id, key) => { if (q.get(key)) $(id).value = q.get(key); };
+  set('d_method', 'm'); set('d_cost', 'c'); set('d_salvage', 's'); set('d_years', 'y'); set('d_factor', 'f'); set('d_conv', 'cv'); set('d_start', 'sd'); set('d_aym', 'am'); set('d_ayd', 'ad');
+  if (q.get('r')) document.querySelector('input[name="d_round"][value="' + q.get('r') + '"]').checked = true;
+  if (q.get('p')) document.querySelector('input[name="d_partial"][value="' + q.get('p') + '"]').checked = true;
+  toggleFactor(); togglePartial(); calc();
+})();
+</script>
 </body>
-          </html>
+</html>
