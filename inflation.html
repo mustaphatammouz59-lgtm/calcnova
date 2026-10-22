@@ -1,110 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inflation Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inflation Calculator — U.S. CPI Data Back to 1913 | CalcNova</title>
+<meta name="description" content="Free inflation calculator using official U.S. CPI data from 1913 to today: convert the buying power of any amount between any two months, plus forward and backward flat-rate inflation calculators.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/inflation">
+<meta property="og:title" content="Inflation Calculator — U.S. CPI Data Back to 1913 | CalcNova">
+<meta property="og:description" content="What was $100 worth in another year? Convert any amount between any two months from 1913 to today with official CPI data.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/inflation">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Inflation Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/inflation"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How does the CPI inflation calculator convert an amount between two dates?","acceptedAnswer":{"@type":"Answer","text":"It multiplies the amount by the ratio of the two Consumer Price Index values: amount in the target month = amount in the source month × CPI(target) ÷ CPI(source). If prices doubled between the two dates, the CPI doubled too, and the converted amount doubles — it takes twice as many dollars to buy the same goods."}},
+{"@type":"Question","name":"Why is October 2025 missing from the data?","acceptedAnswer":{"@type":"Answer","text":"The Bureau of Labor Statistics never published an October 2025 CPI: data collection was suspended during the 2025 federal government shutdown, and the missing month was never reconstructed. The 2025 annual average used here is the mean of the eleven published months, which is how the BLS itself reports the 2025 average (an increase of 2.63% over 2024)."}},
+{"@type":"Question","name":"What is the difference between the CPI calculator and the flat-rate calculators?","acceptedAnswer":{"@type":"Answer","text":"The CPI calculator uses what actually happened — the official price index for each month since 1913. The forward and backward flat-rate calculators are scenario tools: they apply one constant average inflation rate you choose over a number of years, which is useful for planning ('what will $100 feel like in ten years if inflation averages 3%?') but is not historical data."}},
+{"@type":"Question","name":"How much is a 1913 dollar worth today?","acceptedAnswer":{"@type":"Answer","text":"A single 1913 dollar, at the 1913 average CPI of 9.9, has the buying power of roughly $34 in September 2026 (CPI 336.94). Put the other way around, today's dollar buys about what 3 cents bought in 1913 — the cumulative effect of a century of mostly mild inflation."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Inflation Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Inflation</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Inflation Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Convert the buying power of the U.S. dollar between <strong>any two months from 1913 to today</strong> using the official Consumer Price Index (CPI-U) published by the Bureau of Labor Statistics — then run your own what-if scenarios with the forward and backward flat-rate calculators below.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Inflation Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Initial Amount ($)</label>
-                        <input type="number" id="infAmount" value="1000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+    <h2 class="text-xl font-bold text-gray-900 mb-4">Inflation Calculator with U.S. CPI Data</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label class="block sm:col-span-2">
+                    <span class="text-sm font-medium text-gray-600">Amount</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                        <span class="text-gray-400">$</span>
+                        <input id="i_amount" type="number" value="100" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calcCPI()">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Inflation Rate (%)</label>
-                        <input type="number" id="infRate" value="3" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Number of Years</label>
-                        <input type="number" id="infYears" value="10" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                </label>
+                <div>
+                    <span class="text-sm font-medium text-gray-600">In (source date)</span>
+                    <div class="mt-1 flex gap-2">
+                        <select id="i_fm" class="flex-1 border border-gray-300 rounded-lg p-2.5 num" onchange="calcCPI()"></select>
+                        <select id="i_fy" class="flex-1 border border-gray-300 rounded-lg p-2.5 num" onchange="fillMonths('i_fm', this.value); calcCPI()"></select>
                     </div>
                 </div>
-                <button onclick="calculateInflation()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate</button>
-
-                <div id="infResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-red-500">
-                            <p class="text-sm text-gray-500">Future Cost (What you'll need later)</p>
-                            <p class="text-3xl font-bold text-red-500" id="futureCost">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Purchasing Power (What your money is worth later)</p>
-                            <p class="text-3xl font-bold text-[#14B8A6]" id="powerLost">$0</p>
-                        </div>
+                <div>
+                    <span class="text-sm font-medium text-gray-600">Equals how much in (target date)</span>
+                    <div class="mt-1 flex gap-2">
+                        <select id="i_tm" class="flex-1 border border-gray-300 rounded-lg p-2.5 num" onchange="calcCPI()"></select>
+                        <select id="i_ty" class="flex-1 border border-gray-300 rounded-lg p-2.5 num" onchange="fillMonths('i_tm', this.value); calcCPI()"></select>
                     </div>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">What is Inflation?</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Inflation is the rate at which the general level of prices for goods and services is rising. This calculator shows how much money you will need in the future, and what your current money will be worth.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <button onclick="calcCPI()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="cpi_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">Reading the result</div>
+                <p>The converted amount is what you would need at the target date to match the buying power of your amount at the source date. Going forward in time the number grows with inflation; going backward it shrinks. The data runs through <strong>September 2026</strong>, the latest CPI published.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-1">Forward Flat Rate Inflation Calculator</h2>
+            <p class="text-sm text-gray-500 mb-4">What an amount today will need to grow to — at a constant average inflation rate — to keep its buying power after some years.</p>
+            <div class="grid grid-cols-3 gap-3">
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Amount $</span>
+                    <input id="f_amount" type="number" value="100" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calcFlat()">
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Inflation rate %</span>
+                    <input id="f_rate" type="number" value="3" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calcFlat()">
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Years</span>
+                    <input id="f_years" type="number" value="10" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calcFlat()">
+                </label>
             </div>
-        </aside>
-    </main>
-
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+            <div id="fwd_results" class="mt-5"></div>
         </div>
-    </footer>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-1">Backward Flat Rate Inflation Calculator</h2>
+            <p class="text-sm text-gray-500 mb-4">What an amount some years ago, at a constant average inflation rate, is equivalent to in today's buying power — or the reverse.</p>
+            <div class="grid grid-cols-3 gap-3">
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Amount $</span>
+                    <input id="b_amount" type="number" value="100" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calcFlat()">
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Inflation rate %</span>
+                    <input id="b_rate" type="number" value="3" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calcFlat()">
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Years ago</span>
+                    <input id="b_years" type="number" value="10" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calcFlat()">
+                </label>
+            </div>
+            <div id="bwd_results" class="mt-5"></div>
+        </div>
+    </div>
 
-    <script>
-        function calculateInflation() {
-            var amount = parseFloat(document.getElementById('infAmount').value);
-            var rate = parseFloat(document.getElementById('infRate').value) / 100;
-            var years = parseFloat(document.getElementById('infYears').value);
+    <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-10">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Historical U.S. Inflation by Year</h2>
+        <p class="text-sm text-gray-500 mb-4">Annual average CPI-U and the inflation rate it implies (average-to-average). Two data notes: October 2025 was never published by the BLS (collection was suspended during the federal shutdown), so the 2025 average uses the eleven published months; 2026 is a partial year (January–September) and has no annual average yet.</p>
+        <div class="overflow-auto max-h-[420px] border border-gray-100 rounded-lg">
+            <table class="w-full text-sm num">
+                <thead class="bg-gray-50 sticky top-0"><tr>
+                    <th class="text-left p-2.5">Year</th><th class="text-right p-2.5">Average CPI</th><th class="text-right p-2.5">Inflation (avg to avg)</th>
+                </tr></thead>
+                <tbody id="history_body"></tbody>
+            </table>
+        </div>
+        <p class="text-xs text-gray-400 mt-3">Source: U.S. Bureau of Labor Statistics, Consumer Price Index for All Urban Consumers (CPI-U), U.S. city average, all items, not seasonally adjusted (series CUUR0000SA0, via FRED CPIAUCNS).</p>
+    </section>
 
-            if (isNaN(amount) || isNaN(rate) || isNaN(years)) {
-                alert("Please enter valid numbers.");
-                return;
-            }
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>What Is Inflation?</h2>
+        <p>Inflation is a general rise in the prices of goods and services over time, which means each unit of currency buys a little less than it did before. It is usually quoted as a percentage per year: at 3% inflation, a basket of goods that costs $100 today will cost about $103 a year from now — and a $100 bill kept in a drawer will only buy what $97 buys today. Most central banks in developed economies treat roughly 2% as a healthy target: high enough to keep people spending and borrowing rather than hoarding cash, low enough that prices feel stable. Much of the twentieth century averaged close to 3% in the United States, which is why 3% is the default in the scenario calculators above.</p>
+        <h3>How the CPI Measures It</h3>
+        <p>The Bureau of Labor Statistics tracks the price of a large, fixed basket of goods and services — food, housing, transport, medical care, apparel and hundreds more — sampled across U.S. cities every month. The weighted average price of that basket is the Consumer Price Index. The index is anchored so that the average price level of 1982–1984 equals 100, which is why the numbers look large today: a CPI of 336.94 in September 2026 means the basket costs about 3.37 times its 1982–84 price. Inflation between any two dates is simply the percentage change in the index — for example, the CPI rose from 236.916 in January 2016 to 242.839 in January 2017, an increase of 2.5%.</p>
+        <h3>When Inflation Runs Away — and When Prices Fall</h3>
+        <p>At the extreme, <strong>hyperinflation</strong> is inflation spinning out of control, typically when a government prints money far faster than the economy produces goods: prices can double in days, savings are wiped out, and people flee into foreign currency or hard assets. Germany in 1923 and Zimbabwe in the 2000s are the standard examples. The mirror image is <strong>deflation</strong> — falling prices, which sound pleasant but discourage spending (why buy today what is cheaper tomorrow?), raise the real burden of debts, and can lock an economy into a downward spiral, as in the early 1930s. The U.S. data above contains both: double-digit inflation in 1917–1920, 1947 and 1979–1981, and outright deflation in 1921, 1930–1933 and 2009.</p>
+        <h3>Why It Happens</h3>
+        <p>Economists group the causes into three families. <strong>Demand-pull</strong> inflation occurs when spending outruns the economy's capacity to produce, so buyers bid prices up. <strong>Cost-push</strong> inflation starts on the supply side — an oil shock, a poor harvest or a currency slide raises producers' costs, which get passed on. <strong>Built-in</strong> inflation is the echo of the other two: workers demand raises to catch up with prices, firms raise prices to cover wages, and expectations alone keep the wheel turning. Underneath all of it sits the money supply: sustained inflation is rarely possible unless the amount of money in circulation grows persistently faster than output.</p>
+        <h3>Protecting Your Money</h3>
+        <p>Cash is inflation's easiest victim: at 2.5% inflation, $50,000 sitting in a non-interest-bearing account loses $1,250 of real value in a single year. The standard defenses are assets whose returns can outpace prices — diversified equities, real estate, commodities such as gold, and inflation-indexed bonds like U.S. Treasury TIPS, whose principal is adjusted with the CPI itself. None is a perfect shield year by year, and diversification matters more than any single hedge; but over long horizons, simply keeping money idle is the one strategy guaranteed to lose ground. The calculators on this page let you measure exactly how much ground, historically or in your own scenario.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>How does the CPI calculator convert amounts?</h4>
+        <p>Amount at the target date = your amount × CPI(target) ÷ CPI(source). It is a pure price-level ratio, the same method the BLS describes for its own inflation calculator.</p>
+        <h4>Why is October 2025 missing?</h4>
+        <p>The BLS never published it — collection stopped during the 2025 federal government shutdown and the month was never reconstructed. The 2025 annual average here is the mean of the eleven published months, matching the BLS's own reported 2025 average (+2.63% over 2024).</p>
+        <h4>CPI calculator vs. flat-rate calculators — which should I use?</h4>
+        <p>Use the CPI calculator for the past: it is real, measured history. Use the flat-rate calculators for the future or for hypothetical histories, where no CPI exists yet and you must assume a rate.</p>
+        <h4>What is a 1913 dollar worth today?</h4>
+        <p>About $34.03 in September 2026 terms — the CPI has risen roughly 34-fold since the 1913 average. A modern dollar, conversely, buys about what 3 cents bought in 1913.</p>
+    </section>
 
-            var futureCost = amount * Math.pow((1 + rate), years);
-            var purchasingPower = amount / Math.pow((1 + rate), years);
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="currency.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Currency Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Inflation is one reason exchange rates drift over the long run.</p>
+            </a>
+            <a href="compound-interest.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Compound Interest Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The growth your savings need just to stay ahead of inflation.</p>
+            </a>
+            <a href="interest.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Interest Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Compare nominal returns with the real, inflation-adjusted kind.</p>
+            </a>
+            <a href="investment.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Investment Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Project an investment, then check it against inflation here.</p>
+            </a>
+        </div>
+    </section>
+</main>
 
-            var formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            document.getElementById('futureCost').innerHTML = formatter.format(futureCost);
-            document.getElementById('powerLost').innerHTML = formatter.format(purchasingPower);
-            document.getElementById('infResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const CPI = {"1913":[9.8,9.8,9.8,9.8,9.7,9.8,9.9,9.9,10.0,10.0,10.1,10.0,9.9],"1914":[10.0,9.9,9.9,9.8,9.9,9.9,10.0,10.2,10.2,10.1,10.2,10.1,10.0],"1915":[10.1,10.0,9.9,10.0,10.1,10.1,10.1,10.1,10.1,10.2,10.3,10.3,10.1],"1916":[10.4,10.4,10.5,10.6,10.7,10.8,10.8,10.9,11.1,11.3,11.5,11.6,10.9],"1917":[11.7,12.0,12.0,12.6,12.8,13.0,12.8,13.0,13.3,13.5,13.5,13.7,12.8],"1918":[14.0,14.1,14.0,14.2,14.5,14.7,15.1,15.4,15.7,16.0,16.3,16.5,15.1],"1919":[16.5,16.2,16.4,16.7,16.9,16.9,17.4,17.7,17.8,18.1,18.5,18.9,17.3],"1920":[19.3,19.5,19.7,20.3,20.6,20.9,20.8,20.3,20.0,19.9,19.8,19.4,20.0],"1921":[19.0,18.4,18.3,18.1,17.7,17.6,17.7,17.7,17.5,17.5,17.4,17.3,17.9],"1922":[16.9,16.9,16.7,16.7,16.7,16.7,16.8,16.6,16.6,16.7,16.8,16.9,16.8],"1923":[16.8,16.8,16.8,16.9,16.9,17.0,17.2,17.1,17.2,17.3,17.3,17.3,17.1],"1924":[17.3,17.2,17.1,17.0,17.0,17.0,17.1,17.0,17.1,17.2,17.2,17.3,17.1],"1925":[17.3,17.2,17.3,17.2,17.3,17.5,17.7,17.7,17.7,17.7,18.0,17.9,17.5],"1926":[17.9,17.9,17.8,17.9,17.8,17.7,17.5,17.4,17.5,17.6,17.7,17.7,17.7],"1927":[17.5,17.4,17.3,17.3,17.4,17.6,17.3,17.2,17.3,17.4,17.3,17.3,17.4],"1928":[17.3,17.1,17.1,17.1,17.2,17.1,17.1,17.1,17.3,17.2,17.2,17.1,17.1],"1929":[17.1,17.1,17.0,16.9,17.0,17.1,17.3,17.3,17.3,17.3,17.3,17.2,17.1],"1930":[17.1,17.0,16.9,17.0,16.9,16.8,16.6,16.5,16.6,16.5,16.4,16.1,16.7],"1931":[15.9,15.7,15.6,15.5,15.3,15.1,15.1,15.1,15.0,14.9,14.7,14.6,15.2],"1932":[14.3,14.1,14.0,13.9,13.7,13.6,13.6,13.5,13.4,13.3,13.2,13.1,13.7],"1933":[12.9,12.7,12.6,12.6,12.6,12.7,13.1,13.2,13.2,13.2,13.2,13.2,13.0],"1934":[13.2,13.3,13.3,13.3,13.3,13.4,13.4,13.4,13.6,13.5,13.5,13.4,13.4],"1935":[13.6,13.7,13.7,13.8,13.8,13.7,13.7,13.7,13.7,13.7,13.8,13.8,13.7],"1936":[13.8,13.8,13.7,13.7,13.7,13.8,13.9,14.0,14.0,14.0,14.0,14.0,13.9],"1937":[14.1,14.1,14.2,14.3,14.4,14.4,14.5,14.5,14.6,14.6,14.5,14.4,14.4],"1938":[14.2,14.1,14.1,14.2,14.1,14.1,14.1,14.1,14.1,14.0,14.0,14.0,14.1],"1939":[14.0,13.9,13.9,13.8,13.8,13.8,13.8,13.8,14.1,14.0,14.0,14.0,13.9],"1940":[13.9,14.0,14.0,14.0,14.0,14.1,14.0,14.0,14.0,14.0,14.0,14.1,14.0],"1941":[14.1,14.1,14.2,14.3,14.4,14.7,14.7,14.9,15.1,15.3,15.4,15.5,14.7],"1942":[15.7,15.8,16.0,16.1,16.3,16.3,16.4,16.5,16.5,16.7,16.8,16.9,16.3],"1943":[16.9,16.9,17.2,17.4,17.5,17.5,17.4,17.3,17.4,17.4,17.4,17.4,17.3],"1944":[17.4,17.4,17.4,17.5,17.5,17.6,17.7,17.7,17.7,17.7,17.7,17.8,17.6],"1945":[17.8,17.8,17.8,17.8,17.9,18.1,18.1,18.1,18.1,18.1,18.1,18.2,18.0],"1946":[18.2,18.1,18.3,18.4,18.5,18.7,19.8,20.2,20.4,20.8,21.3,21.5,19.5],"1947":[21.5,21.5,21.9,21.9,21.9,22.0,22.2,22.5,23.0,23.0,23.1,23.4,22.3],"1948":[23.7,23.5,23.4,23.8,23.9,24.1,24.4,24.5,24.5,24.4,24.2,24.1,24.1],"1949":[24.0,23.8,23.8,23.9,23.8,23.9,23.7,23.8,23.9,23.7,23.8,23.6,23.8],"1950":[23.5,23.5,23.6,23.6,23.7,23.8,24.1,24.3,24.4,24.6,24.7,25.0,24.1],"1951":[25.4,25.7,25.8,25.8,25.9,25.9,25.9,25.9,26.1,26.2,26.4,26.5,26.0],"1952":[26.5,26.3,26.3,26.4,26.4,26.5,26.7,26.7,26.7,26.7,26.7,26.7,26.5],"1953":[26.6,26.5,26.6,26.6,26.7,26.8,26.8,26.9,26.9,27.0,26.9,26.9,26.7],"1954":[26.9,26.9,26.9,26.8,26.9,26.9,26.9,26.9,26.8,26.8,26.8,26.7,26.9],"1955":[26.7,26.7,26.7,26.7,26.7,26.7,26.8,26.8,26.9,26.9,26.9,26.8,26.8],"1956":[26.8,26.8,26.8,26.9,27.0,27.2,27.4,27.3,27.4,27.5,27.5,27.6,27.2],"1957":[27.6,27.7,27.8,27.9,28.0,28.1,28.3,28.3,28.3,28.3,28.4,28.4,28.1],"1958":[28.6,28.6,28.8,28.9,28.9,28.9,29.0,28.9,28.9,28.9,29.0,28.9,28.9],"1959":[29.0,28.9,28.9,29.0,29.0,29.1,29.2,29.2,29.3,29.4,29.4,29.4,29.1],"1960":[29.3,29.4,29.4,29.5,29.5,29.6,29.6,29.6,29.6,29.8,29.8,29.8,29.6],"1961":[29.8,29.8,29.8,29.8,29.8,29.8,30.0,29.9,30.0,30.0,30.0,30.0,29.9],"1962":[30.0,30.1,30.1,30.2,30.2,30.2,30.3,30.3,30.4,30.4,30.4,30.4,30.2],"1963":[30.4,30.4,30.5,30.5,30.5,30.6,30.7,30.7,30.7,30.8,30.8,30.9,30.6],"1964":[30.9,30.9,30.9,30.9,30.9,31.0,31.1,31.0,31.1,31.1,31.2,31.2,31.0],"1965":[31.2,31.2,31.3,31.4,31.4,31.6,31.6,31.6,31.6,31.7,31.7,31.8,31.5],"1966":[31.8,32.0,32.1,32.3,32.3,32.4,32.5,32.7,32.7,32.9,32.9,32.9,32.4],"1967":[32.9,32.9,33.0,33.1,33.2,33.3,33.4,33.5,33.6,33.7,33.8,33.9,33.4],"1968":[34.1,34.2,34.3,34.4,34.5,34.7,34.9,35.0,35.1,35.3,35.4,35.5,34.8],"1969":[35.6,35.8,36.1,36.3,36.4,36.6,36.8,37.0,37.1,37.3,37.5,37.7,36.7],"1970":[37.8,38.0,38.2,38.5,38.6,38.8,39.0,39.0,39.2,39.4,39.6,39.8,38.8],"1971":[39.8,39.9,40.0,40.1,40.3,40.6,40.7,40.8,40.8,40.9,40.9,41.1,40.5],"1972":[41.1,41.3,41.4,41.5,41.6,41.7,41.9,42.0,42.1,42.3,42.4,42.5,41.8],"1973":[42.6,42.9,43.3,43.6,43.9,44.2,44.3,45.1,45.2,45.6,45.9,46.2,44.4],"1974":[46.6,47.2,47.8,48.0,48.6,49.0,49.4,50.0,50.6,51.1,51.5,51.9,49.3],"1975":[52.1,52.5,52.7,52.9,53.2,53.6,54.2,54.3,54.6,54.9,55.3,55.5,53.8],"1976":[55.6,55.8,55.9,56.1,56.5,56.8,57.1,57.4,57.6,57.9,58.0,58.2,56.9],"1977":[58.5,59.1,59.5,60.0,60.3,60.7,61.0,61.2,61.4,61.6,61.9,62.1,60.6],"1978":[62.5,62.9,63.4,63.9,64.5,65.2,65.7,66.0,66.5,67.1,67.4,67.7,65.2],"1979":[68.3,69.1,69.8,70.6,71.5,72.3,73.1,73.8,74.6,75.2,75.9,76.7,72.6],"1980":[77.8,78.9,80.1,81.0,81.8,82.7,82.7,83.3,84.0,84.8,85.5,86.3,82.4],"1981":[87.0,87.9,88.5,89.1,89.8,90.6,91.6,92.3,93.2,93.4,93.7,94.0,90.9],"1982":[94.3,94.6,94.5,94.9,95.8,97.0,97.5,97.7,97.9,98.2,98.0,97.6,96.5],"1983":[97.8,97.9,97.9,98.6,99.2,99.5,99.9,100.2,100.7,101.0,101.2,101.3,99.6],"1984":[101.9,102.4,102.6,103.1,103.4,103.7,104.1,104.5,105.0,105.3,105.3,105.3,103.9],"1985":[105.5,106.0,106.4,106.9,107.3,107.6,107.8,108.0,108.3,108.7,109.0,109.3,107.6],"1986":[109.6,109.3,108.8,108.6,108.9,109.5,109.5,109.7,110.2,110.3,110.4,110.5,109.6],"1987":[111.2,111.6,112.1,112.7,113.1,113.5,113.8,114.4,115.0,115.3,115.4,115.4,113.6],"1988":[115.7,116.0,116.5,117.1,117.5,118.0,118.5,119.0,119.8,120.2,120.3,120.5,118.3],"1989":[121.1,121.6,122.3,123.1,123.8,124.1,124.4,124.6,125.0,125.6,125.9,126.1,124.0],"1990":[127.4,128.0,128.7,128.9,129.2,129.9,130.4,131.6,132.7,133.5,133.8,133.8,130.7],"1991":[134.6,134.8,135.0,135.2,135.6,136.0,136.2,136.6,137.2,137.4,137.8,137.9,136.2],"1992":[138.1,138.6,139.3,139.5,139.7,140.2,140.5,140.9,141.3,141.8,142.0,141.9,140.3],"1993":[142.6,143.1,143.6,144.0,144.2,144.4,144.4,144.8,145.1,145.7,145.8,145.8,144.5],"1994":[146.2,146.7,147.2,147.4,147.5,148.0,148.4,149.0,149.4,149.5,149.7,149.7,148.2],"1995":[150.3,150.9,151.4,151.9,152.2,152.5,152.5,152.9,153.2,153.7,153.6,153.5,152.4],"1996":[154.4,154.9,155.7,156.3,156.6,156.7,157.0,157.3,157.8,158.3,158.6,158.6,156.9],"1997":[159.1,159.6,160.0,160.2,160.1,160.3,160.5,160.8,161.2,161.6,161.5,161.3,160.5],"1998":[161.6,161.9,162.2,162.5,162.8,163.0,163.2,163.4,163.6,164.0,164.0,163.9,163.0],"1999":[164.3,164.5,165.0,166.2,166.2,166.2,166.7,167.1,167.9,168.2,168.3,168.3,166.6],"2000":[168.8,169.8,171.2,171.3,171.5,172.4,172.8,172.8,173.7,174.0,174.1,174.0,172.2],"2001":[175.1,175.8,176.2,176.9,177.7,178.0,177.5,177.5,178.3,177.7,177.4,176.7,177.1],"2002":[177.1,177.8,178.8,179.8,179.8,179.9,180.1,180.7,181.0,181.3,181.3,180.9,179.9],"2003":[181.7,183.1,184.2,183.8,183.5,183.7,183.9,184.6,185.2,185.0,184.5,184.3,184.0],"2004":[185.2,186.2,187.4,188.0,189.1,189.7,189.4,189.5,189.9,190.9,191.0,190.3,188.9],"2005":[190.7,191.8,193.3,194.6,194.4,194.5,195.4,196.4,198.8,199.2,197.6,196.8,195.3],"2006":[198.3,198.7,199.8,201.5,202.5,202.9,203.5,203.9,202.9,201.8,201.5,201.8,201.6],"2007":[202.416,203.499,205.352,206.686,207.949,208.352,208.299,207.917,208.49,208.936,210.177,210.036,207.342],"2008":[211.08,211.693,213.528,214.823,216.632,218.815,219.964,219.086,218.783,216.573,212.425,210.228,215.303],"2009":[211.143,212.193,212.709,213.24,213.856,215.693,215.351,215.834,215.969,216.177,216.33,215.949,213.139],"2010":[216.687,216.741,217.631,218.009,218.178,217.965,218.011,218.312,218.439,218.711,218.803,219.179,218.056],"2011":[220.223,221.309,223.467,224.906,225.964,225.722,225.922,226.545,226.889,226.421,226.23,225.672,224.939],"2012":[226.665,227.663,229.392,230.085,229.815,229.478,229.104,230.379,231.407,231.317,230.221,229.601,229.594],"2013":[230.28,232.166,232.773,232.531,232.945,233.504,233.596,233.877,234.149,233.546,233.069,233.049,232.957],"2014":[233.916,234.781,236.293,237.072,237.9,238.343,238.25,237.852,238.031,237.433,236.151,234.812,236.736],"2015":[233.707,234.722,236.119,236.599,237.805,238.638,238.654,238.316,237.945,237.838,237.336,236.525,237.017],"2016":[236.916,237.111,238.132,239.261,240.229,241.018,240.628,240.849,241.428,241.729,241.353,241.432,240.007],"2017":[242.839,243.603,243.801,244.524,244.733,244.955,244.786,245.519,246.819,246.663,246.669,246.524,245.12],"2018":[247.867,248.991,249.554,250.546,251.588,251.989,252.006,252.146,252.439,252.885,252.038,251.233,251.107],"2019":[251.712,252.776,254.202,255.548,256.092,256.143,256.571,256.558,256.759,257.346,257.208,256.974,255.657],"2020":[257.971,258.678,258.115,256.389,256.394,257.797,259.101,259.918,260.28,260.388,260.229,260.474,258.811],"2021":[261.582,263.014,264.877,267.054,269.195,271.696,273.003,273.567,274.31,276.589,277.948,278.802,270.97],"2022":[281.148,283.716,287.504,289.109,292.296,296.311,296.276,296.171,296.808,298.012,297.711,296.797,292.655],"2023":[299.17,300.84,301.836,303.363,304.127,305.109,305.691,307.026,307.789,307.671,307.051,306.746,304.702],"2024":[308.417,310.326,312.332,313.548,314.069,314.175,314.54,314.796,315.301,315.664,315.493,315.605,313.689],"2025":[317.671,319.082,319.799,320.795,321.465,322.561,323.048,323.976,324.8,null,324.122,324.054,321.943],"2026":[325.252,326.785,330.213,333.02,335.123,333.952,333.918,334.98,336.94,null,null,null,null]};
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MSHORT = ['Jan.','Feb.','Mar.','Apr.','May','Jun.','Jul.','Aug.','Sep.','Oct.','Nov.','Dec.'];
+const YEARS = Object.keys(CPI).map(Number).sort((a, b) => a - b);
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtCPI = v => v.toLocaleString('en-US', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+
+function fillYears(selId, def) {
+  const s = $(selId);
+  s.innerHTML = YEARS.slice().reverse().map(y => '<option value="' + y + '"' + (y === def ? ' selected' : '') + '>' + y + '</option>').join('');
+}
+function fillMonths(selId, year, defMonth) {
+  const s = $(selId), row = CPI[year], cur = s.value;
+  const want = defMonth !== undefined ? String(defMonth) : cur;
+  let opts = '';
+  for (let m = 1; m <= 12; m++) if (row[m - 1] !== null) opts += '<option value="' + m + '">' + MONTHS[m - 1] + '</option>';
+  if (row[12] !== null) opts += '<option value="13">Average</option>';
+  s.innerHTML = opts;
+  if ([...s.options].some(o => o.value === want)) s.value = want;
+}
+function dateLabel(y, m) { return m === 13 ? y + ' (Average)' : MSHORT[m - 1] + ' ' + y; }
+function dateVal(y, m) { return m === 13 ? y + 0.5 : y + (m - 1) / 12; }
+function cpiAt(y, m) { return CPI[y][m - 1]; }
+
+function calcCPI() {
+  const a = num('i_amount');
+  const fm = parseInt($('i_fm').value), fy = parseInt($('i_fy').value);
+  const tm = parseInt($('i_tm').value), ty = parseInt($('i_ty').value);
+  const c1 = cpiAt(fy, fm), c2 = cpiAt(ty, tm);
+  if (!c1 || !c2 || a <= 0) { $('cpi_results').innerHTML = ''; return; }
+  const out = a * c2 / c1;
+  const total = (c2 / c1 - 1) * 100;
+  const dv = dateVal(ty, tm) - dateVal(fy, fm);
+  const avgYr = dv > 0.01 ? (Math.pow(c2 / c1, 1 / dv) - 1) * 100 : 0;
+  let rows = '';
+  const y0 = Math.min(fy, ty), y1 = Math.max(fy, ty);
+  for (let y = y0; y <= y1; y++) {
+    if (CPI[y][12] === null) continue;
+    rows += '<tr class="border-t border-gray-100"><td class="p-2">' + y + ' (Average)</td><td class="p-2 text-right">' + fmt$(a * CPI[y][12] / c1) + '</td><td class="p-2 text-right text-gray-500">' + fmtCPI(CPI[y][12]) + '</td></tr>';
+  }
+  $('cpi_results').innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-5">' +
+      '<div class="text-sm opacity-80">' + fmt$(a) + ' in ' + dateLabel(fy, fm) + ' has the buying power of</div>' +
+      '<div class="text-3xl font-extrabold mt-1">' + fmt$(out) + ' <span class="text-base font-semibold">in ' + dateLabel(ty, tm) + '</span></div>' +
+    '</div>' +
+    '<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 text-center">' +
+      '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">Total inflation</div><div class="font-bold num">' + total.toFixed(2) + '%</div></div>' +
+      '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">Average per year</div><div class="font-bold num">' + avgYr.toFixed(2) + '%</div></div>' +
+      '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">CPI ' + dateLabel(fy, fm) + '</div><div class="font-bold num">' + fmtCPI(c1) + '</div></div>' +
+      '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">CPI ' + dateLabel(ty, tm) + '</div><div class="font-bold num">' + fmtCPI(c2) + '</div></div>' +
+    '</div>' +
+    (rows ? '<div class="overflow-auto max-h-64 mt-4 border border-gray-100 rounded-lg"><table class="w-full text-sm num"><thead class="bg-gray-50"><tr><th class="text-left p-2">Year</th><th class="text-right p-2">Equivalent of ' + fmt$(a) + '</th><th class="text-right p-2">CPI</th></tr></thead><tbody>' + rows + '</tbody></table></div>' : '');
+  updateShare();
+}
+function calcFlat() {
+  const fa = num('f_amount'), fr = num('f_rate') / 100, fy = num('f_years');
+  const fwd = fa * Math.pow(1 + fr, fy);
+  $('fwd_results').innerHTML = fa > 0 ?
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-4"><div class="text-sm opacity-80">After ' + fy + ' years at ' + num('f_rate') + '% inflation, you will need</div><div class="text-2xl font-extrabold mt-1">' + fmt$(fwd) + '</div><div class="text-sm opacity-80 mt-1">to match the buying power of ' + fmt$(fa) + ' today — and ' + fmt$(fa) + ' left idle will feel like ' + fmt$(fa / Math.pow(1 + fr, fy)) + '.</div></div>' : '';
+  const ba = num('b_amount'), br = num('b_rate') / 100, by = num('b_years');
+  const bwd = ba / Math.pow(1 + br, by);
+  $('bwd_results').innerHTML = ba > 0 ?
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-4"><div class="text-sm opacity-80">' + fmt$(ba) + ' today equals the buying power of</div><div class="text-2xl font-extrabold mt-1">' + fmt$(bwd) + ' <span class="text-base font-semibold">' + by + ' years ago</span></div><div class="text-sm opacity-80 mt-1">at a constant ' + num('b_rate') + '% average inflation rate.</div></div>' : '';
+  updateShare();
+}
+function buildHistory() {
+  let rows = '';
+  for (let i = YEARS.length - 1; i >= 0; i--) {
+    const y = YEARS[i], avg = CPI[y][12];
+    let inf = '—';
+    if (avg !== null && i > 0 && CPI[YEARS[i - 1]][12] !== null) inf = ((avg / CPI[YEARS[i - 1]][12] - 1) * 100).toFixed(2) + '%';
+    rows += '<tr class="border-t border-gray-100"><td class="p-2.5">' + y + (avg === null ? ' <span class="text-gray-400">(Jan–Sep)</span>' : '') + '</td><td class="p-2.5 text-right">' + (avg === null ? '—' : fmtCPI(avg)) + '</td><td class="p-2.5 text-right">' + inf + '</td></tr>';
+  }
+  $('history_body').innerHTML = rows;
+}
+function updateShare() {
+  const q = new URLSearchParams({ a: $('i_amount').value, fm: $('i_fm').value, fy: $('i_fy').value, tm: $('i_tm').value, ty: $('i_ty').value, fr: $('f_rate').value, fyrs: $('f_years').value, br: $('b_rate').value, byrs: $('b_years').value });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  fillYears('i_fy', 2016); fillYears('i_ty', 2026);
+  fillMonths('i_fm', 2016, 13); fillMonths('i_tm', 2026, 9);
+  if (q.get('a')) $('i_amount').value = q.get('a');
+  if (q.get('fy') && CPI[q.get('fy')]) { $('i_fy').value = q.get('fy'); fillMonths('i_fm', parseInt(q.get('fy')), q.get('fm') ? parseInt(q.get('fm')) : undefined); }
+  if (q.get('ty') && CPI[q.get('ty')]) { $('i_ty').value = q.get('ty'); fillMonths('i_tm', parseInt(q.get('ty')), q.get('tm') ? parseInt(q.get('tm')) : undefined); }
+  if (q.get('fr')) $('f_rate').value = q.get('fr');
+  if (q.get('fyrs')) $('f_years').value = q.get('fyrs');
+  if (q.get('br')) $('b_rate').value = q.get('br');
+  if (q.get('byrs')) $('b_years').value = q.get('byrs');
+  buildHistory();
+  calcCPI(); calcFlat();
+})();
+</script>
 </body>
 </html>
