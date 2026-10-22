@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }</style>
+<title>Sign In | CalcNova</title>
+<meta name="description" content="Sign in to your CalcNova account.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/sign-in">
+</head>
+<body class="text-gray-800">
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="flex items-center gap-4">
+            <div class="space-x-4 hidden md:flex font-medium">
+                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+                <a href="real-estate.html" class="hover:text-[#14B8A6] transition">Real Estate</a>
+                <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
+            </div>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </div>
+</nav>
+<main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4"><a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <span class="text-gray-800 font-medium">Sign In</span></nav>
+    <h1 class="text-3xl font-extrabold text-gray-900 mb-6">Sign In</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <form onsubmit="return doSignIn(event)">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+                <input id="si_email" type="email" maxlength="100" required class="w-full border border-gray-300 rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-[#3F51B5]">
+                <label class="block text-sm font-medium text-gray-700 mb-1" style="margin-top:14px">Password:</label>
+                <input id="si_pw" type="password" maxlength="100" required class="w-full border border-gray-300 rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-[#3F51B5]">
+                <label class="flex items-center gap-2 mt-4 text-sm text-gray-600 cursor-pointer"><input id="si_stay" type="checkbox" checked class="accent-[#3F51B5]"> stay signed in</label>
+                <p id="si_err" class="hidden mt-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2"></p>
+                <div class="flex gap-3 mt-5">
+                    <button type="submit" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg transition">Sign In</button>
+                    <button type="reset" class="px-6 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition">Clear</button>
+                </div>
+                <p class="text-sm text-gray-500 mt-5 text-center">
+                    <a href="forget-password.html" class="text-[#3F51B5] hover:underline">Forget password?</a><br>
+                    New user? <a href="create-account.html" class="text-[#3F51B5] hover:underline">Create a free account</a>
+                </p>
+            </form>
+        </div>
+        <div>
+            <div class="relative text-center my-2 md:my-6">
+                <div class="border-t border-gray-300 absolute inset-x-0 top-1/2"></div>
+                <span class="relative bg-[#F8FAFC] px-4 text-gray-400 text-lg">or</span>
+            </div>
+            <button onclick="googleNote()" class="w-full flex items-center bg-white border border-gray-300 rounded-lg px-4 py-3 hover:bg-gray-50 transition shadow-sm">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" height="20" alt="Google" class="mr-3">
+                <span class="font-medium text-gray-700">Sign in with Google</span>
+            </button>
+            <p id="g_note" class="hidden mt-3 text-sm text-gray-500 bg-white border border-gray-200 rounded-lg px-3 py-2">Google sign-in isn't enabled yet — please use your CalcNova account, or create one free in a few seconds.</p>
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] mt-6">Advertisement — 300 × 250</div>
+            <p class="text-xs text-gray-400 mt-4">CalcNova accounts are stored privately in your browser on this device — your password never leaves it. Signing in keeps your session on this device so the site can greet you by name.</p>
+        </div>
+    </div>
+</main>
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
+<script>
+async function hashPw(pw) { const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('cn::' + pw)); return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join(''); }
+function getAccount() { try { return JSON.parse(localStorage.getItem('cn_account') || 'null'); } catch (e) { return null; } }
+function saveAccount(a) { localStorage.setItem('cn_account', JSON.stringify(a)); }
+function startSession(acct, stay) { const s = { name: acct.name, email: acct.email, t: Date.now() }; (stay ? localStorage : sessionStorage).setItem('cn_session', JSON.stringify(s)); }
+async function trySignIn(email, pw) {
+  const a = getAccount();
+  if (!a) return 'noaccount';
+  if (a.email !== String(email).trim().toLowerCase()) return 'invalid';
+  return (await hashPw(pw)) === a.hash ? 'ok' : 'invalid';
+}
+async function createAccount(name, email, pw) {
+  email = String(email).trim().toLowerCase();
+  const existing = getAccount();
+  if (existing && existing.email === email) return 'exists';
+  const acct = { name: String(name).trim(), email, hash: await hashPw(pw) };
+  saveAccount(acct);
+  return acct;
+}
+async function resetPassword(email, newPw) {
+  const a = getAccount();
+  if (!a || a.email !== String(email).trim().toLowerCase()) return false;
+  a.hash = await hashPw(newPw); saveAccount(a); return true;
+}
+
+function showErr(msg) { const e = document.getElementById('si_err'); e.textContent = msg; e.classList.remove('hidden'); }
+async function doSignIn(ev) {
+  ev.preventDefault();
+  const email = document.getElementById('si_email').value, pw = document.getElementById('si_pw').value;
+  const r = await trySignIn(email, pw);
+  if (r === 'ok') { startSession(getAccount(), document.getElementById('si_stay').checked); location.href = 'index.html'; }
+  else if (r === 'noaccount') showErr('No account exists on this device yet — create a free account first.');
+  else showErr('Invalid email or password. Please try again.');
+  return false;
+}
+function googleNote() { document.getElementById('g_note').classList.remove('hidden'); }
+</script>
+</body>
+</html>
