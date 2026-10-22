@@ -1,136 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boat Loan Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boat Loan Calculator — Payment, Sales Tax, Fees, Trade-In &amp; Affordable Price | CalcNova</title>
+<meta name="description" content="Free boat loan calculator: monthly payment and total cost with sales tax, fees and trade-in counted — or reverse it and find the boat price a monthly payment can afford.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/boat-loan">
+<meta property="og:title" content="Boat Loan Calculator — Payment & Affordable Boat Price | CalcNova">
+<meta property="og:description" content="Price-to-payment and payment-to-price, with tax, fees and trade-in in the math.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/boat-loan">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Boat Loan Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/boat-loan"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How long can a boat loan run?","acceptedAnswer":{"@type":"Answer","text":"Terms range from about 2 years on small boats to 20 years on large, expensive ones — much longer than auto loans, because boats hold value longer and cost more. The default here, 10 years on $35,000, is typical mid-market. Remember the trade-off at 7%: stretching from 5 to 10 years cuts the payment roughly in half but more than doubles the interest."}},
+{"@type":"Question","name":"Is sales tax charged on the full price or after trade-in?","acceptedAnswer":{"@type":"Answer","text":"It depends on the state: many tax the full price, some tax only the difference after a trade-in credit, and a few cap the tax. This calculator follows the gross-price method (tax on the full price, matching the reference model); if your state credits trade-ins, lower the tax rate entry to the effective rate on the difference."}},
+{"@type":"Question","name":"Should I finance the tax and fees or pay them upfront?","acceptedAnswer":{"@type":"Answer","text":"Paying upfront is cheaper: financing the $4,450 of tax and fees on the default boat raises the loan from $28,000 to $32,450 and the interest from $11,012 to $12,763 — you pay about $1,750 for the convenience of keeping $4,450 in your pocket for ten years. Financing makes sense only if the cash earns more elsewhere or is needed as a reserve."}},
+{"@type":"Question","name":"What does owning the boat cost beyond the loan?","acceptedAnswer":{"@type":"Answer","text":"Insurance (usually mandatory while financed), maintenance and winterization, fuel, marina or storage fees, and gear. For a mid-sized boat around $30,000, budget roughly $3,000–$7,000 a year on top of the loan payment — which is why the reverse mode exists: start from a payment that leaves room for the rest."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Boat Loan Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Boat Loan</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Boat Loan Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">A boat's sticker price is only part of what's financed: sales tax, title and registration, a trailer, the down payment and your trade-in all move the loan. Run it forward from a <strong>total price</strong> — or in <strong>reverse</strong>, from the monthly payment you can afford to the boat it buys.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Boat Loan Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Boat Price ($)</label>
-                        <input type="number" id="blBoatPrice" value="35000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Down Payment ($)</label>
-                        <input type="number" id="blDownPayment" value="5000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
-                        <select id="blTerm" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                            <option value="5">5 Years</option>
-                            <option value="10">10 Years</option>
-                            <option value="15" selected>15 Years</option>
-                            <option value="20">20 Years</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (%)</label>
-                        <input type="number" id="blRate" value="7.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-                <button onclick="calculateBoatLoan()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Boat Loan</button>
-
-                <div id="blResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Monthly Payment</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="blMonthly">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Paid</p>
-                            <p class="text-xl font-bold text-red-500" id="blTotalInterest">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Loan Amount</p>
-                            <p class="text-xl font-bold text-gray-800" id="blTotalCost">$0</p>
-                        </div>
-                    </div>
-                </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex gap-2">
+                <button id="tab_std" onclick="setMode('standard')" class="flex-1 font-bold py-2.5 rounded-lg transition bg-[#3F51B5] text-white">Total Price</button>
+                <button id="tab_rev" onclick="setMode('reverse')" class="flex-1 font-bold py-2.5 rounded-lg transition bg-gray-100 text-gray-600">Monthly Payment</button>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Financing Your Boat</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Buying a boat is a significant investment. Most buyers finance their boats through a marine lender or bank. Boat loans are typically secured by the boat itself. A larger down payment can lower your monthly payments and reduce the total interest you pay over the life of the loan.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
+                <label class="block" id="w_price"><span class="text-sm font-medium text-gray-600">Boat price</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="bl_price" type="number" value="35000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+                <label class="block hidden" id="w_pay"><span class="text-sm font-medium text-gray-600">Monthly payment</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="bl_pay" type="number" value="350" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Interest rate</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="bl_rate" type="number" value="7" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"><span class="text-gray-400">%</span></div></label>
+                <div class="grid grid-cols-3 gap-2">
+                    <label class="block col-span-2"><span class="text-sm font-medium text-gray-600">Loan term</span>
+                        <input id="bl_term" type="number" value="10" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()"></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">&nbsp;</span>
+                        <select id="bl_termunit" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5" onchange="calc()"><option value="y" selected>years</option><option value="m">months</option></select></label>
                 </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <label class="block col-span-2"><span class="text-sm font-medium text-gray-600">Down payment</span>
+                        <input id="bl_down" type="number" value="7000" min="0" step="any" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()"></label>
+                    <label class="block"><span class="text-sm font-medium text-gray-600">&nbsp;</span>
+                        <select id="bl_downunit" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5" onchange="downUnitChange()"><option value="d" selected>$</option><option value="p">%</option></select></label>
+                </div>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Trade-in value</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="bl_trade" type="number" value="0" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Sales tax</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="bl_tax" type="number" value="7" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"><span class="text-gray-400">%</span></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Fees <span class="text-gray-400">(title, registration, trailer…)</span></span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="bl_fees" type="number" value="2000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+            </div>
+            <label class="flex items-center gap-2 mt-4 font-medium text-gray-700 cursor-pointer"><input id="bl_inloan" type="checkbox" class="w-4 h-4 accent-[#3F51B5]" onchange="calc()"> Include all fees in loan <span class="text-gray-400 text-sm">(sales tax and fees financed instead of paid upfront)</span></label>
+            <button onclick="calc()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="bl_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">The boat costs more than the boat</div>
+                <p>On the defaults, the $35,000 boat totals <strong>$50,462</strong> once interest, tax and fees land — and ownership adds insurance, storage, fuel and upkeep on top (roughly $3,000–$7,000 a year for a mid-sized boat). Price the whole hobby, not the hull.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>Boat Loans and the Real Cost of Getting on the Water</h2>
+        <p>A boat loan works like an auto loan or a mortgage pointed at the water: a bank, credit union or marine finance company lends the purchase price, you repay in fixed monthly installments, and in most cases the boat itself is the collateral — miss payments and it can be repossessed. Loans cover new and used boats from a small fishing skiff to a yacht, typically with a down payment and terms from 2 to 20 years. Approval and pricing ride on credit history, income and the boat's age and value, so comparing several lenders — and using the reverse mode above to set your ceiling <em>before</em> visiting a dealer — is the cheapest negotiating move there is.</p>
+        <h3>The Fees Around the Price</h3>
+        <p>Budget beyond the sticker. <strong>Sales tax</strong> runs 4–8% in most states (some cap it or credit a trade-in against it). <strong>Origination fees</strong> of 1–3% of the loan are common — $500 to $1,500 on a $50,000 loan. Lenders often require a <strong>marine survey</strong> on used or larger boats, the nautical equivalent of a home inspection. Add <strong>title and registration</strong> (state fees varying with size; dealers usually handle it, private sales may not), dealer <strong>documentation fees</strong>, and for smaller boats a <strong>trailer</strong>, frequently sold separately. Together they easily reach thousands — the Fees field above exists so they land in your math, not in a surprise at signing.</p>
+        <h3>Owning It Is the Second Purchase</h3>
+        <p>The loan payment is only the first line of ownership. Insurance (generally compulsory while the loan runs) covers damage, liability and theft; maintenance — engine service, hull cleaning, winterization — is non-negotiable if the boat is to hold value; fuel burn dwarfs a car's (from $20 an outing for a small boat to hundreds for a large one); storage means a marina slip or dry stack unless you have your own dock; and gear, from life jackets and fire extinguishers to electronics, accumulates fast. For a boat around $30,000, plan on $3,000–$7,000 a year beyond the payment. None of this argues against buying — it argues for buying the size the full budget supports.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>Why does the tax show the full price even with a trade-in?</h4>
+        <p>Because that is the common rule this calculator models: many states tax the gross price. Where your state taxes only the price difference, the tax saving is one more reason a trade-in can beat a private sale — enter the effective rate to match your state.</p>
+        <h4>What down payment do lenders expect?</h4>
+        <p>Commonly 10–20%, with 20% the default in this calculator ($7,000 on $35,000). More down means a smaller loan, less interest, and a buffer against the boat depreciating faster than the balance falls — the marine version of going underwater.</p>
+        <h4>Can I pay the loan off early?</h4>
+        <p>Most simple-interest marine loans allow it without penalty, and every early dollar skips its future interest; check your note for a prepayment clause before counting on it, and use the schedule below to see how the balance falls.</p>
+    </section>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="auto-loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Auto Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The same math on four wheels, trade-in and tax included.</p>
+            </a>
+            <a href="auto-lease.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Auto Lease Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">When you'd rather rent the vehicle than own it.</p>
+            </a>
+            <a href="loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Amortized, deferred-payment and zero-coupon structures.</p>
+            </a>
+            <a href="personal-loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Personal Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The unsecured route some buyers use for smaller boats.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        function calculateBoatLoan() {
-            const price = parseFloat(document.getElementById('blBoatPrice').value);
-            const downPayment = parseFloat(document.getElementById('blDownPayment').value);
-            const years = parseInt(document.getElementById('blTerm').value);
-            const rate = parseFloat(document.getElementById('blRate').value) / 100 / 12;
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (isNaN(price) || isNaN(downPayment) || isNaN(years) || isNaN(rate) || price <= downPayment || downPayment < 0) {
-                alert("Please enter valid numbers. Price must be greater than down payment.");
-                return;
-            }
-
-            const loanAmount = price - downPayment;
-            const months = years * 12;
-
-            let monthlyPayment = 0;
-            if (rate === 0) {
-                monthlyPayment = loanAmount / months;
-            } else {
-                monthlyPayment = loanAmount * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
-            }
-
-            const totalRepaid = monthlyPayment * months;
-            const totalInterest = totalRepaid - loanAmount;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('blMonthly').textContent = formatter.format(monthlyPayment);
-            document.getElementById('blTotalInterest').textContent = formatter.format(totalInterest);
-            document.getElementById('blTotalCost').textContent = formatter.format(totalRepaid);
-
-            document.getElementById('blResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+let mode = 'standard', schedView = 'yearly';
+function setMode(m) {
+  mode = m;
+  $('tab_std').className = 'flex-1 font-bold py-2.5 rounded-lg transition ' + (m === 'standard' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  $('tab_rev').className = 'flex-1 font-bold py-2.5 rounded-lg transition ' + (m === 'reverse' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  $('w_price').classList.toggle('hidden', m !== 'standard');
+  $('w_pay').classList.toggle('hidden', m !== 'reverse');
+  calc();
+}
+function downUnitChange() {
+  const unit = $('bl_downunit').value;
+  const priceBasis = mode === 'standard' ? num('bl_price') : 0;
+  const v = num('bl_down');
+  if (priceBasis > 0 && v > 0) $('bl_down').value = unit === 'p' ? Math.round(100000 * v / priceBasis) / 1000 : Math.round(priceBasis * v / 100);
+  calc();
+}
+function donut2(principal, interest) {
+  const total = principal + interest, R = 42, C = 2 * Math.PI * R;
+  const f1 = total > 0 ? principal / total : 0, f2 = total > 0 ? interest / total : 0;
+  return '<svg width="210" height="100" viewBox="0 0 210 100">' +
+    (f1 > 0 ? '<circle cx="50" cy="50" r="' + R + '" fill="none" stroke="#2b7ddb" stroke-width="16" stroke-dasharray="' + Math.max(f1 * C - 1.5, 0.5) + ' ' + C.toFixed(2) + '" transform="rotate(-90 50 50)"/>' : '') +
+    (f2 > 0 ? '<circle cx="50" cy="50" r="' + R + '" fill="none" stroke="#8bbc21" stroke-width="16" stroke-dasharray="' + Math.max(f2 * C - 1.5, 0.5) + ' ' + C.toFixed(2) + '" transform="rotate(' + (-90 + f1 * 360) + ' 50 50)"/>' : '') +
+    '<text x="97" y="43" font-size="11" fill="#2b7ddb" font-weight="700">Principal ' + Math.round(f1 * 100) + '%</text>' +
+    '<text x="97" y="60" font-size="11" fill="#8bbc21" font-weight="700">Interest ' + Math.round(f2 * 100) + '%</text></svg>';
+}
+function statsHtml(pairs) {
+  return '<div class="grid grid-cols-2 gap-3 mt-4 text-center">' + pairs.map(p => '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">' + p[0] + '</div><div class="font-bold num">' + p[1] + '</div></div>').join('') + '</div>';
+}
+function setSchedView(v) { schedView = v; calc(); }
+function calc() {
+  const rate = num('bl_rate'), i = rate / 1200;
+  const termRaw = num('bl_term');
+  const n = Math.round($('bl_termunit').value === 'y' ? termRaw * 12 : termRaw);
+  const downPct = $('bl_downunit').value === 'p';
+  const trade = num('bl_trade'), taxR = num('bl_tax') / 100, fees = num('bl_fees');
+  const inLoan = $('bl_inloan').checked;
+  const out = $('bl_results');
+  if (n <= 0) { out.innerHTML = ''; updateShare(); return; }
+  let price, loan, pay;
+  if (mode === 'standard') {
+    price = num('bl_price');
+    const down = downPct ? price * num('bl_down') / 100 : num('bl_down');
+    const tax = price * taxR;
+    loan = price - down - trade + (inLoan ? tax + fees : 0);
+    if (price <= 0 || loan < 0) { out.innerHTML = ''; updateShare(); return; }
+    pay = i > 0 ? loan * i / (1 - Math.pow(1 + i, -n)) : loan / n;
+    finish(price, loan, pay, n, i, down, tax, fees, inLoan, trade);
+  } else {
+    pay = num('bl_pay');
+    if (pay <= 0) { out.innerHTML = ''; updateShare(); return; }
+    loan = i > 0 ? pay * (1 - Math.pow(1 + i, -n)) / i : pay * n;
+    // Solve price from loan = price - down(price) - trade + [inLoan ? tax(price) + fees : 0]
+    const dFrac = downPct ? num('bl_down') / 100 : 0;
+    const dFlat = downPct ? 0 : num('bl_down');
+    price = inLoan ? (loan + dFlat + trade - fees) / (1 - dFrac + taxR) : (loan + dFlat + trade) / (1 - dFrac);
+    const down = downPct ? price * dFrac : dFlat;
+    const tax = price * taxR;
+    if (!(price > 0)) { out.innerHTML = ''; updateShare(); return; }
+    finish(price, loan, pay, n, i, down, tax, fees, inLoan, trade);
+  }
+}
+function finish(price, loan, pay, n, i, down, tax, fees, inLoan, trade) {
+  const out = $('bl_results');
+  let bal = loan, interest = 0, mRows = '', yInterest = 0, yPrincipal = 0, yRows = '';
+  for (let k = 1; k <= n; k++) {
+    const it = bal * i, prin = Math.min(pay - it, bal), payK = prin + it;
+    bal -= prin; interest += it; yInterest += it; yPrincipal += prin;
+    mRows += '<tr class="border-t border-gray-100"><td class="p-2">' + k + '</td><td class="p-2 text-right">' + fmt$(it) + '</td><td class="p-2 text-right">' + fmt$(prin) + '</td><td class="p-2 text-right">' + fmt$(Math.max(bal, 0)) + '</td></tr>';
+    if (k % 12 === 0 || k === n) {
+      const yr = Math.ceil(k / 12);
+      mRows += '<tr class="bg-gray-50 font-semibold text-center"><td colspan="4" class="p-1.5">End of year ' + yr + '</td></tr>';
+      yRows += '<tr class="border-t border-gray-100"><td class="p-2">' + yr + '</td><td class="p-2 text-right">' + fmt$(yInterest) + '</td><td class="p-2 text-right">' + fmt$(yPrincipal) + '</td><td class="p-2 text-right">' + fmt$(Math.max(bal, 0)) + '</td></tr>';
+      yInterest = 0; yPrincipal = 0;
+    }
+  }
+  const upfront = down + (inLoan ? 0 : tax + fees);
+  const totalCost = price + interest + tax + fees;
+  const headLabel = mode === 'standard' ? 'Monthly pay' : 'Boat price';
+  const headVal = mode === 'standard' ? fmt$(pay) : fmt$(price);
+  const tblHead = '<thead class="bg-gray-50 sticky top-0"><tr><th class="text-left p-2">' + (schedView === 'monthly' ? 'Month' : 'Year') + '</th><th class="text-right p-2">Interest</th><th class="text-right p-2">Principal</th><th class="text-right p-2">Ending Balance</th></tr></thead>';
+  out.innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-5 flex flex-wrap items-center gap-5"><div class="flex-1 min-w-[200px]"><div class="text-sm opacity-80">' + headLabel + '</div><div class="text-3xl font-extrabold mt-1">' + headVal + '</div>' + (mode === 'reverse' ? '<div class="text-sm opacity-80 mt-1">affordable at ' + fmt$(pay) + ' a month</div>' : '') + '</div><div class="bg-white rounded-lg p-1">' + donut2(loan, interest) + '</div></div>' +
+    statsHtml([['Total loan amount', fmt$(loan)], ['Sales tax', fmt$(tax)], ['Upfront payment', fmt$(upfront)], ['Total of ' + n + ' loan payments', fmt$(pay * n)], ['Total loan interest', fmt$(interest)], ['Total cost (price, interest, tax, fees)', fmt$(totalCost)]]) +
+    '<div class="flex items-center gap-3 mt-5"><span class="font-bold text-gray-800">Amortization schedule</span><span class="text-sm"><button onclick="setSchedView(\'monthly\')" class="' + (schedView === 'monthly' ? 'font-bold text-[#3F51B5]' : 'text-gray-500 underline') + '">Monthly</button> · <button onclick="setSchedView(\'yearly\')" class="' + (schedView === 'yearly' ? 'font-bold text-[#3F51B5]' : 'text-gray-500 underline') + '">Annual</button></span></div>' +
+    '<div class="overflow-auto max-h-80 mt-2 border border-gray-100 rounded-lg"><table class="w-full text-sm num">' + tblHead + '<tbody>' + (schedView === 'monthly' ? mRows : yRows) + '</tbody></table></div>';
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ m: mode, pr: $('bl_price').value, pay: $('bl_pay').value, r: $('bl_rate').value, t: $('bl_term').value, tu: $('bl_termunit').value, d: $('bl_down').value, du: $('bl_downunit').value, tr: $('bl_trade').value, tx: $('bl_tax').value, f: $('bl_fees').value, il: $('bl_inloan').checked ? 1 : 0 });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  const set = (id, key) => { if (q.get(key)) $(id).value = q.get(key); };
+  set('bl_price', 'pr'); set('bl_pay', 'pay'); set('bl_rate', 'r'); set('bl_term', 't'); set('bl_termunit', 'tu'); set('bl_down', 'd'); set('bl_downunit', 'du'); set('bl_trade', 'tr'); set('bl_tax', 'tx'); set('bl_fees', 'f');
+  if (q.get('il') === '1') $('bl_inloan').checked = true;
+  setMode(q.get('m') === 'reverse' ? 'reverse' : 'standard');
+})();
+</script>
 </body>
 </html>
