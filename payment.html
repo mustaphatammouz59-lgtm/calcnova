@@ -1,150 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Calculator — Monthly Payment or Payoff Time | CalcNova</title>
+<meta name="description" content="Free payment calculator with two modes: Fixed Term finds the monthly payment for a loan term; Fixed Payments finds how long a fixed monthly payment takes to pay a loan off. Full amortization schedule included.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/payment">
+<meta property="og:title" content="Payment Calculator — Monthly Payment or Payoff Time | CalcNova">
+<meta property="og:description" content="Know the term? Get the payment. Know the payment? Get the payoff time — with total interest and an amortization schedule.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/payment">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+    .tabbtn.active { background: #3F51B5; color: #fff; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Payment Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/payment"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is the difference between the Fixed Term and Fixed Payments tabs?","acceptedAnswer":{"@type":"Answer","text":"They answer opposite questions about the same loan. Fixed Term starts from a deadline — a $200,000 loan at 6% over 15 years — and finds the payment that hits it exactly: $1,687.71 a month. Fixed Payments starts from a budget — the same loan paid at $2,000 a month — and finds the deadline: 11 years and 6.98 months, with $77,951.44 of interest instead of $103,788.46. Same debt, and the payment-first view shows what an extra $312.29 a month buys: three and a half years of freedom and $25,837 less interest."}},
+{"@type":"Question","name":"What happens if my monthly payment is too small?","acceptedAnswer":{"@type":"Answer","text":"If the payment does not exceed the first month's interest — loan amount times the monthly rate — the balance never falls. At exactly the interest amount the debt stands still forever; below it, the balance grows every month despite paying (negative amortization). On a $200,000 loan at 6%, the first month's interest is $1,000, so any payment of $1,000 or less can never pay the loan off. The calculator flags this instead of inventing a payoff date."}},
+{"@type":"Question","name":"Why does the payoff time show a fraction of a month?","acceptedAnswer":{"@type":"Answer","text":"Because the exact solution of the amortization equation is rarely a whole number of payments. Paying $2,000 a month against $200,000 at 6% mathematically clears the debt after 138.98 months: 138 full payments plus a final, smaller payment of about $1,951.56 in month 139. The schedule in the results shows that real, month-by-month version."}},
+{"@type":"Question","name":"Should I use the interest rate or the APR in this calculator?","acceptedAnswer":{"@type":"Answer","text":"The interest rate if you want the mechanics of the loan itself; the APR if you want its true total cost. APR folds lender fees, points and closing costs into a single annual figure, so a loan quoted at 6% with heavy fees may carry a 6.4% APR — and running the calculator at the APR shows what the debt really costs. With no fees, the two are identical."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Payment Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Payment</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Payment Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Every loan negotiation is really about two numbers — the <strong>term</strong> and the <strong>monthly payment</strong> — and you usually get to choose only one of them. Use the <strong>Fixed Term</strong> tab when the deadline is set and you need the payment; use <strong>Fixed Payments</strong> when the budget is set and you need the payoff date. For car-specific payments use the <a href="auto-loan.html" class="text-[#3F51B5] underline">Auto Loan Calculator</a>; for salary after tax, the <a href="take-home-paycheck.html" class="text-[#3F51B5] underline">Take-Home-Paycheck Calculator</a>.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Payment Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Amount ($)</label>
-                        <input type="number" id="payAmount" value="25000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Interest Rate (%)</label>
-                        <input type="number" id="payRate" value="7.5" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Loan Term (Years)</label>
-                        <input type="number" id="payYears" value="5" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Extra Monthly Payment ($)</label>
-                        <input type="number" id="payExtra" value="0" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+        <section class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex rounded-lg overflow-hidden border border-gray-300 mb-6" role="tablist">
+                <button id="tab_term" class="tabbtn active flex-1 py-2.5 font-semibold text-sm bg-gray-100 text-gray-700 transition" onclick="setMode('fixterm')">Fixed Term</button>
+                <button id="tab_pay" class="tabbtn flex-1 py-2.5 font-semibold text-sm bg-gray-100 text-gray-700 transition" onclick="setMode('fixpay')">Fixed Payments</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label for="p_amount" class="block text-sm font-medium text-gray-700 mb-1">Loan amount</label>
+                    <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                    <input id="p_amount" type="number" step="any" value="200000" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
                 </div>
-                <button onclick="calculatePayment()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Payment</button>
-
-                <div id="payResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Monthly Payment</p>
-                            <p class="text-3xl font-bold text-[#14B8A6]" id="payMonthly">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Paid</p>
-                            <p class="text-xl font-bold text-red-500" id="payTotalInterest">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Loan Cost</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="payTotalCost">$0</p>
-                        </div>
-                    </div>
+                <div id="row_term">
+                    <label for="p_term" class="block text-sm font-medium text-gray-700 mb-1">Loan term (years)</label>
+                    <input id="p_term" type="number" step="any" value="15" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num">
+                </div>
+                <div id="row_pay" style="display:none">
+                    <label for="p_monthlypay" class="block text-sm font-medium text-gray-700 mb-1">Monthly pay</label>
+                    <div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>
+                    <input id="p_monthlypay" type="number" step="any" value="2000" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>
+                </div>
+                <div>
+                    <label for="p_rate" class="block text-sm font-medium text-gray-700 mb-1">Interest rate</label>
+                    <div class="relative"><input id="p_rate" type="number" step="any" value="6" class="w-full rounded-lg border-gray-300 border pl-3 pr-7 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"><span class="absolute right-3 top-2.5 text-gray-400">%</span></div>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Payments are Calculated</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">This calculator uses the standard amortization formula to determine your fixed monthly payment. It assumes the interest is compounded monthly. If you add an "Extra Monthly Payment", the calculator will recalculate the total interest saved and the new payoff time.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="calculate()" class="flex-1 bg-[#4CAF50] hover:bg-green-600 text-white font-bold py-3 rounded-lg transition shadow-md">Calculate</button>
+                <button onclick="shareLink(this)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg transition text-sm">Copy share link</button>
             </div>
+            <p class="text-xs text-gray-400 mt-4" id="mode_hint">Fixed Term: the payment is whatever it takes to finish exactly on schedule — the way mortgages and auto loans are written.</p>
+        </section>
+
+        <div class="lg:col-span-3 space-y-6">
+            <section id="results"></section>
+            <!-- AdSense: 300x250 beside the form / below results on mobile -->
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 prose max-w-none prose-gray prose-headings:text-[#3F51B5] mt-12 mb-10">
+        <h2>One loan, two questions</h2>
+        <p>A loan is a contract between a borrower and a lender: money up front, repaid later with interest. Of everything in that contract, the two numbers borrowers actually negotiate are how long it runs and what it costs each month — and the two tabs above exist because those numbers trade against each other. Fix the term and the payment is determined. Fix the payment and the term is determined. Everything else is arithmetic.</p>
+        <h3>Fixed term: choosing the deadline</h3>
+        <p>Most big loans are written this way. Mortgages are the classic case: the choice between a 30-year and a 15-year term is a long-term financial decision, not a clerical one. The defaults above show the 15-year version of a $200,000 loan at 6% — $1,687.71 a month and $103,788.46 of interest. Stretch the same loan to 30 years in the <a href="loan.html">Loan Calculator</a> and the payment drops to $1,199.10 while the interest climbs to $231,676.38. People pick the shorter term when they value certainty and a lower rate and have savings to absorb the bigger payment; they pick the longer one to keep monthly obligations low, sometimes timing the payoff to coincide with retirement income. Auto loans run the same trade-off over 12 to 96 months, where the longest term with the smallest payment almost always ends up the most expensive way to buy the car.</p>
+        <h3>Fixed payments: choosing the budget</h3>
+        <p>The other tab answers the question debtors actually ask: <em>if I pay this much a month, when is it gone?</em> It is the natural tool for credit-card debt and for anyone with a fixed monthly surplus — and adding spare cash to the "Monthly Pay" field shows exactly how much sooner the loan dies. There is one hard limit, and the calculator enforces it honestly: if the payment does not cover the first month's interest (the loan amount times the monthly rate), the balance can never fall. At exactly that amount the debt is permanent; below it, the balance grows every month despite the payments — negative amortization, the trap behind minimum-payment credit cards. Lower the amount, raise the payment, or find a lower rate; one of the three has to move.</p>
+        <h3>Interest rate vs. APR</h3>
+        <p>The rate field deserves one distinction. The <strong>interest rate</strong> is just the cost of borrowing the principal. The <strong>APR</strong> is the broader measure: it prorates broker fees, discount points, closing costs and administrative charges across the life of the loan into a single annual figure. A loan with no fees has an APR equal to its rate; a loan with heavy upfront costs can have an APR noticeably above it — on large loans, a difference worth thousands. Run this calculator at the interest rate to see the loan's mechanics, then at the APR to see its true total cost. The advertised APR is usually the more honest input.</p>
+        <h3>Fixed vs. variable rates</h3>
+        <p>This calculator assumes a <strong>fixed</strong> rate — the rate most conventional mortgages, auto loans and student loans carry for their whole life. <strong>Variable</strong> (adjustable or floating) rates move with an index such as the Federal Reserve's key rate: payments change as the index changes, sometimes under a lender's cap, and usually only at agreed review intervals. Falling index rates favor variable borrowers; rising ones favor fixed. Variable structures live in adjustable-rate mortgages, HELOCs and some personal and student loans — and credit cards, whose issuers need give no advance notice of a variable-rate increase. A fixed-rate calculation like this one is the baseline every variable offer should be compared against.</p>
+        <h3>Frequently asked questions</h3>
+        <h4>Which tab should I use?</h4>
+        <p>Fixed Term when you know how long the loan should last (comparing mortgage or auto-loan offers). Fixed Payments when you know what you can pay each month (credit cards, extra-payment plans).</p>
+        <h4>Why 6.98 months — a fraction?</h4>
+        <p>The exact payoff for $2,000 a month on $200,000 at 6% is 138.98 months: 138 full payments and a smaller final one of about $1,951.56. The schedule shows the real month-by-month version.</p>
+        <h4>My payment "cannot pay off this loan" — what now?</h4>
+        <p>It does not exceed the first month's interest ($1,000 on the default loan). Raise the payment above that line, borrow less, or find a lower rate.</p>
+        <h4>Rate or APR?</h4>
+        <p>Rate for the mechanics, APR for the true cost including fees. They are identical only when the loan has no fees.</p>
+    </section>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Amortized, deferred and bond loans with any compounding and payback frequency.</p>
+            </a>
+            <a href="auto-loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Auto Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Car payments with trade-in, sales tax and fees included.</p>
+            </a>
+            <a href="take-home-paycheck.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Take-Home-Paycheck Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The other "payment": what actually lands in your account after taxes.</p>
+            </a>
+            <a href="apr.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">APR Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">True annual cost of a loan once fees and points are counted.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        function calculatePayment() {
-            const amount = parseFloat(document.getElementById('payAmount').value);
-            const rate = parseFloat(document.getElementById('payRate').value) / 100 / 12;
-            const years = parseFloat(document.getElementById('payYears').value);
-            const extra = parseFloat(document.getElementById('payExtra').value) || 0;
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (isNaN(amount) || isNaN(rate) || isNaN(years) || amount <= 0 || years <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
-
-            const months = years * 12;
-            
-            // Base Monthly Payment
-            let basePayment = 0;
-            if (rate === 0) {
-                basePayment = amount / months;
-            } else {
-                basePayment = amount * (rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
-            }
-
-            const totalMonthly = basePayment + extra;
-            
-            // Calculate Total Interest based on actual payments
-            let balance = amount;
-            let totalInterest = 0;
-            let currentMonths = 0;
-
-            while (balance > 0 && currentMonths < 1200) { // 100 years limit
-                let interest = balance * rate;
-                let principal = totalMonthly - interest;
-                
-                if (principal > balance) {
-                    principal = balance; // Last payment adjustment
-                }
-                
-                totalInterest += interest;
-                balance -= principal;
-                currentMonths++;
-            }
-
-            const totalCost = amount + totalInterest;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('payMonthly').textContent = formatter.format(totalMonthly);
-            document.getElementById('payTotalInterest').textContent = formatter.format(totalInterest);
-            document.getElementById('payTotalCost').textContent = formatter.format(totalCost);
-
-            document.getElementById('payResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+let mode = "fixterm";
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, "")); return isNaN(v) ? 0 : v; };
+const money = n => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function setMode(m) {
+  mode = m;
+  $("tab_term").classList.toggle("active", m === "fixterm");
+  $("tab_pay").classList.toggle("active", m === "fixpay");
+  $("row_term").style.display = m === "fixterm" ? "" : "none";
+  $("row_pay").style.display = m === "fixpay" ? "" : "none";
+  $("mode_hint").textContent = m === "fixterm"
+    ? "Fixed Term: the payment is whatever it takes to finish exactly on schedule — the way mortgages and auto loans are written."
+    : "Fixed Payments: the term is whatever your monthly budget makes it — the way credit-card payoff plans work. Add any extra you can spare to the payment.";
+  calculate();
+}
+function donutSVG(principal, interest) {
+  const total = principal + interest;
+  const pPct = total > 0 ? principal / total : 0, iPct = 1 - pPct;
+  const arc = (frac, startFrac) => {
+    if (frac <= 0) return "";
+    const r = 40, cx = 58.5, cy = 48;
+    const a0 = -Math.PI / 2 + startFrac * 2 * Math.PI, a1 = a0 + Math.min(frac, 0.9999) * 2 * Math.PI;
+    const x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0), x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+    return "M " + cx + " " + cy + " L " + x0.toFixed(3) + " " + y0.toFixed(3) + " A " + r + " " + r + " 0 " + (frac > 0.5 ? 1 : 0) + " 1 " + x1.toFixed(3) + " " + y1.toFixed(3) + " Z";
+  };
+  return '<svg width="220" height="96" role="img" aria-label="Principal versus interest"><path d="' + arc(pPct, 0) + '" fill="#2b7ddb"></path><path d="' + arc(iPct, pPct) + '" fill="#8bbc21"></path>'
+    + '<circle cx="58.5" cy="48" r="12" fill="white"></circle>'
+    + '<rect x="117" y="8" rx="3" ry="3" width="20" height="14" style="fill:#2b7ddb;"></rect><text x="142" y="19" font-size="13" fill="#374151">Principal ' + Math.round(pPct * 100) + '%</text>'
+    + '<rect x="117" y="26" rx="3" ry="3" width="20" height="14" style="fill:#8bbc21;"></rect><text x="142" y="37" font-size="13" fill="#374151">Interest ' + Math.round(iPct * 100) + '%</text></svg>';
+}
+function row(label, val) { return '<tr class="border-b border-gray-100"><td class="py-2 pr-3">' + label + '</td><td class="py-2 text-right num font-semibold">' + val + "</td></tr>"; }
+let schedRows = [];
+function scheduleHTML() {
+  let monthly = "", prevYearEnd = null;
+  schedRows.forEach(r => {
+    monthly += '<tr class="border-b border-gray-100"><td class="py-1.5 pr-3 num">' + r.m + '</td><td class="py-1.5 pr-3 text-right num">' + money(r.i) + '</td><td class="py-1.5 pr-3 text-right num">' + money(r.pr) + '</td><td class="py-1.5 text-right num">' + money(Math.max(0, r.bal)) + "</td></tr>";
+    if (r.m % 12 === 0) monthly += '<tr class="bg-gray-50 text-center text-xs text-gray-500 font-semibold"><td colspan="4" class="py-1.5">End of year ' + (r.m / 12) + "</td></tr>";
+  });
+  let annual = "", yI = 0, yP = 0, year = 0;
+  schedRows.forEach((r, idx) => {
+    yI += r.i; yP += r.pr; year = Math.ceil(r.m / 12);
+    if (r.m % 12 === 0 || idx === schedRows.length - 1) {
+      annual += '<tr class="border-b border-gray-100"><td class="py-1.5 pr-3 num">' + year + '</td><td class="py-1.5 pr-3 text-right num">' + money(yI) + '</td><td class="py-1.5 pr-3 text-right num">' + money(yP) + '</td><td class="py-1.5 text-right num">' + money(Math.max(0, r.bal)) + "</td></tr>";
+      yI = 0; yP = 0;
+    }
+  });
+  const head = '<thead><tr class="text-left text-gray-500 border-b border-gray-200"><th class="py-2 pr-3 font-semibold">PERIOD</th><th class="py-2 pr-3 font-semibold text-right">Interest</th><th class="py-2 pr-3 font-semibold text-right">Principal</th><th class="py-2 font-semibold text-right">Ending Balance</th></tr></thead>';
+  return '<section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"><div class="flex items-center justify-between mb-3"><h3 class="font-bold text-[#3F51B5]">Amortization schedule</h3>'
+    + '<div class="text-sm"><button id="sv_annual" class="font-bold text-[#3F51B5] underline" onclick="schedView(0)">Annual</button> <span class="text-gray-300">|</span> <button id="sv_monthly" class="text-[#3F51B5] underline" onclick="schedView(1)">Monthly</button></div></div>'
+    + '<div id="sched_annual" class="overflow-y-auto" style="max-height:420px"><table class="w-full text-[15px]">' + head.replace("PERIOD", "Year") + "<tbody>" + annual + "</tbody></table></div>"
+    + '<div id="sched_monthly" class="overflow-y-auto" style="max-height:420px;display:none"><table class="w-full text-[15px]">' + head.replace("PERIOD", "Month") + "<tbody>" + monthly + "</tbody></table></div></section>";
+}
+function schedView(v) {
+  $("sched_annual").style.display = v === 0 ? "" : "none";
+  $("sched_monthly").style.display = v === 1 ? "" : "none";
+  $("sv_annual").classList.toggle("font-bold", v === 0);
+  $("sv_monthly").classList.toggle("font-bold", v === 1);
+}
+function iterate(P, i, pay, maxMonths) {
+  schedRows = [];
+  let bal = P, k = 0, lastPay = pay;
+  while (bal > 0.000001 && k < maxMonths) {
+    const ik = bal * i; let pk = pay - ik; lastPay = pay;
+    if (pk >= bal) { pk = bal; lastPay = bal + ik; }
+    bal -= pk; k++;
+    schedRows.push({ m: k, i: ik, pr: pk, bal: Math.max(0, bal) });
+  }
+  return { months: k, lastPay };
+}
+function calculate() {
+  const P = Math.max(0, num("p_amount")), ratePct = num("p_rate"), i = ratePct / 100 / 12;
+  if (P <= 0) { $("results").innerHTML = ""; return; }
+  if (mode === "fixterm") {
+    const years = Math.max(0, num("p_term")), n = Math.max(1, Math.round(years * 12));
+    const pay = i === 0 ? P / n : P * i / (1 - Math.pow(1 + i, -n));
+    const total = pay * n, interest = total - P;
+    iterate(P, i, pay, n);
+    $("results").innerHTML =
+      '<div class="bg-[#3F51B5] text-white rounded-xl p-6 shadow-md"><div class="text-sm uppercase tracking-wide opacity-80">Monthly payment</div>'
+      + '<div class="text-4xl sm:text-5xl font-extrabold mt-1 num">' + money(pay) + '</div>'
+      + '<div class="text-sm opacity-90 mt-1">You will need to pay ' + money(pay) + " every month for " + (years % 1 === 0 ? years : years.toFixed(2)) + " years to pay off the debt.</div></div>"
+      + '<section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"><table class="w-full text-[15px]"><tbody>'
+      + row("Total of " + n + " payments", money(total)) + row("Total Interest", money(interest))
+      + '</tbody></table><div class="mt-3">' + donutSVG(P, Math.max(0, interest)) + "</div></section>"
+      + scheduleHTML();
+  } else {
+    const pay = Math.max(0, num("p_monthlypay"));
+    const firstInterest = P * i;
+    if (i > 0 && pay <= firstInterest) {
+      $("results").innerHTML = '<div class="bg-red-50 border border-red-200 text-red-800 rounded-xl p-6"><div class="font-bold text-lg">This payment can never pay off the loan</div>'
+        + '<p class="text-sm mt-2">The first month\'s interest alone is ' + money(firstInterest) + " (" + money(P) + " × " + (ratePct / 12).toFixed(4) + '% per month), and your payment is ' + money(pay) + ". The balance would never fall — at or below the interest amount it stands still or grows every month. Raise the monthly pay, borrow less, or find a lower rate.</p></div>";
+      return;
+    }
+    const nExact = i === 0 ? P / pay : Math.log(pay / (pay - firstInterest)) / Math.log(1 + i);
+    const total = pay * nExact, interest = total - P;
+    const yrs = Math.floor(nExact / 12), mos = nExact - 12 * yrs;
+    const it = iterate(P, i, pay, 1200);
+    $("results").innerHTML =
+      '<div class="bg-[#3F51B5] text-white rounded-xl p-6 shadow-md"><div class="text-sm uppercase tracking-wide opacity-80">Payoff time</div>'
+      + '<div class="text-4xl sm:text-5xl font-extrabold mt-1 num">' + yrs + " years " + mos.toFixed(2) + ' months</div>'
+      + '<div class="text-sm opacity-90 mt-1">You will need to pay ' + money(pay) + " every month for " + yrs + " years " + mos.toFixed(2) + " months to pay off the debt — " + it.months + " monthly payments, the last one smaller (" + money(it.lastPay) + ").</div></div>"
+      + '<section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"><table class="w-full text-[15px]"><tbody>'
+      + row("Time required to clear debt", (nExact / 12).toFixed(2) + " years")
+      + row("Total of " + nExact.toFixed(2) + " payments", money(total)) + row("Total Interest", money(interest))
+      + '</tbody></table><div class="mt-3">' + donutSVG(P, Math.max(0, interest)) + "</div></section>"
+      + scheduleHTML();
+  }
+}
+function shareLink(btn) {
+  const p = new URLSearchParams({ mode, amount: $("p_amount").value, term: $("p_term").value, pay: $("p_monthlypay").value, rate: $("p_rate").value });
+  const url = location.origin + location.pathname + "?" + p.toString();
+  history.replaceState(null, "", url);
+  if (navigator.clipboard) navigator.clipboard.writeText(url);
+  const old = btn.textContent; btn.textContent = "Copied!"; setTimeout(() => btn.textContent = old, 1600);
+}
+(function prefill() {
+  const q = new URLSearchParams(location.search);
+  if (q.get("amount") !== null) $("p_amount").value = q.get("amount");
+  if (q.get("term") !== null) $("p_term").value = q.get("term");
+  if (q.get("pay") !== null) $("p_monthlypay").value = q.get("pay");
+  if (q.get("rate") !== null) $("p_rate").value = q.get("rate");
+  setMode(q.get("mode") === "fixpay" ? "fixpay" : "fixterm");
+})();
+</script>
 </body>
 </html>
