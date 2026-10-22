@@ -1,153 +1,302 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debt Payoff Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debt Payoff Calculator — Avalanche Planner for Any Debts | CalcNova</title>
+<meta name="description" content="Free debt payoff calculator: build a debt avalanche schedule for up to 20 debts — cards, auto loans, mortgages — with extra monthly, yearly and one-time payments, payoff order, total interest, and the exact payment schedule for each debt.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/debt-payoff">
+<meta property="og:title" content="Debt Payoff Calculator — Avalanche Planner for Any Debts | CalcNova">
+<meta property="og:description" content="Cards, car loans, a mortgage — one avalanche plan with extra payments, in the order that costs the least.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/debt-payoff">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Debt Payoff Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/debt-payoff"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What does 'fixed total monthly payment' mean?","acceptedAnswer":{"@type":"Answer","text":"With the fixed total on, the combined amount you pay every month never drops: when a debt is finished, everything it was receiving rolls into the next debt in line, so the plan accelerates. With it off, each debt simply gets its own payment until it ends, and the monthly total shrinks as debts disappear — slower, but it frees up cash flow sooner. At this calculator's defaults the fixed plan finishes in 136 months; letting the total shrink stretches the same debts considerably longer."}},
+{"@type":"Question","name":"When do the yearly and one-time extra payments land?","acceptedAnswer":{"@type":"Answer","text":"The yearly extra is applied at the start of each year of the plan — months 1, 13, 25 and so on — and always aims at the highest-rate debt still standing, like every other extra dollar. The one-time extra lands in the exact month you choose. Both stack with the monthly extra and with the rollover from finished debts."}},
+{"@type":"Question","name":"Should extra money go to the mortgage or the credit cards first?","acceptedAnswer":{"@type":"Answer","text":"To the cards, and it is not close: at 18.99% APR a dollar of card balance costs roughly five times as much per year as a dollar of 4% mortgage balance. The avalanche order — highest rate first, regardless of the type or size of the debt — is why this plan kills both cards inside 39 months while the mortgage, paid only its regular payment until then, still finishes years early thanks to the rollovers that follow."}},
+{"@type":"Question","name":"Is it always wise to pay debts off early?","acceptedAnswer":{"@type":"Answer","text":"Not always. Check for prepayment penalties first. Keep an emergency fund — extra payments are hard to undo when a transmission fails. And money aimed at a very cheap debt (say 3–4%) might historically have earned more invested, though that trade swaps a guaranteed saving for a market risk. High-rate consumer debt, by contrast, is almost always the best 'investment' available: paying it off earns its APR, guaranteed and tax-free."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Debt Payoff Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Debt Payoff</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Debt Payoff Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Every debt you have — credit cards, an auto loan, the mortgage — in one <strong>debt avalanche</strong> plan: each debt gets its regular payment, and every spare dollar, including the payments freed when a debt dies, attacks the highest interest rate. Add extra payments per month, per year, or as a one-time lump sum, and see the month each debt dies and what the whole pile costs. For cards only, use the <a href="credit-cards-payoff.html" class="text-[#3F51B5] underline">Credit Cards Payoff Calculator</a>.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Debt Payoff Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Total Debt Amount ($)</label>
-                        <input type="number" id="dpTotal" value="15000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl">
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Extra payment per month</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                        <span class="text-gray-400">$</span>
+                        <input id="p_exm" type="number" value="100" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Average Interest Rate (APR) (%)</label>
-                        <!-- تم تعديل القيمة الافتراضية لتكون واقعية -->
-                        <input type="number" id="dpRate" value="15" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Extra payment per year</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                        <span class="text-gray-400">$</span>
+                        <input id="p_exy" type="number" value="0" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()">
                     </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Monthly Payment Amount ($)</label>
-                        <input type="number" id="dpPayment" value="400" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">One-time extra payment</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                        <span class="text-gray-400">$</span>
+                        <input id="p_ex1" type="number" value="0" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()">
                     </div>
-                </div>
-                <button onclick="calculateDebtPayoff()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Debt Free Date</button>
-
-                <div id="dpResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Time to be Debt Free</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="dpTime">0 Months</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Paid</p>
-                            <p class="text-xl font-bold text-red-500" id="dpTotalInterest">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Amount Paid</p>
-                            <p class="text-xl font-bold text-gray-800" id="dpTotalPaid">$0</p>
-                        </div>
-                    </div>
-                </div>
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">...made during month #</span>
+                    <input id="p_ex1m" type="number" value="5" min="1" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()">
+                </label>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How to Pay Off Debt Faster</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Paying off debt requires a plan. This calculator helps you see how long it will take to become debt-free based on your monthly payment. If the time is too long, try increasing your monthly payment even by a small amount. You can also explore strategies like the Debt Snowball or Debt Avalanche to tackle multiple debts efficiently.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
+            <div class="mt-4 max-w-xl">
+                <div class="text-sm font-medium text-gray-600 mb-1">Fixed total monthly payment?</div>
+                <div class="flex gap-2 max-w-md">
+                    <button id="f_yes" onclick="setFixed(true)" class="flex-1 font-bold py-2 rounded-lg transition bg-[#3F51B5] text-white text-sm">Yes — roll freed payments forward</button>
+                    <button id="f_no" onclick="setFixed(false)" class="flex-1 font-bold py-2 rounded-lg transition bg-gray-100 text-gray-600 text-sm">No — total shrinks</button>
                 </div>
+                <p class="text-xs text-gray-400 mt-1">"Yes" keeps the combined monthly total constant: a finished debt's payment is redistributed to the remaining debts. "No" lets the total fall as debts are paid off.</p>
+            </div>
+            <div class="flex gap-2 mt-5 max-w-md">
+                <button id="m_avalanche" onclick="setMethod('avalanche')" class="flex-1 font-bold py-2 rounded-lg transition bg-[#3F51B5] text-white text-sm">Avalanche — highest APR first</button>
+                <button id="m_snowball" onclick="setMethod('snowball')" class="flex-1 font-bold py-2 rounded-lg transition bg-gray-100 text-gray-600 text-sm">Snowball — smallest balance first</button>
+            </div>
+<div class="overflow-x-auto mt-5">
+                <table class="w-full text-sm">
+                    <thead><tr class="text-left text-gray-500 border-b border-gray-200">
+                        <th class="p-2 w-8"></th><th class="p-2">Debt name</th><th class="p-2">Remaining balance</th><th class="p-2">Monthly or min. payment</th><th class="p-2">Interest rate</th>
+                    </tr></thead>
+                    <tbody id="card_rows"></tbody>
+                </table>
+            </div>
+            <button id="more_btn" onclick="toggleMore()" class="mt-3 text-sm text-[#3F51B5] font-medium hover:underline">Show more input fields</button>
+            <button onclick="calc()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="p_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">The defaults, by the numbers</div>
+                <p>$284,000 of debt — a $250,000 mortgage, a $25,000 auto loan and $9,000 of card balances — with payments of $2,529 plus $100 extra a month. The avalanche kills Credit card 1 in <strong>31 months</strong> and Credit card 2 in 39, the auto loan in 48, and then turns the full $2,629 onto the mortgage, which dies in <strong>month 136</strong> instead of month 180 on its own schedule. Total interest: about <strong>$72,853</strong>. The cards are 3% of the balance but were first in line — because at ~19% they were the most expensive dollars owed.</p>
+</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>One Plan for Every Debt You Owe</h2>
+        <p>Most households do not have "a debt" — they have a pile: a mortgage, a car loan, a couple of cards, maybe a student or personal loan, each with its own balance, payment and rate. Paying them in the wrong order is expensive in a quiet way: every month a high-rate balance survives, it costs its rate, while extra money aimed at a cheap loan saves only the cheap rate. This calculator stacks the whole pile into a single plan and answers the only questions that matter: what do I pay on each debt this month, when does each one die, and what does the pile cost in total?</p>
+        <h3>The Avalanche, Applied to Everything</h3>
+        <p>The plan is the debt avalanche, unchanged from the card-only version but applied across debt types. Every debt receives its contractual monthly or minimum payment. Everything else — the extra monthly amount, the yearly and one-time extras, and (with the fixed total switched on) every payment freed by a finished debt — flows to the <strong>highest interest rate</strong> still standing, regardless of whether that debt is a $3,000 card or a $300,000 loan. Rate, not balance and not debt type, sets the order, because rate is what a surviving balance charges you. When a debt is finished mid-month, the leftover moves to the next debt in the very same month.</p>
+        <h3>Fixed Total: The Accelerator</h3>
+        <p>The "fixed total" choice is the plan's engine. Switched on, your combined monthly outlay never falls: the $250 that used to feed a dead card joins the attack on the next debt, whose freed payment joins the next, until in the final stretch the entire amount lands on the last debt every month. Switched off, each debt keeps only its own payment and the monthly total shrinks as debts die — gentler on cash flow, but at the defaults the plan runs to month 178 instead of 136, and the pile costs about $16,081 more interest. Same debts, same starting payments; the rollover is worth more than most rate negotiations.</p>
+        <h3>Before You Accelerate</h3>
+        <p>Three cautions belong in any payoff plan. <strong>Prepayment penalties</strong> still exist on some loans — check before sending extra. <strong>Liquidity</strong>: extra principal is a one-way door, so keep a starter emergency fund before attacking even expensive debt, and a full one before attacking cheap debt. And <strong>opportunity cost</strong>: money against a 4% mortgage earns a guaranteed 4%; the market has historically offered more, but with risk and no guarantee — while money against a 19% card "earns" 19% guaranteed, which is why the avalanche almost always starts with the cards whatever the pile looks like. When the debts themselves become unpayable, the honest alternatives — a nonprofit debt management plan, settlement, or bankruptcy — exist on a spectrum of credit damage, and a counselor from a nonprofit agency is the right first call.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>What does "fixed total monthly payment" mean?</h4>
+        <p>On: the combined payment never drops and finished debts' payments roll forward. Off: each debt keeps only its own payment and the total shrinks as debts end. On is faster and cheaper; off frees cash sooner.</p>
+        <h4>When do yearly and one-time extras land?</h4>
+        <p>The yearly extra lands at the start of each plan year (months 1, 13, 25…); the one-time extra in the exact month you pick. Both aim at the highest-rate debt standing, like all extra money here.</p>
+        <h4>Mortgage or cards first?</h4>
+        <p>Cards — at ~19% versus ~4%, each card dollar costs about five times more per year. The avalanche reaches the mortgage last but still retires it years early via rollovers.</p>
+        <h4>Is early payoff always wise?</h4>
+        <p>Check penalties, keep an emergency fund, and weigh cheap debt against investing. High-rate consumer debt is the exception: clearing it is a guaranteed return equal to its APR.</p>
+    </section>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="credit-cards-payoff.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Credit Cards Payoff Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The cards-only version, driven by one monthly budget.</p>
+            </a>
+            <a href="payment.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Payment Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Fixed term vs. fixed payment for any single loan.</p>
+            </a>
+            <a href="loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Price a consolidation loan to replace the cards.</p>
+            </a>
+            <a href="debt-to-income.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Debt-to-Income Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">How the whole pile weighs against your income.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        function calculateDebtPayoff() {
-            const total = parseFloat(document.getElementById('dpTotal').value);
-            const apr = parseFloat(document.getElementById('dpRate').value) / 100;
-            const payment = parseFloat(document.getElementById('dpPayment').value);
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            // التحقق من صحة المدخلات
-            if (isNaN(total) || isNaN(apr) || isNaN(payment) || total <= 0 || payment <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
-
-            const monthlyRate = apr / 12;
-            
-            // التحقق مما إذا كانت الدفعة تغطي الفائدة على الأقل
-            if (payment <= total * monthlyRate) {
-                alert("Your monthly payment is too low to ever pay off this debt. Please increase the payment amount.");
-                return;
-            }
-
-            let currentBalance = total;
-            let months = 0;
-            let totalInterest = 0;
-
-            // حلقة حسابية لحين سداد الدين بالكامل
-            while (currentBalance > 0 && months < 1200) {
-                let interest = currentBalance * monthlyRate;
-                let principal = payment - interest;
-                
-                if (principal > currentBalance) {
-                    principal = currentBalance;
-                }
-
-                totalInterest += interest;
-                currentBalance -= principal;
-                months++;
-            }
-
-            const totalPaid = total + totalInterest;
-            
-            // تنسيق الوقت
-            const years = Math.floor(months / 12);
-            const remainingMonths = months % 12;
-            let timeString = "";
-            if (years > 0) timeString += years + " Years ";
-            if (remainingMonths > 0) timeString += remainingMonths + " Months";
-            if (years === 0 && remainingMonths === 0) timeString = months + " Months";
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            // عرض النتائج
-            document.getElementById('dpTime').textContent = timeString;
-            document.getElementById('dpTotalInterest').textContent = formatter.format(totalInterest);
-            document.getElementById('dpTotalPaid').textContent = formatter.format(totalPaid);
-
-            // إظهار قسم النتائج
-            document.getElementById('dpResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const MAXC = 20, VISIBLE = 6;
+let showMore = false, method = 'avalanche', fixedTotal = true;
+const numOf = el => { const v = parseFloat(String(el.value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function buildRows() {
+  let h = '';
+  const defaults = { 1: ['Auto loan', 25000, 519, 4.9], 2: ['Home mortgage', 250000, 1800, 4], 3: ['Credit card 1', 6000, 150, 18.99], 4: ['Credit card 2', 3000, 60, 16.99] };
+  for (let k = 1; k <= MAXC; k++) {
+    const d = defaults[k] || ['', '', '', ''];
+    h += '<tr class="' + (k > VISIBLE ? 'extra_row hidden' : '') + '"><td class="p-2 text-gray-400">' + k + '.</td>' +
+      '<td class="p-1"><input id="nm' + k + '" type="text" value="' + d[0] + '" class="w-full border border-gray-300 rounded-lg p-2" oninput="calc()"></td>' +
+      '<td class="p-1"><input id="bal' + k + '" type="number" value="' + d[1] + '" min="0" step="any" class="w-full border border-gray-300 rounded-lg p-2 num" oninput="calc()"></td>' +
+      '<td class="p-1"><input id="min' + k + '" type="number" value="' + d[2] + '" min="0" step="any" class="w-full border border-gray-300 rounded-lg p-2 num" oninput="calc()"></td>' +
+      '<td class="p-1"><input id="apr' + k + '" type="number" value="' + d[3] + '" min="0" step="any" class="w-full border border-gray-300 rounded-lg p-2 num" oninput="calc()"></td></tr>';
+  }
+  $('card_rows').innerHTML = h;
+}
+function toggleMore() {
+  showMore = !showMore;
+  document.querySelectorAll('.extra_row').forEach(r => r.classList.toggle('hidden', !showMore));
+  $('more_btn').textContent = showMore ? 'Hide extra fields' : 'Show more input fields';
+}
+function setMethod(m) {
+  method = m;
+  $('m_avalanche').className = 'flex-1 font-bold py-2 rounded-lg transition text-sm ' + (m === 'avalanche' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  $('m_snowball').className = 'flex-1 font-bold py-2 rounded-lg transition text-sm ' + (m === 'snowball' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  calc();
+}
+function setFixed(f) {
+  fixedTotal = f;
+  $('f_yes').className = 'flex-1 font-bold py-2 rounded-lg transition text-sm ' + (f ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  $('f_no').className = 'flex-1 font-bold py-2 rounded-lg transition text-sm ' + (!f ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  calc();
+}
+function termText(n) {
+  const y = Math.floor(n / 12), m = n % 12;
+  return n + ' months (' + ((y ? y + (y === 1 ? ' year' : ' years') : '') + (y && m ? ' and ' : '') + (m ? m + (m === 1 ? ' month' : ' months') : (y ? '' : '0 months'))) + ')';
+}
+function scheduleText(c) {
+  const pays = c.payments;
+  if (!pays.length) return '';
+  const lastM = pays[pays.length - 1][0], lastAmt = pays[pays.length - 1][1];
+  const body = pays.slice(0, -1);
+  const parts = [];
+  let s = 0;
+  for (let j = 1; j <= body.length; j++) {
+    if (j === body.length || Math.abs(body[j][1] - body[s][1]) > 0.004) {
+      parts.push((parts.length ? 'Then pay ' : 'Pay ') + fmt$(body[s][1]) + ' until month ' + body[j - 1][0]);
+      s = j;
+    }
+  }
+  if (!body.length) return 'Pay ' + fmt$(lastAmt) + ' at month ' + lastM + ' to payoff';
+  return parts.join('. ') + '. Pay ' + fmt$(lastAmt) + ' at month ' + lastM + ' to payoff';
+}
+function simulate(debtsIn, o) {
+  const debts = debtsIn.map(d => ({ ...d, bal: d.balance, totInt: 0, totPay: 0, payoffMonth: 0, payments: [] }));
+  const order = [...debts].sort((a, b) => method === 'avalanche' ? b.rate - a.rate : a.balance - b.balance);
+  const basePool = debts.reduce((s, d) => s + d.pay, 0) + o.extraMonth;
+  let month = 0, stuck = false;
+  while (debts.some(d => d.bal > 0.000001)) {
+    month++;
+    if (month > 2400) { stuck = true; break; }
+    for (const d of debts) if (d.bal > 0) { const it = d.bal * d.rate / 1200; d.bal += it; d.totInt += it; }
+    const extraNow = (o.extraYear && month % 12 === 1 ? o.extraYear : 0) + (o.extraOne && month === o.extraOneMonth ? o.extraOne : 0);
+    const paid = new Map();
+    if (fixedTotal) {
+      let money = basePool + extraNow;
+      for (const d of debts) { if (d.bal <= 0) continue; const p = Math.min(d.pay, d.bal, money); if (p > 0) paid.set(d, p); money -= p; }
+      for (const d of order) { if (money <= 0.000001) break; if (d.bal <= 0) continue; const owed = d.bal - (paid.get(d) || 0); const e = Math.min(owed, money); if (e > 0) { paid.set(d, (paid.get(d) || 0) + e); money -= e; } }
+    } else {
+      for (const d of debts) { if (d.bal <= 0) continue; const p = Math.min(d.pay, d.bal); if (p > 0) paid.set(d, p); }
+      let money = o.extraMonth + extraNow;
+      for (const d of order) { if (money <= 0.000001) break; if (d.bal <= 0) continue; const owed = d.bal - (paid.get(d) || 0); const e = Math.min(owed, money); if (e > 0) { paid.set(d, (paid.get(d) || 0) + e); money -= e; } }
+    }
+    for (const d of debts) { const p = paid.get(d) || 0; if (p > 0) { d.bal -= p; d.totPay += p; d.payoffMonth = month; d.payments.push([month, p]); } }
+  }
+  return { debts, months: month, stuck };
+}
+function calc() {
+  const debtsIn = [];
+  for (let k = 1; k <= MAXC; k++) {
+    const bal = numOf($('bal' + k));
+    if (bal > 0) debtsIn.push({ idx: k, name: $('nm' + k).value.trim() || ('Debt ' + k), balance: bal, pay: numOf($('min' + k)), rate: numOf($('apr' + k)) });
+  }
+  const out = $('p_results');
+  if (!debtsIn.length) { out.innerHTML = ''; updateShare(); return; }
+  const o = { extraMonth: numOf($('p_exm')), extraYear: numOf($('p_exy')), extraOne: numOf($('p_ex1')), extraOneMonth: Math.max(1, Math.round(numOf($('p_ex1m')))) };
+  const r = simulate(debtsIn, o);
+  if (r.stuck) {
+    out.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-5"><div class="font-bold">These payments never clear the debts.</div><p class="text-sm mt-1">At least one debt\'s payment does not beat its monthly interest, and no extra money reaches it. Raise a payment or add an extra amount so every balance is shrinking.</p></div>';
+    updateShare(); return;
+  }
+  const totInt = r.debts.reduce((s, d) => s + d.totInt, 0), totPay = r.debts.reduce((s, d) => s + d.totPay, 0);
+  const baseTotal = debtsIn.reduce((s, d) => s + d.pay, 0) + o.extraMonth;
+  let h = '<div class="bg-[#3F51B5] text-white rounded-xl p-5"><div class="text-sm opacity-80">' + (fixedTotal ? 'Making fixed payments of ' + fmt$(baseTotal) + ' every month' : 'With the monthly/min. and extra payments') + (o.extraMonth ? ', of which ' + fmt$(o.extraMonth) + ' is the extra monthly payment' : '') + ', you are debt-free in</div><div class="text-3xl font-extrabold mt-1">' + termText(r.months) + '</div><div class="text-sm opacity-80 mt-1">Total paid ' + fmt$(totPay) + ', of which interest is ' + fmt$(totInt) + '.</div></div>';
+  h += '<div class="overflow-x-auto mt-4"><table class="w-full text-sm num"><thead><tr class="text-left text-gray-500 border-b border-gray-200"><th class="p-2">Debt</th><th class="p-2">Payoff Length</th><th class="p-2 text-right">Total Interest</th><th class="p-2 text-right">Total Payments</th><th class="p-2">Payment Schedule</th></tr></thead><tbody>';
+  for (const d of [...r.debts].sort((a, b) => a.payoffMonth - b.payoffMonth)) {
+    h += '<tr class="border-b border-gray-100 align-top"><td class="p-2 font-medium">#' + d.idx + ': ' + d.name.replace(/</g, '') + '</td><td class="p-2">' + termText(d.payoffMonth) + '</td><td class="p-2 text-right">' + fmt$(d.totInt) + '</td><td class="p-2 text-right">' + fmt$(d.totPay) + '</td><td class="p-2 text-gray-600">' + scheduleText(d) + '</td></tr>';
+  }
+  h += '</tbody></table></div>';
+  out.innerHTML = h;
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ exm: $('p_exm').value, exy: $('p_exy').value, ex1: $('p_ex1').value, ex1m: $('p_ex1m').value, fixed: fixedTotal ? 'y' : 'n', method });
+  for (let k = 1; k <= MAXC; k++) { if (numOf($('bal' + k)) > 0) { q.set('nm' + k, $('nm' + k).value); q.set('bal' + k, $('bal' + k).value); q.set('min' + k, $('min' + k).value); q.set('apr' + k, $('apr' + k).value); } }
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+buildRows();
+(function init() {
+  const q = new URLSearchParams(location.search);
+  if (q.get('exm')) $('p_exm').value = q.get('exm');
+  if (q.get('exy')) $('p_exy').value = q.get('exy');
+  if (q.get('ex1')) $('p_ex1').value = q.get('ex1');
+  if (q.get('ex1m')) $('p_ex1m').value = q.get('ex1m');
+  let anyExtra = false;
+  for (let k = 1; k <= MAXC; k++) { if (q.get('bal' + k)) { $('bal' + k).value = q.get('bal' + k); if (q.get('nm' + k)) $('nm' + k).value = q.get('nm' + k); if (q.get('min' + k)) $('min' + k).value = q.get('min' + k); if (q.get('apr' + k)) $('apr' + k).value = q.get('apr' + k); if (k > VISIBLE) anyExtra = true; } }
+  if (anyExtra) toggleMore();
+  if (q.get('fixed') === 'n') setFixed(false);
+  setMethod(q.get('method') === 'snowball' ? 'snowball' : 'avalanche');
+})();
+</script>
 </body>
 </html>
