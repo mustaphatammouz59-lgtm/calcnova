@@ -1,152 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Credit Card Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credit Card Calculator — Payoff Time &amp; Interest | CalcNova</title>
+<meta name="description" content="Free credit card calculator: find how long it takes to pay off a balance at a fixed monthly payment, or the monthly payment needed to be debt-free within a chosen timeframe — with total interest and a full payoff schedule.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/credit-card">
+<meta property="og:title" content="Credit Card Calculator — Payoff Time & Interest | CalcNova">
+<meta property="og:description" content="How long until a credit card balance is gone, and what will the interest cost? Fixed payment and fixed timeframe modes.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/credit-card">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Credit Card Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/credit-card"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why is the interest here slightly different from my card statement?","acceptedAnswer":{"@type":"Answer","text":"Most issuers charge interest with the average daily balance method: a daily periodic rate (APR ÷ 365) applied to the average of each day's balance in the billing cycle. When you pay, and whether you made purchases mid-cycle, shifts the result by small amounts. This calculator uses the standard monthly model — interest of APR ÷ 12 on each month's opening balance — which matches issuer math closely but can differ by a few cents over a long payoff."}},
+{"@type":"Question","name":"What happens if my payment only covers the interest?","acceptedAnswer":{"@type":"Answer","text":"The balance never falls. On an $8,000 balance at 18% APR the interest alone is $120 a month, so a $120 payment keeps the debt exactly where it is forever, and anything less makes it grow. Every dollar above the interest is what actually reduces the balance — which is why small increases in the monthly payment cut the payoff time so dramatically."}},
+{"@type":"Question","name":"Is 'interest plus 1% of the balance' a good payment plan?","acceptedAnswer":{"@type":"Answer","text":"It is the minimum-payment formula many issuers use, and it is designed to keep you in debt a long time: on $8,000 at 18% APR it starts at $200 a month but shrinks as the balance falls, stretching the payoff past five years and costing about $4,300 in interest. Paying a fixed $200 instead — the same first payment, held constant — clears the debt on the same schedule here because this calculator holds the amount fixed; letting it shrink like a true minimum adds many more months."}},
+{"@type":"Question","name":"When is a balance transfer worth it?","acceptedAnswer":{"@type":"Answer","text":"When the transfer fee costs less than the interest you avoid. Moving $8,000 to a 0% APR card for 18 months with a 3% fee costs $240; keeping it at 18% APR and paying $399 a month costs over $950 of interest in the same 18 months. The transfer wins if you actually clear the balance inside the promotional window — whatever remains when the regular APR returns starts accruing at the full rate."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Credit Card Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Credit Card</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Credit Card Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Two questions, one calculator: <strong>how long</strong> will a balance take to clear at the payment you can afford — or <strong>how much</strong> must you pay each month to be rid of it by a date you choose? Either way you see the total interest and the full month-by-month schedule.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Credit Card Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Balance ($)</label>
-                        <input type="number" id="ccBalance" value="5000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Credit card balance</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                        <span class="text-gray-400">$</span>
+                        <input id="c_balance" type="number" value="8000" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()">
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Interest Rate (APR) (%)</label>
-                        <input type="number" id="ccRate" value="19.99" step="0.01" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Interest rate (APR)</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                        <input id="c_rate" type="number" value="18" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()">
+                        <span class="text-gray-400">%</span>
                     </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Monthly Payment ($)</label>
-                        <input type="number" id="ccPayment" value="200" class="w-full border border-gray-300 rounded-md p-2 outline-none">
+                </label>
+            </div>
+
+            <div class="flex gap-2 mt-6">
+                <button id="tab_pay" onclick="setMode('pay')" class="flex-1 font-bold py-2.5 rounded-lg transition bg-[#3F51B5] text-white">Pay a fixed amount</button>
+                <button id="tab_time" onclick="setMode('time')" class="flex-1 font-bold py-2.5 rounded-lg transition bg-gray-100 text-gray-600">Pay off by a deadline</button>
+            </div>
+
+            <div id="mode_pay" class="mt-4">
+                <label class="block">
+                    <span class="text-sm font-medium text-gray-600">Monthly payment</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]">
+                        <span class="text-gray-400">$</span>
+                        <input id="c_payment" type="number" value="200" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()">
+                        <span class="text-gray-400 whitespace-nowrap">/ month</span>
                     </div>
+                </label>
+                <div class="flex flex-wrap gap-2 mt-3 text-sm">
+                    <span class="text-gray-500 py-1">Minimum-payment presets:</span>
+                    <button onclick="preset(1)" class="px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 transition">Interest + 1% of balance</button>
+                    <button onclick="preset(2)" class="px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 transition">2%</button>
+                    <button onclick="preset(3)" class="px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 transition">3%</button>
+                    <button onclick="preset(4)" class="px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 transition">4%</button>
+                    <button onclick="preset(5)" class="px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 transition">5%</button>
                 </div>
-                <button onclick="calculateCreditCard()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Payoff Time</button>
+                <p class="text-xs text-gray-400 mt-2">Presets fill the payment with that formula's <em>first-month</em> amount and then hold it fixed — a true issuer minimum would shrink as the balance falls and take even longer.</p>
+            </div>
 
-                <div id="ccResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Time to Pay Off</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="ccTime">0 Months</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Interest Paid</p>
-                            <p class="text-xl font-bold text-red-500" id="ccTotalInterest">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Amount Paid</p>
-                            <p class="text-xl font-bold text-gray-800" id="ccTotalPaid">$0</p>
-                        </div>
-                    </div>
+            <div id="mode_time" class="mt-4 hidden">
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="block">
+                        <span class="text-sm font-medium text-gray-600">Pay off in — years</span>
+                        <input id="c_years" type="number" value="2" min="0" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()">
+                    </label>
+                    <label class="block">
+                        <span class="text-sm font-medium text-gray-600">and months</span>
+                        <input id="c_months" type="number" value="0" min="0" max="11" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()">
+                    </label>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Credit Card Interest Works</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Credit cards use compound interest, which means you pay interest on your interest. The longer it takes to pay off your balance, the more you will pay in total. This calculator shows you the exact month you will be debt-free and the total interest you will have paid over that time.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <button onclick="calc()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="c_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">The minimum-payment trap</div>
+                <p>At the defaults on this page — $8,000 at 18% APR — a $200 fixed payment clears the card in 5 years 2 months and costs about <strong>$4,309 of interest</strong>, more than half the original balance. Doubling the payment to about $400 finishes in 2 years and cuts the interest to about $1,585. With card APRs, the payment size matters far more than the rate.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>How Credit Card Interest Really Works</h2>
+        <p>A credit card is an unsecured revolving loan: the issuer lets you spend up to a credit limit, sends a monthly statement, and lets you repay anything from a small minimum to the full balance. Whatever is left unpaid rolls into next month and accrues interest at the card's APR — an annual percentage rate that, for cards, is high by loan standards, commonly 18–28%, because there is no collateral behind it. Pay the statement balance in full every month and the grace period means you never pay interest at all; carry a balance and the grace period usually disappears, so even new purchases start accruing immediately.</p>
+        <h3>How Issuers Charge It: Average Daily Balance</h3>
+        <p>Most issuers use the average daily balance method. The APR is divided by 365 to get a daily periodic rate; that rate is applied to the average of the balance on each day of the billing cycle, multiplied by the number of days. Paying earlier in the cycle, or making two smaller payments instead of one, lowers the average balance and therefore the interest — an effect this calculator's monthly model (APR ÷ 12 on the opening balance) approximates closely. Two older methods, previous balance and adjusted balance, still exist in some card agreements and produce lower charges, which is one reason statement interest rarely matches a simple estimate to the exact cent.</p>
+        <h3>Cash Advances and Balance Transfers</h3>
+        <p>Two features deserve special caution. A <strong>cash advance</strong> — withdrawing cash against the card — usually carries a higher APR than purchases, a fee of 3–5%, and no grace period: interest starts the moment the cash leaves the ATM. A <strong>balance transfer</strong> moves debt to a card offering a low or 0% introductory APR, typically for 6–21 months, usually for a 3–5% fee on the amount moved. It is a genuinely useful tool when the fee is smaller than the interest avoided and the balance is cleared inside the promotional window; left longer, the remaining balance reverts to the full APR and the trap closes again.</p>
+        <h3>Using a Card Without Being Used by It</h3>
+        <p>The same product that produces five-figure interest bills also offers real advantages when the balance is paid in full: fraud liability capped by law (and usually zero by policy), purchase protection and extended warranties, cashback or travel rewards that amount to a small discount on everything, and a documented payment history that builds a credit score. The dividing line is never the card — it is whether a balance revolves. If one already does, the fastest exit is a fixed payment as large as the budget allows, aimed at the highest APR first (the "avalanche" order), while new spending goes on debit until the balance is gone.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>Why doesn't my statement interest match this exactly?</h4>
+        <p>Issuers use daily interest on the average daily balance, and your payment dates and mid-cycle purchases move the average. Expect agreement within a few cents per month, not to the penny over years.</p>
+        <h4>What if I only pay the interest each month?</h4>
+        <p>The balance never moves: $120 a month on the default balance pays the issuer $1,440 a year and reduces your debt by $0. Any amount above the interest starts making progress.</p>
+        <h4>Is "interest + 1%" a sensible payment?</h4>
+        <p>It is the standard minimum formula, built to stretch the debt. Use the presets above to see its first-month amount, then compare holding that amount fixed against choosing a deadline — the fixed plan is always faster.</p>
+        <h4>When does a balance transfer pay off?</h4>
+        <p>When the transfer fee (often 3–5% once) is less than the interest you'd pay over the same months, and you can clear the balance before the promotional APR expires.</p>
+    </section>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="payment.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Payment Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The same fixed-term vs. fixed-payment question for any loan.</p>
+            </a>
+            <a href="loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">What this balance would cost as a structured personal loan instead.</p>
+            </a>
+            <a href="apr.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">APR Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The true annual cost of a loan once fees are counted.</p>
+            </a>
+            <a href="debt-to-income.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Debt-to-Income Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">How this payment looks to a lender, next to your other debts.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        function calculateCreditCard() {
-            // جلب القيم
-            const balance = parseFloat(document.getElementById('ccBalance').value);
-            const apr = parseFloat(document.getElementById('ccRate').value) / 100;
-            const payment = parseFloat(document.getElementById('ccPayment').value);
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            // التحقق من المدخلات
-            if (isNaN(balance) || isNaN(apr) || isNaN(payment) || balance <= 0 || payment <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
-
-            const monthlyRate = apr / 12;
-            
-            // التحقق من أن الدفعة تغطي الفائدة
-            if (payment <= balance * monthlyRate) {
-                alert("Your monthly payment is too low to ever pay off this balance. Please increase the payment amount.");
-                return;
-            }
-
-            let currentBalance = balance;
-            let months = 0;
-            let totalInterest = 0;
-
-            // الحساب
-            while (currentBalance > 0 && months < 1200) {
-                let interest = currentBalance * monthlyRate;
-                let principal = payment - interest;
-                
-                if (principal > currentBalance) {
-                    principal = currentBalance;
-                }
-
-                totalInterest += interest;
-                currentBalance -= principal;
-                months++;
-            }
-
-            const totalPaid = balance + totalInterest;
-
-            // تنسيق الوقت
-            const years = Math.floor(months / 12);
-            const remainingMonths = months % 12;
-            let timeString = "";
-            if (years > 0) timeString += years + " Years ";
-            if (remainingMonths > 0) timeString += remainingMonths + " Months";
-            if (years === 0 && remainingMonths === 0) timeString = months + " Months";
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            // عرض النتائج
-            document.getElementById('ccTime').textContent = timeString;
-            document.getElementById('ccTotalInterest').textContent = formatter.format(totalInterest);
-            document.getElementById('ccTotalPaid').textContent = formatter.format(totalPaid);
-
-            document.getElementById('ccResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+let mode = 'pay';
+function setMode(m) {
+  mode = m;
+  $('mode_pay').classList.toggle('hidden', m !== 'pay');
+  $('mode_time').classList.toggle('hidden', m !== 'time');
+  $('tab_pay').className = 'flex-1 font-bold py-2.5 rounded-lg transition ' + (m === 'pay' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  $('tab_time').className = 'flex-1 font-bold py-2.5 rounded-lg transition ' + (m === 'time' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  calc();
+}
+function preset(k) {
+  const bal = num('c_balance'), rate = num('c_rate');
+  let v = k === 1 ? bal * 0.01 + bal * rate / 1200 : bal * 0.01 * k;
+  if (v < 15) v = bal < 15 ? bal : 15;
+  $('c_payment').value = v.toFixed(2);
+  calc();
+}
+function termText(n) {
+  const y = Math.floor(n / 12), m = n % 12;
+  return (y ? y + (y === 1 ? ' year' : ' years') : '') + (y && m ? ' and ' : '') + (m ? m + (m === 1 ? ' month' : ' months') : (y ? '' : '0 months'));
+}
+function schedule(bal0, i, pay) {
+  let bal = bal0, totInt = 0, rows = '', n = 0, lastPay = 0;
+  while (bal > 0.000001 && n < 3600) {
+    const it = bal * i;
+    const p = Math.min(pay, bal + it);
+    const prin = p - it;
+    bal = bal + it - p;
+    totInt += it; n++; lastPay = p;
+    rows += '<tr class="border-t border-gray-100"><td class="p-2">' + n + '</td><td class="p-2 text-right">' + fmt$(p) + '</td><td class="p-2 text-right">' + fmt$(prin) + '</td><td class="p-2 text-right">' + fmt$(it) + '</td><td class="p-2 text-right">' + fmt$(Math.max(bal, 0)) + '</td></tr>';
+  }
+  return { n, totInt, rows, lastPay };
+}
+function tableHtml(rows) {
+  return '<div class="overflow-auto max-h-72 mt-4 border border-gray-100 rounded-lg"><table class="w-full text-sm num"><thead class="bg-gray-50 sticky top-0"><tr><th class="text-left p-2">Month</th><th class="text-right p-2">Payment</th><th class="text-right p-2">Principal</th><th class="text-right p-2">Interest</th><th class="text-right p-2">Balance</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+}
+function statsHtml(pairs) {
+  return '<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 text-center">' + pairs.map(p => '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">' + p[0] + '</div><div class="font-bold num">' + p[1] + '</div></div>').join('') + '</div>';
+}
+function calc() {
+  const bal = num('c_balance'), rate = num('c_rate'), i = rate / 1200;
+  const out = $('c_results');
+  if (bal <= 0) { out.innerHTML = ''; return; }
+  if (mode === 'pay') {
+    const pay = num('c_payment');
+    const firstInt = bal * i;
+    if (pay <= 0) { out.innerHTML = ''; return; }
+    if (pay <= firstInt) {
+      out.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-5"><div class="font-bold">This payment never pays the card off.</div><p class="text-sm mt-1">The interest alone is ' + fmt$(firstInt) + ' per month at the start, and your payment is ' + fmt$(pay) + '. Anything above ' + fmt$(firstInt) + ' begins to reduce the balance — even a few dollars more makes a real difference over time.</p></div>';
+      updateShare(); return;
+    }
+    const s = schedule(bal, i, pay);
+    out.innerHTML =
+      '<div class="bg-[#3F51B5] text-white rounded-xl p-5"><div class="text-sm opacity-80">Paying ' + fmt$(pay) + ' a month, you are debt-free in</div><div class="text-3xl font-extrabold mt-1">' + termText(s.n) + '</div><div class="text-sm opacity-80 mt-1">' + s.n + ' payments; the final one is ' + fmt$(s.lastPay) + '.</div></div>' +
+      statsHtml([['Total interest', fmt$(s.totInt)], ['Total paid', fmt$(bal + s.totInt)], ['Interest share', (s.totInt / (bal + s.totInt) * 100).toFixed(1) + '%'], ['First month interest', fmt$(firstInt)]]) +
+      tableHtml(s.rows);
+  } else {
+    const n = Math.round(num('c_years')) * 12 + Math.round(num('c_months'));
+    if (n <= 0) { out.innerHTML = '<p class="text-sm text-gray-500">Enter a timeframe of at least one month.</p>'; updateShare(); return; }
+    const pay = i > 0 ? bal * i / (1 - Math.pow(1 + i, -n)) : bal / n;
+    const totInt = pay * n - bal;
+    const s = schedule(bal, i, pay);
+    out.innerHTML =
+      '<div class="bg-[#3F51B5] text-white rounded-xl p-5"><div class="text-sm opacity-80">To clear ' + fmt$(bal) + ' in ' + termText(n) + ', pay</div><div class="text-3xl font-extrabold mt-1">' + fmt$(pay) + ' <span class="text-base font-semibold">per month</span></div></div>' +
+      statsHtml([['Total interest', fmt$(totInt)], ['Total paid', fmt$(pay * n)], ['Payments', n], ['Interest share', (totInt / (pay * n) * 100).toFixed(1) + '%']]) +
+      tableHtml(s.rows);
+  }
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ b: $('c_balance').value, r: $('c_rate').value, mode, p: $('c_payment').value, y: $('c_years').value, m: $('c_months').value });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  if (q.get('b')) $('c_balance').value = q.get('b');
+  if (q.get('r')) $('c_rate').value = q.get('r');
+  if (q.get('p')) $('c_payment').value = q.get('p');
+  if (q.get('y')) $('c_years').value = q.get('y');
+  if (q.get('m')) $('c_months').value = q.get('m');
+  setMode(q.get('mode') === 'time' ? 'time' : 'pay');
+})();
+</script>
 </body>
 </html>
