@@ -1,127 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estate Tax Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estate Tax Calculator — Federal Estate Tax &amp; the $15M Exemption (2026) | CalcNova</title>
+<meta name="description" content="Free estate tax calculator: estimate federal estate tax from your assets, debts, deductions and lifetime gifts. 2026 exemption $15 million, top rate 40%, with a 2025 comparison.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/estate-tax">
+<meta property="og:title" content="Estate Tax Calculator — Federal Estate Tax & the $15M Exemption (2026) | CalcNova">
+<meta property="og:description" content="Gross estate, deductions, lifetime gifts and the unified credit — see the federal estate tax and what your heirs keep.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/estate-tax">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Estate Tax Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/estate-tax"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Who actually pays the federal estate tax?","acceptedAnswer":{"@type":"Answer","text":"Very few estates. For deaths in 2026 the first $15 million per person ($30 million per married couple with portability) is exempt, so well under 1 in 1,000 estates owes anything. Above the exemption, the tax applies only to the excess, at graduated rates topping out at 40%."}},
+{"@type":"Question","name":"Is life insurance part of the taxable estate?","acceptedAnswer":{"@type":"Answer","text":"Usually yes — if you own the policy or hold any 'incidents of ownership' in it, the full death benefit counts in your gross estate, even though your family receives it income-tax free. That surprise pushes many estates over the exemption, which is why large policies are often held in an irrevocable life insurance trust (ILIT) instead."}},
+{"@type":"Question","name":"What is portability between spouses?","acceptedAnswer":{"@type":"Answer","text":"Any exemption the first spouse to die does not use can be transferred to the survivor — the 'deceased spousal unused exclusion' — but only if the executor files Form 706 for the first estate, even when no tax is due. With portability elected, a couple can shelter up to $30 million in 2026. Assets left to a spouse are themselves deductible (the unlimited marital deduction), so tax is usually deferred to the second death rather than avoided."}},
+{"@type":"Question","name":"What is the difference between estate tax and inheritance tax?","acceptedAnswer":{"@type":"Answer","text":"Who pays. The estate tax is charged to the estate itself, on the total value transferred, before anything is distributed — that is the federal tax this calculator estimates. An inheritance tax is charged to each heir on what they receive, at rates that depend on their relationship to the deceased. There is no federal inheritance tax; a handful of states impose one, and spouses are exempt everywhere."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Estate Tax Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Estate Tax</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Estate Tax Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Estimate the <strong>federal estate tax</strong> on an estate: everything you own at fair market value, minus debts, expenses, charitable gifts and state death taxes — then measured against the <strong>$15 million lifetime exemption for 2026</strong>. Lifetime taxable gifts count against that same exemption through the unified credit. Many states levy their own estate or inheritance taxes on top; this calculator covers the federal tax only.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Estate Tax Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Total Estate Value ($)</label>
-                        <p class="text-xs text-gray-500 mb-1">Total value of assets, property, and cash.</p>
-                        <input type="number" id="etValue" value="15000000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Total Deductions & Debts ($)</label>
-                        <p class="text-xs text-gray-500 mb-1">Mortgages, charitable donations, etc.</p>
-                        <input type="number" id="etDeductions" value="500000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-                <button onclick="calculateEstateTax()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Estate Tax</button>
-
-                <div id="etResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Net Taxable Estate</p>
-                            <p class="text-xl font-bold text-gray-800" id="etNetEstate">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-red-500">
-                            <p class="text-sm text-gray-500">Estimated Federal Estate Tax</p>
-                            <p class="text-2xl font-bold text-red-500" id="etTaxOwed">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Amount Passed to Heirs</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="etNetToHeirs">$0</p>
-                        </div>
-                    </div>
-                </div>
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+        <section class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Assets</h2>
+            <div class="space-y-3" id="assets"></div>
+            <h2 class="text-lg font-bold text-[#3F51B5] mt-7 mb-4">Liabilities, costs &amp; deductions</h2>
+            <div class="space-y-3" id="deducts"></div>
+            <h2 class="text-lg font-bold text-[#3F51B5] mt-7 mb-4">Lifetime gifts</h2>
+            <div class="space-y-3" id="gifts"></div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="calculate()" class="flex-1 bg-[#4CAF50] hover:bg-green-600 text-white font-bold py-3 rounded-lg transition shadow-md">Calculate</button>
+                <button onclick="shareLink(this)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg transition text-sm">Copy share link</button>
             </div>
+            <p class="text-xs text-gray-400 mt-4">Values are fair market values at death. Amounts left to a spouse are covered by the unlimited marital deduction — model an estate passing to non-spouse heirs here. The state death taxes line is an input (what the estate expects to pay a state), and it is deductible federally.</p>
+        </section>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Understanding the Estate Tax</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">The federal estate tax is a tax on your right to transfer property at your death. It consists of an accounting of everything you own or have certain interests in at the date of death. However, the U.S. has a very high exemption limit (for 2024, it's $13.61 million per individual). This means the first $13.61 million of your estate is completely tax-free. Only the amount exceeding this limit is subject to the 40% federal estate tax rate.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
+        <div class="lg:col-span-3 space-y-8">
+            <section id="results" class="scroll-mt-24"></section>
+
+            <!-- AdSense: 300x250 beside the form / above results on mobile -->
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+
+            <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 prose max-w-none prose-gray prose-headings:text-[#3F51B5]">
+                <h2>How the federal estate tax is figured</h2>
+                <p>The computation follows Form 706 in four steps. <strong>First, the gross estate</strong>: everything the deceased owned or controlled — real estate, investments, cash, vehicles, retirement accounts, business interests, and life insurance on policies they owned — valued at fair market value on the date of death (an executor may elect a date six months later if it lowers both the estate and the tax). <strong>Second, deductions</strong>: debts and mortgages, funeral and administration expenses, charitable bequests, and state death taxes actually paid all come off the top, as does anything left to a surviving spouse under the unlimited marital deduction. The result is the taxable estate. <strong>Third, lifetime taxable gifts are added back</strong> — gifts above the annual exclusion made since 1977 — because the gift and estate taxes share one unified system designed so you cannot dodge the tax by giving everything away the week before. <strong>Fourth, the unified credit</strong>: the tentative tax on that combined base, computed on the graduated rate schedule (18% rising to 40% above $1 million), is reduced by the credit — the tax on the exemption amount. For 2026 the exemption is <strong>$15,000,000</strong>, so the credit is $5,945,800 and, in practice, the tax equals 40% of whatever the base exceeds $15 million by.</p>
+                <h3>The exemption, then and now</h3>
+                <div class="overflow-x-auto not-prose">
+                <table class="w-full text-[15px]">
+                    <thead><tr class="text-left text-gray-500 border-b border-gray-200"><th class="py-2 pr-3 font-semibold">Year of death</th><th class="py-2 pr-3 font-semibold">Lifetime exemption</th><th class="py-2 font-semibold">Top rate</th></tr></thead>
+                    <tbody>
+                        <tr class="border-b border-gray-100"><td class="py-2 pr-3">2011</td><td class="py-2 pr-3 num">$5,000,000</td><td class="py-2 num">35%</td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2 pr-3">2013</td><td class="py-2 pr-3 num">$5,250,000</td><td class="py-2 num">40%</td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2 pr-3">2017</td><td class="py-2 pr-3 num">$5,490,000</td><td class="py-2 num">40%</td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2 pr-3">2018</td><td class="py-2 pr-3 num">$11,180,000</td><td class="py-2 num">40%</td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2 pr-3">2020</td><td class="py-2 pr-3 num">$11,580,000</td><td class="py-2 num">40%</td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2 pr-3">2022</td><td class="py-2 pr-3 num">$12,060,000</td><td class="py-2 num">40%</td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2 pr-3">2024</td><td class="py-2 pr-3 num">$13,610,000</td><td class="py-2 num">40%</td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2 pr-3">2025</td><td class="py-2 pr-3 num">$13,990,000</td><td class="py-2 num">40%</td></tr>
+                        <tr><td class="py-2 pr-3 font-semibold">2026</td><td class="py-2 pr-3 num font-semibold">$15,000,000</td><td class="py-2 num">40%</td></tr>
+                    </tbody>
+                </table>
                 </div>
-            </div>
+                <p>The exemption nearly tripled between 2017 and 2018 and was set at a flat $15 million from 2026 (indexed for inflation afterward), which is why this calculator leads with 2026 and keeps a 2025 column for comparison: dying a year earlier with the same estate could cost a family several hundred thousand dollars more, as the results above show. Married couples effectively get two exemptions — $30 million in 2026 — through portability, provided the first estate files the return that elects it.</p>
+                <h3>Gifts: the annual exclusion and the unified credit</h3>
+                <p>Each year you may give up to <strong>$19,000 per recipient</strong> (2025 and 2026) to as many people as you like, entirely outside the system — no tax, no return, no dent in the exemption. Gifts above that per person start consuming the lifetime exemption, and only when the exemption is exhausted does gift tax (also up to 40%) come due out of pocket. The "lifetime gifted" field in this calculator is the total of those exemption-consuming gifts: give away $2 million across your life and die in 2026, and your estate's remaining shelter is $13 million, not $15 million — the example the results above quietly encode. Direct payments of tuition and medical bills for someone else never count as gifts at all, nor do gifts to a spouse or to charity.</p>
+                <h3>Ways a taxable estate gets smaller</h3>
+                <ul>
+                    <li><strong>Annual-exclusion gifting</strong> — a couple with three married children can move $228,000 a year (6 recipients × $19,000 × 2 spouses) out of their estates, plus all future growth on it.</li>
+                    <li><strong>Charitable bequests</strong> — deductible dollar for dollar, with no cap; many estates near the line give the taxable slice to charity rather than 40% of it to the IRS.</li>
+                    <li><strong>An ILIT for life insurance</strong> — holding large policies in an irrevocable life insurance trust keeps the death benefit out of the gross estate entirely.</li>
+                    <li><strong>Irrevocable trusts and valuation discounts</strong> — freezing techniques (GRATs, family entities, installment sales) shift future appreciation to heirs at today's values.</li>
+                    <li><strong>Spending and state choice</strong> — the honest basics: enjoying the money, and dying domiciled in one of the majority of states with no state death tax at all (about a dozen states plus D.C. still levy an estate tax, and a few levy an inheritance tax on heirs).</li>
+                </ul>
+                <p>One caution that outweighs all of the above: heirs generally receive assets with a <strong>stepped-up basis</strong>, erasing decades of capital gains at death. Aggressive lifetime gifting of appreciated assets trades a 40% estate tax the family might never owe for a capital-gains tax it certainly will — which is why estates below the exemption usually plan for income tax and probate, not estate tax, and why this estimate is a starting point for a conversation with an estate attorney, not the conversation itself.</p>
+                <h3>Frequently asked questions</h3>
+                <h4>Who actually pays the federal estate tax?</h4>
+                <p>Estates above $15 million per person in 2026 — well under 1 in 1,000 deaths. Only the excess over the exemption is taxed, at rates reaching 40%.</p>
+                <h4>Is life insurance part of the taxable estate?</h4>
+                <p>Yes, if you owned the policy — the full death benefit is in the gross estate (though income-tax free to the beneficiary). An ILIT is the standard fix.</p>
+                <h4>What is portability?</h4>
+                <p>The first spouse's unused exemption can pass to the survivor — up to $30 million sheltered per couple in 2026 — but only if Form 706 is filed for the first estate to elect it.</p>
+                <h4>Estate tax vs. inheritance tax?</h4>
+                <p>The estate pays the estate tax on the whole transfer; heirs pay an inheritance tax on what they receive. The federal government has only the former; a few states have the latter, and spouses are always exempt.</p>
+            </section>
+
+            <section>
+                <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <a href="marriage-tax.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                        <div class="font-bold text-[#3F51B5]">Marriage Tax Calculator</div>
+                        <p class="text-sm text-gray-500 mt-1">The marital deduction starts here: filing jointly vs. as two singles, bonus or penalty.</p>
+                    </a>
+                    <a href="income-tax.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                        <div class="font-bold text-[#3F51B5]">Income Tax Calculator</div>
+                        <p class="text-sm text-gray-500 mt-1">The annual side of the same code — a full federal return with every deduction and credit.</p>
+                    </a>
+                    <a href="retirement.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                        <div class="font-bold text-[#3F51B5]">Retirement Calculator</div>
+                        <p class="text-sm text-gray-500 mt-1">Grow the estate first: what you need, what to save, and how long it lasts.</p>
+                    </a>
+                </div>
+            </section>
         </div>
+    </div>
+</main>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
-
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
         </div>
-    </footer>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-    <script>
-        function calculateEstateTax() {
-            const value = parseFloat(document.getElementById('etValue').value);
-            const deductions = parseFloat(document.getElementById('etDeductions').value);
+<script>
+const SCHED = [[10000, 0.18], [20000, 0.20], [40000, 0.22], [60000, 0.24], [80000, 0.26], [100000, 0.28], [150000, 0.30], [250000, 0.32], [500000, 0.34], [750000, 0.37], [1000000, 0.39], [Infinity, 0.40]];
+const EXEMPT = { 2026: 15000000, 2025: 13990000 };
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, "")); return isNaN(v) ? 0 : v; };
+const fmt0 = n => "$" + Math.round(n).toLocaleString("en-US");
 
-            if (isNaN(value) || isNaN(deductions) || value <= 0 || deductions < 0) {
-                alert("Please enter valid numbers.");
-                return;
-            }
+const ASSETS = [
+  ["residence", "Residence & other real estate", 5000000],
+  ["stock", "Stocks, bonds & other investments", 10000000],
+  ["saving", "Savings, CDs & checking accounts", 1000000],
+  ["vehicle", "Vehicles, boats & other property", 250000],
+  ["retirement", "Retirement plans", 2500000],
+  ["lifeinsurance", "Life insurance benefit", 1000000],
+  ["otherasset", "Other assets", 250000]
+];
+const DEDUCTS = [
+  ["debt", "Debts (mortgage, loans, cards…)", 1000000],
+  ["funeral", "Funeral, administration & claims expenses", 100000],
+  ["charitable", "Charitable contributions", 1000000],
+  ["statetax", "State inheritance or estate taxes", 500000]
+];
+function fieldHTML(key, label, val) {
+  return '<div class="grid grid-cols-2 gap-3 items-center"><label for="i_' + key + '" class="text-sm font-medium text-gray-700">' + label + '</label>'
+    + '<div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span>'
+    + '<input id="i_' + key + '" type="number" step="any" value="' + val + '" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div></div>';
+}
+$("assets").innerHTML = ASSETS.map(f => fieldHTML(f[0], f[1], f[2])).join("");
+$("deducts").innerHTML = DEDUCTS.map(f => fieldHTML(f[0], f[1], f[2])).join("");
+$("gifts").innerHTML = fieldHTML("lifetimegifted", "Total amount you've gifted (above the annual exclusion) in your lifetime", 0);
 
-            // 2024 Federal Estate Tax Exemption Limit (Individual)
-            const exemptionLimit = 13610000;
-            const taxRate = 0.40; // 40% flat rate for amounts over exemption
-
-            // Net Estate = Total Value - Deductions
-            const netEstate = value - deductions;
-
-            let taxOwed = 0;
-
-            // Tax is only on the amount above the exemption limit
-            if (netEstate > exemptionLimit) {
-                const taxableAmount = netEstate - exemptionLimit;
-                taxOwed = taxableAmount * taxRate;
-            }
-
-            const amountToHeirs = netEstate - taxOwed;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('etNetEstate').textContent = formatter.format(netEstate > 0 ? netEstate : 0);
-            document.getElementById('etTaxOwed').textContent = formatter.format(taxOwed);
-            document.getElementById('etNetToHeirs').textContent = formatter.format(amountToHeirs > 0 ? amountToHeirs : 0);
-
-            document.getElementById('etResults').classList.remove('hidden');
-        }
-    </script>
+function schedTax(x) { let tax = 0, prev = 0; for (const [top, r] of SCHED) { if (x > prev) tax += (Math.min(x, top) - prev) * r; prev = top; } return tax; }
+function estateCalc(a, year) {
+  const gross = ASSETS.reduce((s, f) => s + a[f[0]], 0);
+  const ded = DEDUCTS.reduce((s, f) => s + a[f[0]], 0);
+  const net = Math.max(0, gross - ded);
+  const base = net + a.lifetimegifted;
+  const afterEx = Math.max(0, base - EXEMPT[year]);
+  const tax = Math.max(0, schedTax(base) - schedTax(EXEMPT[year]));
+  return { gross, ded, net, base, afterEx, tax, afterTax: net - tax };
+}
+function calculate() {
+  const a = {};
+  [...ASSETS, ...DEDUCTS].forEach(f => a[f[0]] = Math.max(0, num("i_" + f[0])));
+  a.lifetimegifted = Math.max(0, num("i_lifetimegifted"));
+  const r26 = estateCalc(a, 2026), r25 = estateCalc(a, 2025);
+  const eff = r26.net > 0 ? (r26.tax / r26.net * 100) : 0;
+  let banner;
+  if (r26.tax <= 0) banner = '<div class="bg-green-600 text-white rounded-xl p-6 shadow-md"><div class="text-sm uppercase tracking-wide opacity-80">Federal estate tax (2026)</div><div class="text-4xl sm:text-5xl font-extrabold mt-1 num">$0</div><div class="text-sm opacity-90 mt-1">The taxable base of ' + fmt0(r26.base) + ' (net estate ' + fmt0(r26.net) + ' plus ' + fmt0(a.lifetimegifted) + ' of lifetime gifts) fits inside the $15,000,000 exemption — your heirs keep the full <strong>' + fmt0(r26.afterTax) + '</strong>. No federal return is required for tax reasons below the threshold (a return may still be filed to elect portability).</div></div>';
+  else banner = '<div class="bg-[#3F51B5] text-white rounded-xl p-6 shadow-md"><div class="text-sm uppercase tracking-wide opacity-80">Federal estate tax (2026)</div><div class="text-4xl sm:text-5xl font-extrabold mt-1 num">' + fmt0(r26.tax) + '</div><div class="text-sm opacity-90 mt-1">On a taxable amount of ' + fmt0(r26.afterEx) + ' above the $15,000,000 exemption — an effective rate of ' + eff.toFixed(2) + '% of the net estate. Your heirs keep <strong>' + fmt0(r26.afterTax) + '</strong>. The same estate in 2025 would have owed ' + fmt0(r25.tax) + '.</div></div>';
+  const card = (label, val) => '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center"><div class="text-xs text-gray-500">' + label + '</div><div class="text-xl font-bold mt-1 num">' + val + "</div></div>";
+  const yr = (y, r) => '<tr class="border-b border-gray-100"><td class="py-2 pr-3">' + y + ' (exemption ' + fmt0(EXEMPT[y]) + ')</td><td class="py-2 pr-3 text-right num">' + fmt0(r.afterEx) + '</td><td class="py-2 pr-3 text-right num">' + fmt0(r.tax) + '</td><td class="py-2 text-right num">' + fmt0(r.afterTax) + "</td></tr>";
+  $("results").innerHTML = banner
+    + '<div class="grid grid-cols-2 xl:grid-cols-4 gap-4">'
+    + card("Gross estate", fmt0(r26.gross)) + card("Deductions", "−" + fmt0(r26.ded))
+    + card("Net taxable estate", fmt0(r26.net)) + card("Lifetime gifts added back", fmt0(a.lifetimegifted)) + "</div>"
+    + '<section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6"><h3 class="font-bold text-[#3F51B5] mb-3">2026 vs. 2025 — the year matters</h3>'
+    + '<table class="w-full text-[15px]"><thead><tr class="text-left text-gray-500 border-b border-gray-200"><th class="py-2 pr-3 font-semibold">Year of death</th><th class="py-2 pr-3 font-semibold text-right">Taxable after exemption</th><th class="py-2 pr-3 font-semibold text-right">Federal estate tax</th><th class="py-2 font-semibold text-right">Heirs receive</th></tr></thead><tbody>'
+    + yr(2026, r26) + yr(2025, r25)
+    + "</tbody></table>"
+    + '<p class="text-xs text-gray-400 mt-3">Tax computed on the unified rate schedule: tentative tax on the net estate plus lifetime taxable gifts, minus the unified credit (the tax on the exemption itself — $5,945,800 for 2026). Because both exemptions sit in the 40% bracket, the result equals 40% of the amount over the exemption.</p></section>';
+}
+const KEYS = [...ASSETS, ...DEDUCTS].map(f => f[0]).concat(["lifetimegifted"]);
+function shareLink(btn) {
+  const p = new URLSearchParams();
+  KEYS.forEach(k => p.set(k, $("i_" + k).value));
+  const url = location.origin + location.pathname + "?" + p.toString();
+  history.replaceState(null, "", url);
+  if (navigator.clipboard) navigator.clipboard.writeText(url);
+  const old = btn.textContent; btn.textContent = "Copied!"; setTimeout(() => btn.textContent = old, 1600);
+}
+function prefill() {
+  const q = new URLSearchParams(location.search);
+  KEYS.forEach(k => { const v = q.get(k); if (v !== null) $("i_" + k).value = v; });
+}
+prefill();
+calculate();
+</script>
 </body>
 </html>
