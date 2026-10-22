@@ -1,126 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>College Cost Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>College Cost Calculator — What College Will Cost &amp; How Much to Save | CalcNova</title>
+<meta name="description" content="Free college cost calculator: project future college costs from today's averages, see the total in today's money, and find the monthly saving that gets you there — for any share of the cost.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/college-cost">
+<meta property="og:title" content="College Cost Calculator — What College Will Cost & How Much to Save | CalcNova">
+<meta property="og:description" content="Future college costs, their value in today's money, and the monthly saving that covers the share you choose.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/college-cost">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"College Cost Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/college-cost"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How much does college cost per year in the U.S.?","acceptedAnswer":{"@type":"Answer","text":"For 2025–26, the College Board's average total annual cost — tuition, fees, and living costs — is about $65,470 at a 4-year private college, $30,990 at a 4-year public college for in-state students, $50,920 out-of-state, and $21,320 at a 2-year public college. Individual schools vary widely; every college publishes a net price calculator for its own numbers."}},
+{"@type":"Question","name":"Why save for only 35% of the cost?","acceptedAnswer":{"@type":"Answer","text":"Because few families pay the whole bill from savings. Grants, scholarships, work-study, current income during the college years, and student loans typically share the load. Setting the savings share to the slice you realistically intend to cover — a third is a common planning choice — turns an intimidating total into a monthly saving you might actually sustain."}},
+{"@type":"Question","name":"What does 'in today's money' mean?","acceptedAnswer":{"@type":"Answer","text":"It restates future costs in present-day purchasing power by discounting them at your expected after-tax investment return. A $154,625 four-year bill starting in 3 years is $130,836 in today's money at a 3.75% after-tax return — the lump sum that, invested today, exactly grows into the money needed as each year's bill arrives."}},
+{"@type":"Question","name":"Why enter 0% tax for a 529 plan?","acceptedAnswer":{"@type":"Answer","text":"Earnings in a 529 plan grow free of federal tax and are withdrawn tax-free when used for qualified education expenses, so the tax drag this calculator applies to ordinary savings accounts does not apply. Set the tax rate to 0% and the full return works for you — one reason the 529 is the default vehicle for college saving."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">College Cost Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">College Cost</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">College Cost Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">How much will college actually cost by the time your student starts — and what monthly saving covers the share you plan to pay? Start from the latest national averages or your own figure, grow it at the college inflation rate, and see the bill three ways: in future dollars, in today's money, and as a monthly saving.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">College Cost Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Annual Cost (Tuition + Living) ($)</label>
-                        <input type="number" id="ccAnnualCost" value="25000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Annual Cost Increase (%)</label>
-                        <p class="text-xs text-gray-500 mb-1">Education inflation is usually 4-6%</p>
-                        <input type="number" id="ccInflation" value="5" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Years Until College Starts</label>
-                        <input type="number" id="ccYearsUntil" value="10" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-                <button onclick="calculateCollegeCost()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate Future Costs</button>
-
-                <div id="ccResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Cost of First Year</p>
-                            <p class="text-xl font-bold text-gray-800" id="ccFirstYear">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Cost of Fourth Year</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="ccFourthYear">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Total 4-Year Cost</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="ccTotal4Year">$0</p>
-                        </div>
-                    </div>
-                </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label class="block"><span class="text-sm font-medium text-gray-600">Today's annual college costs</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="c_cost" type="number" value="30990" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">…or pick an average (2025–26)</span>
+                    <select id="c_avg" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5" onchange="pickAverage()">
+                        <option value="">Select an average</option>
+                        <option value="65470">4-year private: $65,470</option>
+                        <option value="30990" selected>4-year in-state public: $30,990</option>
+                        <option value="50920">4-year out-of-state public: $50,920</option>
+                        <option value="21320">2-year public: $21,320</option>
+                    </select></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">College cost increase rate <span class="text-gray-400">(5% recommended)</span></span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="c_growth" type="number" value="5" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"><span class="text-gray-400">%</span></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">College will start in (years)</span>
+                    <input id="c_start" type="number" value="3" min="0" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()"></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Attendance duration (years)</span>
+                    <input id="c_years" type="number" value="4" min="1" step="1" class="mt-1 w-full border border-gray-300 rounded-lg p-2.5 num" oninput="calc()"></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Percent of costs from savings</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="c_pct" type="number" value="35" min="0" max="100" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"><span class="text-gray-400">%</span></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">College savings balance now</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="c_balance" type="number" value="0" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Investment return rate</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="c_return" type="number" value="5" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"><span class="text-gray-400">%</span></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Tax rate on the return <span class="text-gray-400">(use 0% for a 529 plan)</span></span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="c_tax" type="number" value="25" min="0" max="100" step="any" class="w-full p-2.5 outline-none num" oninput="calc()"><span class="text-gray-400">%</span></div></label>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">The Rising Cost of Education</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">College tuition has historically increased at a rate much higher than general inflation. This calculator helps parents and students plan ahead by estimating how much a 4-year degree will cost by the time the student is ready to enroll. It assumes the cost increases every year while the student is in school.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <button onclick="calc()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="c_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">Reference: average annual cost, 2025–26</div>
+                <p class="mb-2">Tuition, fees and living costs combined (College Board data):</p>
+                <ul class="space-y-1">
+                    <li>4-year private — <strong>$65,470</strong></li>
+                    <li>4-year public, in-state — <strong>$30,990</strong></li>
+                    <li>4-year public, out-of-state — <strong>$50,920</strong></li>
+                    <li>2-year public — <strong>$21,320</strong></li>
+                </ul>
+                <p class="mt-2">For a specific school, the federal College Navigator and each college's own net price calculator give tighter figures.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>What the Bill Is Made Of</h2>
+        <p>Three categories dominate. <strong>Tuition and fees</strong> — the price of instruction — vary enormously by school, program and residency: public colleges commonly charge out-of-state students close to double the in-state rate, which is why the averages above split the two. <strong>Room and board</strong> covers campus housing and meal plans; living at home erases most of it, though some schools require first-year students to live on campus. <strong>Books and supplies</strong> are smaller but have inflated quickly too — used and rented textbooks blunt them. Around those sit transportation, personal expenses, and sometimes a comprehensive fee that bundles everything into one number. The averages in this calculator include tuition, fees and living costs, which is the honest basis for a savings plan.</p>
+        <h3>Why the Savings Share Is a Choice</h3>
+        <p>Almost nobody funds college from a single source. The typical package mixes savings with grants and scholarships (money that is never repaid), work-study earnings, current income while the student is enrolled, and loans for the remainder. This calculator's job is the savings slice: pick the percent you intend to cover, and it converts that slice — grown at the college inflation rate and discounted at your after-tax return — into a monthly deposit that runs from today until the final college year ends. Reducing the share doesn't make the plan weaker; grants and a student's own earnings are real funding, and a sustainable deposit beats an heroic one abandoned by February.</p>
+        <h3>The 529 Plan, in Short</h3>
+        <p>A 529 plan is a state-sponsored account built for exactly this. Contributions aren't federally deductible (many states offer their own deduction or credit), but earnings grow tax-free and come out tax-free for qualified expenses: tuition and fees, books, computers, and room and board for at-least-half-time students, plus up to $10,000 a year of K-12 tuition. That tax treatment is why the calculator tells you to enter a 0% tax rate for 529 money — and why the same deposit reaches the goal faster inside one. Owned by a parent, a 529 also counts gently in federal aid formulas (at most 5.64% of its value, after an allowance). A sibling product, the 529 Prepaid Plan, buys tomorrow's tuition at today's prices at participating public schools — a hedge against the very inflation rate at the top of this page, at the cost of flexibility. Non-qualified withdrawals of earnings face income tax plus a 10% penalty, so don't overfund far beyond a plausible bill.</p>
+        <h3>Net Price Calculators and Aid</h3>
+        <p>Every U.S. college must publish a net price calculator that estimates your cost after aid, using your family's finances and sometimes grades and scores. Use them for the specific schools on your list; use this page for the savings plan that has to work whichever school wins. The aid process starts with the FAFSA and the family contribution it computes — a college whose sticker price is $20,000 higher may, after aid, cost less than the cheaper sticker. Sticker shock is a planning problem, not a verdict.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>Why does the monthly saving run past the start of college?</h4>
+        <p>The deposit plan spans the years until college <em>ends</em> (7 years at the defaults: 3 until it starts, 4 attending), because money saved during the early college years still funds the later ones. Your balance keeps earning while the first bills are paid from it.</p>
+        <h4>Is 5% the right cost increase?</h4>
+        <p>It's the conventional planning figure: college costs have historically risen faster than general inflation, roughly doubling each decade in recent eras. If your target school has frozen tuition guarantees, use a lower rate and watch the goal shrink.</p>
+        <h4>What if my savings already exceed the target?</h4>
+        <p>Then the additional amount to save is zero and the plan is funded — the calculator says so. Redirect new deposits to the next goal; an overfunded 529 has limited uses beyond education (with narrow exceptions, such as a modest Roth IRA rollover for the beneficiary).</p>
+    </section>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="student-loan.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Student Loan Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Whatever savings don't cover becomes a loan — solve it, project it, pay it off faster.</p>
+            </a>
+            <a href="savings.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Savings Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Grow a deposit plan toward any goal, with or without a starting balance.</p>
+            </a>
+            <a href="investment.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Investment Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Solve for the return, the deposit, or the time any portfolio target needs.</p>
+            </a>
+            <a href="compound-interest.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Compound Interest Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Why starting the 529 early beats depositing more later.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        function calculateCollegeCost() {
-            const currentCost = parseFloat(document.getElementById('ccAnnualCost').value);
-            const inflationRate = parseFloat(document.getElementById('ccInflation').value) / 100;
-            const yearsUntilStart = parseInt(document.getElementById('ccYearsUntil').value);
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (isNaN(currentCost) || isNaN(inflationRate) || isNaN(yearsUntilStart) || currentCost <= 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
-
-            // حساب تكلفة السنة الأولى في المستقبل
-            const firstYearCost = currentCost * Math.pow((1 + inflationRate), yearsUntilStart);
-            
-            // حساب تكلفة السنة الرابعة (بعد 3 سنوات من بدء الكلية)
-            const fourthYearCost = firstYearCost * Math.pow((1 + inflationRate), 3);
-
-            // حساب التكلفة الإجمالية لأربع سنوات (السنة الأولى + الثانية + الثالثة + الرابعة)
-            let total4Year = 0;
-            for (let i = 0; i < 4; i++) {
-                total4Year += firstYearCost * Math.pow((1 + inflationRate), i);
-            }
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('ccFirstYear').textContent = formatter.format(firstYearCost);
-            document.getElementById('ccFourthYear').textContent = formatter.format(fourthYearCost);
-            document.getElementById('ccTotal4Year').textContent = formatter.format(total4Year);
-
-            document.getElementById('ccResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? 0 : v; };
+const fmt$ = v => '$' + Math.round(v).toLocaleString('en-US');
+const fmt$2 = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function pickAverage() {
+  const v = $('c_avg').value;
+  if (v) { $('c_cost').value = v; calc(); }
+}
+function scenarioHtml(title, share, total, pvTotal, balance, factor, yearsTotal, freshmanCost) {
+  const needSave = share * total, targetPV = share * pvTotal;
+  const additional = Math.max(targetPV - balance, 0);
+  const monthly = factor > 0 ? additional / factor : 0;
+  let rows = '';
+  if (share === 1) {
+    rows += '<div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-500">Total college cost</span><strong class="num">' + fmt$(total) + '</strong></div>';
+    rows += '<div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-500">Total college cost in today\'s money</span><strong class="num">' + fmt$(pvTotal) + '</strong></div>';
+  } else {
+    rows += '<div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-500">You will need to save</span><strong class="num">' + fmt$(needSave) + '</strong></div>';
+    rows += '<div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-500">Your target saving amount in today\'s money</span><strong class="num">' + fmt$(targetPV) + '</strong></div>';
+  }
+  if (balance > 0) rows += '<div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-500">Additional amount to save in today\'s money</span><strong class="num">' + fmt$(additional) + '</strong></div>';
+  rows += '<div class="flex justify-between py-1.5"><span class="text-gray-500">Equivalent monthly saving</span><strong class="num">' + fmt$(monthly) + ' per month for ' + yearsTotal + ' years</strong></div>';
+  if (share !== 1) rows += '<div class="flex justify-between py-1.5 border-t border-gray-100"><span class="text-gray-500">Amount needed in freshman year</span><strong class="num">' + fmt$(share * freshmanCost) + '</strong></div>';
+  return '<div class="bg-gray-50 rounded-xl p-4 mt-4"><div class="font-bold text-gray-800 mb-1">' + title + '</div>' + rows + '</div>';
+}
+function calc() {
+  const C = num('c_cost'), g = num('c_growth') / 100, S = Math.round(num('c_start')), L = Math.round(num('c_years'));
+  const pct = num('c_pct') / 100, B = num('c_balance');
+  const rp = num('c_return') / 100 * (1 - num('c_tax') / 100);
+  const out = $('c_results');
+  if (C <= 0 || L <= 0) { out.innerHTML = ''; updateShare(); return; }
+  let total = 0, pv = 0, freshman = 0;
+  for (let k = 0; k < L; k++) {
+    const cost = C * Math.pow(1 + g, S + k);
+    if (k === 0) freshman = cost;
+    total += cost;
+    pv += cost / Math.pow(1 + rp, S + k);
+  }
+  const months = (S + L) * 12, j = rp / 12;
+  const factor = j > 0 ? (1 - Math.pow(1 + j, -months)) / j : months;
+  const pctRounded = Math.round(pct * 100);
+  out.innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-xl p-5"><div class="text-sm opacity-80">Freshman year will cost</div><div class="text-3xl font-extrabold mt-1">' + fmt$(freshman) + '</div><div class="text-sm opacity-80 mt-1">vs. ' + fmt$2(C) + ' today (rising ' + (g * 100).toFixed(1).replace(/\.0$/, '') + '% a year for ' + S + ' years). Total over the ' + L + ' years: ' + fmt$(total) + '.</div></div>' +
+    scenarioHtml('If paying college costs in full', 1, total, pv, B, factor, S + L, freshman) +
+    (pct > 0 && pct < 1 ? '<p class="text-sm text-gray-500 mt-4">If ' + pctRounded + '% of college costs come from savings — the rest maybe paid by grants, scholarships, student loans, or other financial aid:</p>' + scenarioHtml('', pct, total, pv, B, factor, S + L, freshman) : '');
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ c: $('c_cost').value, g: $('c_growth').value, s: $('c_start').value, l: $('c_years').value, p: $('c_pct').value, b: $('c_balance').value, r: $('c_return').value, t: $('c_tax').value });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  const set = (id, key) => { if (q.get(key)) $(id).value = q.get(key); };
+  set('c_cost', 'c'); set('c_growth', 'g'); set('c_start', 's'); set('c_years', 'l'); set('c_pct', 'p'); set('c_balance', 'b'); set('c_return', 'r'); set('c_tax', 't');
+  calc();
+})();
+</script>
 </body>
 </html>
