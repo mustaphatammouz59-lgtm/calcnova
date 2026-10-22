@@ -1,176 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discount Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discount Calculator — Price After Discount, Amount Saved, Original Price | CalcNova</title>
+<meta name="description" content="Free discount calculator: percent off or fixed amount off — solve the final price, the amount saved, or the original price from any two values, including stacked discounts.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/discount">
+<meta property="og:title" content="Discount Calculator — Percent Off & Fixed Amount Off | CalcNova">
+<meta property="og:description" content="Any two values solve the rest: before price, discount, after price, and what you saved.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/discount">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Discount Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/discount"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I find the original price from a discounted price?","acceptedAnswer":{"@type":"Answer","text":"Divide by what remains: original = sale price ÷ (1 − discount). A $51 coat at 15% off started at $51 ÷ 0.85 = $60. The common error is adding 15% back onto $51 ($58.65) — percentages are anchored to the original price, so undoing one means dividing, not adding."}},
+{"@type":"Question","name":"Do stacked discounts add up?","acceptedAnswer":{"@type":"Answer","text":"No — they compound. 20% off followed by 15% off is not 35% off: the second discount applies to the already-reduced price, so the equivalent single discount is 1 − (0.80 × 0.85) = 32%. The calculator above handles a second discount directly."}},
+{"@type":"Question","name":"Is '50% off' the same as 'buy one get one free'?","acceptedAnswer":{"@type":"Answer","text":"Only if you buy exactly two identical items and would have bought both anyway: two $40 items for $40 is a 50% effective discount. Buy one, and BOGO saves nothing; buy three, and the effective discount falls to 33%."}},
+{"@type":"Question","name":"What is the difference between a discount and a markup in reverse?","acceptedAnswer":{"@type":"Answer","text":"A discount is measured against the original (higher) price; the markup that created that price was measured against cost. A $120 item marked up 25% from a $96 cost, then discounted 25%, lands at $90 — not back at $96 — because the two percentages have different bases."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Discount Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Discount</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Discount Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Provide <strong>any two values</strong> — the price before, the discount, the price after, or what you saved — and the rest are calculated. Works for a percentage off or a fixed amount off, and handles a second, stacked discount for the sales that layer them.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Discount Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Calculation Type</label>
-                    <select id="discType" class="w-full border border-gray-300 rounded-md p-2 outline-none mb-4">
-                        <option value="findPrice">Find Final Price (I know the % discount)</option>
-                        <option value="findPercent">Find % Discount (I know the original and final price)</option>
-                    </select>
-                </div>
-
-                <!-- Inputs for finding Price -->
-                <div id="priceInputs" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Original Price ($)</label>
-                        <input type="number" id="discOriginal" value="100" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Discount (%)</label>
-                        <input type="number" id="discPercent" value="20" step="0.1" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-
-                <!-- Inputs for finding Percent -->
-                <div id="percentInputs" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 hidden">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Original Price ($)</label>
-                        <input type="number" id="discOrig2" value="100" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Final Price ($)</label>
-                        <input type="number" id="discFinal" value="80" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-
-                <button onclick="calculateDiscount()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Calculate</button>
-
-                <div id="discResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500" id="discResultLabel1">Original Price</p>
-                            <p class="text-xl font-bold text-gray-800" id="discResult1">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500" id="discResultLabel2">Amount Saved</p>
-                            <p class="text-xl font-bold text-green-600" id="discResult2">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500" id="discResultLabel3">Final Price</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="discResult3">$0</p>
-                        </div>
-                    </div>
-                </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex gap-2">
+                <button id="tab_pct" onclick="setMode('p')" class="flex-1 font-bold py-2.5 rounded-lg transition bg-[#3F51B5] text-white">Percent off</button>
+                <button id="tab_fixed" onclick="setMode('f')" class="flex-1 font-bold py-2.5 rounded-lg transition bg-gray-100 text-gray-600">Fixed amount off</button>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">How Discounts Work</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">A discount is a reduction in the price of a product or service. It is usually expressed as a percentage off the original price. This calculator helps you quickly determine the final price you will pay and how much money you are saving compared to the original price.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
+                <label class="block"><span class="text-sm font-medium text-gray-600">Price before discount</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="x_before" type="number" value="59.99" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="edited('before')"></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600" id="x_disc_label">Discount</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400" id="x_disc_prefix"></span><input id="x_disc" type="number" value="15" min="0" step="any" class="w-full p-2.5 outline-none num" oninput="edited('discount')"><span class="text-gray-400" id="x_disc_suffix">%</span></div></label>
+                <label class="block" id="x_second_wrap"><span class="text-sm font-medium text-gray-600">Second discount <span class="text-gray-400">(stacked, optional)</span></span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><input id="x_disc2" type="number" value="" min="0" step="any" placeholder="none" class="w-full p-2.5 outline-none num" oninput="edited('discount')"><span class="text-gray-400">%</span></div></label>
+                <label class="block"><span class="text-sm font-medium text-gray-600">Price after discount</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="x_after" type="number" value="" min="0" step="any" placeholder="solve for me" class="w-full p-2.5 outline-none num" oninput="edited('after')"></div></label>
+                <label class="block" id="x_saved_wrap"><span class="text-sm font-medium text-gray-600">You saved</span>
+                    <div class="mt-1 flex items-center border border-gray-300 rounded-lg px-3 focus-within:ring-2 focus-within:ring-[#3F51B5]"><span class="text-gray-400">$</span><input id="x_saved" type="number" value="" min="0" step="any" placeholder="solve for me" class="w-full p-2.5 outline-none num" oninput="edited('saved')"></div></label>
+            </div>
+            <button onclick="calc()" class="mt-5 w-full bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-3 rounded-lg transition">Calculate</button>
+            <div id="x_results" class="mt-5"></div>
+        </div>
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-sm text-gray-600">
+                <div class="font-bold text-gray-800 mb-2">Stacked ≠ added</div>
+                <p>"Extra 15% off the sale price" sounds like 20% + 15% = 35% off. It isn't: the second cut applies to what's left, so the true total is <strong>32%</strong> — on $100, you pay $68, not $65. Retailers count on the addition; this calculator does the multiplication.</p>
             </div>
         </div>
+    </div>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
+    <section class="prose prose-gray max-w-none bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 mb-10">
+        <h2>Two Kinds of Discount</h2>
+        <p><strong>Percent off</strong> scales with the price: 25% off an $80 jacket takes $20 off, leaving $60 — equivalently, you pay 75% of $80. The same percentage is worth more money on a bigger ticket, which is why stores advertise percentages on expensive goods. <strong>Fixed amount off</strong> doesn't scale: a $15 coupon takes $15 off a $120 service, leaving $105, whether the service cost $120 or $1,200. Coupons and gift-card-style offers are usually fixed; sales events are usually percentages. Both live in the calculator above — the toggle switches the discount field between % and $.</p>
+        <h3>Stacked Discounts Compound</h3>
+        <p>When two percentage discounts apply in sequence, each works on the price the previous one left behind: pay (1 − d₁) × (1 − d₂) of the original. Twenty percent then fifteen percent leaves 0.80 × 0.85 = 0.68 — a 32% total discount, never 35%. The same logic makes "50% off + another 50% off" a 75% discount, not a free item, a fact that surprises shoppers every sale season. Add a second discount in the calculator to see the honest equivalent single percentage.</p>
+        <h3>Working Backwards: The Original Price</h3>
+        <p>Sale tags often show only the final price and the percentage. Recovering the original is a division, not an addition: original = final ÷ (1 − discount). A $51 final price at 15% off means a $60 original — while "adding 15% back" gives $58.65 and quietly understates it, because the 15% was taken from the larger original number. The same asymmetry explains why an item marked up 25% and then discounted 25% ends below where it started. Give the calculator the after-price and the percent, and it does the division for you.</p>
+        <h3>Frequently Asked Questions</h3>
+        <h4>How much is 15% off $59.99?</h4>
+        <p>$9.00 off (15% of $59.99 is $8.9985), for a final price of $50.99 — the page defaults, worked exactly.</p>
+        <h4>Which is better: 20% off or $20 off?</h4>
+        <p>Depends on the price: they're equal at $100. Below $100 the $20 wins; above it, the percentage does. At $59.99, $20 off is a 33.3% discount — far better than 20%.</p>
+        <h4>Does the discount apply before or after tax?</h4>
+        <p>Usually before: most jurisdictions tax the discounted price, though manufacturer coupons are taxed on the pre-discount price in some U.S. states. The Sales Tax Calculator next door handles the tax half of the receipt.</p>
+    </section>
 
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+    <section>
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <a href="sales-tax.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Sales Tax Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The other half of the receipt: tax on the discounted price.</p>
+            </a>
+            <a href="margin.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Margin Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">What the discount does to the seller's margin and markup.</p>
+            </a>
+            <a href="vat.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">VAT Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Prices outside the U.S.: net, gross and the tax between them.</p>
+            </a>
+            <a href="depreciation.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Depreciation Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">The discount nobody advertises: value lost year by year.</p>
+            </a>
         </div>
-    </footer>
+    </section>
+</main>
 
-    <script>
-        // تغيير الحقول بناءً على نوع الحساب
-        document.getElementById('discType').addEventListener('change', function() {
-            const type = this.value;
-            const priceInputs = document.getElementById('priceInputs');
-            const percentInputs = document.getElementById('percentInputs');
-            const resLabel1 = document.getElementById('discResultLabel1');
-            const resLabel2 = document.getElementById('discResultLabel2');
-            const resLabel3 = document.getElementById('discResultLabel3');
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+        </div>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-            if (type === 'findPrice') {
-                priceInputs.classList.remove('hidden');
-                percentInputs.classList.add('hidden');
-                resLabel1.textContent = "Original Price";
-                resLabel2.textContent = "Amount Saved";
-                resLabel3.textContent = "Final Price";
-            } else {
-                priceInputs.classList.add('hidden');
-                percentInputs.classList.remove('hidden');
-                resLabel1.textContent = "Amount Saved";
-                resLabel2.textContent = "Discount Percentage";
-                resLabel3.textContent = "Final Price";
-            }
-        });
-
-        function calculateDiscount() {
-            const type = document.getElementById('discType').value;
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            if (type === 'findPrice') {
-                const original = parseFloat(document.getElementById('discOriginal').value);
-                const percent = parseFloat(document.getElementById('discPercent').value) / 100;
-
-                if (isNaN(original) || isNaN(percent) || original < 0 || percent < 0) {
-                    alert("Please enter valid positive numbers.");
-                    return;
-                }
-
-                const saved = original * percent;
-                const finalPrice = original - saved;
-
-                document.getElementById('discResult1').textContent = formatter.format(original);
-                document.getElementById('discResult2').textContent = formatter.format(saved);
-                document.getElementById('discResult3').textContent = formatter.format(finalPrice);
-
-            } else {
-                const original = parseFloat(document.getElementById('discOrig2').value);
-                const finalPrice = parseFloat(document.getElementById('discFinal').value);
-
-                if (isNaN(original) || isNaN(finalPrice) || original <= 0 || finalPrice < 0 || finalPrice > original) {
-                    alert("Please enter valid numbers. Final price cannot be greater than original price.");
-                    return;
-                }
-
-                const saved = original - finalPrice;
-                const percent = (saved / original) * 100;
-
-                document.getElementById('discResult1').textContent = formatter.format(saved);
-                document.getElementById('discResult2').textContent = percent.toFixed(2) + "%";
-                document.getElementById('discResult3').textContent = formatter.format(finalPrice);
-            }
-
-            document.getElementById('discResults').classList.remove('hidden');
-        }
-    </script>
+<script>
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, '')); return isNaN(v) ? null : v; };
+const filled = id => String($(id).value).trim() !== '' && num(id) !== null;
+const fmt$ = v => '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtPct = v => (Math.round(v * 100) / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
+const r2 = v => Math.round(v * 100) / 100;
+let mode = 'p';
+let givens = ['before', 'discount'];
+const F = { before: 'x_before', discount: 'x_disc', after: 'x_after', saved: 'x_saved' };
+function setMode(m) {
+  mode = m;
+  $('tab_pct').className = 'flex-1 font-bold py-2.5 rounded-lg transition ' + (m === 'p' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  $('tab_fixed').className = 'flex-1 font-bold py-2.5 rounded-lg transition ' + (m === 'f' ? 'bg-[#3F51B5] text-white' : 'bg-gray-100 text-gray-600');
+  $('x_disc_suffix').textContent = m === 'p' ? '%' : '';
+  $('x_disc_prefix').textContent = m === 'f' ? '$' : '';
+  $('x_second_wrap').style.display = m === 'p' ? '' : 'none';
+  $('x_saved_wrap').style.display = m === 'p' ? '' : 'none';
+  givens = ['before', 'discount'];
+  calc();
+}
+function edited(field) {
+  givens = [field].concat(givens.filter(f => f !== field)).slice(0, 2);
+  calc();
+}
+function effectiveDiscount(d1, d2) {
+  return 1 - (1 - d1 / 100) * (1 - (d2 || 0) / 100);
+}
+function bannerHtml(headline, sub) {
+  return '<div class="bg-[#3F51B5] text-white rounded-xl p-5"><div class="text-sm opacity-80">' + headline + '</div><div class="text-3xl font-extrabold mt-1">' + sub + '</div></div>';
+}
+function statsHtml(pairs) {
+  return '<div class="grid grid-cols-2 gap-3 mt-4 text-center">' + pairs.map(p => '<div class="bg-gray-50 rounded-lg p-3"><div class="text-xs text-gray-500">' + p[0] + '</div><div class="font-bold num">' + p[1] + '</div></div>').join('') + '</div>';
+}
+function calc() {
+  const out = $('x_results');
+  const fields = mode === 'p' ? ['before', 'discount', 'after', 'saved'] : ['before', 'discount', 'after'];
+  let g = givens.filter(f => fields.includes(f) && filled(F[f]));
+  for (const f of fields) if (!g.includes(f) && filled(F[f])) g.push(f);
+  g = g.slice(0, 2);
+  if (g.length < 2) { out.innerHTML = ''; updateShare(); return; }
+  const v = {};
+  for (const f of fields) v[f] = g.includes(f) ? num(F[f]) : null;
+  const has = (...fs) => fs.every(f => v[f] !== null);
+  if (mode === 'p') {
+    const d2 = filled('x_disc2') && g.includes('discount') ? num('x_disc2') : null;
+    const effFrom = d => d2 !== null ? effectiveDiscount(d, d2) * 100 : d;
+    if (has('before', 'discount')) { const e = effFrom(v.discount); v.saved = v.before * e / 100; v.after = v.before - v.saved; v.eff = e; }
+    else if (has('before', 'after')) { v.saved = v.before - v.after; v.eff = v.before > 0 ? v.saved / v.before * 100 : 0; v.discount = v.eff; }
+    else if (has('before', 'saved')) { v.after = v.before - v.saved; v.eff = v.before > 0 ? v.saved / v.before * 100 : 0; v.discount = v.eff; }
+    else if (has('discount', 'after')) { const e = effFrom(v.discount); if (e >= 100) { out.innerHTML = '<p class="text-sm text-gray-500">A 100% discount makes every original price $0 — lower the discount.</p>'; return; } v.before = v.after / (1 - e / 100); v.saved = v.before - v.after; v.eff = e; }
+    else if (has('discount', 'saved')) { const e = effFrom(v.discount); if (!(e > 0)) { out.innerHTML = '<p class="text-sm text-gray-500">A 0% discount saves $0 at any price — add an original or final price instead.</p>'; return; } v.before = v.saved / (e / 100); v.after = v.before - v.saved; v.eff = e; }
+    else if (has('after', 'saved')) { v.before = v.after + v.saved; v.eff = v.before > 0 ? v.saved / v.before * 100 : 0; v.discount = v.eff; }
+    if ([v.before, v.after, v.saved].some(x => x === null || !isFinite(x))) { out.innerHTML = ''; updateShare(); return; }
+    $('x_before').value = r2(v.before); $('x_disc').value = Math.round(v.discount * 100) / 100;
+    $('x_after').value = r2(v.after); $('x_saved').value = r2(v.saved);
+    const stackNote = d2 !== null && d2 > 0 ? ' Stacked ' + v.discount + '% + ' + d2 + '% = an effective ' + fmtPct(v.eff) + ' off.' : '';
+    out.innerHTML = bannerHtml('Price after discount', fmt$(v.after)) +
+      '<p class="text-sm text-gray-600 mt-3">You saved <strong>' + fmt$(v.saved) + '</strong> — ' + fmtPct(v.eff) + ' off the original ' + fmt$(v.before) + '.' + stackNote + '</p>' +
+      statsHtml([['Price before', fmt$(v.before)], ['Discount', fmtPct(v.eff)], ['You saved', fmt$(v.saved)], ['Price after', fmt$(v.after)]]);
+  } else {
+    if (has('before', 'discount')) { v.saved = v.discount; v.after = v.before - v.discount; }
+    else if (has('before', 'after')) { v.discount = v.before - v.after; v.saved = v.discount; }
+    else if (has('discount', 'after')) { v.before = v.after + v.discount; v.saved = v.discount; }
+    if ([v.before, v.after, v.discount].some(x => x === null || !isFinite(x))) { out.innerHTML = ''; updateShare(); return; }
+    const pctEq = v.before > 0 ? v.discount / v.before * 100 : 0;
+    $('x_before').value = r2(v.before); $('x_disc').value = r2(v.discount); $('x_after').value = r2(v.after);
+    out.innerHTML = bannerHtml('Price after discount', fmt$(v.after)) +
+      '<p class="text-sm text-gray-600 mt-3">You saved <strong>' + fmt$(v.discount) + '</strong> — equivalent to ' + fmtPct(pctEq) + ' off the original ' + fmt$(v.before) + '.</p>' +
+      statsHtml([['Price before', fmt$(v.before)], ['Amount off', fmt$(v.discount)], ['Equivalent percent', fmtPct(pctEq)], ['Price after', fmt$(v.after)]]);
+  }
+  updateShare();
+}
+function updateShare() {
+  const q = new URLSearchParams({ m: mode, b: $('x_before').value, d: $('x_disc').value, d2: $('x_disc2').value, a: $('x_after').value, s: $('x_saved').value, gv: givens.join(',') });
+  history.replaceState(null, '', location.pathname + '?' + q.toString());
+}
+(function init() {
+  const q = new URLSearchParams(location.search);
+  const set = (id, key) => { if (q.get(key)) $(id).value = q.get(key); };
+  set('x_before', 'b'); set('x_disc', 'd'); set('x_disc2', 'd2'); set('x_after', 'a'); set('x_saved', 's');
+  if (q.get('gv')) givens = q.get('gv').split(',').filter(f => F[f]).slice(0, 2);
+  if (givens.length < 2) givens = ['before', 'discount'];
+  setMode(q.get('m') === 'f' ? 'f' : 'p');
+})();
+</script>
 </body>
-</html>
+            </html>
