@@ -1,166 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marriage Tax Calculator - CalcNova</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; } </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marriage Tax Calculator — Marriage Bonus or Penalty? | CalcNova</title>
+<meta name="description" content="Free marriage tax calculator: compare filing as two singles vs. married filing jointly on 2026 federal brackets. See your marriage bonus or penalty, payroll and state taxes, and take-home pay both ways.">
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/marriage-tax">
+<meta property="og:title" content="Marriage Tax Calculator — Marriage Bonus or Penalty? | CalcNova">
+<meta property="og:description" content="Two singles or one joint return — which pays less federal tax? Enter both incomes and see the difference.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/marriage-tax">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+    .num { font-variant-numeric: tabular-nums; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://calcnova.mustaphatammouz59.workers.dev/"},{"@type":"ListItem","position":2,"name":"Financial Calculators","item":"https://calcnova.mustaphatammouz59.workers.dev/financial"},{"@type":"ListItem","position":3,"name":"Marriage Tax Calculator","item":"https://calcnova.mustaphatammouz59.workers.dev/marriage-tax"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is the marriage penalty?","acceptedAnswer":{"@type":"Answer","text":"The marriage penalty is the extra federal tax a couple pays filing jointly compared with what the same two people would pay as singles. It mostly appears when both spouses earn similar, higher incomes, because the joint brackets stop being exactly double the single brackets at the top: the 37% rate starts at $768,700 of joint taxable income, while two singles would not reach it until $1,281,200 combined."}},
+{"@type":"Question","name":"When do couples get a marriage bonus instead?","acceptedAnswer":{"@type":"Answer","text":"When the two incomes are very unequal — especially a single-earner couple. The lower earner's unused low brackets and standard deduction shelter part of the higher earner's income, so the joint bill drops. A one-income couple earning $200,000 saves roughly $10,000 a year in federal tax by filing jointly rather than as one single filer."}},
+{"@type":"Question","name":"Is married filing separately ever better?","acceptedAnswer":{"@type":"Answer","text":"Rarely. Filing separately halves many brackets and the standard deduction, and it disqualifies or shrinks several credits, including the earned income credit in most cases. It can help in narrow situations — for example, keeping one spouse's income-driven student loan payments low, or separating medical-expense deductions — but for most couples joint filing wins. This calculator compares joint filing against two single returns, the comparison that matters before the wedding."}},
+{"@type":"Question","name":"Does this calculator include state taxes and credits?","acceptedAnswer":{"@type":"Answer","text":"State and city tax is estimated as the flat percentage you enter, applied to each spouse's gross income, so it is the same before and after marriage. On the federal side the estimate includes the earned income credit based on the dependents entered, and long-term capital gains and qualified dividends are taxed at the preferential 0%/15%/20% rates."}}]}
+</script>
 </head>
 <body class="text-gray-800">
-    <!-- Navbar -->
-    <nav class="bg-[#3F51B5] text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
-            <div class="space-x-4 hidden md:flex font-medium">
-                <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
-            </div>
+<nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+    <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+        <div class="space-x-4 hidden md:flex font-medium">
+            <a href="financial.html" class="hover:text-[#14B8A6] transition">Financial</a>
+            <a href="privacy.html" class="hover:text-[#14B8A6] transition">Privacy</a>
         </div>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <nav class="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt;
+        <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt;
+        <span class="text-gray-800 font-medium">Marriage Tax Calculator</span>
     </nav>
 
-    <!-- Breadcrumbs -->
-    <div class="container mx-auto px-4 py-4 text-sm text-gray-500">
-        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="financial.html" class="hover:text-[#3F51B5]">Financial</a> &gt; <span class="text-gray-800 font-medium">Marriage Tax</span>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Marriage Tax Calculator</h1>
+        <p class="mt-3 text-gray-600 max-w-3xl">Marriage changes your taxes the moment the year ends — marry on the last day of the year and the IRS counts you as married for all of it. This calculator estimates the difference between <strong>filing as two singles</strong> and <strong>filing one joint return</strong>, using <strong>2026 federal brackets</strong>: your marriage bonus or marriage penalty, plus payroll taxes, a state estimate, and take-home pay both ways. For a full single return with every deduction and credit, use the <a href="income-tax.html" class="text-[#3F51B5] font-medium hover:underline">Income Tax Calculator</a>.</p>
     </div>
 
-    <main class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-        <div class="md:w-3/4">
-            <h1 class="text-3xl font-bold text-[#3F51B5] mb-6">Marriage Tax Calculator</h1>
+    <!-- AdSense: in-article, right after the intro -->
+    <div class="mb-8">
+        <div class="border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[110px]">Advertisement — In-article (fluid)</div>
+    </div>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Spouse 1 Annual Income ($)</label>
-                        <input type="number" id="mtIncome1" value="80000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Spouse 2 Annual Income ($)</label>
-                        <input type="number" id="mtIncome2" value="60000" class="w-full border border-gray-300 rounded-md p-2 outline-none">
-                    </div>
-                </div>
-                <button onclick="calculateMarriageTax()" class="w-full bg-[#3F51B5] text-white font-bold py-3 rounded-md hover:bg-blue-800 transition shadow-md">Compare Taxes</button>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <section class="bg-white rounded-xl shadow-sm border-2 border-[#3F51B5]/30 p-6">
+            <h2 class="text-lg font-bold text-[#3F51B5] mb-5">Spouse 1</h2>
+            <div class="space-y-3" id="f1"></div>
+        </section>
+        <section class="bg-white rounded-xl shadow-sm border-2 border-[#14B8A6]/40 p-6">
+            <h2 class="text-lg font-bold text-teal-700 mb-5">Spouse 2</h2>
+            <div class="space-y-3" id="f2"></div>
+        </section>
+    </div>
+    <div class="flex gap-3 mt-6 max-w-xl">
+        <button onclick="calculate()" class="flex-1 bg-[#4CAF50] hover:bg-green-600 text-white font-bold py-3 rounded-lg transition shadow-md">Calculate</button>
+        <button onclick="shareLink(this)" class="px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg transition text-sm">Copy share link</button>
+    </div>
+    <p class="text-xs text-gray-400 mt-3 max-w-3xl">Estimate only, based on 2026 federal brackets and standard assumptions: retirement savings reduce taxable income first, payroll taxes are figured on salary and business income, and the earned income credit is applied from the dependents entered. State tax is a flat percentage of gross income. Not tax advice.</p>
 
-                <div id="mtResults" class="hidden mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-4">
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Tax (Single)</p>
-                            <p class="text-xl font-bold text-gray-800" id="mtSingleTax">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p class="text-sm text-gray-500">Total Tax (Married)</p>
-                            <p class="text-xl font-bold text-[#3F51B5]" id="mtMarriedTax">$0</p>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm border-2 border-[#14B8A6]">
-                            <p class="text-sm text-gray-500">Tax Savings / Penalty</p>
-                            <p class="text-2xl font-bold text-[#14B8A6]" id="mtDifference">$0</p>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <p class="text-lg font-semibold" id="mtVerdict">Result</p>
-                    </div>
-                </div>
-            </div>
+    <section id="results" class="mt-8 scroll-mt-24"></section>
 
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">The "Marriage Penalty" vs "Marriage Bonus"</h2>
-                <p class="text-gray-600 mb-4 leading-relaxed">Depending on how much each spouse earns, getting married can either lower or raise your total income tax bill. A <strong>Marriage Bonus</strong> occurs when the combined tax bill is lower than what you would pay if you were single. A <strong>Marriage Penalty</strong> occurs when the combined bill is higher. This usually happens when both spouses have high, relatively equal incomes.</p>
-                <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500">
-                    <p>In-Article AdSense Banner (Fluid)</p>
-                </div>
-            </div>
+    <!-- AdSense: 300x250 -->
+    <div class="mt-8 border-2 border-dashed border-gray-300 rounded-xl bg-white text-gray-400 text-sm flex items-center justify-center min-h-[250px] max-w-[336px]">Advertisement — 300 × 250</div>
+
+    <section class="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 prose max-w-none prose-gray prose-headings:text-[#3F51B5]">
+        <h2>Marriage bonus, marriage penalty — what actually changes</h2>
+        <p>Since 2018, the federal brackets for married couples filing jointly have been almost exactly <strong>double</strong> the single brackets, and so is the standard deduction ($32,200 joint vs. $16,100 single in 2026). That design has a consequence most couples find surprising: if two people earn roughly the same and take the standard deduction, marriage changes their federal income tax by almost nothing — the joint return and the two single returns land on the same number, as the defaults in this calculator show (a small penalty appears there once the earned income credit and payroll-tax details enter). The difference shows up at the edges, in two opposite directions.</p>
+        <h3>Where the bonus comes from</h3>
+        <p>When incomes are <strong>unequal</strong>, the joint return averages them. The lower earner's unused standard deduction and cheap 10% and 12% bracket space absorb income that the higher earner would have paid 22% or 24% on as a single. The extreme case is the one-income couple: $200,000 earned by one spouse costs about $33,300 in federal tax on a single return, but only about $23,200 on a joint return — a marriage bonus near <strong>$10,100 a year</strong>. Bonuses also appear at modest incomes through the earned income credit: two low earners who each claim the credit separately can lose part of it when their incomes combine, but a single earner with dependents often gains, because the joint phase-out range starts much higher.</p>
+        <h3>Where the penalty hides</h3>
+        <p>The doubling stops at the very top. The 37% bracket begins at $768,700 of joint taxable income — far less than twice the single threshold of $640,600 — so two high earners can owe thousands more as a couple than as singles. The same is true, in smaller print, of the Social Security wage base (each spouse gets their own cap either way, so no change) and of various credit phase-outs that use combined income: at lower incomes, two earners whose combined wages push past an earned-income-credit or education-credit limit can lose credits they would have kept as singles. Penalties are real but narrower than folklore suggests — for most middle-income couples the honest answer is "within a few hundred dollars either way," which is exactly why running your own two numbers beats guessing.</p>
+        <h3>Why almost everyone files jointly</h3>
+        <p>Married filing separately is the third option, and it is usually the worst: brackets and the standard deduction are halved rather than doubled, the earned income credit is generally unavailable, education credits disappear, and if one spouse itemizes, the other must too. It survives for edge cases — shielding a spouse from the other's tax liability, keeping income-driven student-loan payments based on one income, or clearing the medical-expense floor on a lower income. Joint filing also unlocks things singles cannot do at all: a <strong>spousal IRA</strong> for a non-working partner, a doubled capital-loss and home-sale exclusion capacity, and an unlimited marital deduction for estate and gift purposes — the wealth-transfer benefit that matters most to high-net-worth couples. Note that this calculator compares joint filing with the two-single counterfactual — the right question before marrying, and the one that produces the bonus/penalty figure.</p>
+        <h3>How this estimate works</h3>
+        <p>Each spouse's income is built from salary and business income, interest and dividends, rental and passive income, and capital gains. Pre-tax 401(k) and IRA savings come off the top. The deduction is the 2026 standard deduction for the filing status chosen (or your own total if you switch it off — add up mortgage interest, charitable donations, student loan interest up to $2,500, child care up to $3,000 and tuition up to $4,000 per person). Long-term gains and qualified dividends are stacked on top of ordinary income and taxed at 0%, 15% or 20%. Social Security and Medicare are figured per person on salary and business income — doubled rates if self-employed — and the earned income credit is applied from the dependents entered before the final federal figure. State and city tax is the flat rate you enter, applied to gross income, so it does not change with marital status. Results are estimates for planning, not a substitute for a prepared return.</p>
+        <h3>Frequently asked questions</h3>
+        <h4>What is the marriage penalty?</h4>
+        <p>The extra tax a couple pays filing jointly versus as two singles. It concentrates among similar high earners, because the top joint bracket starts well below twice the single threshold.</p>
+        <h4>When is there a marriage bonus?</h4>
+        <p>When incomes are unequal — most dramatically with one earner. The joint return lets the lower earner's unused deductions and low brackets shelter the higher earner's income.</p>
+        <h4>Is married filing separately ever better?</h4>
+        <p>Rarely, and this calculator does not model it: halved brackets, lost credits and matching-deduction rules make it the most expensive status for most couples, outside narrow student-loan or liability situations.</p>
+        <h4>Does the calculator include state tax and credits?</h4>
+        <p>State tax is your flat percentage of each spouse's gross income. Federally, the earned income credit is included; other credits are not, which is why this is an estimator and the <a href="income-tax.html">Income Tax Calculator</a> exists for full returns.</p>
+    </section>
+
+    <section class="mt-8">
+        <h2 class="text-lg font-bold text-[#3F51B5] mb-4">Related Calculators</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <a href="income-tax.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Income Tax Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">A complete federal return for either status — every deduction, credit and the refund or amount owed.</p>
+            </a>
+            <a href="salary.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">Salary Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Convert each spouse's pay between hourly, weekly, monthly and annual amounts.</p>
+            </a>
+            <a href="ira.html" class="block bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-[#3F51B5] transition">
+                <div class="font-bold text-[#3F51B5]">IRA Calculator</div>
+                <p class="text-sm text-gray-500 mt-1">Including the spousal IRA marriage unlocks — Traditional vs. Roth vs. taxable, side by side.</p>
+            </a>
         </div>
+    </section>
+</main>
 
-        <aside class="md:w-1/4">
-            <div class="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 sticky top-4">
-                <p class="font-medium">AdSense Space</p>
-            </div>
-        </aside>
-    </main>
-
-    <footer class="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <div class="mb-4 space-x-4">
-                <a href="about.html" class="hover:text-white transition">About Us</a>
-                <a href="privacy.html" class="hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition">Terms of Use</a>
-            </div>
-            <p class="text-sm">&copy; 2024 CalcNova. All rights reserved.</p>
+<footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+    <div class="container mx-auto px-4 text-center">
+        <div class="mb-3 space-x-4 text-sm">
+            <a href="index.html" class="hover:text-white">Home</a>
+            <a href="financial.html" class="hover:text-white">Financial</a>
+            <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
         </div>
-    </footer>
+        <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+    </div>
+</footer>
 
-    <script>
-        // Helper function to calculate tax for single filers (Simplified 2024 brackets)
-        function calcSingleTax(income) {
-            let taxable = income - 14600; // Standard deduction
-            if (taxable <= 0) return 0;
-            if (taxable <= 11600) return taxable * 0.10;
-            if (taxable <= 47150) return 1160 + (taxable - 11600) * 0.12;
-            if (taxable <= 100525) return 5426 + (taxable - 47150) * 0.22;
-            if (taxable <= 191950) return 17168.50 + (taxable - 100525) * 0.24;
-            return 39110.50 + (taxable - 191950) * 0.32;
-        }
+<script>
+const BR = { Single: [12400, 50400, 105700, 201775, 256225, 640600], MarriedJoint: [24800, 100800, 211400, 403550, 512450, 768700], HeadofHousehold: [17700, 67450, 105700, 201750, 256200, 640600] };
+const RATES = [0.10, 0.12, 0.22, 0.24, 0.32, 0.35, 0.37];
+const STD = { Single: 16100, MarriedJoint: 32200, HeadofHousehold: 24150 };
+const CG = { Single: [49450, 545500], MarriedJoint: [98900, 613700], HeadofHousehold: [66200, 579600] };
+const SSBASE = 184500;
+const EITC = { max: [664, 4427, 7316, 8231], pin: [0.0765, 0.34, 0.40, 0.45], pout: [0.0765, 0.1598, 0.2106, 0.2106], startS: [10860, 23890, 23890, 23890], startJ: [18140, 31160, 31160, 31160] };
+const $ = id => document.getElementById(id);
+const num = id => { const v = parseFloat(String($(id).value).replace(/[^0-9.\-]/g, "")); return isNaN(v) ? 0 : v; };
+const fmt0 = n => "$" + Math.round(n).toLocaleString("en-US");
+const fmtS = n => (n < 0 ? "-$" : "$") + Math.abs(Math.round(n)).toLocaleString("en-US");
 
-        // Helper function to calculate tax for married filers (Simplified 2024 brackets)
-        function calcMarriedTax(income) {
-            let taxable = income - 29200; // Standard deduction
-            if (taxable <= 0) return 0;
-            if (taxable <= 23200) return taxable * 0.10;
-            if (taxable <= 94300) return 2320 + (taxable - 23200) * 0.12;
-            if (taxable <= 201050) return 10852 + (taxable - 94300) * 0.22;
-            if (taxable <= 383900) return 34337 + (taxable - 201050) * 0.24;
-            return 78221 + (taxable - 383900) * 0.32;
-        }
+const FIELDS = [
+  ["sal", "Salary + business income", 65000, 45000, "$"],
+  ["int", "Interest + dividends income", 0, 0, "$"],
+  ["rent", "Rental, royalty, passive income", 0, 0, "$"],
+  ["st", "Short-term capital gain", 0, 0, "$"],
+  ["lt", "Long-term capital gain", 0, 0, "$"],
+  ["qd", "Qualified dividends", 0, 0, "$"],
+  ["k401", "401K, IRA… savings (pre-tax)", 10000, 6000, "$"]
+];
+function fieldHTML(p, key, label, val, pre) {
+  return '<div class="grid grid-cols-2 gap-3 items-center"><label for="' + p + key + '" class="text-sm font-medium text-gray-700">' + label + '</label>'
+    + '<div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">' + pre + '</span>'
+    + '<input id="' + p + key + '" type="number" step="any" value="' + val + '" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div></div>';
+}
+function spouseForm(p, defaults) {
+  let h = FIELDS.map(f => fieldHTML(p, f[0], f[1], defaults === 1 ? f[2] : f[3], f[4])).join("");
+  h += '<div class="grid grid-cols-2 gap-3 items-center"><label for="' + p + 'status" class="text-sm font-medium text-gray-700">Filing status (before marriage)</label>'
+    + '<select id="' + p + 'status" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5]"><option value="Single">Single</option><option value="MarriedJoint">Qualified Widow(er)</option><option value="HeadofHousehold">Head of Household</option></select></div>';
+  h += '<div class="grid grid-cols-2 gap-3 items-center"><label for="' + p + 'deps" class="text-sm font-medium text-gray-700">No. of dependents</label>'
+    + '<input id="' + p + 'deps" type="number" value="0" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div>';
+  h += '<div class="grid grid-cols-2 gap-3 items-center"><label for="' + p + 'useStd" class="text-sm font-medium text-gray-700">Use standard deduction?</label>'
+    + '<select id="' + p + 'useStd" onchange="toggleDed(\'' + p + '\')" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5]"><option value="yes">Yes</option><option value="no">No</option></select></div>';
+  h += '<div class="grid grid-cols-2 gap-3 items-center" id="' + p + 'dedRow" style="display:none"><label for="' + p + 'dedAmt" class="text-sm font-medium text-gray-700">Total deductions <span class="text-gray-400 font-normal">(mortgage interest, donations, student loan ≤ $2,500, child care ≤ $3,000, tuition ≤ $4,000)</span></label>'
+    + '<div class="relative"><span class="absolute left-3 top-2.5 text-gray-400">$</span><input id="' + p + 'dedAmt" type="number" step="any" value="0" class="w-full rounded-lg border-gray-300 border pl-7 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"></div></div>';
+  h += '<div class="grid grid-cols-2 gap-3 items-center"><label for="' + p + 'rate" class="text-sm font-medium text-gray-700">State + city tax rate</label>'
+    + '<div class="relative"><input id="' + p + 'rate" type="number" step="any" value="5" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5] num"><span class="absolute right-3 top-2.5 text-gray-400">%</span></div></div>';
+  h += '<div class="grid grid-cols-2 gap-3 items-center"><label for="' + p + 'se" class="text-sm font-medium text-gray-700">Self-employed?</label>'
+    + '<select id="' + p + 'se" class="w-full rounded-lg border-gray-300 border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3F51B5]"><option value="no">No</option><option value="yes">Yes</option></select></div>';
+  return h;
+}
+$("f1").innerHTML = spouseForm("a", 1);
+$("f2").innerHTML = spouseForm("b", 2);
+function toggleDed(p) { $(p + "dedRow").style.display = $(p + "useStd").value === "no" ? "" : "none"; }
 
-        function calculateMarriageTax() {
-            const income1 = parseFloat(document.getElementById('mtIncome1').value);
-            const income2 = parseFloat(document.getElementById('mtIncome2').value);
+function schedTax(T, st) { let tax = 0, prev = 0; const b = BR[st]; for (let i = 0; i < 7; i++) { const top = i < 6 ? b[i] : Infinity; if (T > prev) tax += (Math.min(T, top) - prev) * RATES[i]; prev = top; } return tax; }
+function marginal(T, st) { if (T <= 0) return 0; const b = BR[st]; for (let i = 0; i < 6; i++) if (T <= b[i]) return RATES[i] * 100; return 37; }
+function taxWithPref(T, pref, st) {
+  const ord = Math.max(0, T - pref); let tax = schedTax(ord, st);
+  let rem = Math.min(pref, Math.max(0, T - ord)); const c = CG[st];
+  const at0 = Math.max(0, Math.min(rem, c[0] - ord)); rem -= at0;
+  const at15 = Math.max(0, Math.min(rem, c[1] - ord - at0)); tax += at15 * 0.15; rem -= at15;
+  tax += rem * 0.20; return tax;
+}
+function eitc(earned, agi, kids, joint) {
+  const k = Math.min(3, kids); const mx = EITC.max[k];
+  let c = Math.min(mx, earned * EITC.pin[k]);
+  const base = Math.max(agi, earned); const start = joint ? EITC.startJ[k] : EITC.startS[k];
+  c = Math.min(c, mx - EITC.pout[k] * Math.max(0, base - start));
+  return Math.max(0, c);
+}
+function payroll(salBiz, se) {
+  if (se) return { ss: 0.124 * Math.min(salBiz, SSBASE), med: 0.029 * salBiz };
+  return { ss: 0.062 * Math.min(salBiz, SSBASE), med: 0.0145 * salBiz };
+}
+function readSpouse(p) {
+  const o = {};
+  FIELDS.forEach(f => o[f[0]] = Math.max(0, num(p + f[0])));
+  o.status = $(p + "status").value;
+  o.deps = Math.max(0, Math.floor(num(p + "deps")));
+  o.useStd = $(p + "useStd").value === "yes";
+  o.dedAmt = Math.max(0, num(p + "dedAmt"));
+  o.rate = Math.max(0, num(p + "rate"));
+  o.se = $(p + "se").value === "yes";
+  return o;
+}
+function oneReturn(p, status, joint, jointDed) {
+  const gross = p.sal + p.int + p.rent + p.st + p.lt + p.qd;
+  const agi = gross - p.k401;
+  const pr = payroll(p.sal, p.se); const fica = pr.ss + pr.med;
+  const ded = jointDed !== undefined ? jointDed : (p.useStd ? STD[status] : p.dedAmt);
+  const T = Math.max(0, agi - ded - fica);
+  let tax = taxWithPref(T, Math.min(p.lt + p.qd, T), status);
+  const invInc = p.int + p.st + p.lt + p.qd;
+  const credit = invInc <= 12200 ? eitc(p.sal, agi, p.deps + 1, joint) : 0;
+  tax = Math.max(0, tax - credit);
+  const state = gross * p.rate / 100;
+  return { gross, ss: pr.ss, med: pr.med, tax, state, credit, T, marginal: marginal(T, status), takeHome: gross - tax - pr.ss - pr.med - state - p.k401 };
+}
+function calculate() {
+  const a = readSpouse("a"), b = readSpouse("b");
+  const s1 = oneReturn(a, a.status, false), s2 = oneReturn(b, b.status, false);
+  const j = { sal: a.sal + b.sal, int: a.int + b.int, rent: a.rent + b.rent, st: a.st + b.st, lt: a.lt + b.lt, qd: a.qd + b.qd, k401: a.k401 + b.k401, deps: a.deps + b.deps, rate: 0, se: false };
+  const jointDed = (a.useStd && b.useStd) ? STD.MarriedJoint : (a.useStd ? STD.MarriedJoint / 2 : a.dedAmt) + (b.useStd ? STD.MarriedJoint / 2 : b.dedAmt);
+  const mfjRaw = oneReturn({ ...j, se: false }, "MarriedJoint", true, jointDed);
+  // joint payroll is per person (SS cap and SE rates apply individually)
+  const pa = payroll(a.sal, a.se), pb = payroll(b.sal, b.se);
+  const mfj = { ...mfjRaw, ss: pa.ss + pb.ss, med: pa.med + pb.med, state: s1.state + s2.state };
+  mfj.takeHome = mfj.gross - mfj.tax - mfj.ss - mfj.med - mfj.state - j.k401;
+  // recompute joint tax with the true combined payroll offset
+  const gross = j.sal + j.int + j.rent + j.st + j.lt + j.qd, agi = gross - j.k401;
+  const ficaJ = pa.ss + pa.med + pb.ss + pb.med;
+  const TJ = Math.max(0, agi - jointDed - ficaJ);
+  let taxJ = taxWithPref(TJ, Math.min(j.lt + j.qd, TJ), "MarriedJoint");
+  const creditJ = (j.int + j.st + j.lt + j.qd) <= 12200 ? eitc(j.sal, agi, j.deps + 1, true) : 0;
+  taxJ = Math.max(0, taxJ - creditJ);
+  mfj.tax = taxJ; mfj.credit = creditJ; mfj.T = TJ; mfj.marginal = marginal(TJ, "MarriedJoint");
+  mfj.takeHome = gross - taxJ - mfj.ss - mfj.med - mfj.state - j.k401;
 
-            if (isNaN(income1) || isNaN(income2) || income1 < 0 || income2 < 0) {
-                alert("Please enter valid positive numbers.");
-                return;
-            }
+  const combTax = s1.tax + s2.tax;
+  const diff = combTax - mfj.tax;
+  let banner;
+  if (Math.abs(diff) < 1) banner = '<div class="bg-[#3F51B5] text-white rounded-xl p-6 shadow-md"><div class="text-2xl sm:text-3xl font-extrabold">Essentially no difference</div><div class="text-sm opacity-90 mt-1">Filing jointly vs. as two singles changes your federal income tax by less than a dollar on these numbers — the joint brackets and standard deduction are double the single ones, so similar incomes usually wash out.</div></div>';
+  else if (diff > 0) banner = '<div class="bg-green-600 text-white rounded-xl p-6 shadow-md"><div class="text-sm uppercase tracking-wide opacity-80">Marriage bonus</div><div class="text-4xl sm:text-5xl font-extrabold mt-1 num">You save ~ ' + fmt0(diff) + ' a year</div><div class="text-sm opacity-90 mt-1">Federal income tax if married filing jointly: <strong>' + fmt0(mfj.tax) + '</strong> vs. <strong>' + fmt0(combTax) + '</strong> as two singles. Take-home pay rises from ' + fmt0(s1.takeHome + s2.takeHome) + ' to ' + fmt0(mfj.takeHome) + '.</div></div>';
+  else banner = '<div class="bg-[#3F51B5] text-white rounded-xl p-6 shadow-md"><div class="text-sm uppercase tracking-wide opacity-80">Marriage penalty</div><div class="text-4xl sm:text-5xl font-extrabold mt-1 num">You pay ~ ' + fmt0(-diff) + ' more a year</div><div class="text-sm opacity-90 mt-1">Federal income tax if married filing jointly: <strong>' + fmt0(mfj.tax) + '</strong> vs. <strong>' + fmt0(combTax) + '</strong> as two singles. Take-home pay falls from ' + fmt0(s1.takeHome + s2.takeHome) + ' to ' + fmt0(mfj.takeHome) + '.</div></div>';
+  const comb = { gross: s1.gross + s2.gross, tax: combTax, ss: s1.ss + s2.ss, med: s1.med + s2.med, state: s1.state + s2.state, takeHome: s1.takeHome + s2.takeHome, marginal: null, k401: a.k401 + b.k401 };
+  s1.k401 = a.k401; s2.k401 = b.k401; mfj.k401 = a.k401 + b.k401;
+  const row = (label, f, bold) => '<tr class="border-b border-gray-100' + (bold ? " font-semibold" : "") + '"><td class="py-2 pr-3">' + label + '</td><td class="py-2 pr-3 text-right num">' + f(s1) + '</td><td class="py-2 pr-3 text-right num">' + f(s2) + '</td><td class="py-2 pr-3 text-right num">' + f(comb) + '</td><td class="py-2 text-right num">' + f(mfj) + "</td></tr>";
+  const creditsUsed = [s1.credit > 0 ? "Spouse 1" : null, s2.credit > 0 ? "Spouse 2" : null, mfj.credit > 0 ? "joint return" : null].filter(Boolean);
+  const creditNote = (s1.credit + s2.credit + mfj.credit) > 0 ? '<p class="text-xs text-gray-400 mt-3">Federal figures are after the earned income credit (' + [s1.credit > 0 ? "Spouse 1: " + fmt0(s1.credit) : null, s2.credit > 0 ? "Spouse 2: " + fmt0(s2.credit) : null, mfj.credit > 0 ? "joint: " + fmt0(mfj.credit) : null].filter(Boolean).join(" · ") + '), which is why a return with taxable income can still show no federal tax due.</p>' : "";
+  $("results").innerHTML = banner
+    + '<section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-6 overflow-x-auto"><h3 class="font-bold text-[#3F51B5] mb-3">Before and after marriage</h3>'
+    + '<table class="w-full text-[15px] min-w-[560px]"><thead><tr class="text-left text-gray-500 border-b border-gray-200"><th class="py-2 pr-3 font-semibold"></th><th class="py-2 pr-3 font-semibold text-right">Spouse 1</th><th class="py-2 pr-3 font-semibold text-right">Spouse 2</th><th class="py-2 pr-3 font-semibold text-right">Combined (2 singles)</th><th class="py-2 font-semibold text-right">Married Joint</th></tr></thead><tbody>'
+    + row("All income", r => fmt0(r.gross))
+    + row("Federal income tax", r => fmt0(r.tax), true)
+    + row("Marginal tax rate", r => r.marginal === null ? "—" : r.marginal + "%")
+    + row("Social Security tax", r => fmt0(r.ss))
+    + row("Medicare tax", r => fmt0(r.med))
+    + row("State + city income tax", r => fmt0(r.state))
+    + row("401K, IRA… savings", r => fmt0(r.k401))
+    + row("Final take-home pay", r => fmt0(r.takeHome), true)
+    + "</tbody></table>" + creditNote + "</section>";
+}
 
-            // Calculate Single Taxes
-            const tax1 = calcSingleTax(income1);
-            const tax2 = calcSingleTax(income2);
-            const totalSingleTax = tax1 + tax2;
-
-            // Calculate Married Tax
-            const combinedIncome = income1 + income2;
-            const totalMarriedTax = calcMarriedTax(combinedIncome);
-
-            // Difference
-            const difference = totalSingleTax - totalMarriedTax;
-
-            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
-            document.getElementById('mtSingleTax').textContent = formatter.format(totalSingleTax);
-            document.getElementById('mtMarriedTax').textContent = formatter.format(totalMarriedTax);
-            
-            const diffEl = document.getElementById('mtDifference');
-            const verdictEl = document.getElementById('mtVerdict');
-            
-            if (difference > 0) {
-                // Married tax is lower -> Bonus
-                diffEl.textContent = formatter.format(difference);
-                diffEl.className = "text-2xl font-bold text-green-500";
-                verdictEl.textContent = "You get a Marriage Bonus! You save money by filing jointly.";
-                verdictEl.className = "text-lg font-semibold text-green-600";
-            } else if (difference < 0) {
-                // Married tax is higher -> Penalty
-                diffEl.textContent = formatter.format(Math.abs(difference));
-                diffEl.className = "text-2xl font-bold text-red-500";
-                verdictEl.textContent = "You face a Marriage Penalty. You pay more tax by filing jointly.";
-                verdictEl.className = "text-lg font-semibold text-red-600";
-            } else {
-                diffEl.textContent = "$0";
-                diffEl.className = "text-2xl font-bold text-gray-800";
-                verdictEl.textContent = "There is no tax advantage or disadvantage to getting married.";
-                verdictEl.className = "text-lg font-semibold text-gray-700";
-            }
-
-            document.getElementById('mtResults').classList.remove('hidden');
-        }
-    </script>
+const SHARE_KEYS = ["sal", "int", "rent", "st", "lt", "qd", "k401", "status", "deps", "useStd", "dedAmt", "rate", "se"];
+function shareLink(btn) {
+  const p = new URLSearchParams();
+  ["a", "b"].forEach(pre => SHARE_KEYS.forEach(k => { const el = $(pre + k); if (el) p.set(pre + k, el.value); }));
+  const url = location.origin + location.pathname + "?" + p.toString();
+  history.replaceState(null, "", url);
+  if (navigator.clipboard) navigator.clipboard.writeText(url);
+  const old = btn.textContent; btn.textContent = "Copied!"; setTimeout(() => btn.textContent = old, 1600);
+}
+function prefill() {
+  const q = new URLSearchParams(location.search);
+  ["a", "b"].forEach(pre => SHARE_KEYS.forEach(k => { const v = q.get(pre + k); if (v !== null && $(pre + k)) $(pre + k).value = v; }));
+  toggleDed("a"); toggleDed("b");
+}
+prefill();
+calculate();
+</script>
 </body>
 </html>
