@@ -231,7 +231,7 @@
             const iwA = addDays(ov, -5);
             const test = addDays(ov, 9);
             const nextPeriod = addDays(lmp, cy);
-            const due = addDays(lmp, 280);
+            const due = addDays(lmp, 280 + (cy - 28));
 
             const row = (label, val) => `<div class="flex justify-between gap-4 py-2 border-b border-gray-100"><span class="text-gray-600">${label}</span><span class="font-semibold text-right">${val}</span></div>`;
             $('resText').innerHTML =
@@ -244,7 +244,7 @@
                 row('Due Date If Pregnant', fmt(due));
 
             // Calendar of the ovulation month
-            const y = ov.getUTCFullYear(), mo = ov.getUTCMonth();
+            const y = owA.getUTCFullYear(), mo = owA.getUTCMonth();
             const first = new Date(Date.UTC(y, mo, 1));
             const startDow = first.getUTCDay();
             const daysIn = new Date(Date.UTC(y, mo + 1, 0)).getUTCDate();
@@ -275,7 +275,7 @@
             for (let k = 0; k < 6; k++) {
                 const pStart = addDays(lmp, k * cy);
                 const o = addDays(pStart, cy - 14);
-                rows += `<tr><td class="px-3 py-1.5 border-b border-gray-100">${fmt(pStart)}</td><td class="px-3 py-1.5 border-b border-gray-100">${fmtRange(addDays(o, -2), addDays(o, 2))}</td><td class="px-3 py-1.5 border-b border-gray-100">${fmt(addDays(pStart, 280))}</td></tr>`;
+                rows += `<tr><td class="px-3 py-1.5 border-b border-gray-100">${fmt(pStart)}</td><td class="px-3 py-1.5 border-b border-gray-100">${fmtRange(addDays(o, -2), addDays(o, 2))}</td><td class="px-3 py-1.5 border-b border-gray-100">${fmt(addDays(pStart, 280 + (cy - 28)))}</td></tr>`;
             }
             $('resTable').innerHTML =
                 '<p class="font-bold text-gray-800 mb-2">Important dates for the next 6 cycles:</p>' +
@@ -317,4 +317,4 @@
         })();
     </script>
 </body>
-          </html>
+</html>
