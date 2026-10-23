@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GFR Calculator - CalcNova</title>
+    <meta name="description" content="Free GFR calculator: estimate glomerular filtration rate for adults with the MDRD, CKD-EPI, and Mayo Quadratic formulas, and for children with the Schwartz formula — from serum creatinine, age, gender, and race.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/gfr">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="GFR Calculator - CalcNova">
+    <meta property="og:description" content="Estimated GFR by three adult formulas (MDRD, CKD-EPI, Mayo) plus the Schwartz formula for children.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/gfr">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GFR Calculator - CalcNova">
+    <meta name="twitter:description" content="Kidney function estimate from serum creatinine: MDRD, CKD-EPI, Mayo, and Schwartz.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "GFR Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/gfr" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is a normal GFR?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Adjusted for body surface area, the normal range is about 100 to 130 mL/min/1.73 m2 in men and 90 to 120 in women under 40, and GFR declines with age after 40. Population means run from 116 at ages 20-29 down to 75 at 70+. A GFR above 60 is usually adequate; below 15 indicates kidney failure." }
+            },
+            {
+                "@type": "Question",
+                "name": "Which GFR formula should I use?",
+                "acceptedAnswer": { "@type": "Answer", "text": "This calculator reports three widely used adult estimates side by side — the IDMS-traceable MDRD equation, the CKD-EPI formula, and the Mayo Quadratic formula — because each was fitted to a different study population and they can differ, especially at high GFR. For children it uses the Schwartz formula, which works from height and serum creatinine." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why does estimated GFR depend on race in these formulas?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The MDRD and CKD-EPI equations as originally published include a coefficient for Black patients (1.212 in MDRD; higher base coefficients in CKD-EPI), fitted from the study populations they were developed on. This calculator implements the classic published equations, so the selector is part of the adult form." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">GFR Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">GFR Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            The GFR (glomerular filtration rate) Calculator estimates GFR values from serum creatinine, age,
+            gender, and race. For comparison, the adult results are given for <strong>three prevalent
+            formulas</strong> — MDRD, CKD-EPI, and the Mayo Quadratic — while children are estimated with the
+            Schwartz formula from height and creatinine.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <div class="lg:col-span-2 space-y-6">
+                <section class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                    <h2 class="text-xl font-bold text-[#3F51B5]">GFR Calculator for Adults</h2>
+                    <p class="text-sm text-gray-500 mt-1">For people aged 18 years or older.</p>
+                    <div class="grid sm:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="aScr">Serum creatinine (S<sub>Cr</sub>)</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="aScr" value="0.9" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                                <select id="aScrUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5] bg-white text-sm">
+                                    <option value="mgdL" selected>mg/dL</option>
+                                    <option value="molL">micromole/L</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="aAge">Age</label>
+                            <input type="number" id="aAge" value="50" min="1" max="120" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <span class="block text-sm font-semibold mb-1">Gender</span>
+                            <div class="flex gap-5 pt-2">
+                                <label class="flex items-center gap-2 text-sm"><input type="radio" name="aSex" value="male" checked class="accent-[#3F51B5]"> Male</label>
+                                <label class="flex items-center gap-2 text-sm"><input type="radio" name="aSex" value="female" class="accent-[#3F51B5]"> Female</label>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="block text-sm font-semibold mb-1">Race</span>
+                            <div class="flex gap-5 pt-2">
+                                <label class="flex items-center gap-2 text-sm"><input type="radio" name="aRace" value="1" class="accent-[#3F51B5]"> Black</label>
+                                <label class="flex items-center gap-2 text-sm"><input type="radio" name="aRace" value="0" checked class="accent-[#3F51B5]"> Not Black</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 mt-6 no-print">
+                        <button onclick="calcAdult(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                        <button onclick="clearAdult()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                    </div>
+                    <p id="aError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+                    <div id="aResult" class="result-box mt-6">
+                        <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                        <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                            <p class="text-gray-700">The following are the GFR results based on 3 formulas often used:</p>
+                            <div id="aTable" class="overflow-x-auto mt-3"></div>
+                            <div class="mt-4 flex items-center gap-3 no-print">
+                                <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                                <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="bg-white rounded-xl shadow-md p-6 border border-gray-100" id="children">
+                    <h2 class="text-xl font-bold text-[#3F51B5]">GFR Calculator for Children</h2>
+                    <p class="text-sm text-gray-500 mt-1">For people aged 18 years or younger — Schwartz formula.</p>
+                    <div class="grid sm:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="cScr">Serum creatinine (S<sub>Cr</sub>)</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="cScr" value="0.9" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                                <select id="cScrUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5] bg-white text-sm">
+                                    <option value="mgdL" selected>mg/dL</option>
+                                    <option value="molL">micromole/L</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="cHeight">Height</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="cHeight" value="110" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                                <select id="cHeightUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5] bg-white text-sm">
+                                    <option value="inch">inch</option>
+                                    <option value="cm" selected>cm</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 mt-6 no-print">
+                        <button onclick="calcChild(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                        <button onclick="clearChild()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                    </div>
+                    <p id="cError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+                    <div id="cResult" class="result-box mt-6">
+                        <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                        <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                            <p class="text-gray-700 text-lg">GFR = <strong id="cValue" class="text-xl"></strong> mL/min/1.73 m<sup>2</sup></p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">An estimate, not a diagnosis</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        Estimated GFR is a screening number built from creatinine, which muscle mass and diet can
+                        shift. A single low value is a reason to talk to a clinician and re-test, not a verdict —
+                        kidney disease staging uses GFR together with evidence of kidney damage over time.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">What is glomerular filtration rate (GFR)?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                GFR describes how fast fluid is filtered through the kidneys, and it is the standard yardstick
+                of kidney function: higher is generally better, and a significant fall means the kidneys are
+                filtering less volume per unit time than they should. Adjusted for body surface area, the normal
+                range is 100 to 130 mL/min/1.73 m<sup>2</sup> in men and 90 to 120 mL/min/1.73 m<sup>2</sup> in
+                women under 40; after 40, GFR declines progressively with age.
+            </p>
+            <h3 class="text-lg font-bold text-gray-800 mt-6 mb-2">Population mean estimated GFR</h3>
+            <div class="overflow-x-auto">
+            <table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden max-w-md">
+                <thead><tr class="bg-[#E8EAF6] text-left"><th class="px-3 py-2">Age</th><th class="px-3 py-2">Mean Estimated GFR (mL/min/1.73 m<sup>2</sup>)</th></tr></thead>
+                <tbody>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">20-29</td><td class="px-3 py-1.5 border-b border-gray-100">116</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">30-39</td><td class="px-3 py-1.5 border-b border-gray-100">107</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">40-49</td><td class="px-3 py-1.5 border-b border-gray-100">99</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">50-59</td><td class="px-3 py-1.5 border-b border-gray-100">93</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">60-69</td><td class="px-3 py-1.5 border-b border-gray-100">85</td></tr>
+                    <tr><td class="px-3 py-1.5">70+</td><td class="px-3 py-1.5">75</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3 class="text-lg font-bold text-gray-800 mt-6 mb-2">Chronic kidney disease stages</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                A GFR above 60 mL/min/1.73 m<sup>2</sup> is usually adequate, and on its own does not mean
+                chronic kidney disease (CKD).<sup>1</sup> A significant decline since a previous test, though,
+                can be an early indicator — and the earlier kidney disease is caught and treated, the better
+                the chance of avoiding dialysis. Stages combine the GFR range with evidence of kidney damage,
+                as noted:
+            </p>
+            <div class="overflow-x-auto">
+            <table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden max-w-xl">
+                <thead><tr class="bg-[#E8EAF6] text-left"><th class="px-3 py-2">Stage</th><th class="px-3 py-2">GFR Value (mL/min/1.73 m<sup>2</sup>)</th></tr></thead>
+                <tbody>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Normal</td><td class="px-3 py-1.5 border-b border-gray-100">90+ or above and no proteinuria</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">CKD1</td><td class="px-3 py-1.5 border-b border-gray-100">90+ with evidence of kidney damage</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">CKD2 (Mild)</td><td class="px-3 py-1.5 border-b border-gray-100">60 to 89 with evidence of kidney damage</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">CKD3 (Moderate)</td><td class="px-3 py-1.5 border-b border-gray-100">30 to 59</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">CKD4 (Severe)</td><td class="px-3 py-1.5 border-b border-gray-100">15 to 29</td></tr>
+                    <tr><td class="px-3 py-1.5">CKD5 Kidney failure</td><td class="px-3 py-1.5">less than 15</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Measuring GFR</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                The most accurate measurement is inulin clearance: inulin is freely filtered and is neither
+                metabolized, secreted, nor reabsorbed, which makes it ideal — but the test needs continuous
+                intravenous infusion with repeated, carefully timed blood and urine collections, so it is
+                impractical for routine care.<sup>2,3</sup> Everyday practice therefore estimates GFR from
+                serum creatinine. Creatinine clearance has real limits: muscle mass moves serum creatinine
+                independently of kidney function, and because the body secretes a little creatinine, clearance
+                based on it typically overestimates GFR by 10-20%. It remains in use because it is easy. Three
+                widely used estimating equations, plus the children's formula, are:
+            </p>
+            <p class="text-gray-700 leading-7 mb-2"><strong>The IDMS-traceable MDRD study equation</strong></p>
+            <p class="text-gray-700 leading-7 mb-4 pl-5">GFR = 175 × (S<sub>Cr</sub>)<sup>-1.154</sup> × (age)<sup>-0.203</sup> × (0.742 if female) × (1.212 if Black), with S<sub>Cr</sub> in mg/dL.</p>
+            <p class="text-gray-700 leading-7 mb-2"><strong>The CKD-EPI formula</strong></p>
+            <p class="text-gray-700 leading-7 mb-4 pl-5">
+                GFR = A × (S<sub>Cr</sub>/κ)<sup>α</sup> × 0.993<sup>age</sup>, where κ is 0.7 for females and
+                0.9 for males; α is -0.329 (female) or -0.411 (male) when S<sub>Cr</sub> ≤ κ and -1.209 when
+                S<sub>Cr</sub> &gt; κ; and A is 144 (non-Black female), 166 (Black female), 141 (non-Black
+                male), or 163 (Black male).
+            </p>
+            <p class="text-gray-700 leading-7 mb-2"><strong>The Mayo Quadratic formula</strong></p>
+            <p class="text-gray-700 leading-7 mb-4 pl-5">If S<sub>Cr</sub> &lt; 0.8 mg/dL, use 0.8 mg/dL. GFR = e<sup>(1.911 + 5.249/S<sub>Cr</sub> − 2.114/S<sub>Cr</sub><sup>2</sup> − 0.00686 × age − (0.205 if female))</sup>.</p>
+            <p class="text-gray-700 leading-7 mb-2"><strong>Estimated GFR for children — Schwartz formula</strong></p>
+            <p class="text-gray-700 leading-7 mb-4 pl-5">GFR = 0.413 × height (in cm) / S<sub>Cr</sub>.</p>
+            <ol class="list-decimal pl-6 text-sm text-gray-500 leading-6">
+                <li>"Normal GFR," The UK eCKD Guide, The Renal Association.</li>
+                <li>Gaspari, F., Perico, N., Remuzzi, G. 1997. "Measurement of glomerular filtration rate." Kidney International Supplements 63: S151-4. PMID 9407445.</li>
+                <li>Hsu, C., Bansal, N. 2011. "Measured GFR as 'Gold Standard' – All that Glitters Is Not Gold?" Clinical Journal of the American Society of Nephrology 6(8): 1813-14. doi:10.2215/CJN.06040611.</li>
+            </ol>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="bmi.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">BMI Calculator</span><span class="block text-sm text-gray-500 mt-1">Body mass index and healthy range</span></a>
+                <a href="bmr.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">BMR Calculator</span><span class="block text-sm text-gray-500 mt-1">Basal metabolic rate and activity calories</span></a>
+                <a href="body-fat.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Body Fat Calculator</span><span class="block text-sm text-gray-500 mt-1">Body fat percentage, mass, and lean mass</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+
+        function phpRound(x, nd) {
+            const p = Math.pow(10, nd || 0);
+            return Math.sign(x) * Math.round(Math.abs(x) * p) / p;
+        }
+        function fmt1(x) { return phpRound(x, 1).toFixed(1); }
+        function radioVal(name) { return document.querySelector(`input[name="${name}"]:checked`).value; }
+        function toMgDl(v, unitSel) { return unitSel === 'molL' ? v / 88.4 : v; }
+
+        function calcAdult(push) {
+            $('aError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('aError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('aResult').style.display = 'none';
+            };
+            const scrRaw = parseFloat($('aScr').value);
+            const age = parseFloat($('aAge').value);
+            if (isNaN(scrRaw) || scrRaw <= 0) return fail('Please enter a serum creatinine value above 0.');
+            if (isNaN(age) || age <= 0) return fail('Please enter an age.');
+            const scr = toMgDl(scrRaw, $('aScrUnit').value);
+            const female = radioVal('aSex') === 'female';
+            const black = radioVal('aRace') === '1';
+
+            // IDMS-traceable MDRD
+            let mdrd = 175 * Math.pow(scr, -1.154) * Math.pow(age, -0.203);
+            if (female) mdrd *= 0.742;
+            if (black) mdrd *= 1.212;
+
+            // CKD-EPI (2009)
+            const kappa = female ? 0.7 : 0.9;
+            const alpha = scr <= kappa ? (female ? -0.329 : -0.411) : -1.209;
+            const coef = female ? (black ? 166 : 144) : (black ? 163 : 141);
+            const epi = coef * Math.pow(scr / kappa, alpha) * Math.pow(0.993, age);
+
+            // Mayo Quadratic (creatinine floored at 0.8)
+            const s = Math.max(scr, 0.8);
+            const mayo = Math.exp(1.911 + 5.249 / s - 2.114 / (s * s) - 0.00686 * age - (female ? 0.205 : 0));
+
+            $('aTable').innerHTML =
+                '<table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden"><thead><tr class="bg-[#E8EAF6] text-left"><th class="px-3 py-2">Formula</th><th class="px-3 py-2">Result</th></tr></thead><tbody>' +
+                `<tr><td class="px-3 py-2 border-b border-gray-100">MDRD 4-Variable Equation</td><td class="px-3 py-2 border-b border-gray-100"><strong>${fmt1(mdrd)}</strong> mL/min/1.73 m<sup>2</sup></td></tr>` +
+                `<tr><td class="px-3 py-2 border-b border-gray-100">CKD-EPI Formula</td><td class="px-3 py-2 border-b border-gray-100"><strong>${fmt1(epi)}</strong> mL/min/1.73 m<sup>2</sup></td></tr>` +
+                `<tr><td class="px-3 py-2">Mayo Quadratic Formula</td><td class="px-3 py-2"><strong>${fmt1(mayo)}</strong> mL/min/1.73 m<sup>2</sup></td></tr>` +
+                '</tbody></table>';
+            $('aResult').style.display = 'block';
+            $('shareMsg').textContent = '';
+
+            if (push) {
+                const q = new URLSearchParams({ as: $('aScr').value, au: $('aScrUnit').value, aa: $('aAge').value, ag: radioVal('aSex'), ar: radioVal('aRace'), cs: $('cScr').value, cu: $('cScrUnit').value, ch: $('cHeight').value, chu: $('cHeightUnit').value });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function calcChild(push) {
+            $('cError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('cError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('cResult').style.display = 'none';
+            };
+            const scrRaw = parseFloat($('cScr').value);
+            const hRaw = parseFloat($('cHeight').value);
+            if (isNaN(scrRaw) || scrRaw <= 0) return fail('Please enter a serum creatinine value above 0.');
+            if (isNaN(hRaw) || hRaw <= 0) return fail('Please enter a height.');
+            const scr = toMgDl(scrRaw, $('cScrUnit').value);
+            const cm = $('cHeightUnit').value === 'inch' ? hRaw * 2.54 : hRaw;
+            // Schwartz
+            $('cValue').textContent = fmt1(0.413 * cm / scr);
+            $('cResult').style.display = 'block';
+            if (push) calcAdultShareOnly();
+        }
+        function calcAdultShareOnly() {
+            const q = new URLSearchParams({ as: $('aScr').value, au: $('aScrUnit').value, aa: $('aAge').value, ag: radioVal('aSex'), ar: radioVal('aRace'), cs: $('cScr').value, cu: $('cScrUnit').value, ch: $('cHeight').value, chu: $('cHeightUnit').value });
+            history.replaceState(null, '', '?' + q.toString());
+        }
+        function clearAdult() {
+            $('aScr').value = 0.9; $('aScrUnit').value = 'mgdL'; $('aAge').value = 50;
+            document.querySelector('input[name="aSex"][value="male"]').checked = true;
+            document.querySelector('input[name="aRace"][value="0"]').checked = true;
+            calcAdult(true);
+        }
+        function clearChild() {
+            $('cScr').value = 0.9; $('cScrUnit').value = 'mgdL'; $('cHeight').value = 110; $('cHeightUnit').value = 'cm';
+            calcChild(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            if (q.get('as')) $('aScr').value = q.get('as');
+            if (q.get('au')) $('aScrUnit').value = q.get('au');
+            if (q.get('aa')) $('aAge').value = q.get('aa');
+            const ag = q.get('ag'); if (ag) { const r = document.querySelector(`input[name="aSex"][value="${ag}"]`); if (r) r.checked = true; }
+            const ar = q.get('ar'); if (ar) { const r = document.querySelector(`input[name="aRace"][value="${ar}"]`); if (r) r.checked = true; }
+            if (q.get('cs')) $('cScr').value = q.get('cs');
+            if (q.get('cu')) $('cScrUnit').value = q.get('cu');
+            if (q.get('ch')) $('cHeight').value = q.get('ch');
+            if (q.get('chu')) $('cHeightUnit').value = q.get('chu');
+            calcAdult(false);
+            calcChild(false);
+        })();
+    </script>
+</body>
+          </html>
