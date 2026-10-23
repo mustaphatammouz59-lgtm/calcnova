@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Weight Calculator - CalcNova</title>
+    <meta name="description" content="Free healthy weight calculator: enter your height to get the healthy BMI weight range (18.5–25) plus the underweight, overweight, and obesity thresholds for your height.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/healthy-weight">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Healthy Weight Calculator - CalcNova">
+    <meta property="og:description" content="The healthy weight range for your height, from the BMI bands — plus every category boundary at your height.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/healthy-weight">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Healthy Weight Calculator - CalcNova">
+    <meta name="twitter:description" content="Healthy, underweight, overweight and obese weight ranges for any height.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Healthy Weight Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/healthy-weight" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is a healthy weight?",
+                "acceptedAnswer": { "@type": "Answer", "text": "For adults, the weight range that puts your BMI between 18.5 and 25. It is a population-level guideline: it does not account for body composition, so a muscular athlete can land in the 'overweight' band while perfectly healthy, and someone in the healthy band can still carry unhealthy body fat." }
+            },
+            {
+                "@type": "Question",
+                "name": "Is being slightly overweight actually harmful?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It is debated. Some large analyses (Flegal et al., JAMA) found the 25–30 BMI band associated with equal or slightly lower mortality than the healthy band, while other researchers point to the band's higher risks of diabetes, heart disease, and several cancers. Mortality is not the only measure of health." }
+            },
+            {
+                "@type": "Question",
+                "name": "How much exercise does the WHO recommend?",
+                "acceptedAnswer": { "@type": "Answer", "text": "About 60 minutes of physical activity a day for children, and at least 150 minutes a week in total for adults, alongside limiting calorie-dense foods, total fats, and sugars, and eating more fruit, vegetables, legumes, whole grains, and nuts." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        .unit-btn { transition: all .15s; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Healthy Weight Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Healthy Weight Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            A healthy weight is defined by body mass index: for an adult, any weight that puts your BMI between
+            <strong>18.5 and 25</strong>. Enter your height and this calculator turns those BMI bands into weights —
+            your healthy range, and the exact weights where underweight, overweight, and obesity begin at your height.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="flex gap-2 mb-5 no-print">
+                    <button type="button" id="btnUS" onclick="setUnit('us')" class="unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600">US Units</button>
+                    <button type="button" id="btnMetric" onclick="setUnit('metric')" class="unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white">Metric Units</button>
+                </div>
+
+                <div id="usFields" class="hidden">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div><label class="block text-sm font-semibold mb-1" for="feet">Height — feet</label><input type="number" id="feet" value="5" min="0" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                        <div><label class="block text-sm font-semibold mb-1" for="inches">Height — inches</label><input type="number" id="inches" value="10" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                    </div>
+                </div>
+
+                <div id="metricFields">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div><label class="block text-sm font-semibold mb-1" for="cm">Height — cm</label><input type="number" id="cm" value="180" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-5 bg-white">
+                        <p class="text-center text-lg">The healthy weight range for the height is <span id="resRange" class="font-extrabold text-green-700 text-xl"></span>.</p>
+                        <div class="mt-6">
+                            <div class="relative h-7 rounded-full overflow-hidden flex text-[10px] font-semibold text-white">
+                                <div class="bg-[#64B5F6] flex items-center justify-center" style="width:14.52%">Underweight</div>
+                                <div class="bg-[#4CAF50] flex items-center justify-center" style="width:20.97%">Healthy</div>
+                                <div class="bg-[#FF9800] flex items-center justify-center" style="width:16.13%">Overweight</div>
+                                <div class="bg-[#E53935] flex items-center justify-center" style="width:48.39%">Obese</div>
+                            </div>
+                            <div id="resTicks" class="relative h-6 mt-1 text-xs text-gray-600"></div>
+                            <div class="flex justify-between text-[10px] text-gray-400 -mt-1"><span>BMI 14</span><span>BMI 45</span></div>
+                        </div>
+                        <div class="mt-4 flex items-center justify-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">A range, not a verdict</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        BMI bands ignore body composition. A rugby player can be "overweight" by this chart with very
+                        little body fat — the <a href="body-fat.html" class="text-[#3F51B5] hover:underline">Body Fat Calculator</a>
+                        separates muscle from fat.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">What is a healthy weight?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                The healthy range is computed from BMI. Given a height, the weights that produce a BMI of 18.5 to 25
+                define the healthy band; the same arithmetic gives the boundaries for every other category — below
+                18.5 underweight, 25–30 overweight, above 30 obese. An adult of 18 or older inside 18.5–25 is
+                conventionally classed as healthy or normal weight. The full machinery is in our
+                <a href="bmi.html" class="text-[#3F51B5] hover:underline">BMI Calculator</a> — but one caveat travels
+                with it: BMI is an estimate that is blind to body composition. It is calibrated to the average person,
+                so it can mislabel the very muscular as overweight and the lightly-built as fine when they are not.
+                Sorting yourself out properly takes body composition — and for a personal call, a medical professional.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Effects of being underweight, overweight, and obese</h2>
+            <h3 class="font-bold text-gray-800 mb-2">Underweight (BMI below 18.5)</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                People end up underweight through genetics, too little food, a fast metabolism, illness, or drug use.
+                Persistently low weight is linked to conditions such as hyperthyroidism, cancer, and tuberculosis,
+                and it can itself be a sign of an undiagnosed disease. Studies find mortality among the underweight
+                rising to levels comparable with the morbidly obese — though some of that signal is disease causing
+                the weight loss rather than the other way round, and underweight without an underlying illness may
+                carry little extra risk. The day-to-day effects are clearer: low energy and stamina, osteoporosis,
+                and a weaker immune system with more infections. Underweight from poor-quality food risks outright
+                malnutrition, with physical and mental developmental consequences, and — in severe cases — conditions
+                such as kwashiorkor and marasmus. For women, being underweight through an eating disorder can stop
+                menstruation, impair fertility, and complicate pregnancy.
+            </p>
+            <h3 class="font-bold text-gray-800 mb-2">Overweight (BMI 25–30)</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Overweight usually means consuming more energy than the body spends, though alcohol, genetics, eating
+                disorders, inactivity, poor nutrition, and stress all push the same direction. Its harms are genuinely
+                debated. Overweight is generally held to cause the same problems as obesity in milder form — yet
+                several large studies, including Flegal and colleagues' analysis in JAMA, found this band associated
+                with mortality no higher, and sometimes lower, than the healthy band. Some read that as evidence
+                that 25–30 might be near-optimal; others answer that mortality is not the whole of health, and the
+                band's elevated risks of diabetes, heart disease, and several cancers matter regardless.
+            </p>
+            <h3 class="font-bold text-gray-800 mb-2">Obese (BMI over 30)</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Obesity is most often the product of too little movement, too much food, and a genetic susceptibility
+                that makes both easier; rarer causes include endocrine disorders, medication, and mental illness. It
+                is largely preventable through diet and activity — but "eat less, move more" is an answer for an
+                individual, and at population scale the causes involve food environments and economics that no
+                algorithm settles. The medical stakes are high: obesity sharply raises the risk of cardiovascular
+                disease, stroke, hypertension, type 2 diabetes, osteoarthritis, several cancers, obstructive sleep
+                apnea, and depression, and it measurably shortens life expectancy — which is why it ranks among the
+                leading preventable causes of death worldwide.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Maintaining a healthy weight</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Underweight, overweight, and obesity call for different directions of travel, but the levers are the
+                same family: food, activity, and — where relevant — mental health. To gain weight healthily, eat more
+                often and lean on nutrient-dense foods: whole grains, vegetables, lean protein, nuts and seeds.
+                Resistance training adds the weight as muscle. When an eating disorder such as anorexia or bulimia is
+                the cause, treatment has to address the psychological side alongside the physical one.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                Coming down from overweight or obesity works through the same pair of levers. WHO guidance is to cut
+                back on calorie-dense foods, total fats, and sugars while eating more fruit, vegetables, legumes,
+                whole grains, and nuts, and to be regularly active — around 60 minutes a day for children and 150
+                minutes a week for adults. Individual effort works best where the environment helps: nutrition
+                education, affordable healthy choices, less sugar and salt engineered into processed food, and less
+                marketing of it to children.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">References</h2>
+            <ol class="list-decimal pl-6 text-sm text-gray-600 leading-6 mb-4">
+                <li>Flegal, K. M., Graubard, B. I., Williamson, D. F., et al. "Excess Deaths Associated With Underweight, Overweight, and Obesity." <i>JAMA</i> 2005; 294(15): 1861-1867.</li>
+                <li>WHO. "Obesity and overweight." Fact sheet, 2021. who.int/news-room/fact-sheets/detail/obesity-and-overweight.</li>
+            </ol>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">FAQ</h2>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">My weight is in the healthy range — am I definitely healthy?</h4>
+                    <p class="text-gray-700 leading-7">Not automatically. The range is a screening tool built on population averages: fitness, body fat distribution, blood pressure, and blood work all carry information BMI can't see. Treat the range as a first check, not a certificate.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Does this apply to children?</h4>
+                    <p class="text-gray-700 leading-7">No — the 18.5–25 band is for adults. Children are assessed against age-and-sex growth percentiles (the CDC charts), which is what our BMI Calculator uses for ages 2–20.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="bmi.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">BMI Calculator</span><span class="block text-sm text-gray-500 mt-1">Your own BMI and category</span></a>
+                <a href="ideal-weight.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Ideal Weight Calculator</span><span class="block text-sm text-gray-500 mt-1">Four classic IBW formulas</span></a>
+                <a href="body-fat.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Body Fat Calculator</span><span class="block text-sm text-gray-500 mt-1">What the scale can't tell you</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let unit = 'metric';
+        const $ = id => document.getElementById(id);
+        const TICKS = [16.5, 18.5, 25, 30, 35, 40];
+
+        function setUnit(u) {
+            unit = u;
+            $('usFields').classList.toggle('hidden', u !== 'us');
+            $('metricFields').classList.toggle('hidden', u !== 'metric');
+            const on = 'unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white';
+            const off = 'unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600';
+            $('btnUS').className = u === 'us' ? on : off;
+            $('btnMetric').className = u === 'metric' ? on : off;
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            let meters;
+            if (unit === 'metric') meters = parseFloat($('cm').value) / 100;
+            else meters = ((parseFloat($('feet').value) || 0) * 12 + (parseFloat($('inches').value) || 0)) * 0.0254;
+            if (isNaN(meters) || meters <= 0) {
+                const e = $('formError');
+                e.textContent = 'Please enter a valid height.';
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+                return;
+            }
+            const h2 = meters * meters;
+            const fmt = kg => unit === 'metric' ? kg.toFixed(1) + 'kg' : Math.round(kg * 2.20462) + 'lbs';
+            $('resRange').textContent = fmt(18.5 * h2) + ' - ' + fmt(25 * h2);
+            $('resTicks').innerHTML = TICKS.map(b => {
+                const left = ((b - 14) / 31 * 100).toFixed(2);
+                return `<span class="absolute -translate-x-1/2 whitespace-nowrap" style="left:${left}%">${fmt(b * h2)}</span>`;
+            }).join('');
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+            if (push) {
+                const q = new URLSearchParams({ u: unit });
+                if (unit === 'metric') q.set('cm', $('cm').value);
+                else { q.set('ft', $('feet').value); q.set('in', $('inches').value); }
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function clearForm() {
+            $('feet').value = 5; $('inches').value = 10; $('cm').value = 180;
+            setUnit('metric');
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            if (q.get('u') === 'us' || q.get('u') === 'metric') setUnit(q.get('u'));
+            if (q.get('cm')) $('cm').value = q.get('cm');
+            if (q.get('ft')) $('feet').value = q.get('ft');
+            if (q.get('in')) $('inches').value = q.get('in');
+            calculate(false);
+        })();
+    </script>
+</body>
+                      </html>
