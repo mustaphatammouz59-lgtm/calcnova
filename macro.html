@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Macro Calculator - CalcNova</title>
+    <meta name="description" content="Free macro calculator: daily protein, carbohydrate, and fat targets in grams from your age, gender, height, weight, activity level, and goal — with balanced, low-fat, low-carb, and high-protein presets plus a custom slider tool.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/macro">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Macro Calculator - CalcNova">
+    <meta property="og:description" content="Your daily macros in grams: five preset splits or build your own with sliders.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/macro">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Macro Calculator - CalcNova">
+    <meta name="twitter:description" content="Protein, carbs, and fat targets matched to your calories and goal.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Macro Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/macro" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What energy values does the calculator use per gram?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Protein 4.1 kcal per gram, carbohydrate 3.75 kcal per gram, and fat 8.8 kcal per gram — the conversion factors behind every split and slider on this page." }
+            },
+            {
+                "@type": "Question",
+                "name": "Where do the protein and carbohydrate ranges come from?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The protein range follows guidelines from the American Dietetic Association, the CDC, and the WHO (with a floor of 0.83 g per kg of body weight, rising with activity). The carbohydrate range follows the joint recommendations of the Institute of Medicine, the FAO, and the WHO." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why did I get a warning instead of macros?",
+                "acceptedAnswer": { "@type": "Answer", "text": "If your goal pushes daily energy below 1,500 Calories (men) or 1,200 Calories (women), the calculator shows a warning instead: intakes that low during weight loss should be guided by a doctor, or replaced with a less aggressive plan." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        .mtab { padding: 6px 14px; border-radius: 8px; font-weight: 600; font-size: 14px; background: #E8EAF6; color: #3F51B5; cursor: pointer; border: none; }
+        .mtab.on { background: #3F51B5; color: #fff; }
+        input[type=range] { width: 100%; accent-color: #3F51B5; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Macro Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Macro Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Suggested daily <strong>protein, carbohydrate, and fat</strong> amounts — in grams, with healthy
+            ranges — for your age, build, activity level, and weight goal. Pick a preset split (Balanced, Low Fat,
+            Low Carb, High Protein) or build your own with the sliders.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="flex gap-2 mb-5 no-print">
+                    <button id="btnUS" onclick="setUnit('us')" class="px-4 py-1.5 rounded-lg font-semibold text-sm bg-gray-200 text-gray-600">US Units</button>
+                    <button id="btnMetric" onclick="setUnit('metric')" class="px-4 py-1.5 rounded-lg font-semibold text-sm bg-[#3F51B5] text-white">Metric Units</button>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="age">Age <span class="font-normal text-gray-500">(ages 18 - 80)</span></label>
+                        <input type="number" id="age" value="25" min="18" max="80" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <span class="block text-sm font-semibold mb-1">Gender</span>
+                        <div class="flex gap-5 pt-2">
+                            <label class="flex items-center gap-2 text-sm"><input type="radio" name="sex" value="m" checked class="accent-[#3F51B5]"> Male</label>
+                            <label class="flex items-center gap-2 text-sm"><input type="radio" name="sex" value="f" class="accent-[#3F51B5]"> Female</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="usInputs" class="hidden grid sm:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Height</label>
+                        <div class="flex gap-2 items-center">
+                            <input type="number" id="hFeet" value="5" min="0" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">feet</span>
+                            <input type="number" id="hInch" value="10" min="0" max="11" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">inches</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="lb">Weight (pounds)</label>
+                        <input type="number" id="lb" value="165" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div id="metricInputs" class="grid sm:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="cm">Height (cm)</label>
+                        <input type="number" id="cm" value="180" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="kg">Weight (kg)</label>
+                        <input type="number" id="kg" value="65" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="activity">Activity</label>
+                        <select id="activity" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5] bg-white">
+                            <option value="1">Basal Metabolic Rate (BMR)</option>
+                            <option value="1.2">Sedentary: little or no exercise</option>
+                            <option value="1.375">Light: exercise 1-3 times/week</option>
+                            <option value="1.465" selected>Moderate: exercise 4-5 times/week</option>
+                            <option value="1.55">Active: daily exercise or intense exercise 3-4 times/week</option>
+                            <option value="1.725">Very Active: intense exercise 6-7 times/week</option>
+                            <option value="1.9">Extra Active: very intense exercise daily, or physical job</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="goal">Your goal</label>
+                        <select id="goal" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5] bg-white">
+                            <option value="m" selected>Maintain weight</option>
+                            <option value="l">Mild weight loss of 0.5 lb (0.25 kg) per week</option>
+                            <option value="l1">Weight loss of 1 lb (0.5 kg) per week</option>
+                            <option value="l2">Extreme weight loss of 2 lb (1 kg) per week</option>
+                            <option value="g">Mild weight gain of 0.5 lb (0.25 kg) per week</option>
+                            <option value="g1">Weight gain of 1 lb (0.5 kg) per week</option>
+                            <option value="g2">Extreme weight gain of 2 lb (1 kg) per week</option>
+                        </select>
+                    </div>
+                </div>
+
+                <details class="mt-4">
+                    <summary class="font-semibold text-[#3F51B5] cursor-pointer text-sm">+ Settings</summary>
+                    <div class="mt-3 pl-1">
+                        <span class="block text-sm font-semibold mb-1">BMR estimation formula:</span>
+                        <div class="flex flex-col gap-2">
+                            <label class="flex items-center gap-2 text-sm"><input type="radio" name="formula" value="m" checked class="accent-[#3F51B5]"> Mifflin St Jeor</label>
+                            <label class="flex items-center gap-2 text-sm flex-wrap"><input type="radio" name="formula" value="k" class="accent-[#3F51B5]"> Katch-McArdle <span class="text-gray-500">(more accurate if you are lean and know your body fat %)</span></label>
+                            <div class="flex items-center gap-2 pl-6">
+                                <label class="text-sm" for="fatPct">Body fat:</label>
+                                <input type="number" id="fatPct" value="20" min="0" max="70" step="any" class="w-24 border border-gray-300 rounded-lg px-3 py-1.5 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">%</span>
+                                <a href="body-fat.html" class="text-sm text-[#3F51B5] underline">Calculate it</a>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <ul class="text-[13px] text-gray-500 mt-4 space-y-0.5 list-none pl-0">
+                    <li><strong>Exercise:</strong> 15-30 minutes of elevated heart rate activity.</li>
+                    <li><strong>Intense exercise:</strong> 45-120 minutes of elevated heart rate activity.</li>
+                    <li><strong>Very intense exercise:</strong> 2+ hours of elevated heart rate activity.</li>
+                </ul>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                        <p id="warnText" class="hidden text-gray-800 leading-7 font-medium"></p>
+                        <div id="resMain">
+                            <p id="resHead" class="text-gray-700 leading-7"></p>
+                            <div id="resTabs" class="flex flex-wrap gap-2 mt-4 no-print"></div>
+                            <div id="sliderBox" class="hidden mt-4 space-y-3">
+                                <p class="text-sm font-semibold text-gray-600">Slide the bars to create your own plan</p>
+                                <div><label class="text-sm font-medium">Protein: <span id="svP" class="font-bold"></span> g</label><input type="range" id="rgP" step="0.1" oninput="slideProtein(parseFloat(this.value))"></div>
+                                <div><label class="text-sm font-medium">Carbs: <span id="svC" class="font-bold"></span> g</label><input type="range" id="rgC" step="0.1" oninput="slideCarb(parseFloat(this.value))"></div>
+                                <div><label class="text-sm font-medium">Fat: <span id="svF" class="font-bold"></span> g</label><input type="range" id="rgF" step="0.1" oninput="slideFat(parseFloat(this.value))"></div>
+                            </div>
+                            <div id="resTable" class="mt-5 overflow-x-auto"></div>
+                            <p class="text-sm text-gray-500 leading-6 mt-4">The results above are a guideline for more typical situations. Please consult with a doctor for your macronutrient needs if you are an athlete, training for a specific purpose, or on a special diet due to a disease, pregnancy, or other conditions. The protein range is calculated based on the guidelines set by the American Dietetic Association (ADA), the Centers for Disease Control and Prevention (CDC), and the World Health Organization. The carbohydrate range is based on the guidelines and joint recommendations of the Institute of Medicine, the Food and Agriculture Organization, and the World Health Organization.</p>
+                        </div>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">Grams, not percentages</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        Percentages don't survive contact with a food label — grams do. Every preset here is shown
+                        both ways, but the grams are what you actually eat.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">What are macronutrients?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                In health and fitness, macronutrients are the compounds eaten in large quantities that provide the
+                body's bulk energy: <strong>carbohydrates, proteins, and fats</strong> — the three this calculator
+                covers. (Some definitions add water and certain minerals, which are also needed in quantity.)
+                Micronutrients are the other essential half of nutrition: vitamins and dietary minerals such as
+                vitamin A, copper, iron, and iodine, needed at under 100 milligrams a day, against grams per day
+                for macros.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Protein</strong> is built from amino acids, some of which — the essential amino acids —
+                can only come from food. Sources span animal (meat, dairy) and plant (beans, legumes, nuts, seeds)
+                foods, plus supplements. Healthier picks include soy, beans, nuts, fish, skinless poultry, lean
+                beef, pork, and low-fat dairy; the unhealthier end is fried and processed meats (deli meats,
+                sausages, fast-food burgers), high-sugar yogurts, processed protein bars, and many cheeses.
+                <strong>Carbohydrates</strong> are classified as sugar (the simplest form), starch, and fiber, and
+                by their saccharide count — monosaccharides and disaccharides ("simple") versus oligosaccharides
+                and polysaccharides ("complex"). Glucose is a key monosaccharide fuel; polysaccharides like
+                cellulose can't be digested for energy but supply valuable fiber. Sugar-heavy processed carbs are
+                the problem end; complex carbs from vegetables, fruit, whole grains, and legumes are beneficial
+                and necessary. <strong>Fat</strong> — cholesterol, phospholipids, triglycerides — has structural
+                and metabolic roles and is the most energy-dense storage form. Saturated and trans fats are the
+                unhealthy classes; monounsaturated, polyunsaturated, and omega-3 fats are the better sources. US
+                dietary guidance: avoid trans fats where possible, keep saturated fat under 10% of daily calories,
+                and replace saturated with mono- and polyunsaturated fats.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Daily calorie needs</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Everything starts from daily energy need, driven by height, weight, age, activity, and whether the
+                goal is to maintain, lose, or gain. This calculator estimates resting expenditure with one of two
+                equations — Mifflin St Jeor (from weight, height, age, and sex) or Katch-McArdle (from lean body
+                mass, so it can be more accurate for lean people who know their body fat percentage) — then applies
+                the activity factor and the goal adjustment. Across the population, needs run roughly 1,600–3,000
+                Calories a day: generally 2,000–3,000 for men and 1,600–2,400 for women, rising with activity.
+                Since protein, carbs, and fat supply nearly all of that energy, their gram targets follow directly
+                once the calorie target is set — using the standards of bodies such as the American Dietetic
+                Association, the CDC, and the WHO.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Macronutrients in common foods</h2>
+            <div class="overflow-x-auto">
+            <table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden">
+                <thead><tr class="bg-[#E8EAF6] text-left"><th class="px-3 py-2">Food</th><th class="px-3 py-2">Serving Size</th><th class="px-3 py-2">Protein</th><th class="px-3 py-2">Carbs</th><th class="px-3 py-2">Fat</th></tr></thead>
+                <tbody>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100 font-semibold" colspan="5">Fruit</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Apple</td><td class="px-3 py-1.5 border-b border-gray-100">1 (4 oz.)</td><td class="px-3 py-1.5 border-b border-gray-100">0.27g</td><td class="px-3 py-1.5 border-b border-gray-100">14.36g</td><td class="px-3 py-1.5 border-b border-gray-100">0.18g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Banana</td><td class="px-3 py-1.5 border-b border-gray-100">1 (6 oz.)</td><td class="px-3 py-1.5 border-b border-gray-100">1.85g</td><td class="px-3 py-1.5 border-b border-gray-100">38.85g</td><td class="px-3 py-1.5 border-b border-gray-100">0.56g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Orange</td><td class="px-3 py-1.5 border-b border-gray-100">1 (4 oz.)</td><td class="px-3 py-1.5 border-b border-gray-100">0.79g</td><td class="px-3 py-1.5 border-b border-gray-100">11.79g</td><td class="px-3 py-1.5 border-b border-gray-100">0.23g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Strawberry</td><td class="px-3 py-1.5 border-b border-gray-100">1 cup</td><td class="px-3 py-1.5 border-b border-gray-100">1.11g</td><td class="px-3 py-1.5 border-b border-gray-100">12.75g</td><td class="px-3 py-1.5 border-b border-gray-100">0.5g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100 font-semibold" colspan="5">Vegetables</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Broccoli</td><td class="px-3 py-1.5 border-b border-gray-100">1 cup</td><td class="px-3 py-1.5 border-b border-gray-100">2.57g</td><td class="px-3 py-1.5 border-b border-gray-100">6.04g</td><td class="px-3 py-1.5 border-b border-gray-100">0.34g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Carrots</td><td class="px-3 py-1.5 border-b border-gray-100">1 cup</td><td class="px-3 py-1.5 border-b border-gray-100">1.19g</td><td class="px-3 py-1.5 border-b border-gray-100">12.26g</td><td class="px-3 py-1.5 border-b border-gray-100">0.31g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Tomato</td><td class="px-3 py-1.5 border-b border-gray-100">1 cup</td><td class="px-3 py-1.5 border-b border-gray-100">1.58g</td><td class="px-3 py-1.5 border-b border-gray-100">7.06g</td><td class="px-3 py-1.5 border-b border-gray-100">0.36g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100 font-semibold" colspan="5">Proteins</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Beef, regular, cooked</td><td class="px-3 py-1.5 border-b border-gray-100">2 oz.</td><td class="px-3 py-1.5 border-b border-gray-100">14.2g</td><td class="px-3 py-1.5 border-b border-gray-100">0g</td><td class="px-3 py-1.5 border-b border-gray-100">10.4g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Chicken, cooked</td><td class="px-3 py-1.5 border-b border-gray-100">2 oz.</td><td class="px-3 py-1.5 border-b border-gray-100">16g</td><td class="px-3 py-1.5 border-b border-gray-100">0g</td><td class="px-3 py-1.5 border-b border-gray-100">1.84g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Egg</td><td class="px-3 py-1.5 border-b border-gray-100">1 large</td><td class="px-3 py-1.5 border-b border-gray-100">6.29g</td><td class="px-3 py-1.5 border-b border-gray-100">0.38g</td><td class="px-3 py-1.5 border-b border-gray-100">4.97g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Tofu</td><td class="px-3 py-1.5 border-b border-gray-100">4 oz.</td><td class="px-3 py-1.5 border-b border-gray-100">7.82g</td><td class="px-3 py-1.5 border-b border-gray-100">2.72g</td><td class="px-3 py-1.5 border-b border-gray-100">3.06g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Shrimp, cooked</td><td class="px-3 py-1.5 border-b border-gray-100">2 oz.</td><td class="px-3 py-1.5 border-b border-gray-100">15.45g</td><td class="px-3 py-1.5 border-b border-gray-100">0.69g</td><td class="px-3 py-1.5 border-b border-gray-100">1.32g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100 font-semibold" colspan="5">Common Meals/Snacks</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Bread, white</td><td class="px-3 py-1.5 border-b border-gray-100">1 slice (1 oz.)</td><td class="px-3 py-1.5 border-b border-gray-100">1.91g</td><td class="px-3 py-1.5 border-b border-gray-100">12.65g</td><td class="px-3 py-1.5 border-b border-gray-100">0.82g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Pizza</td><td class="px-3 py-1.5 border-b border-gray-100">1 slice (14")</td><td class="px-3 py-1.5 border-b border-gray-100">13.32g</td><td class="px-3 py-1.5 border-b border-gray-100">33.98g</td><td class="px-3 py-1.5 border-b border-gray-100">12.13g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Rice</td><td class="px-3 py-1.5 border-b border-gray-100">1 cup cooked</td><td class="px-3 py-1.5 border-b border-gray-100">4.2g</td><td class="px-3 py-1.5 border-b border-gray-100">44.08g</td><td class="px-3 py-1.5 border-b border-gray-100">0.44g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Dark Chocolate</td><td class="px-3 py-1.5 border-b border-gray-100">1 oz.</td><td class="px-3 py-1.5 border-b border-gray-100">1.57g</td><td class="px-3 py-1.5 border-b border-gray-100">16.84g</td><td class="px-3 py-1.5 border-b border-gray-100">9.19g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100 font-semibold" colspan="5">Beverages/Dairy</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Milk (1%)</td><td class="px-3 py-1.5 border-b border-gray-100">1 cup</td><td class="px-3 py-1.5 border-b border-gray-100">8.22g</td><td class="px-3 py-1.5 border-b border-gray-100">12.18g</td><td class="px-3 py-1.5 border-b border-gray-100">2.37g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Milk (whole)</td><td class="px-3 py-1.5 border-b border-gray-100">1 cup</td><td class="px-3 py-1.5 border-b border-gray-100">7.86g</td><td class="px-3 py-1.5 border-b border-gray-100">11.03g</td><td class="px-3 py-1.5 border-b border-gray-100">7.93g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Orange Juice</td><td class="px-3 py-1.5 border-b border-gray-100">1 cup</td><td class="px-3 py-1.5 border-b border-gray-100">1.74g</td><td class="px-3 py-1.5 border-b border-gray-100">25.79g</td><td class="px-3 py-1.5 border-b border-gray-100">0.5g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Yogurt (low-fat)</td><td class="px-3 py-1.5 border-b border-gray-100">1 cup</td><td class="px-3 py-1.5 border-b border-gray-100">12.86g</td><td class="px-3 py-1.5 border-b border-gray-100">17.25g</td><td class="px-3 py-1.5 border-b border-gray-100">3.8g</td></tr>
+                </tbody>
+            </table>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="carbohydrate.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Carbohydrate Calculator</span><span class="block text-sm text-gray-500 mt-1">Daily carb needs by guideline</span></a>
+                <a href="protein.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Protein Calculator</span><span class="block text-sm text-gray-500 mt-1">Protein needs by activity and goal</span></a>
+                <a href="fat-intake.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Fat Intake Calculator</span><span class="block text-sm text-gray-500 mt-1">Daily fat ranges by calorie level</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        let unit = 'metric';
+        const EP = 4.1, EC = 3.75, EF = 8.8; // kcal per gram: protein, carbs, fat
+        let CAL = 0, BND = null, PRESETS = null, CUR = 'Balanced';
+
+        function setUnit(u) {
+            unit = u;
+            $('usInputs').classList.toggle('hidden', u !== 'us');
+            $('metricInputs').classList.toggle('hidden', u !== 'metric');
+            $('btnUS').className = 'px-4 py-1.5 rounded-lg font-semibold text-sm ' + (u === 'us' ? 'bg-[#3F51B5] text-white' : 'bg-gray-200 text-gray-600');
+            $('btnMetric').className = 'px-4 py-1.5 rounded-lg font-semibold text-sm ' + (u === 'metric' ? 'bg-[#3F51B5] text-white' : 'bg-gray-200 text-gray-600');
+        }
+        function radioVal(name) { return document.querySelector(`input[name="${name}"]:checked`).value; }
+        const grams = (share) => CAL * share;
+        function split(p, c, f) { return { p: CAL * p / EP, c: CAL * c / EC, f: CAL * f / EF }; }
+
+        function renderTable(p, c, f) {
+            const row = (label, sub, val, range) =>
+                `<div class="flex justify-between items-baseline gap-4 py-2 border-b border-gray-100"><span class="text-gray-600">${label}${sub ? ` <span class="text-xs text-gray-400">${sub}</span>` : ''}</span><span class="text-right"><strong class="text-lg">${val}</strong> <span class="text-sm text-gray-500">grams/day</span>${range ? `<span class="block text-xs text-gray-400">Range: ${range}</span>` : ''}</span></div>`;
+            $('resTable').innerHTML =
+                row('Protein', '', Math.round(p), `${Math.round(BND.pLo)} - ${Math.round(BND.pHi)}`) +
+                row('Carbs', 'Includes Sugar', Math.round(c), `${Math.round(BND.cLo)} - ${Math.round(BND.cHi)}`) +
+                row('Fat', 'Includes Saturated Fat', Math.round(f), `${Math.round(BND.fLo)} - ${Math.round(BND.fHi)}`) +
+                row('Sugar', '', '&lt;' + Math.round(0.10 * CAL / EC), '') +
+                row('Saturated Fat', '', '&lt;' + Math.round(0.10 * CAL / EF), '') +
+                `<div class="flex justify-between items-baseline gap-4 py-2"><span class="text-gray-600">Food Energy</span><span class="text-right"><strong class="text-lg">${CAL.toLocaleString('en-US')}</strong> <span class="text-sm text-gray-500">Calories/day</span><span class="block text-xs text-gray-400">or ${Math.round(CAL * 4.1868).toLocaleString('en-US')} kJ/day</span></span></div>`;
+            $('svP').textContent = Math.round(p); $('svC').textContent = Math.round(c); $('svF').textContent = Math.round(f);
+        }
+        function renderTabs() {
+            $('resTabs').innerHTML = ['Balanced', 'Low Fat', 'Low Carb', 'High Protein', 'Create Your Own']
+                .map(t => `<button class="mtab ${t === CUR ? 'on' : ''}" onclick="popResult('${t}')">${t}</button>`).join('');
+        }
+        function popResult(t) {
+            CUR = t;
+            renderTabs();
+            $('sliderBox').classList.toggle('hidden', t !== 'Create Your Own');
+            if (t === 'Create Your Own') {
+                $('rgP').value = PRESETS.Balanced.p; $('rgC').value = PRESETS.Balanced.c; $('rgF').value = PRESETS.Balanced.f;
+                renderTable(PRESETS.Balanced.p, PRESETS.Balanced.c, PRESETS.Balanced.f);
+            } else {
+                const s = PRESETS[t];
+                renderTable(s.p, s.c, s.f);
+            }
+            return false;
+        }
+        // Slider constraint logic: changing one macro redistributes the remaining
+        // energy between the other two, clamped to their healthy ranges.
+        function slideProtein(v) {
+            const c0 = parseFloat($('rgC').value), f0 = parseFloat($('rgF').value);
+            const rem = CAL - v * EP;
+            let nc = rem * c0 / (c0 * EC + f0 * EF), nf = rem * f0 / (c0 * EC + f0 * EF), np = v;
+            if (nf < BND.fLo) { nf = BND.fLo; nc = (rem - nf * EF) / EC; }
+            else if (nf > BND.fHi) { nf = BND.fHi; nc = (rem - nf * EF) / EC; }
+            if (nc < BND.cLo) { nc = BND.cLo; nf = (rem - nc * EC) / EF; if (nf < BND.fLo) { nf = BND.fLo; np = (CAL - nc * EC - nf * EF) / EP; $('rgP').value = np; } }
+            else if (nc > BND.cHi) { nc = BND.cHi; nf = (rem - nc * EC) / EF; if (nf > BND.fHi) { nf = BND.fHi; np = (CAL - nc * EC - nf * EF) / EP; $('rgP').value = np; } }
+            $('rgC').value = nc; $('rgF').value = nf;
+            renderTable(np, nc, nf);
+            return false;
+        }
+        function slideCarb(v) {
+            const p0 = parseFloat($('rgP').value), f0 = parseFloat($('rgF').value);
+            const rem = CAL - v * EC;
+            let nf = (rem - p0 * EP) / EF, nc = v, np = p0;
+            if (nf < BND.fLo) { nf = BND.fLo; np = (rem - nf * EF) / EP; if (np < BND.pLo) { np = BND.pLo; nc = (CAL - np * EP - nf * EF) / EC; $('rgC').value = nc; } }
+            else if (nf > BND.fHi) { nf = BND.fHi; np = (rem - nf * EF) / EP; if (np > BND.pHi) { np = BND.pHi; nc = (CAL - np * EP - nf * EF) / EC; $('rgC').value = nc; } }
+            $('rgP').value = np; $('rgF').value = nf;
+            renderTable(np, nc, nf);
+            return false;
+        }
+        function slideFat(v) {
+            const c0 = parseFloat($('rgC').value), p0 = parseFloat($('rgP').value);
+            const rem = CAL - v * EF;
+            let nc = rem * c0 / (c0 * EC + p0 * EP), np = rem * p0 / (c0 * EC + p0 * EP), nf = v;
+            if (np < BND.pLo) { np = BND.pLo; nc = (rem - np * EP) / EC; }
+            else if (np > BND.pHi) { np = BND.pHi; nc = (rem - np * EP) / EC; }
+            if (nc < BND.cLo) { nc = BND.cLo; np = (rem - nc * EC) / EP; if (np < BND.pLo) { np = BND.pLo; nf = (CAL - nc * EC - np * EP) / EF; $('rgF').value = nf; } }
+            else if (nc > BND.cHi) { nc = BND.cHi; np = (rem - nc * EC) / EP; if (np > BND.pHi) { np = BND.pHi; nf = (CAL - nc * EC - np * EP) / EF; $('rgF').value = nf; } }
+            $('rgC').value = nc; $('rgP').value = np;
+            renderTable(np, nc, nf);
+            return false;
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('formError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+            };
+            const age = parseFloat($('age').value);
+            if (isNaN(age) || age < 18 || age > 80) return fail('Please enter an age between 18 and 80.');
+            const sex = radioVal('sex');
+            let kg, cm;
+            if (unit === 'us') {
+                const ft = parseFloat($('hFeet').value), inch = parseFloat($('hInch').value), lb = parseFloat($('lb').value);
+                if (isNaN(ft) || isNaN(inch) || isNaN(lb) || lb <= 0 || (ft * 12 + inch) <= 0) return fail('Please enter your height and weight.');
+                cm = (ft * 12 + inch) * 2.54;
+                kg = lb * 0.45359237;
+            } else {
+                cm = parseFloat($('cm').value); kg = parseFloat($('kg').value);
+                if (isNaN(cm) || isNaN(kg) || cm <= 0 || kg <= 0) return fail('Please enter your height and weight.');
+            }
+            const act = parseFloat($('activity').value);
+            const goal = $('goal').value;
+            const formula = radioVal('formula');
+            let bmr;
+            if (formula === 'k') {
+                const fat = parseFloat($('fatPct').value);
+                if (isNaN(fat) || fat < 0 || fat >= 100) return fail('Please enter a body fat percentage to use the Katch-McArdle formula.');
+                bmr = 370 + 21.6 * (1 - fat / 100) * kg;
+            } else {
+                bmr = 10 * kg + 6.25 * cm - 5 * age + (sex === 'm' ? 5 : -161);
+            }
+            const delta = { m: 0, l: -250, l1: -500, l2: -1000, g: 250, g1: 500, g2: 1000 }[goal];
+            CAL = Math.round(bmr * act + delta);
+            const minCal = sex === 'm' ? 1500 : 1200;
+
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+            if (CAL < minCal) {
+                $('resMain').classList.add('hidden');
+                const w = $('warnText');
+                w.textContent = 'Please consult with a doctor to guide your daily food energy needs during weight loss or consider a less aggressive weight loss plan.';
+                w.classList.remove('hidden');
+                return;
+            }
+            $('warnText').classList.add('hidden');
+            $('resMain').classList.remove('hidden');
+
+            const tier = (act === 1 || act === 1.2) ? 0.83 : 1.0;
+            const pLo = Math.max(60, tier * kg, 0.10 * CAL / EP);
+            const fLo = 0.20 * CAL / EF;
+            BND = {
+                pLo, pHi: 0.35 * CAL / EP,
+                cLo: 0.40 * CAL / EC, cHi: (CAL - pLo * EP - fLo * EF) / EC,
+                fLo, fHi: 0.35 * CAL / EF
+            };
+            PRESETS = {
+                'Balanced': split(0.25, 0.50, 0.25),
+                'Low Fat': split(0.275, 0.525, 0.20),
+                'Low Carb': split(0.30, 0.40, 0.30),
+                'High Protein': split(0.35, 0.425, 0.225)
+            };
+            for (const id of ['rgP', 'rgC', 'rgF']) { /* set bounds below */ }
+            $('rgP').min = BND.pLo; $('rgP').max = BND.pHi;
+            $('rgC').min = BND.cLo; $('rgC').max = BND.cHi;
+            $('rgF').min = BND.fLo; $('rgF').max = BND.fHi;
+
+            const perKg = { l: 0.25, l1: 0.5, l2: 1, g: 0.25, g1: 0.5, g2: 1 };
+            const perLb = { l: 0.5, l1: 1, l2: 2, g: 0.5, g1: 1, g2: 2 };
+            let phrase;
+            if (goal === 'm') phrase = 'to maintain your weight.';
+            else {
+                const amt = unit === 'us' ? `${perLb[goal]} lb` : `${perKg[goal]} kg`;
+                phrase = `to ${goal[0] === 'l' ? 'lose' : 'gain'} ${amt} per week.`;
+            }
+            $('resHead').textContent = `The results below are the suggested amounts of macronutrients and food energy (Calories) you need to consume daily ${phrase} Each macronutrient amount is represented as a range of values. Please click whichever tab best suits your needs, or create your own plan.`;
+            CUR = 'Balanced';
+            popResult('Balanced');
+
+            if (push) {
+                const q = new URLSearchParams({ u: unit, a: $('age').value, s: sex, ft: $('hFeet').value, inch: $('hInch').value, lb: $('lb').value, cm: $('cm').value, kg: $('kg').value, act: $('activity').value, goal, f: formula, fat: $('fatPct').value });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function setDefaults() {
+            $('age').value = 25;
+            document.querySelector('input[name="sex"][value="m"]').checked = true;
+            $('hFeet').value = 5; $('hInch').value = 10; $('lb').value = 165;
+            $('cm').value = 180; $('kg').value = 65;
+            $('activity').value = '1.465';
+            $('goal').value = 'm';
+            document.querySelector('input[name="formula"][value="m"]').checked = true;
+            $('fatPct').value = 20;
+            setUnit('metric');
+        }
+        function clearForm() {
+            setDefaults();
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            setUnit('metric');
+            const q = new URLSearchParams(location.search);
+            if (q.get('u')) setUnit(q.get('u'));
+            if (q.get('a')) $('age').value = q.get('a');
+            const sx = q.get('s'); if (sx) { const r = document.querySelector(`input[name="sex"][value="${sx}"]`); if (r) r.checked = true; }
+            if (q.get('ft')) $('hFeet').value = q.get('ft');
+            if (q.get('inch')) $('hInch').value = q.get('inch');
+            if (q.get('lb')) $('lb').value = q.get('lb');
+            if (q.get('cm')) $('cm').value = q.get('cm');
+            if (q.get('kg')) $('kg').value = q.get('kg');
+            if (q.get('act')) $('activity').value = q.get('act');
+            if (q.get('goal')) $('goal').value = q.get('goal');
+            const fm = q.get('f'); if (fm) { const r = document.querySelector(`input[name="formula"][value="${fm}"]`); if (r) r.checked = true; }
+            if (q.get('fat')) $('fatPct').value = q.get('fat');
+            calculate(false);
+        })();
+    </script>
+</body>
+  </html>
