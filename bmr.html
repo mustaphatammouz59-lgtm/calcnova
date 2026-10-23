@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMR Calculator - CalcNova</title>
+    <meta name="description" content="Free BMR calculator: estimate your basal metabolic rate with Mifflin-St Jeor, Revised Harris-Benedict, or Katch-McArdle, plus daily calorie needs by activity level.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/bmr">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="BMR Calculator - CalcNova">
+    <meta property="og:description" content="Your basal metabolic rate and daily calorie needs at six activity levels, from three established formulas.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/bmr">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BMR Calculator - CalcNova">
+    <meta name="twitter:description" content="Estimate your basal metabolic rate and daily calorie needs by activity level.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "BMR Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/bmr" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is the difference between BMR and RMR?",
+                "acceptedAnswer": { "@type": "Answer", "text": "BMR is measured under strict conditions: fully rested, fasted about 12 hours, in a neutral temperature, with the sympathetic nervous system inactive. RMR (resting metabolic rate) is measured under looser, more practical conditions and comes out slightly higher. The two are often used interchangeably, but they are not the same measurement." }
+            },
+            {
+                "@type": "Question",
+                "name": "Which BMR formula is most accurate?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Mifflin-St Jeor, the default here, has proven the most accurate of the equation-based estimates for most people. Katch-McArdle can beat it for lean people who know their body fat percentage, because it works from lean body mass. Even the best equation is still an estimate — a 2005 meta-analysis found about 26% of the variation between individuals remains unexplained by known factors." }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I raise my BMR?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The biggest lever is muscle mass: resistance training builds muscle, and muscle costs more energy to maintain at rest than fat does. Aerobic exercise burns calories while you do it but does not move BMR much. Crash dieting does the opposite — severe restriction can suppress BMR by up to 30% as the body economizes." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        .unit-btn { transition: all .15s; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">BMR Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">BMR Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Your <strong>basal metabolic rate</strong> is the energy you burn at complete rest — in a comfortably temperate room,
+            awake but inactive, with an empty digestive system (about 12 hours after your last meal). This calculator
+            estimates it from the formula you choose in Settings, then scales it by six activity levels to show your
+            daily calorie needs.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="flex gap-2 mb-5 no-print">
+                    <button type="button" id="btnUS" onclick="setUnit('us')" class="unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600">US Units</button>
+                    <button type="button" id="btnMetric" onclick="setUnit('metric')" class="unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white">Metric Units</button>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="age">Age <span class="font-normal text-gray-400">(ages 15 – 80)</span></label>
+                        <input type="number" id="age" value="25" min="1" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Gender</label>
+                        <div class="flex gap-6 items-center h-[42px]">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="sex" value="m" checked class="accent-[#3F51B5]"> Male</label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="sex" value="f" class="accent-[#3F51B5]"> Female</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="usFields" class="hidden">
+                    <div class="grid sm:grid-cols-3 gap-4 mt-4">
+                        <div><label class="block text-sm font-semibold mb-1" for="feet">Height — feet</label><input type="number" id="feet" value="5" min="0" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                        <div><label class="block text-sm font-semibold mb-1" for="inches">Height — inches</label><input type="number" id="inches" value="10" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                        <div><label class="block text-sm font-semibold mb-1" for="pounds">Weight — pounds</label><input type="number" id="pounds" value="160" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                    </div>
+                </div>
+
+                <div id="metricFields">
+                    <div class="grid sm:grid-cols-2 gap-4 mt-4">
+                        <div><label class="block text-sm font-semibold mb-1" for="cm">Height — cm</label><input type="number" id="cm" value="180" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                        <div><label class="block text-sm font-semibold mb-1" for="kg">Weight — kg</label><input type="number" id="kg" value="60" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                    </div>
+                </div>
+
+                <div class="mt-4 no-print">
+                    <button type="button" id="settingsToggle" onclick="toggleSettings()" class="font-bold text-[#3F51B5] hover:underline">+ Settings</button>
+                    <div id="settingsBox" class="hidden mt-3 border border-gray-200 rounded-lg p-4 bg-[#F8FAFC]">
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm font-bold mb-2">Results unit:</p>
+                                <label class="flex items-center gap-2 cursor-pointer mb-1"><input type="radio" name="outunit" value="c" checked class="accent-[#3F51B5]"> Calories</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="outunit" value="j" class="accent-[#3F51B5]"> Kilojoules</label>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold mb-2">BMR estimation formula:</p>
+                                <label class="flex items-center gap-2 cursor-pointer mb-1"><input type="radio" name="formula" value="m" checked class="accent-[#3F51B5]"> Mifflin St Jeor</label>
+                                <label class="flex items-center gap-2 cursor-pointer mb-1"><input type="radio" name="formula" value="h" class="accent-[#3F51B5]"> Revised Harris-Benedict</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="formula" value="k" class="accent-[#3F51B5]"> Katch-McArdle</label>
+                                <div class="flex items-center gap-2 mt-1 ml-6">
+                                    <a href="body-fat.html" class="text-sm text-[#3F51B5] hover:underline">Body Fat:</a>
+                                    <input type="number" id="fatpct" value="20" min="1" max="99" step="any" class="w-20 border border-gray-300 rounded-lg px-2 py-1 outline-none focus:border-[#3F51B5]">
+                                    <span class="text-sm text-gray-500">%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-[#F8FAFC]">
+                        <p class="text-center text-xl">BMR = <span id="resBmr" class="font-extrabold text-green-700 text-2xl"></span> <span id="resUnit" class="text-gray-600 text-base"></span></p>
+                        <h3 id="resActTitle" class="font-bold text-gray-800 mt-5 mb-2"></h3>
+                        <div id="resTable"></div>
+                        <ul class="text-xs text-gray-500 mt-3 space-y-0.5">
+                            <li><strong>Exercise:</strong> 15-30 minutes of elevated heart rate activity.</li>
+                            <li><strong>Intense exercise:</strong> 45-120 minutes of elevated heart rate activity.</li>
+                            <li><strong>Very intense exercise:</strong> 2+ hours of elevated heart rate activity.</li>
+                        </ul>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">Where the calories go</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        For most people, roughly <strong>70%</strong> of the day's energy is pure upkeep — the organs on the
+                        result table of your body. Activity takes about 20%, and digesting food itself (thermogenesis)
+                        about 10%. BMR is the biggest lever in your daily budget.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">What BMR measures</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Think of an idling car: engine on, going nowhere, still burning fuel. That is BMR for a human — the
+                cost of keeping the heart, brain, kidneys, nervous system, intestines, liver, lungs, sex organs,
+                muscles, and skin running, and nothing else. A laboratory-grade BMR measurement is fussy: you must be
+                awake but completely rested, with the sympathetic nervous system quiet and digestion idle. Because
+                real life rarely cooperates, almost everyone works from equations fitted to statistical data instead —
+                the three under Settings. Harris-Benedict was one of the first (revised in 1984); Mifflin-St Jeor
+                arrived in 1990 and has repeatedly tested more accurate; Katch-McArdle takes lean body mass into
+                account, which the other two ignore, and can be the best of the three for lean people who know their
+                body fat percentage. Multiply the BMR by an activity factor between 1.2 and 1.9 and you get the daily
+                calorie need — the table in your result.
+            </p>
+            <div class="grid md:grid-cols-3 gap-4 mb-4">
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">Mifflin-St Jeor</h3>
+                    <p class="text-sm text-gray-700 leading-6">Men: BMR = 10W + 6.25H − 5A + 5<br>Women: BMR = 10W + 6.25H − 5A − 161</p>
+                </div>
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">Revised Harris-Benedict</h3>
+                    <p class="text-sm text-gray-700 leading-6">Men: BMR = 13.397W + 4.799H − 5.677A + 88.362<br>Women: BMR = 9.247W + 3.098H − 4.330A + 447.593</p>
+                </div>
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">Katch-McArdle</h3>
+                    <p class="text-sm text-gray-700 leading-6">BMR = 370 + 21.6 × (1 − F) × W<br><span class="text-gray-500">W = weight (kg), H = height (cm), A = age, F = body fat fraction.</span></p>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">The variables that move BMR</h2>
+            <div class="space-y-3 text-gray-700 leading-7 mb-4">
+                <p><strong>Muscle mass</strong> — Running and cycling don't change BMR directly, but lifting does, indirectly: more muscle means more tissue to maintain at rest, around the clock.</p>
+                <p><strong>Age</strong> — BMR drifts down as the years add up and bodies lose lean tissue; less upkeep, less fuel.</p>
+                <p><strong>Genetics</strong> — Inherited traits account for a real share of the difference between two otherwise similar people.</p>
+                <p><strong>Weather</strong> — Cold forces the body to burn energy holding its temperature; serious heat does too, for cooling. BMR rises roughly 7% for every 1.36 °F increase in internal body temperature.</p>
+                <p><strong>Diet</strong> — Small, regular meals nudge BMR up slightly. Starvation does the opposite, hard: cuts of up to 30% as the body switches to power-saving mode and starts sacrificing energy, mood, and upkeep.</p>
+                <p><strong>Pregnancy</strong> — Growing a second person raises BMR (one reason pregnant women eat more); menopause can push it either way with hormonal change.</p>
+                <p><strong>Supplements</strong> — Some drugs and supplements raise BMR — caffeine is the everyday example — which is why they show up in weight-loss products.</p>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">BMR vs RMR, and the limits of any formula</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Resting metabolic rate (RMR) is BMR's more relaxed sibling: measured in a rested-but-not-fully-inactive
+                state, under conditions less strict than BMR's demand for total physiological equilibrium, it comes
+                out a little higher. The two terms get used interchangeably, but they are different measurements.
+                Either way, a formula is an estimate. A 2005 meta-analysis (Johnstone et al., American Journal of
+                Clinical Nutrition) found that even after accounting for fat-free mass, fat mass, age, and hormones,
+                about <strong>26% of the variation between people stays unexplained</strong>. Serious testing uses calorimetry
+                devices — available at many clinics and gyms — and even those results feed into a TDEE that is still
+                an estimate. The practical answer is the boring one: use BMR to set your starting point, keep a
+                simple journal of food, activity, and weight, and adjust from what actually happens.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">FAQ</h2>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">What is the difference between BMR and RMR?</h4>
+                    <p class="text-gray-700 leading-7">BMR demands strict conditions — fasted, fully rested, temperature-neutral. RMR relaxes them and reads slightly higher. In practice the terms are often swapped, but the measurements are not identical.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Which formula should I use?</h4>
+                    <p class="text-gray-700 leading-7">Mifflin-St Jeor for most people. If you know your body fat percentage and are lean, try Katch-McArdle in Settings and compare — our <a href="body-fat.html" class="text-[#3F51B5] hover:underline">Body Fat Calculator</a> can supply the percentage.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Can I raise my BMR?</h4>
+                    <p class="text-gray-700 leading-7">Build muscle — it is the one durable lever. And avoid crash diets: severe restriction suppresses BMR by up to 30%, which is part of why aggressive diets rebound.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="body-fat.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Body Fat Calculator</span><span class="block text-sm text-gray-500 mt-1">The input Katch-McArdle needs</span></a>
+                <a href="calorie.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Calorie Calculator</span><span class="block text-sm text-gray-500 mt-1">Targets for losing or gaining weight</span></a>
+                <a href="bmi.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">BMI Calculator</span><span class="block text-sm text-gray-500 mt-1">Where your weight sits for your height</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let unit = 'metric';
+        const $ = id => document.getElementById(id);
+        const radio = name => document.querySelector(`input[name="${name}"]:checked`).value;
+        const comma = n => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        const KJ = 4.1868;
+        const LEVELS = [
+            [1.2, 'Sedentary: little or no exercise'],
+            [1.375, 'Exercise 1-3 times/week'],
+            [1.465, 'Exercise 4-5 times/week'],
+            [1.55, 'Daily exercise or intense exercise 3-4 times/week'],
+            [1.725, 'Intense exercise 6-7 times/week'],
+            [1.9, 'Very intense exercise daily, or physical job']
+        ];
+
+        function setUnit(u) {
+            unit = u;
+            $('usFields').classList.toggle('hidden', u !== 'us');
+            $('metricFields').classList.toggle('hidden', u !== 'metric');
+            const on = 'unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white';
+            const off = 'unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600';
+            $('btnUS').className = u === 'us' ? on : off;
+            $('btnMetric').className = u === 'metric' ? on : off;
+        }
+        function toggleSettings() {
+            const b = $('settingsBox');
+            const hidden = b.classList.toggle('hidden');
+            $('settingsToggle').textContent = hidden ? '+ Settings' : '− Settings';
+        }
+        function bmrCalc(sex, wKg, hCm, age, formula, fatPct) {
+            if (formula === 'h') return sex === 'm' ? 13.397 * wKg + 4.799 * hCm - 5.677 * age + 88.362
+                                                     : 9.247 * wKg + 3.098 * hCm - 4.330 * age + 447.593;
+            if (formula === 'k') return 370 + 21.6 * (1 - fatPct / 100) * wKg;
+            return sex === 'm' ? 10 * wKg + 6.25 * hCm - 5 * age + 5
+                               : 10 * wKg + 6.25 * hCm - 5 * age - 161;
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const age = parseFloat($('age').value);
+            const sex = radio('sex');
+            let wKg, hCm;
+            if (unit === 'metric') { hCm = parseFloat($('cm').value); wKg = parseFloat($('kg').value); }
+            else {
+                hCm = ((parseFloat($('feet').value) || 0) * 12 + (parseFloat($('inches').value) || 0)) * 2.54;
+                wKg = parseFloat($('pounds').value) / 2.20462;
+            }
+            const outJ = radio('outunit') === 'j';
+            const formula = radio('formula');
+            const fat = parseFloat($('fatpct').value);
+            if (isNaN(age) || isNaN(hCm) || isNaN(wKg) || hCm <= 0 || wKg <= 0 || (formula === 'k' && (isNaN(fat) || fat <= 0 || fat >= 100))) {
+                const e = $('formError');
+                e.textContent = formula === 'k' ? 'Please enter a valid age, height, weight and a body fat percentage between 1 and 99 for the Katch-McArdle formula.' : 'Please enter a valid age, height and weight.';
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+                return;
+            }
+            const bmr = bmrCalc(sex, wKg, hCm, age, formula, fat || 20);
+            const conv = outJ ? KJ : 1;
+            $('resBmr').textContent = comma(bmr * conv);
+            $('resUnit').textContent = outJ ? 'kJ/day' : 'Calories/day';
+            $('resActTitle').textContent = outJ ? 'Daily food energy needs based on activity level' : 'Daily calorie needs based on activity level';
+            $('resTable').innerHTML = LEVELS.map(([f, label], i) =>
+                `<div class="flex justify-between gap-4 py-2 ${i < LEVELS.length - 1 ? 'border-b border-gray-100' : ''}"><span class="text-gray-600">${label}</span><span class="font-semibold text-gray-900">${comma(bmr * conv * f)}</span></div>`).join('');
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+
+            if (push) {
+                const q = new URLSearchParams({ a: $('age').value, s: sex, u: unit, ou: outJ ? 'j' : 'c', f: formula });
+                if (unit === 'metric') { q.set('cm', $('cm').value); q.set('kg', $('kg').value); }
+                else { q.set('ft', $('feet').value); q.set('in', $('inches').value); q.set('lb', $('pounds').value); }
+                if (formula === 'k') q.set('fat', $('fatpct').value);
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function clearForm() {
+            $('age').value = 25;
+            document.querySelector('input[name="sex"][value="m"]').checked = true;
+            $('feet').value = 5; $('inches').value = 10; $('pounds').value = 160;
+            $('cm').value = 180; $('kg').value = 60;
+            document.querySelector('input[name="outunit"][value="c"]').checked = true;
+            document.querySelector('input[name="formula"][value="m"]').checked = true;
+            $('fatpct').value = 20;
+            setUnit('metric');
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            if (q.get('u') === 'us' || q.get('u') === 'metric') setUnit(q.get('u'));
+            if (q.get('a')) $('age').value = q.get('a');
+            if (q.get('s') === 'f') document.querySelector('input[name="sex"][value="f"]').checked = true;
+            if (q.get('cm')) $('cm').value = q.get('cm');
+            if (q.get('kg')) $('kg').value = q.get('kg');
+            if (q.get('ft')) $('feet').value = q.get('ft');
+            if (q.get('in')) $('inches').value = q.get('in');
+            if (q.get('lb')) $('pounds').value = q.get('lb');
+            if (q.get('ou') === 'j') document.querySelector('input[name="outunit"][value="j"]').checked = true;
+            if (q.get('f') === 'h' || q.get('f') === 'k') document.querySelector(`input[name="formula"][value="${q.get('f')}"]`).checked = true;
+            if (q.get('fat')) $('fatpct').value = q.get('fat');
+            calculate(false);
+        })();
+    </script>
+</body>
+  </html>
