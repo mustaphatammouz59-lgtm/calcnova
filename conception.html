@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conception Calculator - CalcNova</title>
+    <meta name="description" content="Free conception calculator: most probable conception days, the ovulation and intercourse windows, pregnancy test date, and due date if pregnant — over six cycles.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/conception">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Conception Calculator - CalcNova">
+    <meta property="og:description" content="Most probable conception days and the six-cycle outlook from your last period.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/conception">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Conception Calculator - CalcNova">
+    <meta name="twitter:description" content="Find your most probable conception days and fertile window.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Conception Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/conception" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What are the most probable conception days?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The days from two days before ovulation through the day after it — with the final three days of the fertile window carrying the highest probability. Studies put the chance of pregnancy from intercourse in that peak stretch at roughly 30%." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why does the conception window end after the ovulation window?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The egg remains fertilizable for 12–24 hours after release, so conception can occur on the day after ovulation day itself. The window therefore runs one day longer at the end." }
+            },
+            {
+                "@type": "Question",
+                "name": "How can I sharpen the estimate?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Combine the calendar with your own signals: basal body temperature (about 97.2–97.7 °F before ovulation, rising half a degree to a degree after) and cervical mucus, which turns clear and slippery like raw egg white in the days just before ovulation." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        .cal td { width: 14.28%; text-align: center; padding: 6px 0; border-radius: 8px; font-size: 14px; }
+        .cal .iw { background: #E8EAF6; }
+        .cal .ow { background: #9FA8DA; color: #1A237E; font-weight: 600; }
+        .cal .od { background: #3F51B5; color: #fff; font-weight: 700; }
+        .cal .pd { background: #FCE4EC; color: #880E4F; font-weight: 600; }
+        .cal .td { box-shadow: inset 0 0 0 2px #4CAF50; font-weight: 700; color: #2E7D32; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Conception Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Conception Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Estimate the days you are <strong>most likely to conceive</strong>, the ovulation and intercourse
+            windows around them, the earliest sensible pregnancy-test day, and the due date if you conceive — from
+            the first day of your last period, projected over <strong>six cycles</strong>.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="lmpDate">First day of your last period</label>
+                        <input type="date" id="lmpDate" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="cycle">Average length of cycles</label>
+                        <select id="cycle" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5] bg-white"></select>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                        <div id="resText"></div>
+                        <div id="resCal" class="mt-5"></div>
+                        <div id="resTable" class="mt-5 overflow-x-auto"></div>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">The peak three days</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        Within the fertile window, the last three days carry the highest odds — intercourse then
+                        leads to pregnancy in roughly 30% of cases. The window exists at all because sperm wait up
+                        to five days for an egg that lives barely one.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">The fertile window</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Conception — the start of a pregnancy, when an egg is fertilized — can only happen inside a short
+                fertile window each cycle. Sperm remain viable inside the body for up to five days (in some cases
+                seven), while the egg survives only 12–24 hours after ovulation. Regular intercourse across the
+                five days before ovulation and on the day itself therefore covers the window — and within it, the
+                last three days are the most fertile of all: intercourse in that stretch results in pregnancy in
+                approximately 30% of cases. The calculator's "most probable conception days" run from two days
+                before the estimated ovulation day to three days after the window opens — the extra day at the end
+                reflecting the egg's short life after release.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Making the window work for you</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                The single best preparation is simply regular sex — two to three times a week — rather than saving
+                everything for one predicted day; it keeps favorable, fertile-quality cervical mucus present, which
+                protects sperm and extends their lifespan. To aim more precisely, layer your own signals onto the
+                calendar. <strong>Basal body temperature</strong>: your lowest temperature in 24 hours, taken with
+                a sensitive basal thermometer the moment you wake, before even sitting up, at about the same time
+                each morning. Before ovulation it sits around 97.2–97.7 °F; two or three days after ovulation it
+                rises by about half a degree to a degree and stays up until your period. <strong>Cervical
+                mucus</strong>: dry for several days after your period, then cloudy and sticky like paste, then —
+                a few days before ovulation — clear, slippery, and stretchy like raw egg white, in greater
+                quantity, lasting until ovulation day.
+            </p>
+            <p class="text-gray-700 leading-7">
+                If your ovulation day wanders month to month (day 14, then 17, then 12), combine the signals — the
+                mucus change or the temperature shift usually keeps a consistent lead time even when the calendar
+                day doesn't. And if charting itself becomes a stressor, drop it: sex every two days covers the
+                fertile window almost as well, since sperm live up to seven days. Feeling good is not a distraction
+                from the process; it is part of it.
+            </p>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="pregnancy.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Pregnancy Calculator</span><span class="block text-sm text-gray-500 mt-1">Your week-by-week schedule</span></a>
+                <a href="pregnancy-conception.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Pregnancy Conception Calculator</span><span class="block text-sm text-gray-500 mt-1">When conception likely happened</span></a>
+                <a href="pregnancy-weight-gain.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Pregnancy Weight Gain Calculator</span><span class="block text-sm text-gray-500 mt-1">IOM week-by-week targets</span></a>
+                <a href="ovulation.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Ovulation Calculator</span><span class="block text-sm text-gray-500 mt-1">Your ovulation window and test day</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const DAY = 86400000;
+        const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        function parseDate(v) {
+            if (!v) return null;
+            const p = v.split('-').map(Number);
+            return new Date(Date.UTC(p[0], p[1] - 1, p[2]));
+        }
+        function fmt(d) { return `${MONTHS[d.getUTCMonth()].slice(0, 3)} ${d.getUTCDate()}, ${d.getUTCFullYear()}`; }
+        function fmtShort(d) { return `${MONTHS[d.getUTCMonth()].slice(0, 3)} ${d.getUTCDate()}`; }
+        function fmtRange(a, b) { return `${fmtShort(a)} - ${fmtShort(b)}`; }
+        function addDays(d, n) { return new Date(d.getTime() + n * DAY); }
+        function todayUTC() {
+            const t = new Date();
+            return new Date(Date.UTC(t.getFullYear(), t.getMonth(), t.getDate()));
+        }
+        function toISO(d) {
+            const p = n => String(n).padStart(2, '0');
+            return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())}`;
+        }
+        function sameDay(a, b) { return a.getTime() === b.getTime(); }
+        function between(d, a, b) { return d >= a && d <= b; }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('formError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+            };
+            const lmp = parseDate($('lmpDate').value);
+            if (!lmp) return fail('Please pick the first day of your last period.');
+            const cy = parseInt($('cycle').value);
+            const ov = addDays(lmp, cy - 14);
+            const owA = addDays(ov, -2), owB = addDays(ov, 2);
+            const iwA = addDays(ov, -5);
+            const test = addDays(ov, 9);
+            const nextPeriod = addDays(lmp, cy);
+            const due = addDays(lmp, 280 + (cy - 28));
+
+            const row = (label, val) => `<div class="flex justify-between gap-4 py-2 border-b border-gray-100"><span class="text-gray-600">${label}</span><span class="font-semibold text-right">${val}</span></div>`;
+            $('resText').innerHTML =
+                '<p class="font-bold text-gray-800 mb-1">Important dates for this cycle:</p>' +
+                row('Most Probable Conception Days', fmtRange(owA, addDays(ov, 3))) +
+                row('Ovulation Window', fmtRange(owA, owB)) +
+                row('Best Intercourse Days for Pregnancy', fmtRange(iwA, owB)) +
+                row('Pregnancy Test', fmt(test)) +
+                row('Next Period Start', fmt(nextPeriod)) +
+                row('Due Date If Pregnant', fmt(due));
+
+            // Calendar of the ovulation month
+            const y = owA.getUTCFullYear(), mo = owA.getUTCMonth();
+            const first = new Date(Date.UTC(y, mo, 1));
+            const startDow = first.getUTCDay();
+            const daysIn = new Date(Date.UTC(y, mo + 1, 0)).getUTCDate();
+            let cells = '';
+            for (let i = 0; i < startDow; i++) cells += '<td></td>';
+            for (let dd = 1; dd <= daysIn; dd++) {
+                const cur = new Date(Date.UTC(y, mo, dd));
+                let cls = '';
+                if (sameDay(cur, lmp) || sameDay(cur, nextPeriod)) cls = 'pd';
+                else if (sameDay(cur, ov)) cls = 'od';
+                else if (between(cur, owA, addDays(ov, 3))) cls = 'ow';
+                else if (between(cur, iwA, owB)) cls = 'iw';
+                if (sameDay(cur, test)) cls = (cls ? cls + ' ' : '') + 'td';
+                cells += `<td class="${cls}">${dd}</td>`;
+                if ((startDow + dd) % 7 === 0) cells += '</tr><tr>';
+            }
+            $('resCal').innerHTML =
+                `<p class="font-bold text-gray-800 mb-2">${MONTHS[mo]} ${y}</p>` +
+                '<table class="cal w-full max-w-md"><thead><tr class="text-gray-500 text-sm"><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr></thead><tbody><tr>' + cells + '</tr></tbody></table>' +
+                '<div class="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-xs text-gray-600">' +
+                '<span><span class="inline-block w-3 h-3 rounded align-middle" style="background:#FCE4EC"></span> Period start</span>' +
+                '<span><span class="inline-block w-3 h-3 rounded align-middle" style="background:#E8EAF6"></span> Intercourse window</span>' +
+                '<span><span class="inline-block w-3 h-3 rounded align-middle" style="background:#9FA8DA"></span> Conception / ovulation window</span>' +
+                '<span><span class="inline-block w-3 h-3 rounded align-middle" style="background:#3F51B5"></span> Most probable ovulation day</span>' +
+                '<span><span class="inline-block w-3 h-3 rounded align-middle" style="box-shadow: inset 0 0 0 2px #4CAF50"></span> Pregnancy test</span></div>';
+
+            let rows = '';
+            for (let k = 0; k < 6; k++) {
+                const pStart = addDays(lmp, k * cy);
+                const o = addDays(pStart, cy - 14);
+                rows += `<tr><td class="px-3 py-1.5 border-b border-gray-100">${fmt(pStart)}</td><td class="px-3 py-1.5 border-b border-gray-100">${fmtRange(addDays(o, -2), addDays(o, 3))}</td><td class="px-3 py-1.5 border-b border-gray-100">${fmt(addDays(pStart, 280 + (cy - 28)))}</td></tr>`;
+            }
+            $('resTable').innerHTML =
+                '<p class="font-bold text-gray-800 mb-2">Important dates for the next 6 cycles:</p>' +
+                '<table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden"><thead><tr class="bg-[#E8EAF6] text-left"><th class="px-3 py-2">Period Start</th><th class="px-3 py-2">Conception Window</th><th class="px-3 py-2">Due Date</th></tr></thead><tbody>' + rows + '</tbody></table>';
+
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+            if (push) {
+                const q = new URLSearchParams({ lp: $('lmpDate').value, cy: $('cycle').value });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function setDefaults() {
+            $('lmpDate').value = toISO(todayUTC());
+            $('cycle').value = '28';
+        }
+        function clearForm() {
+            setDefaults();
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const sel = $('cycle');
+            for (let cy = 22; cy <= 44; cy++) {
+                const o = document.createElement('option');
+                o.value = cy; o.textContent = cy + ' days';
+                sel.appendChild(o);
+            }
+            setDefaults();
+            const q = new URLSearchParams(location.search);
+            if (q.get('lp')) $('lmpDate').value = q.get('lp');
+            if (q.get('cy')) $('cycle').value = q.get('cy');
+            calculate(false);
+        })();
+    </script>
+</body>
+                            </html>
