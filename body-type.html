@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Type Calculator - CalcNova</title>
+    <meta name="description" content="Free body type calculator for women: find your body shape (hourglass, bottom hourglass, top hourglass, spoon, triangle, inverted triangle, rectangle) from bust, waist, high hip, and hip measurements, plus your waist-hip ratio.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/body-type">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Body Type Calculator - CalcNova">
+    <meta property="og:description" content="Your body shape from four measurements, classified by the published 7-shape algorithm, with waist-hip ratio.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/body-type">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Body Type Calculator - CalcNova">
+    <meta name="twitter:description" content="Hourglass, spoon, triangle, rectangle and more — plus your WHR.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Body Type Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/body-type" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What are the seven female body shapes used here?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Hourglass, bottom hourglass, top hourglass, spoon, triangle, inverted triangle, and rectangle. The classification algorithm comes from a study in the International Journal of Clothing Science and Technology and works from the differences between bust, waist, high hip, and hip measurements in inches. Some bodies do not fit any of the seven shapes." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is waist-hip ratio and why does it matter?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Waist-hip ratio (WHR) is waist circumference divided by hip circumference. Unlike body shape, it is a genuine health indicator: the WHO treats a WHR above 0.85 in women as abdominal obesity, and higher WHR is associated with higher cardiovascular and metabolic risk." }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I measure correctly?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Stand straight with your arms at your sides and keep the tape snug but not compressing. Bust: around the fullest part of the breasts in a properly fitted bra. Waist: the smallest circumference at the natural waist, just above the belly button. High hip: the upper swell of the hip over the pelvis, about 7 inches (18 cm) below the natural waist. Hip: the largest circumference around the buttocks." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Body Type Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Body Type Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            This calculator is designed for women to find their <strong>"body shape"</strong> from bust, waist,
+            high hip, and hip measurements — handy for targeted outfit ideas. Some research links certain
+            shapes with health risks, but the shape itself is a fashion convention, not a health verdict or an
+            ideal to meet; the <strong>waist-hip ratio</strong>, also shown in the results, is the better
+            health indicator of the two.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="bust">Bust Size</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="bust" value="90" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                            <select id="bustUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5] bg-white text-sm">
+                                <option value="inch">inches</option>
+                                <option value="centimeter" selected>cm</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="waist">Waist Size</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="waist" value="60" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                            <select id="waistUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5] bg-white text-sm">
+                                <option value="inch">inches</option>
+                                <option value="centimeter" selected>cm</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="highHip">High Hip Size</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="highHip" value="80" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                            <select id="highHipUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5] bg-white text-sm">
+                                <option value="inch">inches</option>
+                                <option value="centimeter" selected>cm</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="hip">Hip Size</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="hip" value="90" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                            <select id="hipUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5] bg-white text-sm">
+                                <option value="inch">inches</option>
+                                <option value="centimeter" selected>cm</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Results</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                        <div id="resBody"></div>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-sm text-gray-600 leading-6 space-y-2">
+                    <p>When measuring, stand straight with your arms to your sides. Keep the tape snug against the body, but not so tight that it compresses the body, which would make the measurement inaccurate.</p>
+                    <p><strong>Bust size</strong> — the circumference around the chest over the fullest part of the breasts, while wearing a properly fitted bra.</p>
+                    <p><strong>Waist size</strong> — the smallest circumference around the natural waist, just above the belly button.</p>
+                    <p><strong>High hip size</strong> — the circumference of the upper swell of the hip over the pelvic region, about 7 inches (18 cm) below the natural waist.</p>
+                    <p><strong>Hip size</strong> — the largest circumference around the hips over the largest part of the buttocks.</p>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">Most women are "banana"</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        In a North Carolina State University study of more than 6,000 women (2005), 46% were
+                        banana/rectangle-shaped, just over 20% pear-shaped, just under 14% apple-shaped — and only
+                        8% hourglass, the shape fashion treats as the ideal.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">Female body shapes in the fashion industry</h2>
+            <p class="text-gray-700 leading-7 mb-4">Fashion usually sorts body shapes into four classes:</p>
+            <p class="text-gray-700 leading-7 mb-4"><strong>Apple, or inverted triangle</strong> — broader shoulders and bust than hips.</p>
+            <p class="text-gray-700 leading-7 mb-4"><strong>Banana, straight, or rectangle</strong> — the waist measures less than 9 inches smaller than the hip or bust measurements.</p>
+            <p class="text-gray-700 leading-7 mb-4"><strong>Pear, spoon, bell, or triangle</strong> — hip measurements greater than bust measurements.</p>
+            <p class="text-gray-700 leading-7 mb-4"><strong>Hourglass, X shape, triangles opposing, or facing inwards</strong> — hip and bust nearly equal, with a distinctly narrower waist; typically presented as the "ideal."</p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">What is my body shape?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                These shapes rest on societal standards that are subjective and vary by culture. The algorithm
+                behind this calculator comes from a study in the <em>International Journal of Clothing Science
+                and Technology</em><sup>1</sup> that divides women's body shapes into seven categories. Sizes
+                range widely inside each shape, and some bodies fit none of them — the calculator says so when
+                that happens. All differences below are in inches:
+            </p>
+            <ul class="text-gray-700 leading-7 mb-4 space-y-2 list-none pl-0">
+                <li><strong>Hourglass</strong> — if (bust − hips) ≤ 1" and (hips − bust) &lt; 3.6" and (bust − waist) ≥ 9" or (hips − waist) ≥ 10"</li>
+                <li><strong>Bottom hourglass</strong> — if (hips − bust) ≥ 3.6" and (hips − bust) &lt; 10" and (hips − waist) ≥ 9" and (high hip/waist) &lt; 1.193</li>
+                <li><strong>Top hourglass</strong> — if (bust − hips) &gt; 1" and (bust − hips) &lt; 10" and (bust − waist) ≥ 9"</li>
+                <li><strong>Spoon</strong> — if (hips − bust) &gt; 2" and (hips − waist) ≥ 7" and (high hip/waist) ≥ 1.193</li>
+                <li><strong>Triangle</strong> — if (hips − bust) ≥ 3.6" and (hips − waist) &lt; 9"</li>
+                <li><strong>Inverted triangle</strong> — if (bust − hips) ≥ 3.6" and (bust − waist) &lt; 9"</li>
+                <li><strong>Rectangle</strong> — if (hips − bust) &lt; 3.6" and (bust − hips) &lt; 3.6" and (bust − waist) &lt; 9" and (hips − waist) &lt; 10"</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Waist-hip ratio</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                The waist-hip ratio (WHR) is simply waist circumference divided by hip circumference — a 34"
+                waist over 40" hips gives 34/40 = 0.85. Where body shape is a fashion convention, WHR is used
+                as an indicator of real health conditions: people carrying more weight around the waist
+                ("apple-shaped") run higher risks than those carrying it around the hips ("pear-shaped"). The
+                NIDDK puts the higher-risk line at WHR above 0.8 for women and 1.0 for men; the WHO defines
+                obesity at above 0.90 for men and 0.85 for women, roughly a BMI over 30. WHR has outperformed
+                both waist circumference and BMI at predicting mortality over age 75 and is a better predictor
+                of cardiovascular disease; in the study by Yusuf et al.<sup>2</sup>, redefining obesity by WHR
+                instead of BMI would triple the proportion of people classed at risk of heart attack. Abdominal
+                fat is the driver — the higher the WHR, the higher the associated risk. WHR is also correlated
+                with fertility: women above 0.80 show significantly lower pregnancy rates than those between
+                0.70 and 0.79, while men around 0.9 tend to be more fertile and healthier, with lower rates of
+                prostate and testicular cancer. It has even been studied in relation to cognitive ability,
+                attractiveness judgments, and diet composition. For the fat-distribution side of this, see the
+                <a href="body-fat.html" class="text-[#3F51B5] underline">Body Fat Calculator</a>.
+            </p>
+            <ol class="list-decimal pl-6 text-sm text-gray-500 leading-6">
+                <li>Lee, J.Y., Istook, C.L., Nam, Y.J., and Park, S.M., "Comparison of body shape between USA and Korean women", International Journal of Clothing Science and Technology, Vol. 19, No. 5, 2007, pp. 374-391.</li>
+                <li>Yusuf S, et al. (November 2005). "Obesity and the risk of myocardial infarction in 27,000 participants from 52 countries: a case-control study". Lancet. 366 (9497): 1640-9.</li>
+            </ol>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="body-fat.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Body Fat Calculator</span><span class="block text-sm text-gray-500 mt-1">Body fat percentage, mass, and lean mass</span></a>
+                <a href="bmi.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">BMI Calculator</span><span class="block text-sm text-gray-500 mt-1">Body mass index and healthy range</span></a>
+                <a href="body-surface-area.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Body Surface Area Calculator</span><span class="block text-sm text-gray-500 mt-1">BSA by five published formulas</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+
+        function phpRound(x, nd) {
+            const p = Math.pow(10, nd || 0);
+            return Math.sign(x) * Math.round(Math.abs(x) * p) / p;
+        }
+        // PHP-style float print: trimmed, no trailing zeros (0.8 not 0.80)
+        function fmtPHP(x) { return String(parseFloat(x.toPrecision(14))); }
+        function toInches(v, unitSel) { return unitSel === 'centimeter' ? v / 2.54 : v; }
+
+        // The published 7-shape classification (Lee et al. 2007), evaluated in
+        // order; all measurements in inches. The Hourglass rule reads
+        // A AND B AND (C OR D) - confirmed against the reference.
+        function classify(b, w, hh, hp) {
+            const bH = b - hp, hB = hp - b, bW = b - w, hW = hp - w, ratio = hh / w;
+            if (bH <= 1 && hB < 3.6 && (bW >= 9 || hW >= 10)) return 'Hourglass';
+            if (hB >= 3.6 && hB < 10 && hW >= 9 && ratio < 1.193) return 'Bottom hourglass';
+            if (bH > 1 && bH < 10 && bW >= 9) return 'Top hourglass';
+            if (hB > 2 && hW >= 7 && ratio >= 1.193) return 'Spoon';
+            if (hB >= 3.6 && hW < 9) return 'Triangle';
+            if (bH >= 3.6 && bW < 9) return 'Inverted triangle';
+            if (hB < 3.6 && bH < 3.6 && bW < 9 && hW < 10) return 'Rectangle';
+            return null;
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('formError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+            };
+            const bust = toInches(parseFloat($('bust').value), $('bustUnit').value);
+            const waist = toInches(parseFloat($('waist').value), $('waistUnit').value);
+            const highHip = toInches(parseFloat($('highHip').value), $('highHipUnit').value);
+            const hip = toInches(parseFloat($('hip').value), $('hipUnit').value);
+            if ([bust, waist, highHip, hip].some(v => isNaN(v) || v <= 0)) return fail('Please enter all four measurements above 0.');
+
+            const shape = classify(bust, waist, highHip, hip);
+            const whr = phpRound(waist / hip, 2);
+
+            let html;
+            if (shape) {
+                html = `<p class="text-gray-700 text-lg">Body shape: <strong>${shape}</strong></p>`;
+            } else {
+                html = `<p class="text-gray-700 leading-7">Unfortunately, this calculator was unable to classify your body shape within one of the "seven female body shapes." Each individual is unique, and this calculator is unable to consider all possibilities.</p>`;
+            }
+            html += `<p class="text-gray-700 text-lg mt-3">Waist-hip ratio (WHR): <strong>${fmtPHP(whr)}</strong></p>`;
+            if (whr > 0.85) {
+                html += `<p class="text-gray-700 leading-7 mt-3">Based on a WHO publication, this waist-hip ratio indicates abdominal obesity and higher health risk.</p>`;
+            }
+            $('resBody').innerHTML = html;
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+
+            if (push) {
+                const q = new URLSearchParams({ b: $('bust').value, bu: $('bustUnit').value, w: $('waist').value, wu: $('waistUnit').value, hh: $('highHip').value, hhu: $('highHipUnit').value, h: $('hip').value, hu: $('hipUnit').value });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function clearForm() {
+            $('bust').value = 90; $('bustUnit').value = 'centimeter';
+            $('waist').value = 60; $('waistUnit').value = 'centimeter';
+            $('highHip').value = 80; $('highHipUnit').value = 'centimeter';
+            $('hip').value = 90; $('hipUnit').value = 'centimeter';
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            if (q.get('b')) $('bust').value = q.get('b');
+            if (q.get('bu')) $('bustUnit').value = q.get('bu');
+            if (q.get('w')) $('waist').value = q.get('w');
+            if (q.get('wu')) $('waistUnit').value = q.get('wu');
+            if (q.get('hh')) $('highHip').value = q.get('hh');
+            if (q.get('hhu')) $('highHipUnit').value = q.get('hhu');
+            if (q.get('h')) $('hip').value = q.get('h');
+            if (q.get('hu')) $('hipUnit').value = q.get('hu');
+            calculate(false);
+        })();
+    </script>
+</body>
+  </html>
