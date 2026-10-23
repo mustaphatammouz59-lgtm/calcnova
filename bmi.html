@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator - CalcNova</title>
+    <meta name="description" content="Free BMI calculator: body mass index and weight category for adults using WHO ranges, and for children and teens ages 2–20 using CDC BMI-for-age percentiles — with BMI Prime and Ponderal Index.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/bmi">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="BMI Calculator - CalcNova">
+    <meta property="og:description" content="Your BMI, weight category, healthy weight range, BMI Prime and Ponderal Index — adults (WHO) and ages 2–20 (CDC percentiles).">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/bmi">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BMI Calculator - CalcNova">
+    <meta name="twitter:description" content="Free BMI calculator for adults and children, with healthy weight range, BMI Prime and Ponderal Index.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "BMI Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/bmi" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is a healthy BMI?",
+                "acceptedAnswer": { "@type": "Answer", "text": "For adults, the World Health Organization counts a BMI from 18.5 to just under 25 as the normal, healthy range. Below 18.5 is underweight and 25 or above is overweight, with 30 or above classed as obese. For children and teens there is no single healthy number — a BMI from the 5th to just under the 85th percentile for their age and sex is the healthy range." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why does the calculator ask for age and gender?",
+                "acceptedAnswer": { "@type": "Answer", "text": "For adults over 20, age and gender do not change the BMI value or its category. For ages 2 to 20 they matter a great deal: a child's BMI is read against CDC growth charts for their exact age and sex and reported as a percentile, because healthy body fat changes as children grow and differs between boys and girls." }
+            },
+            {
+                "@type": "Question",
+                "name": "Is BMI accurate for athletes and muscular people?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Often not. BMI compares weight with height and cannot tell muscle from fat, so a muscular athlete can land in the overweight range with low body fat, while an inactive person can read as normal while carrying excess fat. Treat BMI as a screening number and pair it with a body fat estimate and waist measurement for a fuller picture." }
+            },
+            {
+                "@type": "Question",
+                "name": "What are BMI Prime and the Ponderal Index?",
+                "acceptedAnswer": { "@type": "Answer", "text": "BMI Prime is your BMI divided by 25, the top of the healthy range — 1.0 means you sit exactly at that limit. The Ponderal Index is a cousin of BMI that cubes height instead of squaring it, which makes it behave better for very tall or very short people." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        input[type=number]::-webkit-inner-spin-button { opacity: 1; }
+        .unit-btn { transition: all .15s; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">BMI Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">BMI Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Work out your Body Mass Index and what it means. Adults are read against the World Health Organization's
+            BMI ranges; children and teens ages 2–20 are read against the CDC's BMI-for-age growth charts and reported
+            as a percentile for their age and sex. You also get your healthy weight range for your height, your
+            <strong>BMI Prime</strong>, and your <strong>Ponderal Index</strong> — all computed in your browser.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="flex gap-2 mb-5 no-print">
+                    <button type="button" id="btnUS" onclick="setUnit('us')" class="unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600">US Units</button>
+                    <button type="button" id="btnMetric" onclick="setUnit('metric')" class="unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white">Metric Units</button>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="age">Age <span class="font-normal text-gray-400">(ages: 2 – 120)</span></label>
+                        <input type="number" id="age" value="25" min="2" max="120" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Gender</label>
+                        <div class="flex gap-6 items-center h-[42px]">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="sex" value="m" checked class="accent-[#3F51B5]"> Male</label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="sex" value="f" class="accent-[#3F51B5]"> Female</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="usFields" class="hidden">
+                    <div class="grid sm:grid-cols-3 gap-4 mt-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="feet">Height — feet</label>
+                            <input type="number" id="feet" value="5" min="0" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="inches">Height — inches</label>
+                            <input type="number" id="inches" value="10" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="pounds">Weight — pounds</label>
+                            <input type="number" id="pounds" value="160" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="metricFields">
+                    <div class="grid sm:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="cm">Height — cm</label>
+                            <input type="number" id="cm" value="180" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="kg">Weight — kg</label>
+                            <input type="number" id="kg" value="65" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-[#F8FAFC]">
+                        <p class="text-xl sm:text-2xl font-bold text-gray-900" id="resHeadline"></p>
+                        <div id="resGauge" class="my-4 flex justify-center"></div>
+                        <ul id="resList" class="list-disc pl-5 space-y-1.5 text-gray-700"></ul>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">Reading your result</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        <strong>Adults:</strong> 18.5–25 is the healthy range. <strong>Ages 2–20:</strong> the 5th–85th
+                        BMI-for-age percentile is the healthy range. Either way, BMI is a screening number, not a
+                        diagnosis — the guide below explains where it misleads.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">What BMI measures — and what it misses</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Body Mass Index is a single number that relates your weight to your height: weight in kilograms divided
+                by height in meters squared. It was designed as a population statistic — a cheap way to sort large
+                groups into weight categories — and it survives because it is simple, free, and roughly right for most
+                people. A BMI far outside the healthy range is a reliable signal that weight is worth a closer look;
+                a BMI inside the range is reassurance, not proof, that body composition is healthy.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                What BMI cannot see is what the weight is made of. Muscle is denser than fat, bone mass varies, and
+                fat stored around the waist carries more risk than the same fat stored on the hips. That is why this
+                page pairs your BMI with a healthy weight range for your height rather than a single "ideal" weight,
+                and why the <a href="body-fat.html" class="text-[#3F51B5] font-semibold hover:underline">body fat calculator</a>
+                is the natural next step when your BMI and your mirror disagree.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">BMI table for adults</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                The World Health Organization's classification, used for men and women age 20 and over. This calculator
+                switches to the adult table at age 21, when the CDC growth charts end.
+            </p>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                    <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-4 py-2.5">Classification</th><th class="px-4 py-2.5">BMI range — kg/m²</th></tr></thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr><td class="px-4 py-2">Severe Thinness</td><td class="px-4 py-2">&lt; 16</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2">Moderate Thinness</td><td class="px-4 py-2">16 – 17</td></tr>
+                        <tr><td class="px-4 py-2">Mild Thinness</td><td class="px-4 py-2">17 – 18.5</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2 font-semibold">Normal</td><td class="px-4 py-2">18.5 – 25</td></tr>
+                        <tr><td class="px-4 py-2">Overweight</td><td class="px-4 py-2">25 – 30</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2">Obese Class I</td><td class="px-4 py-2">30 – 35</td></tr>
+                        <tr><td class="px-4 py-2">Obese Class II</td><td class="px-4 py-2">35 – 40</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2">Obese Class III</td><td class="px-4 py-2">&gt; 40</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">BMI for children and teens, ages 2–20</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Children are not small adults: healthy body fat changes with age and differs between boys and girls,
+                so a child's BMI is converted into a <strong>BMI-for-age percentile</strong> using the CDC growth
+                charts — the same child's BMI can be perfectly healthy at one age and a concern at another. The
+                calculator also reports weight-for-age and height-for-age percentiles, the healthy BMI range for the
+                child's age (the 5th to 85th percentile), and how much weight would bring them into it.
+            </p>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                    <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-4 py-2.5">Category</th><th class="px-4 py-2.5">Percentile range</th></tr></thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr><td class="px-4 py-2">Underweight</td><td class="px-4 py-2">&lt; 5%</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2 font-semibold">Healthy weight</td><td class="px-4 py-2">5% – 85%</td></tr>
+                        <tr><td class="px-4 py-2">At risk of overweight</td><td class="px-4 py-2">85% – 95%</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2">Overweight</td><td class="px-4 py-2">&gt; 95%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-gray-700 leading-7 mb-4">
+                For BMIs above the 95th percentile, percentiles come from the CDC's 2022 extended BMI-for-age method,
+                which models the upper tail instead of stretching the standard chart — that is how readings like the
+                99.9th percentile are produced.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Risks associated with being overweight</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Carrying excess weight raises the risk of a long list of serious conditions. According to the CDC,
+                these include:
+            </p>
+            <ul class="list-disc pl-6 space-y-1.5 text-gray-700 mb-4">
+                <li>High blood pressure</li>
+                <li>Unhealthy cholesterol — higher LDL and triglycerides, lower HDL</li>
+                <li>Type II diabetes</li>
+                <li>Coronary heart disease and stroke</li>
+                <li>Gallbladder disease</li>
+                <li>Osteoarthritis, as cartilage in weight-bearing joints breaks down</li>
+                <li>Sleep apnea and other breathing problems</li>
+                <li>Certain cancers, including endometrial, breast, colon, kidney, gallbladder and liver</li>
+                <li>Depression, anxiety and reduced quality of life</li>
+                <li>Body pain, difficulty with physical functions, and higher overall mortality</li>
+            </ul>
+            <p class="text-gray-700 leading-7 mb-4">
+                None of this is destiny — risk climbs with the degree and duration of excess weight, and it falls as
+                weight comes back toward the healthy range. Aiming first for the top of your healthy range (a BMI of
+                25) is a concrete, achievable target: the result above tells you exactly how much weight that means.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Risks associated with being underweight</h2>
+            <ul class="list-disc pl-6 space-y-1.5 text-gray-700 mb-4">
+                <li>Malnutrition, vitamin deficiencies and anemia</li>
+                <li>Osteoporosis — weaker bones and a higher fracture risk</li>
+                <li>A weakened immune system</li>
+                <li>Growth and development problems in children and teenagers</li>
+                <li>Reproductive problems in women, from hormonal disruption of the menstrual cycle to a higher risk of miscarriage in the first trimester</li>
+                <li>Complications during and after surgery</li>
+                <li>Higher overall mortality compared with the healthy BMI range</li>
+            </ul>
+            <p class="text-gray-700 leading-7 mb-4">
+                Being underweight is sometimes a symptom rather than a condition — of an illness, a thyroid problem,
+                or an eating disorder such as anorexia nervosa. If your BMI is low and you cannot explain why, that is
+                worth a doctor's visit, not just a bigger appetite.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Limitations of BMI</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                BMI estimates excess weight, not excess fat, and it knows nothing about how either is distributed.
+                Three patterns from the CDC are worth remembering: at the same BMI, older adults generally carry more
+                body fat than younger adults; women generally carry more than men; and muscular athletes can score as
+                overweight while being lean. In children, height and the timing of puberty also move the number, and
+                in very thin children a low BMI may reflect low fat-free mass rather than low fat. Used as one signal
+                among several — waist size, body fat percentage, blood pressure, blood work — BMI earns its keep. Used
+                alone, it can mislead in both directions.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">The BMI formula</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                In metric units, BMI = mass (kg) ÷ height² (m). In US units, BMI = 703 × mass (lb) ÷ height² (in) —
+                the 703 converts pounds and inches into the metric result. Worked example, a 5′10″, 160-pound adult:
+                metric first — 160 lb = 72.57 kg and 70 in = 1.778 m, so BMI = 72.57 ÷ 1.778² = <strong>23.0</strong>;
+                directly in US units, 703 × 160 ÷ 70² = <strong>23.0</strong>. Same person, same answer.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">BMI Prime</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                BMI Prime is simply your BMI divided by 25, the upper limit of the healthy range. It expresses your
+                BMI as a fraction of that limit, which makes comparisons immediate: a Prime of 0.8 means you are at
+                80% of the limit; 1.2 means 20% over it. The classification table mirrors the adult BMI table, scaled
+                by the same division.
+            </p>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                    <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-4 py-2.5">Classification</th><th class="px-4 py-2.5">BMI</th><th class="px-4 py-2.5">BMI Prime</th></tr></thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr><td class="px-4 py-2">Severe Thinness</td><td class="px-4 py-2">&lt; 16</td><td class="px-4 py-2">&lt; 0.64</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2">Moderate Thinness</td><td class="px-4 py-2">16 – 17</td><td class="px-4 py-2">0.64 – 0.68</td></tr>
+                        <tr><td class="px-4 py-2">Mild Thinness</td><td class="px-4 py-2">17 – 18.5</td><td class="px-4 py-2">0.68 – 0.74</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2 font-semibold">Normal</td><td class="px-4 py-2">18.5 – 25</td><td class="px-4 py-2">0.74 – 1</td></tr>
+                        <tr><td class="px-4 py-2">Overweight</td><td class="px-4 py-2">25 – 30</td><td class="px-4 py-2">1 – 1.2</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2">Obese Class I</td><td class="px-4 py-2">30 – 35</td><td class="px-4 py-2">1.2 – 1.4</td></tr>
+                        <tr><td class="px-4 py-2">Obese Class II</td><td class="px-4 py-2">35 – 40</td><td class="px-4 py-2">1.4 – 1.6</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2">Obese Class III</td><td class="px-4 py-2">&gt; 40</td><td class="px-4 py-2">&gt; 1.6</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">Ponderal Index</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                The Ponderal Index (also called Rohrer's index) is BMI's older cousin: mass (kg) ÷ height³ (m).
+                Cubing height matches how mass actually scales with size, so the index treats very tall and very
+                short people more fairly — populations where BMI is known to over- or under-state fatness. For the
+                worked example above it gives 72.57 ÷ 1.778³ = <strong>12.9 kg/m³</strong>. Everyday healthy values
+                for adults usually fall around 11–14.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">FAQ</h2>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">What is a healthy BMI?</h4>
+                    <p class="text-gray-700 leading-7">For adults, 18.5 to just under 25 (WHO). For ages 2–20, the healthy zone is the 5th to just under the 85th BMI-for-age percentile, because the right value changes as children grow.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Why does the calculator ask for age and gender?</h4>
+                    <p class="text-gray-700 leading-7">They do not change an adult's result at all. For children and teens they decide which CDC growth-chart curve your BMI is compared against — the same BMI can be the 90th percentile at one age and the 50th at another.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Is BMI accurate for athletes and muscular people?</h4>
+                    <p class="text-gray-700 leading-7">Often not — BMI cannot separate muscle from fat. If you train seriously, read your BMI alongside the <a href="body-fat.html" class="text-[#3F51B5] font-semibold hover:underline">body fat calculator</a> before drawing conclusions.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What are BMI Prime and the Ponderal Index?</h4>
+                    <p class="text-gray-700 leading-7">BMI Prime is your BMI as a fraction of the healthy limit (BMI ÷ 25). The Ponderal Index cubes height instead of squaring it, which behaves better at height extremes. Both are shown with every result above.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="calorie.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Calorie Calculator</span><span class="block text-sm text-gray-500 mt-1">Daily calories for your goal</span></a>
+                <a href="body-fat.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Body Fat Calculator</span><span class="block text-sm text-gray-500 mt-1">What BMI can't see — fat vs muscle</span></a>
+                <a href="bmr.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">BMR Calculator</span><span class="block text-sm text-gray-500 mt-1">Calories you burn at rest</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // CDC growth-chart percentile tables (2000 charts + 2022 extended BMI sigma),
+        // sampled every 6 months from 24 to 240 months of age. Columns:
+        // bmi: P3,P5,P10,P25,P50,P75,P85,P90,P95,sigma | wt/ht: P3,P5,P10,P25,P50,P75,P90,P95,P97
+        const GROWTH = {
+  bmi: { p: [3,5,10,25,50,75,85,90,95], m: "14.521,14.737,15.09,15.742,16.575,17.557,18.162,18.609,19.338,1.376;14.319,14.53,14.871,15.493,16.273,17.166,17.703,18.093,18.715,1.615;14.136,14.343,14.676,15.277,16.02,16.856,17.351,17.707,18.269,1.85;13.979,14.18,14.505,15.089,15.81,16.62,17.099,17.442,17.983,2.08;13.849,14.043,14.358,14.929,15.641,16.451,16.935,17.285,17.842,2.306;13.744,13.932,14.238,14.799,15.512,16.343,16.852,17.225,17.829,2.527;13.662,13.845,14.144,14.702,15.425,16.293,16.839,17.248,17.927,2.743;13.6,13.781,14.079,14.639,15.381,16.298,16.891,17.345,18.118,2.955;13.557,13.739,14.04,14.612,15.382,16.357,17.003,17.507,18.389,3.163;13.533,13.718,14.027,14.618,15.424,16.464,17.168,17.727,18.726,3.366;13.528,13.72,14.04,14.656,15.505,16.617,17.382,17.997,19.118,3.564;13.544,13.744,14.078,14.724,15.621,16.809,17.638,18.311,19.555,3.758;13.582,13.791,14.141,14.821,15.769,17.038,17.93,18.662,20.027,3.947;13.642,13.861,14.228,14.943,15.946,17.297,18.253,19.042,20.527,4.132;13.724,13.953,14.339,15.091,16.149,17.582,18.602,19.447,21.045,4.312;13.829,14.069,14.473,15.262,16.376,17.89,18.972,19.87,21.575,4.488;13.955,14.206,14.629,15.456,16.625,18.217,19.358,20.306,22.11,4.659;14.103,14.365,14.806,15.67,16.892,18.56,19.756,20.75,22.643,4.825;14.272,14.544,15.003,15.903,17.177,18.916,20.163,21.199,23.17,4.987;14.46,14.743,15.219,16.153,17.476,19.281,20.575,21.649,23.686,5.145;14.666,14.959,15.452,16.419,17.788,19.655,20.989,22.096,24.189,5.298;14.889,15.191,15.7,16.699,18.111,20.033,21.404,22.538,24.674,5.446;15.126,15.438,15.963,16.991,18.444,20.415,21.817,22.973,25.14,5.59;15.377,15.698,16.237,17.294,18.783,20.799,22.226,23.399,25.586,5.729;15.639,15.968,16.522,17.605,19.129,21.182,22.63,23.815,26.012,5.864;15.909,16.246,16.814,17.922,19.478,21.564,23.028,24.22,26.418,5.994;16.185,16.531,17.112,18.244,19.828,21.944,23.419,24.615,26.805,6.119;16.465,16.819,17.413,18.568,20.179,22.319,23.803,25,27.176,6.24;16.747,17.108,17.715,18.892,20.529,22.69,24.18,25.376,27.535,6.357;17.027,17.396,18.015,19.214,20.874,23.056,24.55,25.743,27.883,6.469;17.303,17.679,18.31,19.53,21.214,23.415,24.914,26.105,28.228,6.576;17.572,17.956,18.598,19.839,21.547,23.768,25.272,26.463,28.574,6.679;17.83,18.222,18.876,20.138,21.869,24.113,25.627,26.821,28.929,6.777;18.076,18.475,19.14,20.423,22.18,24.451,25.979,27.182,29.299,6.871;18.306,18.711,19.388,20.691,22.477,24.782,26.331,27.55,29.693,6.96;18.516,18.928,19.615,20.94,22.757,25.106,26.686,27.931,30.12,7.045;18.703,19.121,19.819,21.167,23.02,25.424,27.046,28.328,30.59,7.125", f: "14.147,14.398,14.801,15.528,16.423,17.427,18.018,18.441,19.106,1.571;13.973,14.196,14.556,15.213,16.035,16.978,17.544,17.955,18.61,1.755;13.815,14.016,14.344,14.949,15.722,16.632,17.191,17.604,18.276,1.937;13.672,13.859,14.166,14.737,15.482,16.381,16.949,17.376,18.088,2.119;13.546,13.725,14.02,14.575,15.31,16.22,16.808,17.26,18.028,2.301;13.438,13.614,13.906,14.459,15.203,16.141,16.76,17.243,18.084,2.482;13.349,13.527,13.823,14.388,15.154,16.136,16.796,17.317,18.24,2.662;13.281,13.465,13.77,14.357,15.158,16.198,16.906,17.471,18.486,2.842;13.236,13.428,13.748,14.363,15.211,16.32,17.083,17.695,18.808,3.021;13.215,13.416,13.754,14.405,15.306,16.495,17.317,17.981,19.196,3.2;13.217,13.431,13.788,14.48,15.441,16.715,17.6,18.319,19.639,3.378;13.244,13.47,13.849,14.585,15.61,16.974,17.926,18.7,20.127,3.556;13.294,13.534,13.936,14.718,15.809,17.266,18.286,19.117,20.65,3.733;13.369,13.622,14.048,14.876,16.035,17.587,18.674,19.561,21.201,3.909;13.467,13.734,14.183,15.058,16.284,17.93,19.084,20.027,21.769,4.085;13.587,13.867,14.339,15.26,16.553,18.29,19.511,20.507,22.349,4.261;13.728,14.022,14.516,15.481,16.838,18.664,19.947,20.996,22.934,4.435;13.889,14.195,14.71,15.718,17.136,19.046,20.39,21.488,23.517,4.61;14.069,14.386,14.921,15.968,17.443,19.432,20.833,21.978,24.094,4.783;14.265,14.593,15.146,16.229,17.757,19.82,21.273,22.462,24.659,4.957;14.476,14.814,15.383,16.499,18.075,20.205,21.707,22.936,25.21,5.129;14.7,15.046,15.63,16.775,18.394,20.584,22.131,23.397,25.744,5.302;14.933,15.287,15.883,17.054,18.71,20.954,22.541,23.843,26.257,5.473;15.175,15.535,16.142,17.334,19.022,21.314,22.937,24.27,26.749,5.644;15.422,15.786,16.402,17.612,19.328,21.66,23.316,24.678,27.218,5.815;15.67,16.039,16.661,17.886,19.623,21.991,23.676,25.066,27.664,5.985;15.917,16.289,16.917,18.152,19.907,22.305,24.017,25.432,28.089,6.154;16.16,16.534,17.165,18.408,20.178,22.602,24.338,25.778,28.493,6.323;16.394,16.769,17.402,18.652,20.433,22.88,24.639,26.103,28.878,6.491;16.615,16.991,17.626,18.88,20.67,23.138,24.921,26.409,29.248,6.659;16.82,17.196,17.832,19.089,20.888,23.378,25.184,26.698,29.604,6.826;17.003,17.38,18.017,19.278,21.086,23.598,25.429,26.971,29.952,6.993;17.161,17.538,18.177,19.442,21.262,23.8,25.659,27.233,30.297,7.159;17.287,17.666,18.308,19.58,21.414,23.983,25.876,27.486,30.643,7.324;17.378,17.759,18.405,19.687,21.541,24.151,26.083,27.734,30.999,7.489;17.427,17.812,18.464,19.762,21.643,24.302,26.283,27.983,31.37,7.654;17.43,17.82,18.482,19.8,21.717,24.44,26.479,28.237,31.765,7.817" },
+  wt: { p: [3,5,10,25,50,75,90,95,97], m: "10.382,10.64,11.053,11.786,12.671,13.637,14.583,15.188,15.596;11.071,11.34,11.773,12.547,13.493,14.54,15.58,16.253,16.711;11.76,12.04,12.493,13.313,14.33,15.478,16.643,17.409,17.937;12.479,12.774,13.255,14.134,15.24,16.512,17.83,18.712,19.328;13.228,13.545,14.062,15.016,16.231,17.649,19.143,20.158,20.873;14,14.343,14.905,15.948,17.289,18.871,20.559,21.719,22.544;14.79,15.163,15.775,16.915,18.393,20.152,22.051,23.368,24.311;15.6,16.003,16.665,17.906,19.526,21.474,23.599,25.089,26.163;16.433,16.864,17.576,18.916,20.681,22.826,25.198,26.881,28.105;17.293,17.751,18.51,19.947,21.857,24.21,26.852,28.755,30.155;18.18,18.665,19.47,21.005,23.065,25.638,28.578,30.732,32.338;19.095,19.607,20.462,22.1,24.319,27.13,30.399,32.837,34.68;20.035,20.579,21.489,23.242,25.639,28.711,32.343,35.095,37.201;21,21.582,22.557,24.445,27.044,30.407,34.433,37.523,39.913;21.993,22.621,23.674,25.72,28.551,32.238,36.69,40.135,42.816;23.021,23.704,24.85,27.081,30.177,34.224,39.127,42.932,45.899;24.1,24.846,26.1,28.543,31.936,36.372,41.744,45.903,49.139;25.248,26.066,27.441,30.12,33.839,38.689,44.532,49.029,52.508;26.488,27.386,28.894,31.83,35.895,41.17,47.474,52.281,55.969;27.845,28.828,30.479,33.686,38.107,43.806,50.544,55.623,59.484;29.342,30.413,32.211,35.695,40.471,46.577,53.71,59.019,63.015;30.994,32.155,34.101,37.856,42.975,49.456,56.934,62.431,66.527;32.81,34.058,36.145,40.158,45.591,52.408,60.178,65.823,69.991;34.784,36.112,38.328,42.573,48.285,55.388,63.4,69.162,73.386;36.893,38.29,40.617,45.06,51.005,58.347,66.558,72.419,76.692;39.096,40.548,42.963,47.562,53.692,61.227,69.611,75.568,79.898;41.336,42.826,45.304,50.013,56.281,63.972,72.516,78.582,82.988;43.539,45.052,47.566,52.346,58.709,66.527,75.233,81.431,85.942;45.626,47.149,49.679,54.495,60.921,68.848,77.725,84.081,88.729;47.52,49.044,51.579,56.41,62.88,70.904,79.96,86.494,91.302;49.161,50.685,53.22,58.063,64.57,72.686,81.916,88.63,93.601;50.521,52.047,54.589,59.45,65.999,74.201,83.585,90.452,95.561;51.61,53.146,55.704,60.598,67.198,75.477,84.972,91.938,97.132;52.473,54.027,56.614,61.56,68.221,76.561,86.106,93.095,98.299;53.166,54.746,57.376,62.392,69.123,77.511,87.047,93.986,99.127;53.708,55.323,58.008,63.114,69.935,78.378,87.896,94.762,99.816;54.004,55.661,58.411,63.636,70.598,79.181,88.806,95.714,100.778", f: "9.986,10.21,10.574,11.234,12.055,12.987,13.938,14.566,15.002;10.686,10.929,11.325,12.051,12.969,14.03,15.136,15.881,16.403;11.334,11.599,12.033,12.836,13.865,15.075,16.363,17.245,17.871;12,12.289,12.764,13.651,14.801,16.176,17.666,18.705,19.451;12.713,13.027,13.544,14.517,15.793,17.342,19.05,20.261,21.141;13.474,13.813,14.374,15.434,16.839,18.567,20.504,21.899,22.924;14.275,14.639,15.244,16.393,17.93,19.842,22.018,23.605,24.786;15.101,15.492,16.143,17.387,19.062,21.166,23.589,25.38,26.723;15.941,16.363,17.066,18.412,20.237,22.545,25.231,27.234,28.749;16.792,17.248,18.009,19.472,21.463,23.997,26.965,29.194,30.887;17.656,18.152,18.981,20.577,22.757,25.542,28.819,31.289,33.171;18.542,19.084,19.992,21.743,24.139,27.207,30.824,33.553,35.634;19.466,20.062,21.059,22.987,25.628,29.013,33.005,36.013,38.304;20.445,21.101,22.2,24.327,27.242,30.979,35.378,38.685,41.197;21.497,22.22,23.431,25.776,28.991,33.11,37.946,41.57,44.314;22.639,23.433,24.765,27.343,30.878,35.4,40.697,44.652,47.637;23.883,24.751,26.207,29.026,32.891,37.831,43.603,47.899,51.132;25.235,26.176,27.756,30.816,35.011,40.369,46.618,51.26,54.746;26.693,27.704,29.402,32.693,37.206,42.969,49.687,54.672,58.414;28.247,29.322,31.128,34.629,39.433,45.575,52.741,58.064,62.062;29.879,31.008,32.906,36.587,41.646,48.125,55.709,61.359,65.611;31.563,32.734,34.702,38.526,43.791,50.559,58.519,64.481,68.988;33.265,34.464,36.481,40.403,45.821,52.818,61.108,67.366,72.126;34.947,36.16,38.201,42.177,47.689,54.852,63.421,69.957,74.973;36.57,37.782,39.824,43.811,49.36,56.628,65.422,72.219,77.492;38.093,39.294,41.317,45.276,50.814,58.127,67.095,74.134,79.67;39.481,40.661,42.652,46.556,52.042,59.353,68.449,75.71,81.509;40.705,41.861,43.812,47.645,53.057,60.331,69.513,76.975,83.031;41.748,42.879,44.79,48.551,53.883,61.105,70.344,77.978,84.273;42.605,43.717,45.595,49.296,54.561,61.734,71.01,78.783,85.281;43.287,44.386,46.245,49.912,55.137,62.283,71.59,79.462,86.105;43.814,44.913,46.771,50.437,55.663,62.819,72.159,80.083,86.793;44.218,45.329,47.208,50.912,56.185,63.393,72.772,80.7,87.388;44.531,45.667,47.587,51.367,56.733,64.032,73.453,81.334,87.916;44.777,45.949,47.926,51.811,57.304,64.721,74.177,81.97,88.384;44.961,46.172,48.213,52.213,57.843,65.38,74.861,82.546,88.776;45.047,46.29,48.383,52.479,58.219,65.852,75.352,82.954,89.045" },
+  ht: { p: [3,5,10,25,50,75,90,95,97], m: "79.911,80.73,81.992,84.103,86.452,88.805,90.926,92.197,93.023;84.177,85.008,86.301,88.494,90.981,93.521,95.854,97.271,98.2;88.067,88.894,90.188,92.407,94.96,97.609,100.078,101.597,102.6;91.332,92.234,93.635,96.011,98.701,101.445,103.962,105.49,106.491;94.349,95.329,96.844,99.385,102.224,105.079,107.663,109.216,110.227;97.242,98.295,99.915,102.614,105.604,108.584,111.258,112.854,113.89;100.094,101.21,102.922,105.766,108.902,112.016,114.799,116.456,117.528;102.96,104.125,105.913,108.884,112.159,115.41,118.316,120.046,121.166;105.862,107.064,108.912,111.989,115.392,118.781,121.819,123.631,124.806;108.789,110.019,111.913,115.079,118.601,122.125,125.3,127.201,128.436;111.705,112.956,114.89,118.137,121.769,125.426,128.739,130.731,132.028;114.554,115.828,117.801,121.129,124.871,128.66,132.109,134.192,135.551;117.279,118.582,120.603,124.02,127.878,131.799,135.382,137.552,138.97;119.839,121.178,123.258,126.78,130.763,134.82,138.534,140.785,142.258;122.213,123.598,125.749,129.392,133.511,137.707,141.548,143.876,145.4;124.417,125.854,128.084,131.858,136.122,140.459,144.426,146.829,148.401;126.497,127.988,130.3,134.208,138.619,143.1,147.194,149.672,151.292;128.535,130.075,132.463,136.501,141.055,145.682,149.907,152.463,154.134;130.632,132.215,134.672,138.828,143.521,148.293,152.656,155.297,157.025;132.901,134.523,137.042,141.31,146.138,151.058,155.564,158.296,160.085;135.438,137.104,139.693,144.081,149.05,154.117,158.762,161.581,163.426;138.296,140.025,142.708,147.246,152.368,157.575,162.333,165.214,167.098;141.46,143.278,146.087,150.806,156.087,161.406,166.226,169.124,171.012;144.834,146.756,149.705,154.609,160.021,165.398,170.209,173.075,174.931;148.248,150.26,153.324,158.36,163.838,169.203,173.94,176.736,178.537;151.494,153.553,156.671,161.747,167.208,172.498,177.125,179.837,181.577;154.384,156.437,159.537,164.563,169.94,175.121,179.632,182.268,183.956;156.798,158.805,161.836,166.75,172.009,177.078,181.493,184.072,185.724;158.706,160.647,163.585,168.367,173.506,178.479,182.825,185.371,187.004;160.148,162.022,164.868,169.524,174.558,179.459,183.765,186.297,187.923;161.2,163.016,165.785,170.337,175.29,180.142,184.428,186.958,188.587;161.946,163.719,166.43,170.904,175.801,180.622,184.901,187.435,189.071;162.465,164.209,166.878,171.301,176.16,180.965,185.245,187.787,189.43;162.822,164.546,167.189,171.579,176.417,181.215,185.5,188.05,189.7;163.063,164.776,167.405,171.777,176.604,181.401,185.693,188.251,189.907;163.225,164.932,167.555,171.919,176.744,181.543,185.843,188.406,190.068;163.333,165.039,167.659,172.023,176.849,181.654,185.96,188.529,190.194", f: "78.438,79.26,80.525,82.635,84.976,87.311,89.41,90.664,91.477;82.945,83.82,85.17,87.433,89.959,92.496,94.789,96.166,97.062;86.634,87.535,88.929,91.28,93.924,96.601,99.038,100.51,101.47;89.76,90.693,92.142,94.595,97.366,100.186,102.766,104.329,105.352;92.813,93.782,95.288,97.847,100.751,103.72,106.449,108.108,109.196;95.914,96.916,98.479,101.141,104.175,107.293,110.171,111.927,113.082;99.084,100.12,101.737,104.501,107.664,110.927,113.953,115.805,117.025;102.296,103.366,105.038,107.904,111.193,114.599,117.767,119.711,120.993;105.497,106.602,108.332,111.3,114.714,118.256,121.559,123.588,124.929;108.626,109.769,111.559,114.63,118.166,121.838,125.264,127.372,128.764;111.625,112.808,114.659,117.836,121.491,125.285,128.824,130.999,132.436;114.448,115.672,117.587,120.869,124.641,128.551,132.191,134.427,135.903;117.065,118.332,120.312,123.701,127.589,131.61,135.347,137.639,139.149;119.467,120.779,122.828,126.329,130.336,134.471,138.306,140.652,142.198;121.676,123.037,125.16,128.782,132.92,137.18,141.122,143.531,145.115;123.748,125.165,127.373,131.136,135.425,139.832,143.9,146.381,148.012;125.787,127.273,129.586,133.519,137.99,142.569,146.783,149.348,151.031;127.961,129.534,131.976,136.113,140.792,145.557,149.921,152.566,154.298;130.49,132.162,134.747,139.098,143.978,148.905,153.379,156.074,157.831;133.559,135.315,138.018,142.53,147.536,152.537,157.032,159.72,161.465;137.129,138.915,141.652,146.193,151.19,156.14,160.557,163.184,164.883;140.795,142.541,145.213,149.64,154.504,159.314,163.598,166.142,167.787;143.994,145.661,148.219,152.468,157.154,161.804,165.961,168.435,170.038;146.392,147.988,150.443,154.538,159.075,163.601,167.665,170.093,171.668;148.01,149.561,151.95,155.945,160.389,164.836,168.843,171.243,172.802;149.044,150.573,152.929,156.873,161.267,165.673,169.647,172.03,173.579;149.698,151.218,153.562,157.486,161.858,166.242,170.199,172.571,174.114;150.12,151.639,153.98,157.899,162.263,166.637,170.583,172.949,174.487;150.402,151.922,154.266,158.186,162.549,166.919,170.858,173.218,174.752;150.597,152.121,154.468,158.393,162.757,167.125,171.059,173.415,174.945;150.739,152.266,154.617,158.547,162.913,167.279,171.209,173.561,175.089;150.845,152.375,154.73,158.664,163.032,167.397,171.323,173.672,175.197;150.926,152.459,154.817,158.754,163.124,167.488,171.412,173.758,175.28;150.989,152.524,154.885,158.826,163.197,167.56,171.481,173.824,175.345;151.039,152.576,154.94,158.883,163.255,167.617,171.535,173.876,175.396;151.079,152.617,154.983,158.928,163.301,167.662,171.578,173.918,175.435;151.111,152.651,155.018,158.965,163.338,167.699,171.613,173.951,175.467" },
+};
+
+        let unit = 'metric';
+        const $ = id => document.getElementById(id);
+
+        function setUnit(u) {
+            unit = u;
+            $('usFields').classList.toggle('hidden', u !== 'us');
+            $('metricFields').classList.toggle('hidden', u !== 'metric');
+            const on = 'unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white';
+            const off = 'unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600';
+            $('btnUS').className = u === 'us' ? on : off;
+            $('btnMetric').className = u === 'metric' ? on : off;
+        }
+
+        function erf(x) {
+            const s = x < 0 ? -1 : 1; x = Math.abs(x);
+            const t = 1 / (1 + 0.3275911 * x);
+            const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x);
+            return s * y;
+        }
+        const Phi = z => 0.5 * (1 + erf(z / Math.SQRT2));
+
+        const GM = [24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96, 102, 108, 114, 120, 126, 132, 138, 144, 150, 156, 162, 168, 174, 180, 186, 192, 198, 204, 210, 216, 222, 228, 234, 240];
+        const GT = {};
+        for (const k of ['bmi', 'wt', 'ht']) {
+            GT[k] = { p: GROWTH[k].p, m: GROWTH[k].m.split(';').map(r => r.split(',').map(Number)), f: GROWTH[k].f.split(';').map(r => r.split(',').map(Number)) };
+        }
+        function growRow(kind, sex, months) {
+            const rows = GT[kind][sex];
+            if (months <= GM[0]) return rows[0];
+            if (months >= GM[GM.length - 1]) return rows[rows.length - 1];
+            for (let i = 0; i < GM.length - 1; i++) {
+                if (months >= GM[i] && months <= GM[i + 1]) {
+                    const t = (months - GM[i]) / (GM[i + 1] - GM[i]);
+                    return rows[i].map((v, j) => v + t * (rows[i + 1][j] - v));
+                }
+            }
+            return rows[rows.length - 1];
+        }
+        function pctTab(kind, sex, months, x) {
+            const row = growRow(kind, sex, months), pv = GT[kind].p;
+            const pts = pv.map((p, j) => [row[j], p]);
+            let a, b;
+            if (x <= pts[0][0]) { a = pts[0]; b = pts[1]; }
+            else if (x >= pts[pts.length - 1][0]) { a = pts[pts.length - 2]; b = pts[pts.length - 1]; }
+            else {
+                for (let i = 0; i < pts.length - 1; i++) if (x >= pts[i][0] && x <= pts[i + 1][0]) { a = pts[i]; b = pts[i + 1]; break; }
+            }
+            return a[1] + (x - a[0]) / (b[0] - a[0]) * (b[1] - a[1]);
+        }
+        function bmiPercentile(sex, ageYears, bmi) {
+            const months = 12 * ageYears;
+            const row = growRow('bmi', sex, months);
+            const p95 = row[8], sigma = row[9];
+            if (bmi > p95) return 90 + 10 * Phi((bmi - p95) / sigma);
+            return pctTab('bmi', sex, months, bmi);
+        }
+        function fmtPct(p) {
+            if (p < 99) return String(Math.round(p));
+            if (p < 99.9) { const v = Math.round(p * 10) / 10; return v % 1 === 0 ? String(v) : v.toFixed(1); }
+            const v = Math.round(p * 100) / 100;
+            return v.toFixed(2).replace(/0$/, '').replace(/\.$/, '');
+        }
+        const r1 = x => Math.round(x * 10) / 10;
+        const fmt1 = x => { const v = r1(x); return v % 1 === 0 ? String(Math.round(v)) : v.toFixed(1); };
+        const fmt2 = x => { const v = Math.round(x * 100) / 100; return v % 1 === 0 ? String(Math.round(v)) : String(v); };
+
+        const ADULT_CATS = [
+            [16, 'Severe thinness', '#8a0101'], [17, 'Moderate thinness', '#bc2020'], [18.5, 'Mild thinness', '#d97706'],
+            [25, 'Normal', '#008137'], [30, 'Overweight', '#d97706'], [35, 'Obese Class I', '#d38888'],
+            [40, 'Obese Class II', '#bc2020'], [Infinity, 'Obese Class III', '#8a0101']
+        ];
+        function adultCat(bmi) { for (const [lim, name, color] of ADULT_CATS) if (bmi < lim) return [name, color]; }
+        function childCat(p) {
+            if (p < 5) return ['Underweight', '#bc2020'];
+            if (p < 85) return ['Healthy weight', '#008137'];
+            if (p < 95) return ['At risk of overweight', '#d97706'];
+            return ['Overweight', '#bc2020'];
+        }
+
+        function polar(cx, cy, r, bmi) {
+            const t = Math.PI * (1 - (Math.min(42, Math.max(14, bmi)) - 14) / 28);
+            return [cx + r * Math.cos(t), cy - r * Math.sin(t)];
+        }
+        function arcPath(cx, cy, r, b1, b2) {
+            const [x1, y1] = polar(cx, cy, r, b1), [x2, y2] = polar(cx, cy, r, b2);
+            return `M ${x1.toFixed(1)} ${y1.toFixed(1)} A ${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+        }
+        function adultGauge(bmi) {
+            const cx = 160, cy = 150, r = 118;
+            const segs = [[14, 16, '#bc2020'], [16, 17, '#d38888'], [17, 18.5, '#ffe400'], [18.5, 25, '#008137'], [25, 30, '#ffe400'], [30, 35, '#d38888'], [35, 40, '#bc2020'], [40, 42, '#8a0101']];
+            let s = `<svg viewBox="0 0 320 185" class="w-full max-w-[340px]" role="img" aria-label="BMI gauge">`;
+            for (const [a, b, c] of segs) s += `<path d="${arcPath(cx, cy, r, a, b)}" stroke="${c}" stroke-width="17" fill="none"/>`;
+            for (const t of [16, 17, 18.5, 25, 30, 35, 40]) {
+                const [x, y] = polar(cx, cy, r - 22, t);
+                s += `<text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle" font-size="11" fill="#6b7280">${t}</text>`;
+            }
+            const [nx, ny] = polar(cx, cy, r - 4, bmi);
+            s += `<line x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="#374151" stroke-width="3" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="6" fill="#374151"/>`;
+            s += `<text x="${cx}" y="${cy + 26}" text-anchor="middle" font-size="17" font-weight="700" fill="#111827">BMI = ${fmt1(bmi)}</text></svg>`;
+            return s;
+        }
+        function childGauge(p) {
+            const pos = Math.min(100, Math.max(0, p));
+            return `<div class="w-full max-w-[420px] px-1">
+                <div class="relative h-6 rounded-full overflow-hidden flex">
+                    <div style="width:5%;background:#bc2020"></div><div style="width:80%;background:#008137"></div><div style="width:10%;background:#ffe400"></div><div style="width:5%;background:#bc2020"></div>
+                    <div class="absolute top-0 bottom-0" style="left:calc(${pos}% - 1.5px);width:3px;background:#111827"></div>
+                </div>
+                <div class="relative h-5 text-[11px] text-gray-500">
+                    <span class="absolute" style="left:5%;transform:translateX(-50%)">5%</span>
+                    <span class="absolute" style="left:85%;transform:translateX(-50%)">85%</span>
+                    <span class="absolute" style="left:95%;transform:translateX(-50%)">95%</span>
+                </div>
+                <p class="text-center font-bold text-gray-900">BMI Percentile: ${fmtPct(p)}%</p>
+            </div>`;
+        }
+
+        function showError(msg) {
+            const e = $('formError');
+            e.textContent = msg;
+            e.classList.remove('hidden');
+            $('resultBox').style.display = 'none';
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const age = parseFloat($('age').value);
+            const sex = document.querySelector('input[name="sex"]:checked').value;
+            let hCm, wKg, hIn, wDisp, unitName;
+            if (unit === 'metric') {
+                hCm = parseFloat($('cm').value); wKg = parseFloat($('kg').value);
+                hIn = hCm / 2.54; wDisp = wKg; unitName = 'kg';
+            } else {
+                const ft = parseFloat($('feet').value) || 0, inch = parseFloat($('inches').value) || 0;
+                hIn = ft * 12 + inch; wDisp = parseFloat($('pounds').value);
+                hCm = hIn * 2.54; wKg = wDisp / 2.20462; unitName = 'lbs';
+            }
+            if (isNaN(age) || isNaN(hCm) || isNaN(wKg) || hCm <= 0 || wKg <= 0) {
+                showError('Please enter a valid age, height and weight so we can compute your BMI.');
+                return;
+            }
+            const ageC = Math.min(120, Math.max(2, Math.round(age)));
+            const hM = hCm / 100, h2 = hM * hM;
+            const bmi = wKg / h2;
+            const pi = wKg / (hM * hM * hM);
+            const toDisp = kg => unit === 'metric' ? kg : kg * 2.20462;
+
+            let headline, gauge, items = [];
+            if (ageC > 20) {
+                const [cat, color] = adultCat(bmi);
+                const loB = 18.5, hiB = 25;
+                const loW = r1(loB) * h2, hiW = r1(hiB) * h2;
+                headline = `BMI = ${fmt1(bmi)} kg/m<sup>2</sup> &nbsp;(<span style="color:${color}">${cat}</span>)`;
+                gauge = adultGauge(bmi);
+                items.push(`Healthy BMI range: ${fmt1(loB)} kg/m<sup>2</sup> - ${fmt1(hiB)} kg/m<sup>2</sup>`);
+                items.push(`Healthy weight for the height: ${fmt1(toDisp(loW))} ${unitName} - ${fmt1(toDisp(hiW))} ${unitName}`);
+                if (bmi >= hiB) items.push(`Lose ${(toDisp(wKg) - toDisp(hiW)).toFixed(1)} ${unitName} to reach a BMI of ${fmt1(hiB)} kg/m<sup>2</sup>.`);
+                else if (bmi < loB) items.push(`Gain ${(toDisp(loW) - toDisp(wKg)).toFixed(1)} ${unitName} to reach a BMI of ${fmt1(loB)} kg/m<sup>2</sup>.`);
+                items.push(`BMI Prime: ${fmt2(bmi / 25)}`);
+                items.push(`Ponderal Index: ${fmt1(pi)} kg/m<sup>3</sup>`);
+            } else {
+                const pB = bmiPercentile(sex, ageC, bmi);
+                const pW = pctTab('wt', sex, 12 * ageC, wKg);
+                const pH = pctTab('ht', sex, 12 * ageC, hCm);
+                const [cat, color] = childCat(pB);
+                const row = growRow('bmi', sex, 12 * ageC);
+                const loB = r1(row[1]), hiB = r1(row[6]);
+                const loW = loB * h2, hiW = hiB * h2;
+                headline = `BMI = ${fmt1(bmi)} kg/m<sup>2</sup> &nbsp;(<span style="color:${color}">${fmtPct(pB)}%, ${cat}</span>)`;
+                gauge = childGauge(pB);
+                items.push(`Weight-for-age percentile: ${Math.round(pW)}%`);
+                items.push(`Height-for-age percentile: ${Math.round(pH)}%`);
+                items.push(`Healthy BMI range: ${fmt1(loB)} kg/m<sup>2</sup> - ${fmt1(hiB)} kg/m<sup>2</sup>`);
+                items.push(`Healthy weight for the height: ${fmt1(toDisp(loW))} ${unitName} - ${fmt1(toDisp(hiW))} ${unitName}`);
+                if (bmi > hiB) items.push(`Lose ${(toDisp(wKg) - toDisp(hiW)).toFixed(1)} ${unitName} to reach a BMI of ${fmt1(hiB)} kg/m<sup>2</sup>.`);
+                else if (bmi < loB) items.push(`Gain ${(toDisp(loW) - toDisp(wKg)).toFixed(1)} ${unitName} to reach a BMI of ${fmt1(loB)} kg/m<sup>2</sup>.`);
+                items.push(`Ponderal Index: ${fmt1(pi)} kg/m<sup>3</sup>`);
+            }
+            $('resHeadline').innerHTML = headline;
+            $('resGauge').innerHTML = gauge;
+            $('resList').innerHTML = items.map(t => `<li>${t}</li>`).join('');
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+
+            if (push) {
+                const q = new URLSearchParams({ a: ageC, s: sex, u: unit });
+                if (unit === 'metric') { q.set('cm', $('cm').value); q.set('kg', $('kg').value); }
+                else { q.set('ft', $('feet').value); q.set('in', $('inches').value); q.set('lb', $('pounds').value); }
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+
+        function clearForm() {
+            $('age').value = 25;
+            document.querySelector('input[name="sex"][value="m"]').checked = true;
+            $('feet').value = 5; $('inches').value = 10; $('pounds').value = 160;
+            $('cm').value = 180; $('kg').value = 65;
+            setUnit('metric');
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            if (q.get('u') === 'us' || q.get('u') === 'metric') setUnit(q.get('u'));
+            if (q.get('a')) $('age').value = q.get('a');
+            if (q.get('s') === 'f') document.querySelector('input[name="sex"][value="f"]').checked = true;
+            if (q.get('cm')) $('cm').value = q.get('cm');
+            if (q.get('kg')) $('kg').value = q.get('kg');
+            if (q.get('ft')) $('feet').value = q.get('ft');
+            if (q.get('in')) $('inches').value = q.get('in');
+            if (q.get('lb')) $('pounds').value = q.get('lb');
+            calculate(false);
+        })();
+    </script>
+</body>
+                      </html>
