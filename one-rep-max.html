@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Rep Max Calculator - CalcNova</title>
+    <meta name="description" content="Free one rep max (1RM) calculator: estimate your max single-rep lift from a weight and reps using the Epley, Brzycki, or Lombardi formula, with a full percentage table.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/one-rep-max">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="One Rep Max Calculator - CalcNova">
+    <meta property="og:description" content="Your estimated 1RM and every training percentage of it, from Epley, Brzycki, or Lombardi.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/one-rep-max">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="One Rep Max Calculator - CalcNova">
+    <meta name="twitter:description" content="Estimate your one rep max without risking a true max attempt.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "One Rep Max Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/one-rep-max" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Which 1RM formula is most accurate?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Epley and Brzycki are the two most widely used and agree exactly at 10 reps; elsewhere they differ slightly. All such formulas are usually within about 10% of a true tested max, and all get more accurate the fewer reps your test set took — a hard set of 3 is a better basis than a set of 10." }
+            },
+            {
+                "@type": "Question",
+                "name": "Should beginners test a true one rep max?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. Direct max testing carries the highest injury risk and beginners gain more from learning form. Estimation from a submaximal set gives beginners the same programming benefits — training percentages and a progress marker — at a fraction of the risk." }
+            },
+            {
+                "@type": "Question",
+                "name": "Is my one rep max the same for every exercise?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. 1RM is specific to the exercise: your bench press max says nothing direct about your squat or overhead press. Estimate and track each lift separately." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">One Rep Max Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">One Rep Max Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Your <strong>one rep max (1RM)</strong> is the most weight you can lift once, with proper form, in a given
+            exercise. This calculator estimates it from a weight you can already lift — for the best estimate, use a
+            weight you can lift between 1 and 10 times. The
+            <a href="#emethods" class="text-[#3F51B5] hover:underline">estimation methods</a> section below explains
+            the formulas.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="lift">Weight lifted</label>
+                        <div class="flex gap-2">
+                            <input type="number" id="lift" value="100" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                            <select id="liftUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5] bg-white">
+                                <option value="kg" selected>kilograms</option>
+                                <option value="lb">pounds</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="reps">Repeated — times (1–10)</label>
+                        <input type="number" id="reps" value="5" min="1" max="10" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+
+                <button type="button" id="settingsBtn" onclick="toggleSettings()" class="mt-5 text-[#3F51B5] font-bold text-sm hover:underline no-print">+ Settings</button>
+                <div id="settingsBox" class="hidden mt-3 bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm font-semibold mb-1.5">Desired unit</p>
+                            <div class="flex gap-5">
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="outunit" value="kg" checked class="accent-[#3F51B5]"> Kilogram</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="outunit" value="lb" class="accent-[#3F51B5]"> Pound</label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold mb-1.5">1RM estimation formula</p>
+                            <div class="flex flex-col gap-1.5">
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="formula" value="e" checked class="accent-[#3F51B5]"> Epley</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="formula" value="b" class="accent-[#3F51B5]"> Brzycki</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="formula" value="l" class="accent-[#3F51B5]"> Lombardi</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                        <div id="resTable" class="overflow-x-auto"></div>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">Estimate, don't test</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        A true max attempt is the riskiest lift in training. A hard set of 3–5 reps plugged into a
+                        formula gives you a working 1RM — and every training percentage below it — without one.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">What a one rep max is, and why it matters</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                A one-repetition maximum is the peak force your muscles can produce in one all-out effort on a
+                specific exercise — the standard measure of maximal strength, and the number competitions are built
+                on. It is lift-specific: bench press, squat, deadlift, and overhead press each have their own 1RM,
+                and none of them substitutes for another. Knowing yours turns training from guesswork into
+                programming: intensity can be prescribed as a percentage of a known max, progress becomes a number
+                you can watch move, and a stall becomes visible early enough to fix the program rather than wonder.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Measuring it directly</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Direct measurement means working up in weight, fully rested between attempts, until only one clean
+                repetition is possible. Done properly it looks like this: warm up the muscles involved; recruit a
+                spotter; start from a weight you can lift about 5–10 times; rest 2–5 minutes between attempts;
+                increase in steps sized by how the last attempt felt; and stop at the last weight completed with
+                good form — a rep finished with broken form doesn't count and is how injuries happen. Record the
+                number. Direct testing is straightforward and the most accurate method, but it is also the most
+                dangerous and the most time-consuming, and beginners shouldn't do it at all: early training is for
+                learning form, and estimation (below) gives them the same planning benefits safely.
+            </p>
+
+            <h2 id="emethods" class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Estimation methods</h2>
+            <p class="text-gray-700 leading-7 mb-3">Three classical formulas, all selectable in the Settings above:</p>
+            <div class="grid md:grid-cols-3 gap-4 mb-4">
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4 text-center">
+                    <h3 class="font-bold text-gray-800 mb-2">Epley</h3>
+                    <p class="text-gray-700">1RM = W × (1 + reps / 30)</p>
+                </div>
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4 text-center">
+                    <h3 class="font-bold text-gray-800 mb-2">Brzycki</h3>
+                    <p class="text-gray-700">1RM = W × 36 / (37 − reps)</p>
+                </div>
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4 text-center">
+                    <h3 class="font-bold text-gray-800 mb-2">Lombardi</h3>
+                    <p class="text-gray-700">1RM = W × reps<sup>0.10</sup></p>
+                </div>
+            </div>
+            <p class="text-gray-700 leading-7 mb-4">
+                To feed them, pick a weight you can lift for 3–10 reps and lift it to failure — the point where
+                another clean rep is impossible; count only completed reps with proper form. The fewer reps the set
+                took, the better the estimate: formulas are typically within about 10% of a true max, and Epley and
+                Brzycki — the two most popular — agree exactly at 10 reps and differ slightly elsewhere. Estimation
+                is quicker, safer, and open to beginners and people with limitations; its weakness is that the
+                underlying data skews toward experienced lifters, and fast-improving beginners can outgrow an
+                estimate almost as soon as they make it.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Training with your 1RM</h2>
+            <p class="text-gray-700 leading-7 mb-3">Percentages of 1RM target different adaptations (general guidelines — sources vary):</p>
+            <ul class="list-disc pl-6 text-gray-700 leading-7 mb-4">
+                <li><strong>50–60% for 3–5 reps (4–6 sets)</strong> — explosive power; keep rests short.</li>
+                <li><strong>~70% for 10–15 reps (4–6 sets)</strong> — muscular endurance.</li>
+                <li><strong>70–80% for 7–12 reps (3–5 sets)</strong> — muscle growth.</li>
+                <li><strong>80–100% for 1–3 reps (3–4 sets)</strong> — strength and power; use a spotter.</li>
+            </ul>
+            <p class="text-gray-700 leading-7 mb-4">
+                Note the table's Repetitions column tells you roughly how many reps a percentage usually allows —
+                that is not itself a prescription. What you do at a percentage depends on the goal above.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Improving your 1RM</h2>
+            <ul class="list-disc pl-6 text-gray-700 leading-7 mb-4">
+                <li><strong>Prioritize safety.</strong> Strength comes from consistent training, and injuries are the main interruption. Guard your form — especially near your limits — and train heavy with a spotter.</li>
+                <li><strong>Train consistently, at the right loads.</strong> Progress comes from working mostly at 85–100% of 1RM — but a 70% day still beats a skipped day, and real rest days are part of the program, not a failure of it.</li>
+                <li><strong>Rest.</strong> Muscles grow between sessions. Constant limit-pushing — overtraining — fatigues them, blunts training quality, and invites the injury that sets you back months.</li>
+                <li><strong>Vary the work when you stall.</strong> Supersets (different exercises back to back), compound sets (same muscles back to back), and pyramid sets (weight up, reps down) stress muscles in new ways; so does strengthening the supporting muscles around the main lift, which both protects you and often unlocks the plateau.</li>
+            </ul>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Disclaimer:</strong> consult a qualified fitness professional or healthcare provider before
+                maximal strength testing or starting a new exercise program. Safety comes first when training for
+                maximal strength.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">FAQ</h2>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Why does the table stop at 50%?</h4>
+                    <p class="text-gray-700 leading-7">Below half of your max, rep counts climb into territory where the formulas' assumptions stop being useful for strength programming — endurance work is prescribed by time and effort, not by 1RM percentages.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">My set took 10 reps. Should I retest heavier?</h4>
+                    <p class="text-gray-700 leading-7">If you can, yes: rest fully, add weight, and aim to fail in the 3–5 rep range. Estimates tighten considerably as the test set gets shorter.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="lean-body-mass.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Lean Body Mass Calculator</span><span class="block text-sm text-gray-500 mt-1">The tissue doing the lifting</span></a>
+                <a href="calories-burned.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Calories Burned Calculator</span><span class="block text-sm text-gray-500 mt-1">What the session cost you</span></a>
+                <a href="bmr.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">BMR Calculator</span><span class="block text-sm text-gray-500 mt-1">Fuel for recovery and growth</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const radio = name => document.querySelector(`input[name="${name}"]:checked`).value;
+        const PCTS = [100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50];
+        // Repetitions possible at each percentage of 1RM, per formula (fixed tables, verified against the standard references)
+        const REPS_TABLE = {
+            e: [1, 1, 3, 5, 7, 10, 12, 16, 20, 24, 30],
+            b: [1, 2, 4, 6, 8, 10, 11, 13, 15, 17, 19],
+            l: [1, 1, 2, 5, 9, 17, 35, 74, 165, 394, 1023]
+        };
+
+        function toggleSettings() {
+            const box = $('settingsBox');
+            const open = box.classList.toggle('hidden');
+            $('settingsBtn').textContent = open ? '+ Settings' : '− Settings';
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const wIn = parseFloat($('lift').value);
+            const reps = parseFloat($('reps').value);
+            if (isNaN(wIn) || wIn <= 0 || isNaN(reps) || reps < 1 || reps > 10 || Math.floor(reps) !== reps) {
+                const e = $('formError');
+                e.textContent = 'Please enter a valid weight and a whole number of repetitions between 1 and 10.';
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+                return;
+            }
+            const formula = radio('formula');
+            let rm;
+            if (reps === 1) rm = wIn;
+            else if (formula === 'e') rm = wIn * (1 + reps / 30);
+            else if (formula === 'b') rm = wIn * 36 / (37 - reps);
+            else rm = wIn * Math.pow(reps, 0.10);
+            const inUnit = $('liftUnit').value;
+            const outUnit = radio('outunit');
+            let rmOut = rm;
+            if (inUnit !== outUnit) rmOut = inUnit === 'kg' ? rm * 2.20462 : rm / 2.20462;
+            const uLabel = outUnit === 'kg' ? 'kg' : 'lb';
+            let html = `<table class="w-full max-w-lg mx-auto text-sm border border-gray-200 rounded-lg overflow-hidden">
+                <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-4 py-2.5">% of 1RM</th><th class="px-4 py-2.5">Weight</th><th class="px-4 py-2.5">Repetitions</th></tr></thead><tbody>`;
+            PCTS.forEach((p, i) => {
+                const wt = (rmOut * p / 100).toFixed(1);
+                const bold = p === 100 ? ' class="bg-[#E8EAF6] font-semibold"' : '';
+                html += `<tr${bold}><td class="px-4 py-2 border-t border-gray-100">${p}%</td><td class="px-4 py-2 border-t border-gray-100">${p === 100 ? `<strong class="text-green-700">${wt} ${uLabel}</strong>` : `${wt} ${uLabel}`}</td><td class="px-4 py-2 border-t border-gray-100">${REPS_TABLE[formula][i]}</td></tr>`;
+            });
+            html += `</tbody></table>`;
+            $('resTable').innerHTML = html;
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+            if (push) {
+                const q = new URLSearchParams({ w: $('lift').value, wu: inUnit, r: $('reps').value, ou: outUnit, f: formula });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function clearForm() {
+            $('lift').value = 100; $('liftUnit').value = 'kg'; $('reps').value = 5;
+            document.querySelector('input[name="outunit"][value="kg"]').checked = true;
+            document.querySelector('input[name="formula"][value="e"]').checked = true;
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            if (q.get('w')) $('lift').value = q.get('w');
+            if (q.get('wu')) $('liftUnit').value = q.get('wu');
+            if (q.get('r')) $('reps').value = q.get('r');
+            if (q.get('ou') === 'lb') document.querySelector('input[name="outunit"][value="lb"]').checked = true;
+            if (q.get('f') === 'b' || q.get('f') === 'l') document.querySelector(`input[name="formula"][value="${q.get('f')}"]`).checked = true;
+            calculate(false);
+        })();
+    </script>
+</body>
+                                                                                        </html>
