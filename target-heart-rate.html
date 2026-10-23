@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Target Heart Rate Calculator - CalcNova</title>
+    <meta name="description" content="Free target heart rate calculator: training zones from your age or tested max heart rate, using Karvonen heart-rate reserve, or the Borg and CR10 perceived-exertion scales.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/target-heart-rate">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Target Heart Rate Calculator - CalcNova">
+    <meta property="og:description" content="Your five training zones by Karvonen reserve, plus Borg and CR10 exertion tables.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/target-heart-rate">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Target Heart Rate Calculator - CalcNova">
+    <meta name="twitter:description" content="Find the heart rate zones that match your training goal.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Target Heart Rate Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/target-heart-rate" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Which maximum heart rate formula should I use?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Haskell & Fox (220 − age) is the classic, but Tanaka (208 − 0.7 × age) and Nes (211 − 0.64 × age) were fitted to much larger, more modern datasets and usually land closer for adults. All of them are population averages — an individual's true maximum can sit 10 or more beats away — so a tested maximum always beats a formula." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why do my zones change when I add a resting heart rate?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Because the method changes. Percentages of maximum alone ignore fitness; the Karvonen method works on your heart rate reserve — the gap between resting and maximum — so two people of the same age with different resting rates get different, more personal zones." }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I measure my resting heart rate?",
+                "acceptedAnswer": { "@type": "Answer", "text": "In the morning, before getting up or having caffeine, count your pulse for a full 60 seconds. Repeat over a few mornings and use the average. Typical adult values run about 50–90 bpm; trained athletes often sit in the 50s or below." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Target Heart Rate Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Target Heart Rate Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Train at the intensity your goal actually needs. Enter your age — or a tested maximum heart rate — and,
+            optionally, your resting heart rate, and this calculator builds your target zones three ways: plain
+            percentages of maximum, the <strong>Karvonen</strong> heart-rate-reserve method, and the
+            <strong>Borg</strong> perceived-exertion scales.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <p class="text-sm font-semibold mb-2">Max heart rate <span class="font-normal text-gray-500">— the highest rate your heart can reach in intense exercise; measured by a stress test or estimated from age.</span></p>
+                <div class="flex flex-wrap gap-5 mb-4">
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="mm" value="a" checked onchange="shMHR()" class="accent-[#3F51B5]"> Estimate from age</label>
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="mm" value="t" onchange="shMHR()" class="accent-[#3F51B5]"> Test result</label>
+                </div>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div id="ageRow">
+                        <label class="block text-sm font-semibold mb-1" for="age">Age</label>
+                        <input type="number" id="age" value="30" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div id="mhrRow" class="hidden">
+                        <label class="block text-sm font-semibold mb-1" for="mhr">Tested max heart rate (bpm)</label>
+                        <input type="number" id="mhr" value="" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="rhr">Resting heart rate (bpm) <span class="font-normal text-gray-500">— optional</span></label>
+                        <input type="number" id="rhr" value="70" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+
+                <button type="button" id="settingsBtn" onclick="toggleSettings()" class="mt-5 text-[#3F51B5] font-bold text-sm hover:underline no-print">+ Settings</button>
+                <div id="settingsBox" class="hidden mt-3 bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm font-semibold mb-1.5">Max heart rate estimation formula</p>
+                            <div class="flex flex-col gap-1.5">
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="cformula" value="h" checked class="accent-[#3F51B5]"> Haskell &amp; Fox (1971)</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="cformula" value="t" class="accent-[#3F51B5]"> Tanaka, Monahan, &amp; Seals (2001)</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="cformula" value="n" class="accent-[#3F51B5]"> Nes et al. (2013)</label>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold mb-1.5">Activity intensity scale</p>
+                            <div class="flex flex-col gap-1.5">
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="cintensity" value="k" checked class="accent-[#3F51B5]"> The Karvonen Formula</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="cintensity" value="b" class="accent-[#3F51B5]"> Perceived exertion — Borg scale</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="cintensity" value="m" class="accent-[#3F51B5]"> Perceived exertion — modified Borg CR10</label>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3">The intensity scale applies when a resting heart rate is entered; without one, zones are simple percentages of maximum heart rate.</p>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                        <p id="resHeadline" class="text-lg text-gray-800 mb-3"></p>
+                        <div id="resTable" class="overflow-x-auto"></div>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">Averages, not verdicts</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        Age formulas describe populations. In one famous observation, elite rowers in their 20s had
+                        measured maximums anywhere from 160 to 220 bpm — treat your zones as a compass, and a tested
+                        maximum as the map.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">The three numbers behind every zone</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Maximum heart rate (MHR)</strong> is the highest rate your heart reaches in all-out exercise.
+                It is measured properly in a cardiac stress test — treadmill intensity rising while an ECG watches
+                for the signature of maximum — and the theoretical human ceiling is about 300 bpm. In practice it is
+                usually estimated from age, which is also its weakness: the formulas output population averages,
+                and individuals scatter widely around them (elite rowers in their twenties have measured anywhere
+                from 160 to 220 bpm). Use a formula for planning; trust a test for precision.
+            </p>
+            <div class="grid md:grid-cols-3 gap-4 mb-4">
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4 text-center">
+                    <h3 class="font-bold text-gray-800 mb-1">Haskell &amp; Fox (1971)</h3>
+                    <p class="text-gray-700">MHR = 220 − age</p>
+                </div>
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4 text-center">
+                    <h3 class="font-bold text-gray-800 mb-1">Tanaka et al. (2001)</h3>
+                    <p class="text-gray-700">MHR = 208 − 0.7 × age</p>
+                </div>
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4 text-center">
+                    <h3 class="font-bold text-gray-800 mb-1">Nes et al. (2013)</h3>
+                    <p class="text-gray-700">MHR = 211 − 0.64 × age</p>
+                </div>
+            </div>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Resting heart rate (RHR)</strong> is your rate awake, calm, and unstressed — best taken in
+                the morning by counting a full minute of pulse. Typical adults sit around 50–90 bpm (older charts
+                say 60–100); above the range is tachycardia, below it bradycardia — though fit athletes routinely
+                rest in the 50s and sometimes lower, which is fitness, not a fault. <strong>Heart rate reserve</strong>
+                is simply the gap between the two: HR<sub>reserve</sub> = MHR − RHR (a max of 180 with a resting 68
+                gives a reserve of 112). The reserve is what lets a zone system see <em>your</em> fitness instead of
+                only your age.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">The five training zones</h2>
+            <ul class="list-disc pl-6 text-gray-700 leading-7 mb-4">
+                <li><strong>Zone 1 (50–60%)</strong> — very light: warm-ups, cool-downs, recovery days.</li>
+                <li><strong>Zone 2 (60–70%)</strong> — light: fat burning and endurance base; effort you can hold for a long time.</li>
+                <li><strong>Zone 3 (70–80%)</strong> — moderate: aerobic development, speed and strength support.</li>
+                <li><strong>Zone 4 (80–90%)</strong> — hard: near-maximal sustainable output; builds how long you can stay near the top.</li>
+                <li><strong>Zone 5 (90–100%)</strong> — maximum: sustainable only briefly; sharpens muscle and cardiovascular capacity, and demands real recovery. Never train only here.</li>
+            </ul>
+            <p class="text-gray-700 leading-7 mb-4">
+                Training far above your zone wastes energy and lengthens recovery; far below it, the session does
+                little. The zones exist so each workout lands where its benefit lives.
+            </p>
+
+            <h2 id="emethods" class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Three ways to turn intensity into a heart rate</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Percent of maximum</strong> (used when no resting rate is entered) is the simplest: multiply
+                MHR by the zone's percentages. A 36-year-old's MHR is 220 − 36 = 184, so a moderate 70–80% zone is
+                184 × 0.70 ≈ 129 to 184 × 0.80 ≈ 147 bpm. The <strong>Karvonen method</strong> (used when a resting
+                rate is entered) applies the percentages to the reserve instead, then adds the resting rate back:
+                for the same 36-year-old resting at 70, the reserve is 114, the 70% point is 0.70 × 114 + 70 = 150,
+                and the 80% point is 161 — a noticeably higher, more personal zone. <strong>Perceived exertion</strong>
+                skips percentages entirely: on the Borg 6–20 scale you rate how the work feels (the scale is built
+                so rating × 10 roughly equals heart rate), and the target converts as
+                THR = RHR + (MHR − RHR) × (B − 6) / 14 — a "somewhat hard" 13 for someone with max 190 and resting
+                60 gives 60 + 130 × 7/14 = 125 bpm. The modified Borg CR10 compresses the same idea to 0–10, with
+                THR = RHR + (MHR − RHR) × B / 10: a "somewhat difficult" 4 gives 60 + 130 × 0.4 = 112 bpm.
+            </p>
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                        <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-3 py-2">Borg RPE</th><th class="px-3 py-2">Intensity</th></tr></thead>
+                        <tbody class="text-gray-700">
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">6</td><td class="px-3 py-1.5 border-t border-gray-100">No exertion at all</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">7</td><td class="px-3 py-1.5 border-t border-gray-100">Extremely light</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">9</td><td class="px-3 py-1.5 border-t border-gray-100">Very light</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">11</td><td class="px-3 py-1.5 border-t border-gray-100">Light</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">12</td><td class="px-3 py-1.5 border-t border-gray-100">Moderate</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">13</td><td class="px-3 py-1.5 border-t border-gray-100">Somewhat hard</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">15</td><td class="px-3 py-1.5 border-t border-gray-100">Hard</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">17</td><td class="px-3 py-1.5 border-t border-gray-100">Very hard</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">19</td><td class="px-3 py-1.5 border-t border-gray-100">Extremely hard</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">20</td><td class="px-3 py-1.5 border-t border-gray-100">Maximal exertion</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                        <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-3 py-2">Borg CR10</th><th class="px-3 py-2">Intensity</th></tr></thead>
+                        <tbody class="text-gray-700">
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">0</td><td class="px-3 py-1.5 border-t border-gray-100">No exertion</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">0.5</td><td class="px-3 py-1.5 border-t border-gray-100">Noticeable</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">1</td><td class="px-3 py-1.5 border-t border-gray-100">Very light</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">2</td><td class="px-3 py-1.5 border-t border-gray-100">Light</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">3</td><td class="px-3 py-1.5 border-t border-gray-100">Moderate</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">4</td><td class="px-3 py-1.5 border-t border-gray-100">Somewhat difficult</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">5</td><td class="px-3 py-1.5 border-t border-gray-100">Difficult</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">7</td><td class="px-3 py-1.5 border-t border-gray-100">Very difficult</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">9</td><td class="px-3 py-1.5 border-t border-gray-100">Almost maximal</td></tr>
+                            <tr><td class="px-3 py-1.5 border-t border-gray-100">10</td><td class="px-3 py-1.5 border-t border-gray-100">Maximal</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">FAQ</h2>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">My watch disagrees with these zones. Who is right?</h4>
+                    <p class="text-gray-700 leading-7">Probably both, by different definitions: watches use their own MHR estimates and zone boundaries. If your watch has a tested maximum from a hard field test, feed that number into the "Test result" mode here and the two will converge.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Which zone burns the most fat?</h4>
+                    <p class="text-gray-700 leading-7">Zone 2 is the classic fat-burning zone — the highest intensity you can sustain for long durations. Higher zones burn more total calories per minute but proportionally more carbohydrate, and far less time can be spent in them.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="pace.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Pace Calculator</span><span class="block text-sm text-gray-500 mt-1">Pair zones with target paces</span></a>
+                <a href="one-rep-max.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">One Rep Max Calculator</span><span class="block text-sm text-gray-500 mt-1">The strength-side intensity scale</span></a>
+                <a href="calorie.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Calorie Calculator</span><span class="block text-sm text-gray-500 mt-1">Fuel the work in these zones</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const radio = name => document.querySelector(`input[name="${name}"]:checked`).value;
+        const ZONES = [
+            ['Very light', 50, 60], ['Light', 60, 70], ['Moderate', 70, 80], ['Hard', 80, 90], ['VO2 Max (maximum)', 90, 100]
+        ];
+        const ZONES_PLAIN = [
+            ['Very light', 'maintenance, warm up', 50, 60], ['Light', 'weight control, fat burning', 60, 70],
+            ['Moderate', 'aerobic, endurance training', 70, 80], ['Hard', 'anaerobic, hardcore training', 80, 90],
+            ['VO2 Max', 'maximum effort', 90, 100]
+        ];
+        const BORG = [ // label, displayed scale, B used in the formula
+            ['No exertion', '0', 6], ['Extremely light', '7', 7], ['Very light', '9', 9], ['Light', '11', 11],
+            ['Moderate', '12', 12], ['Somewhat hard', '13', 13], ['Hard', '15', 15], ['Very hard', '17', 17],
+            ['Extremely hard', '19', 19], ['Maximal exertion', '20', 20]
+        ];
+        const CR10 = [
+            ['No exertion', 0], ['noticeable', 0.5], ['very light', 1], ['light', 2], ['moderate', 3],
+            ['somewhat difficult', 4], ['difficult', 5], ['very difficult', 7], ['almost maximal', 9], ['maximal', 10]
+        ];
+
+        function shMHR() {
+            const test = radio('mm') === 't';
+            $('ageRow').classList.toggle('hidden', test);
+            $('mhrRow').classList.toggle('hidden', !test);
+        }
+        function toggleSettings() {
+            const box = $('settingsBox');
+            const open = box.classList.toggle('hidden');
+            $('settingsBtn').textContent = open ? '+ Settings' : '− Settings';
+        }
+        function tableHTML(headers, rows) {
+            let h = `<table class="w-full max-w-lg text-sm border border-gray-200 rounded-lg overflow-hidden"><thead><tr class="bg-[#3F51B5] text-white text-left">${headers.map(x => `<th class="px-4 py-2.5">${x}</th>`).join('')}</tr></thead><tbody>`;
+            rows.forEach(r => { h += `<tr>${r.map(c => `<td class="px-4 py-2 border-t border-gray-100">${c}</td>`).join('')}</tr>`; });
+            return h + '</tbody></table>';
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('formError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+            };
+            let mhr;
+            if (radio('mm') === 't') {
+                mhr = parseFloat($('mhr').value);
+                if (isNaN(mhr) || mhr < 30 || mhr > 250) return fail('Please enter your tested maximum heart rate (30–250 bpm).');
+                mhr = Math.round(mhr);
+            } else {
+                const age = parseFloat($('age').value);
+                if (isNaN(age) || age < 1 || age > 120) return fail('Please enter a valid age (1–120).');
+                const f = radio('cformula');
+                mhr = Math.round(f === 'h' ? 220 - age : f === 't' ? 208 - 0.7 * age : 211 - 0.64 * age);
+            }
+            const rhrRaw = $('rhr').value.trim();
+            const rhr = rhrRaw === '' ? NaN : parseFloat(rhrRaw);
+            const hasRHR = !isNaN(rhr) && rhr > 0;
+            if (!isNaN(rhr) && rhr < 0) return fail('Resting heart rate cannot be negative.');
+            if (hasRHR && rhr >= mhr) return fail('Resting heart rate must be below your maximum heart rate.');
+            const reserve = mhr - (hasRHR ? rhr : 0);
+            const scale = radio('cintensity');
+            let headline = '', table = '';
+            if (!hasRHR) {
+                table = tableHTML(['Intensity', 'Target Heart Rate (bpm)'],
+                    ZONES_PLAIN.map(([name, desc, lo, hi]) => [`<strong>${name}</strong><br><span class="text-gray-500">${desc}</span>`, `${Math.round(mhr * lo / 100)} - ${Math.round(mhr * hi / 100)} (${lo} - ${hi}%)`]));
+            } else if (scale === 'k') {
+                const at = p => Math.round(rhr + reserve * p / 100);
+                headline = `Target heart rate during aerobic exercise: <strong class="text-green-700">${at(50)} to ${at(85)} bpm</strong> (50 - 85% of heart rate reserve).`;
+                table = tableHTML(['Exercise Intensity', 'Heart Rate Reserve', 'Target Heart Rate (bpm)'],
+                    ZONES.map(([name, lo, hi]) => [name, `${lo} - ${hi}%`, `${at(lo)} - ${at(hi)}`]));
+            } else if (scale === 'b') {
+                table = tableHTML(['Intensity', 'RPE Scale', 'Target Heart Rate (bpm)'],
+                    BORG.map(([label, disp, b]) => [label, disp, String(Math.round(rhr + reserve * (b - 6) / 14))]));
+            } else {
+                table = tableHTML(['Intensity', 'RPE CR10 Scale', 'Target Heart Rate (bpm)'],
+                    CR10.map(([label, b]) => [label, String(b), String(Math.round(rhr + reserve * b / 10))]));
+            }
+            $('resHeadline').innerHTML = headline;
+            $('resHeadline').style.display = headline ? 'block' : 'none';
+            $('resTable').innerHTML = table;
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+            if (push) {
+                const q = new URLSearchParams({ mm: radio('mm'), age: $('age').value, mhr: $('mhr').value, rhr: $('rhr').value, f: radio('cformula'), i: scale });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function clearForm() {
+            document.querySelector('input[name="mm"][value="a"]').checked = true;
+            $('age').value = 30; $('mhr').value = ''; $('rhr').value = 70;
+            document.querySelector('input[name="cformula"][value="h"]').checked = true;
+            document.querySelector('input[name="cintensity"][value="k"]').checked = true;
+            shMHR();
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            if (q.get('mm') === 't') document.querySelector('input[name="mm"][value="t"]').checked = true;
+            if (q.get('age')) $('age').value = q.get('age');
+            if (q.get('mhr')) $('mhr').value = q.get('mhr');
+            if (q.get('rhr') !== null) $('rhr').value = q.get('rhr');
+            if (['t', 'n'].includes(q.get('f'))) document.querySelector(`input[name="cformula"][value="${q.get('f')}"]`).checked = true;
+            if (['b', 'm'].includes(q.get('i'))) document.querySelector(`input[name="cintensity"][value="${q.get('i')}"]`).checked = true;
+            shMHR();
+            calculate(false);
+        })();
+    </script>
+</body>
+                                                                                        </html>
