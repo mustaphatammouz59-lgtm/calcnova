@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ideal Weight Calculator - CalcNova</title>
+    <meta name="description" content="Free ideal weight calculator: compare the Robinson, Miller, Devine, and Hamwi ideal body weight formulas side by side, plus the healthy BMI range for your height.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/ideal-weight">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Ideal Weight Calculator - CalcNova">
+    <meta property="og:description" content="Ideal body weight from four classic formulas, compared side by side with the healthy BMI range.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/ideal-weight">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ideal Weight Calculator - CalcNova">
+    <meta name="twitter:description" content="How much should you weigh? Four IBW formulas and the healthy BMI range for your height.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Ideal Weight Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/ideal-weight" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Which ideal weight formula is the best?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Devine (1974) is the most widely used, especially in medicine. None of them is 'true' — they were built for drug dosing, not appearance or health verdicts, and they disagree by several kilograms at the same height. Treat the spread of the four, together with the healthy BMI range, as a zone rather than a target." }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I be healthy above my ideal body weight?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. The formulas count only height and gender — not muscle, fat distribution, or frame size. Highly trained athletes routinely exceed their IBW while being exceptionally healthy, because muscle is denser than fat. IBW is a reference, not a verdict." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why is there no formula result for shorter heights or for children?",
+                "acceptedAnswer": { "@type": "Answer", "text": "All four classic formulas are anchored at 5 feet and are meant for adults. At heights of 5 feet or below the calculator reports the WHO healthy BMI range instead; for children and teens up to age 20 it reports the CDC healthy weight range (the 5th to 85th BMI percentile for the child's age and sex)." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        .unit-btn { transition: all .15s; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Ideal Weight Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Ideal Weight Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Experts have chased a formula for <strong>ideal body weight (IBW)</strong> for decades, and several survive side by
+            side. This calculator runs the four classics — Robinson, Miller, Devine, and Hamwi — on your height, gender,
+            and age, and puts them next to the healthy BMI range so you can compare instead of trusting any single number.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="flex gap-2 mb-5 no-print">
+                    <button type="button" id="btnUS" onclick="setUnit('us')" class="unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600">US Units</button>
+                    <button type="button" id="btnMetric" onclick="setUnit('metric')" class="unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white">Metric Units</button>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="age">Age <span class="font-normal text-gray-400">(ages 2 – 80)</span></label>
+                        <input type="number" id="age" value="25" min="1" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Gender</label>
+                        <div class="flex gap-6 items-center h-[42px]">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="sex" value="m" checked class="accent-[#3F51B5]"> Male</label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="sex" value="f" class="accent-[#3F51B5]"> Female</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="usFields" class="hidden">
+                    <div class="grid sm:grid-cols-2 gap-4 mt-4">
+                        <div><label class="block text-sm font-semibold mb-1" for="feet">Height — feet</label><input type="number" id="feet" value="5" min="0" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                        <div><label class="block text-sm font-semibold mb-1" for="inches">Height — inches</label><input type="number" id="inches" value="10" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                    </div>
+                </div>
+
+                <div id="metricFields">
+                    <div class="mt-4">
+                        <label class="block text-sm font-semibold mb-1" for="cm">Height — cm</label>
+                        <input type="number" id="cm" value="180" min="0" step="any" class="w-full sm:w-1/2 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-[#F8FAFC]">
+                        <div id="resBody"></div>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">Born in the pharmacy</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        IBW was never about looks. The formulas were built to dose medication — drug metabolism tracks
+                        ideal weight more closely than total weight — and only later escaped into sports weigh-ins and
+                        everyday use.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">How much should I weigh?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Almost everyone has tried to lose weight, or watched someone do it — usually chasing an "ideal" number
+                absorbed from screens and magazines. The irony is that ideal body weight was invented for none of that:
+                it began as a dosing tool, because many drugs are metabolized in proportion to IBW rather than total
+                weight, and it later spread into sport, where weight classes need a reference. Nothing in the formulas
+                knows what you look like.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                So hold the result at arm's length. IBW counts height and gender only — no muscle, no fat distribution,
+                no frame. A lean, heavily trained athlete can sit well above every formula's output in perfect health,
+                and someone can sit exactly on it in poor health. No index — IBW, BMI, or any other — can certify how
+                much a specific person should weigh. They are references; the healthy habits (moving regularly,
+                eating mostly unprocessed food, sleeping enough) matter more than landing on a number.
+            </p>
+            <h3 class="font-bold text-gray-800 mt-6 mb-2">The factors behind the number</h3>
+            <div class="space-y-3 text-gray-700 leading-7 mb-4">
+                <p><strong>Age</strong> — After the growth years (about 14–15 for girls, 16–17 for boys), age alone shouldn't move IBW much — but people do shrink (roughly 1.5 inches for men, 2 for women by age 70) and trade muscle for fat as they age, which is why the healthy range for children and teens is read off CDC growth charts instead.</p>
+                <p><strong>Gender</strong> — Women naturally carry a higher share of body fat, have lighter bones, and are on average shorter; men carry more muscle, and muscle is heavier than fat.</p>
+                <p><strong>Height</strong> — Taller bodies hold more of everything. A man typically weighs 10–20% more than a woman of the same height.</p>
+                <p><strong>Body frame size</strong> — Bone structure matters: a large-framed person weighs more at the same height, in health. Frame is usually judged by wrist circumference against height:</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h4 class="font-bold text-gray-800 mb-2">Women</h4>
+                    <ul class="text-sm text-gray-700 leading-6 list-disc pl-4">
+                        <li>Under 5'2": small &lt; 5.5", medium 5.5–5.75", large &gt; 5.75"</li>
+                        <li>5'2" – 5'5": small &lt; 6", medium 6–6.25", large &gt; 6.25"</li>
+                        <li>Over 5'5": small &lt; 6.25", medium 6.25–6.5", large &gt; 6.5"</li>
+                    </ul>
+                </div>
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h4 class="font-bold text-gray-800 mb-2">Men (over 5'5")</h4>
+                    <ul class="text-sm text-gray-700 leading-6 list-disc pl-4">
+                        <li>Small boned: wrist 5.5–6.5"</li>
+                        <li>Medium boned: wrist 6.5–7.5"</li>
+                        <li>Large boned: wrist over 7.5"</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">The four formulas</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Every IBW formula shares one shape: a base weight at exactly 5 feet, plus a fixed increment for each
+                inch above it. A 5'10" man under Devine, for instance, gets 50 + 2.3 × 10 = 73 kg (about 161 lbs). The
+                formulas differ only in the base and the increment — a fingerprint of whoever fitted them, and when.
+            </p>
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">G. J. Hamwi (1964)</h3>
+                    <p class="text-sm text-gray-700 leading-6">Men: 48.0 kg + 2.7 kg per inch over 5 feet<br>Women: 45.5 kg + 2.2 kg per inch over 5 feet</p>
+                    <p class="text-sm text-gray-500 mt-1">Invented for medicinal dosage purposes — the original.</p>
+                </div>
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">B. J. Devine (1974)</h3>
+                    <p class="text-sm text-gray-700 leading-6">Men: 50.0 kg + 2.3 kg per inch over 5 feet<br>Women: 45.5 kg + 2.3 kg per inch over 5 feet</p>
+                    <p class="text-sm text-gray-500 mt-1">Also born in dosing, and now the most widely used of the four.</p>
+                </div>
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">J. D. Robinson (1983)</h3>
+                    <p class="text-sm text-gray-700 leading-6">Men: 52 kg + 1.9 kg per inch over 5 feet<br>Women: 49 kg + 1.7 kg per inch over 5 feet</p>
+                    <p class="text-sm text-gray-500 mt-1">A 1983 modification of the Devine formula.</p>
+                </div>
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">D. R. Miller (1983)</h3>
+                    <p class="text-sm text-gray-700 leading-6">Men: 56.2 kg + 1.41 kg per inch over 5 feet<br>Women: 53.1 kg + 1.36 kg per inch over 5 feet</p>
+                    <p class="text-sm text-gray-500 mt-1">The other 1983 modification of Devine — note the higher base and gentler slope.</p>
+                </div>
+            </div>
+            <p class="text-gray-700 leading-7 mb-4">
+                Alongside them, the <strong>healthy BMI range</strong>: the WHO's 18.5–25 band, turned into weights for your
+                height. For children and teens the equivalent is not a fixed band at all — the CDC asks that children
+                sit between the 5th and 85th BMI percentiles for their age, which is what this calculator reports up
+                to age 20 (and why younger children get the CDC sentence instead of a formula table: the formulas are
+                adult tools, anchored at 5 feet).
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Limitations</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Formulas built to fit as many people as possible cannot be precise for any one person. They ignore
+                disabilities, extremes of height and build, activity level, and body composition entirely. Use this
+                page as a general guideline drawn from popular formulas — not as a strict value you must hit to earn
+                the word "ideal."
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">FAQ</h2>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Which formula should I believe?</h4>
+                    <p class="text-gray-700 leading-7">Devine is the most widely used, but the honest answer is the zone: where the four formulas and the healthy BMI range overlap is a reasonable neighborhood for a typical body. Outside it, the other factors — muscle, frame, fat distribution — decide.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Can I be healthy above my ideal weight?</h4>
+                    <p class="text-gray-700 leading-7">Yes — athletes prove it constantly. The formulas cannot see muscle. If your <a href="body-fat.html" class="text-[#3F51B5] hover:underline">body fat percentage</a> is in a healthy band, a high IBW comparison is mostly a compliment to your training.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Why did I get a sentence instead of the table?</h4>
+                    <p class="text-gray-700 leading-7">The formulas are anchored at 5 feet, so at heights of 5 feet or below the calculator reports the healthy range directly — the WHO range for adults, the CDC range for ages 2–20.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="bmi.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">BMI Calculator</span><span class="block text-sm text-gray-500 mt-1">The index behind the healthy range</span></a>
+                <a href="body-fat.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Body Fat Calculator</span><span class="block text-sm text-gray-500 mt-1">What the formulas can't see</span></a>
+                <a href="calorie.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Calorie Calculator</span><span class="block text-sm text-gray-500 mt-1">The daily budget to move toward a target</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let unit = 'metric';
+        const $ = id => document.getElementById(id);
+        const radio = name => document.querySelector(`input[name="${name}"]:checked`).value;
+        const f1 = n => n.toFixed(1);
+        // CDC BMI-for-age P5/P85, sampled every 6 months from 24 to 240 months: [P5, P85]
+        const CDC = {"m":[[14.737,18.162],[14.53,17.703],[14.343,17.351],[14.18,17.099],[14.043,16.935],[13.932,16.852],[13.845,16.839],[13.781,16.891],[13.739,17.003],[13.718,17.168],[13.72,17.382],[13.744,17.638],[13.791,17.93],[13.861,18.253],[13.953,18.602],[14.069,18.972],[14.206,19.358],[14.365,19.756],[14.544,20.163],[14.743,20.575],[14.959,20.989],[15.191,21.404],[15.438,21.817],[15.698,22.226],[15.968,22.63],[16.246,23.028],[16.531,23.419],[16.819,23.803],[17.108,24.18],[17.396,24.55],[17.679,24.914],[17.956,25.272],[18.222,25.627],[18.475,25.979],[18.711,26.331],[18.928,26.686],[19.121,27.046]],"f":[[14.398,18.018],[14.196,17.544],[14.016,17.191],[13.859,16.949],[13.725,16.808],[13.614,16.76],[13.527,16.796],[13.465,16.906],[13.428,17.083],[13.416,17.317],[13.431,17.6],[13.47,17.926],[13.534,18.286],[13.622,18.674],[13.734,19.084],[13.867,19.511],[14.022,19.947],[14.195,20.39],[14.386,20.833],[14.593,21.273],[14.814,21.707],[15.046,22.131],[15.287,22.541],[15.535,22.937],[15.786,23.316],[16.039,23.676],[16.289,24.017],[16.534,24.338],[16.769,24.639],[16.991,24.921],[17.196,25.184],[17.38,25.429],[17.538,25.659],[17.666,25.876],[17.759,26.083],[17.812,26.283],[17.82,26.479]]};
+
+        function setUnit(u) {
+            unit = u;
+            $('usFields').classList.toggle('hidden', u !== 'us');
+            $('metricFields').classList.toggle('hidden', u !== 'metric');
+            const on = 'unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white';
+            const off = 'unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600';
+            $('btnUS').className = u === 'us' ? on : off;
+            $('btnMetric').className = u === 'metric' ? on : off;
+        }
+        function cdcBounds(sex, months) {
+            const rows = CDC[sex];
+            const pos = (Math.max(24, Math.min(240, months)) - 24) / 6;
+            const i = Math.floor(pos);
+            if (i >= 36) return rows[36];
+            const fr = pos - i;
+            return [rows[i][0] + (rows[i + 1][0] - rows[i][0]) * fr, rows[i][1] + (rows[i + 1][1] - rows[i][1]) * fr];
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const age = parseFloat($('age').value);
+            const sex = radio('sex');
+            let hCm;
+            if (unit === 'metric') hCm = parseFloat($('cm').value);
+            else hCm = ((parseFloat($('feet').value) || 0) * 12 + (parseFloat($('inches').value) || 0)) * 2.54;
+            if (isNaN(age) || isNaN(hCm) || hCm <= 0 || age < 1) {
+                const e = $('formError');
+                e.textContent = 'Please enter a valid age and height.';
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+                return;
+            }
+            const inches = hCm / 2.54, over = inches - 60;
+            const hM = hCm / 100;
+            const conv = unit === 'metric' ? 1 : 2.20462;
+            const wUnit = unit === 'metric' ? 'kg' : 'lbs';
+            const child = age <= 20;
+            let loB, hiB;
+            if (child) {
+                const [p5, p85] = cdcBounds(sex, 12 * age);
+                loB = Math.round(p5 * 10) / 10; hiB = Math.round(p85 * 10) / 10;
+            } else { loB = 18.5; hiB = 25; }
+            const rangeTxt = `${f1(loB * hM * hM * conv)} - ${f1(hiB * hM * hM * conv)} ${wUnit}`;
+
+            let html = '';
+            if (inches > 60) {
+                const F = sex === 'm'
+                    ? [['Robinson (1983)', 52, 1.9], ['Miller (1983)', 56.2, 1.41], ['Devine (1974)', 50, 2.3], ['Hamwi (1964)', 48, 2.7]]
+                    : [['Robinson (1983)', 49, 1.7], ['Miller (1983)', 53.1, 1.36], ['Devine (1974)', 45.5, 2.3], ['Hamwi (1964)', 45.5, 2.2]];
+                html = `<p class="text-gray-700 mb-3">The ideal weight based on popular formulas:</p>
+                    <div class="overflow-x-auto"><table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                    <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-4 py-2.5">Formula</th><th class="px-4 py-2.5">Ideal Weight</th></tr></thead><tbody>
+                    ${F.map(([name, base, inc]) => `<tr class="border-t border-gray-100"><td class="px-4 py-2.5">${name}</td><td class="px-4 py-2.5 font-bold text-green-700">${f1((base + inc * over) * conv)} ${wUnit}</td></tr>`).join('')}
+                    <tr class="border-t border-gray-100"><td class="px-4 py-2.5">Healthy BMI Range</td><td class="px-4 py-2.5 font-bold text-green-700">${rangeTxt}</td></tr>
+                    </tbody></table></div>`;
+            } else if (child) {
+                html = `<p class="text-gray-700 leading-7">Based on the CDC chart for ${sex === 'm' ? 'boys' : 'girls'}, the healthy weight range is <strong class="text-green-700">${rangeTxt}</strong>.</p>`;
+            } else {
+                html = `<p class="text-gray-700 leading-7">According to the World Health Organization's recommendations, your healthy weight range is <strong class="text-green-700">${rangeTxt}</strong>.</p>`;
+            }
+            $('resBody').innerHTML = html;
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+
+            if (push) {
+                const q = new URLSearchParams({ a: $('age').value, s: sex, u: unit });
+                if (unit === 'metric') q.set('cm', $('cm').value);
+                else { q.set('ft', $('feet').value); q.set('in', $('inches').value); }
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function clearForm() {
+            $('age').value = 25;
+            document.querySelector('input[name="sex"][value="m"]').checked = true;
+            $('feet').value = 5; $('inches').value = 10;
+            $('cm').value = 180;
+            setUnit('metric');
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            if (q.get('u') === 'us' || q.get('u') === 'metric') setUnit(q.get('u'));
+            if (q.get('a')) $('age').value = q.get('a');
+            if (q.get('s') === 'f') document.querySelector('input[name="sex"][value="f"]').checked = true;
+            if (q.get('cm')) $('cm').value = q.get('cm');
+            if (q.get('ft')) $('feet').value = q.get('ft');
+            if (q.get('in')) $('inches').value = q.get('in');
+            calculate(false);
+        })();
+    </script>
+</body>
+</html>
