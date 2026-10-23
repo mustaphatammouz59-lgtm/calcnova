@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Period Calculator - CalcNova</title>
+    <meta name="description" content="Free period calculator: estimate your period days and most probable ovulation days for the next six cycles from your last period, its length, and your cycle length.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/period">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Period Calculator - CalcNova">
+    <meta property="og:description" content="Your next six periods and most probable ovulation days, projected from your cycle.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/period">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Period Calculator - CalcNova">
+    <meta name="twitter:description" content="Estimate future period days and ovulation days over six cycles.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Period Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/period" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How does the period calculator estimate future periods?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It steps forward from the first day of your last period by your average cycle length, and marks each period as lasting the number of days you entered. Ovulation days are estimated as the five days centered 14 days before each following period." }
+            },
+            {
+                "@type": "Question",
+                "name": "What counts as a regular cycle?",
+                "acceptedAnswer": { "@type": "Answer", "text": "A cycle is considered regular when the longest and shortest cycles vary by less than 8 days. The average cycle is 28 days, and bleeding typically lasts 2 to 7 days." }
+            },
+            {
+                "@type": "Question",
+                "name": "How accurate are the projections?",
+                "acceptedAnswer": { "@type": "Answer", "text": "They are exact arithmetic on the averages you enter — so they describe a perfectly regular cycle. Real cycles shift with stress, illness, travel, and ordinary variation, so treat later cycles as planning estimates rather than certainties." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Period Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Period Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Estimate your <strong>period days</strong> and <strong>most probable ovulation days</strong> for the
+            next six cycles, from the first day of your last period, how long it lasted, and your average cycle
+            length.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="lmpDate">First day of your last period</label>
+                        <input type="date" id="lmpDate" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="plen">How long did it last?</label>
+                        <select id="plen" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5] bg-white"></select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="cycle">Average length of cycles</label>
+                        <select id="cycle" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5] bg-white"></select>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                        <div id="resTable" class="overflow-x-auto"></div>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">What "regular" means</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        A cycle counts as regular when your longest and shortest cycles differ by less than 8 days.
+                        The projections here assume exactly that regularity — the further out a cycle, the more
+                        it's a plan rather than a promise.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">The menstrual cycle</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                The menstrual cycle is the series of changes the body runs through each month in preparation for a
+                possible pregnancy. It usually begins between the ages of 12 and 15 and continues until menopause,
+                which occurs on average at 52. A cycle is counted from the first day of one period to the first day
+                of the next, is driven by the rise and fall of hormones, and lasts 28 days on average — though
+                lengths vary, and a cycle is considered regular when the longest and shortest vary by less than 8
+                days.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                Across the cycle, the lining of the uterus thickens and an egg matures. The egg is released at
+                ovulation — the most fertile point of the cycle, roughly the five days before ovulation through
+                one to two days after it. If the egg is not fertilized, pregnancy cannot happen: the lining sheds
+                as a period, and the cycle restarts. A period — menstruation — is that regular discharge of blood
+                and mucosal tissue through the vagina, usually lasting 2 to 7 days, in the opening (menstrual)
+                phase of the cycle. Periods pause during pregnancy and typically don't resume during the early
+                stages of breastfeeding, and they end permanently at menopause — usually between 49 and 52, and
+                defined as twelve months with no vaginal bleeding.
+            </p>
+            <p class="text-gray-700 leading-7">
+                This calculator projects the two things worth planning around: the period days themselves (when
+                bleeding and discharge occur) and the most probable ovulation days in each cycle.
+            </p>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="pregnancy.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Pregnancy Calculator</span><span class="block text-sm text-gray-500 mt-1">Your week-by-week schedule</span></a>
+                <a href="ovulation.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Ovulation Calculator</span><span class="block text-sm text-gray-500 mt-1">Windows, test day, and due date</span></a>
+                <a href="conception.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Conception Calculator</span><span class="block text-sm text-gray-500 mt-1">Most probable conception days</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const DAY = 86400000;
+        const MON = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
+
+        function parseDate(v) {
+            if (!v) return null;
+            const p = v.split('-').map(Number);
+            return new Date(Date.UTC(p[0], p[1] - 1, p[2]));
+        }
+        function fmtP(d) { return `${MON[d.getUTCMonth()]} ${d.getUTCDate()}`; }
+        function fmtRange(a, b) { return `${fmtP(a)} \u2013 ${fmtP(b)}`; }
+        function addDays(d, n) { return new Date(d.getTime() + n * DAY); }
+        function todayUTC() {
+            const t = new Date();
+            return new Date(Date.UTC(t.getFullYear(), t.getMonth(), t.getDate()));
+        }
+        function toISO(d) {
+            const p = n => String(n).padStart(2, '0');
+            return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())}`;
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('formError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+            };
+            const lmp = parseDate($('lmpDate').value);
+            if (!lmp) return fail('Please pick the first day of your last period.');
+            const len = parseInt($('plen').value);
+            const cy = parseInt($('cycle').value);
+            let rows = '';
+            for (let k = 0; k < 6; k++) {
+                const start = addDays(lmp, k * cy);
+                const pEnd = addDays(start, len - 1);
+                const ov = addDays(start, cy - 14);
+                rows += `<tr><td class="px-3 py-1.5 border-b border-gray-100">${fmtRange(start, pEnd)}</td><td class="px-3 py-1.5 border-b border-gray-100">${fmtRange(addDays(ov, -2), addDays(ov, 2))}</td></tr>`;
+            }
+            $('resTable').innerHTML =
+                '<p class="font-bold text-gray-800 mb-2">Important dates for the next 6 cycles:</p>' +
+                '<table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden"><thead><tr class="bg-[#E8EAF6] text-left"><th class="px-3 py-2">Period</th><th class="px-3 py-2">Most Probable Ovulation Days</th></tr></thead><tbody>' + rows + '</tbody></table>';
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+            if (push) {
+                const q = new URLSearchParams({ lp: $('lmpDate').value, pl: $('plen').value, cy: $('cycle').value });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function setDefaults() {
+            $('lmpDate').value = toISO(todayUTC());
+            $('plen').value = '5';
+            $('cycle').value = '28';
+        }
+        function clearForm() {
+            setDefaults();
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const pl = $('plen');
+            for (let d = 1; d <= 10; d++) {
+                const o = document.createElement('option');
+                o.value = d; o.textContent = d + (d === 1 ? ' day' : ' days');
+                pl.appendChild(o);
+            }
+            const sel = $('cycle');
+            for (let cy = 22; cy <= 44; cy++) {
+                const o = document.createElement('option');
+                o.value = cy; o.textContent = cy + ' days';
+                sel.appendChild(o);
+            }
+            setDefaults();
+            const q = new URLSearchParams(location.search);
+            if (q.get('lp')) $('lmpDate').value = q.get('lp');
+            if (q.get('pl')) $('plen').value = q.get('pl');
+            if (q.get('cy')) $('cycle').value = q.get('cy');
+            calculate(false);
+        })();
+    </script>
+</body>
+      </html>
