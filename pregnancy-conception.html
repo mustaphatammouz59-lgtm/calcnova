@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregnancy Conception Calculator - CalcNova</title>
+    <meta name="description" content="Free pregnancy conception calculator: estimate the most probable and possible conception date ranges from your due date, last period, or an ultrasound date.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/pregnancy-conception">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Pregnancy Conception Calculator - CalcNova">
+    <meta property="og:description" content="When did conception most probably happen? Ranges from your due date, last period, or ultrasound.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/pregnancy-conception">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pregnancy Conception Calculator - CalcNova">
+    <meta name="twitter:description" content="Most probable and possible conception windows, estimated three ways.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Pregnancy Conception Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/pregnancy-conception" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Why does the calculator give a range instead of one date?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Because ovulation day varies even in regular cycles, and sperm can survive 3–5 days waiting for the egg. The same pregnancy can honestly map to several possible conception days, so the calculator shows a most probable window inside a wider possible one." }
+            },
+            {
+                "@type": "Question",
+                "name": "Which method estimates conception most accurately?",
+                "acceptedAnswer": { "@type": "Answer", "text": "An early ultrasound, which measures the fetus directly and is most precise in the first trimester. Last-period estimates assume ovulation on a textbook day, which many cycles don't follow." }
+            },
+            {
+                "@type": "Question",
+                "name": "Can this calculator prove when conception happened?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. It produces estimates from averages and typical cycle biology. The windows can overlap with other possible dates, and only medical testing can answer questions that need certainty." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Pregnancy Conception Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Pregnancy Conception Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Estimate when conception most probably happened, from your <strong>due date</strong>, the first day of
+            your <strong>last period</strong>, or an <strong>ultrasound</strong>. Alongside the conception window,
+            the calculator shows the range of days on which intercourse could have led to the pregnancy — sperm can
+            survive 3–5 days, so the two windows are not the same.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <label class="block text-sm font-semibold mb-1" for="method">Calculate based on</label>
+                <select id="method" onchange="switchMethod()" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5] bg-white">
+                    <option value="due" selected>Due Date</option>
+                    <option value="lmp">Last Period</option>
+                    <option value="us">Ultrasound</option>
+                </select>
+
+                <div class="mt-4 space-y-4">
+                    <div id="rowDue">
+                        <label class="block text-sm font-semibold mb-1" for="dueDate">Your due date</label>
+                        <input type="date" id="dueDate" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div id="rowLmp" class="hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="lmpDate">First day of your last period</label>
+                            <input type="date" id="lmpDate" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="cycle">Average length of your cycles</label>
+                            <select id="cycle" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5] bg-white"></select>
+                        </div>
+                    </div>
+                    <div id="rowUs" class="hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="usDate">Ultrasound date</label>
+                            <input type="date" id="usDate" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Length of pregnancy at the time</label>
+                            <div class="flex gap-3 items-center">
+                                <input type="number" id="usWeeks" value="22" min="0" max="42" class="w-24 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-600">weeks</span>
+                                <input type="number" id="usDays" value="6" min="0" max="6" class="w-24 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-600">days</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                        <div id="resText" class="text-gray-800 leading-7"></div>
+                        <p class="text-sm text-gray-500 mt-3">The results of this calculator are estimation only.</p>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">Why two windows?</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        Conception happens at fertilization, but intercourse can precede it by up to about five
+                        days — sperm wait. That's why the intercourse window always starts earlier than the
+                        conception window.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">When did I conceive?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Pregnancy is dated from the first day of the last menstrual period, but biologically the baby was
+                not conceived until ovulation and fertilization — usually at least 10 days after that first day.
+                Because ovulation timing varies and sperm survive for days, an exact conception day is rarely
+                knowable; what can be estimated is a window. This calculator builds a "most probable" window around
+                the nominal conception date implied by your input, and a wider "possible" window around that, then
+                shifts the start of each window back to cover the days intercourse could have led to it.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Last menstrual period.</strong> With a regular cycle, conception typically falls about
+                11–21 days after the period starts — which is why the cycle-length setting matters: ovulation sits
+                roughly 14 days before the <em>next</em> period, so longer cycles conceive later. The estimate
+                weakens with irregular cycles or an uncertain period date; in those cases an ultrasound is the
+                better anchor. <strong>Due date.</strong> A due date from a prenatal visit (usually set by
+                sonogram) counts back 266 days to a nominal conception. <strong>Ultrasound.</strong> An obstetric
+                ultrasound images the fetus directly; it can measure one as early as five or six weeks after the
+                last period, is most accurate early in pregnancy, and combines well with period-based estimates to
+                pin down gestational age.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Fertilization, conception, and pregnancy</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                The words are often used interchangeably, but medically they are distinct steps. Fertilization is
+                the moment sperm and egg combine in the fallopian tube, producing a fertilized egg from which an
+                embryo develops. Conception, in the long-standing medical and scientific definition, is the whole
+                process of becoming pregnant: fertilization <em>plus</em> implantation of the fertilized egg into
+                the wall of the uterus. A woman is considered pregnant once implantation has occurred — which is
+                also why some public and state-level usage, which treats fertilization alone as the start, differs
+                from the medical definition this calculator uses.
+            </p>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="conception.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Conception Calculator</span><span class="block text-sm text-gray-500 mt-1">Plan the fertile window ahead</span></a>
+                <a href="pregnancy.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Pregnancy Calculator</span><span class="block text-sm text-gray-500 mt-1">Your week-by-week schedule</span></a>
+                <a href="due-date.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Due Date Calculator</span><span class="block text-sm text-gray-500 mt-1">When the baby is expected</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const DAY = 86400000;
+        const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        function parseDate(v) {
+            if (!v) return null;
+            const p = v.split('-').map(Number);
+            return new Date(Date.UTC(p[0], p[1] - 1, p[2]));
+        }
+        function fmt(d) { return `${MONTHS[d.getUTCMonth()].slice(0, 3)} ${d.getUTCDate()}, ${d.getUTCFullYear()}`; }
+        function addDays(d, n) { return new Date(d.getTime() + n * DAY); }
+        function todayUTC() {
+            const t = new Date();
+            return new Date(Date.UTC(t.getFullYear(), t.getMonth(), t.getDate()));
+        }
+        function toISO(d) {
+            const p = n => String(n).padStart(2, '0');
+            return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())}`;
+        }
+        function switchMethod() {
+            const m = $('method').value;
+            $('rowDue').classList.toggle('hidden', m !== 'due');
+            $('rowLmp').classList.toggle('hidden', m !== 'lmp');
+            $('rowUs').classList.toggle('hidden', m !== 'us');
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('formError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+            };
+            const method = $('method').value;
+            let c = null; // nominal conception date
+            if (method === 'due') {
+                const due = parseDate($('dueDate').value);
+                if (!due) return fail('Please pick your due date.');
+                c = addDays(due, -266);
+            } else if (method === 'lmp') {
+                const start = parseDate($('lmpDate').value);
+                if (!start) return fail('Please pick the first day of your last period.');
+                c = addDays(start, parseInt($('cycle').value) - 14);
+            } else {
+                const us = parseDate($('usDate').value);
+                const w = parseInt($('usWeeks').value), dd = parseInt($('usDays').value);
+                if (!us || isNaN(w) || isNaN(dd) || w < 0 || w > 42 || dd < 0 || dd > 6) return fail('Please enter the ultrasound date and the pregnancy length at the time (weeks 0–42, days 0–6).');
+                c = addDays(us, -(w * 7 + dd) + 14);
+            }
+            const range = (a, b) => `<strong>${fmt(addDays(c, a))} - ${fmt(addDays(c, b))}</strong>`;
+            $('resText').innerHTML =
+                `<p class="mb-2">Most probable conception dates:<br>${range(-2, 2)}</p>` +
+                `<p class="mb-2">Most probable dates of sexual intercourse that led to the pregnancy:<br>${range(-5, 2)}</p>` +
+                `<p class="mb-2">Possible conception dates:<br>${range(-3, 7)}</p>` +
+                `<p>Possible dates of sexual intercourse that led to the pregnancy:<br>${range(-8, 7)}</p>`;
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+            if (push) {
+                const q = new URLSearchParams({ m: method, dd: $('dueDate').value, lp: $('lmpDate').value, cy: $('cycle').value, us: $('usDate').value, uw: $('usWeeks').value, ud: $('usDays').value });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function setDefaults() {
+            const t = todayUTC();
+            $('dueDate').value = toISO(addDays(t, 120));
+            $('lmpDate').value = toISO(addDays(t, -160));
+            $('cycle').value = '28';
+            $('usDate').value = toISO(t);
+            $('usWeeks').value = 22; $('usDays').value = 6;
+        }
+        function clearForm() {
+            $('method').value = 'due';
+            setDefaults();
+            switchMethod();
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const sel = $('cycle');
+            for (let cy = 22; cy <= 44; cy++) {
+                const o = document.createElement('option');
+                o.value = cy; o.textContent = cy + ' days';
+                sel.appendChild(o);
+            }
+            setDefaults();
+            const q = new URLSearchParams(location.search);
+            if (q.get('m')) $('method').value = q.get('m');
+            if (q.get('dd')) $('dueDate').value = q.get('dd');
+            if (q.get('lp')) $('lmpDate').value = q.get('lp');
+            if (q.get('cy')) $('cycle').value = q.get('cy');
+            if (q.get('us')) $('usDate').value = q.get('us');
+            if (q.get('uw')) $('usWeeks').value = q.get('uw');
+            if (q.get('ud')) $('usDays').value = q.get('ud');
+            switchMethod();
+            calculate(false);
+        })();
+    </script>
+</body>
+                              </html>
