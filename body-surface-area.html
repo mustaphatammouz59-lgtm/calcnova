@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Surface Area Calculator - CalcNova</title>
+    <meta name="description" content="Free body surface area (BSA) calculator: estimate your body surface area in m2, ft2, and in2 with eight published formulas — Du Bois, Mosteller, Haycock, Gehan and George, Boyd, Fujimoto, Takahira, and Schlich — plus your BMI.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/body-surface-area">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Body Surface Area Calculator - CalcNova">
+    <meta property="og:description" content="BSA by eight published formulas, in square meters, feet, and inches, with BMI.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/body-surface-area">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Body Surface Area Calculator - CalcNova">
+    <meta name="twitter:description" content="Compare Du Bois, Mosteller, Haycock, Boyd and four more BSA formulas at once.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Body Surface Area Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/body-surface-area" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is body surface area (BSA) used for?",
+                "acceptedAnswer": { "@type": "Answer", "text": "BSA is a clinical measure of metabolic mass, used where body weight alone is too crude: most famously for chemotherapy dosing, and for measures such as cardiac index that relate heart performance to body size. Average BSA is about 1.9 m2 for an adult man and 1.6 m2 for an adult woman." }
+            },
+            {
+                "@type": "Question",
+                "name": "Which BSA formula is best?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The Du Bois formula (1916) is the most widely used and has been shown to estimate body fat effectively in both obese and non-obese patients. Mosteller's square-root formula is popular for its simplicity. This calculator shows eight published formulas side by side because each was fitted to a different population and they can differ by several percent." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why does the Fujimoto coefficient here read 0.00883?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Two values circulate in print for the Fujimoto constant, 0.008883 and 0.00883. Cross-checking published calculator outputs shows the computed results follow 0.00883, which is what this calculator uses so that its Fujimoto row matches the outputs clinicians compare against." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Body Surface Area Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Body Surface Area Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            This calculator computes the total surface area of a human body — its <strong>body surface area
+            (BSA)</strong>. Direct measurement of BSA is difficult, so many estimation formulas have been
+            published; the results below compare <strong>eight of the most popular</strong> in square meters,
+            square feet, and square inches.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div>
+                    <span class="block text-sm font-semibold mb-1">Gender</span>
+                    <div class="flex gap-5 pt-1">
+                        <label class="flex items-center gap-2 text-sm"><input type="radio" name="sex" value="m" checked class="accent-[#3F51B5]"> Male</label>
+                        <label class="flex items-center gap-2 text-sm"><input type="radio" name="sex" value="f" class="accent-[#3F51B5]"> Female</label>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-sm font-semibold mb-1" for="weight">Body Weight</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="weight" value="155" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        <select id="weightUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5] bg-white text-sm">
+                            <option value="pound" selected>pounds</option>
+                            <option value="kilogram">kilograms</option>
+                            <option value="gram">grams</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <span class="block text-sm font-semibold mb-1">Body Height</span>
+                    <div class="flex gap-2 items-center">
+                        <input type="number" id="hFeet" value="5" min="0" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">feet</span>
+                        <input type="number" id="hInch" value="9" min="0" max="11" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">inches</span>
+                    </div>
+                    <p class="text-center font-bold text-gray-400 my-2">OR</p>
+                    <div class="flex gap-2 items-center">
+                        <input type="number" id="hCm" value="" min="0" step="any" placeholder="Height in cm" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">cm</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                        <p id="heightNote" class="hidden text-gray-700 font-medium mb-2"></p>
+                        <p class="text-gray-700">The following are the body surface area results based on popular formulas:</p>
+                        <div id="resTable" class="overflow-x-auto mt-3"></div>
+                        <p id="bmiLine" class="text-gray-700 leading-7 mt-4"></p>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">Why eight formulas?</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        Each was fitted to a different measured population, so they disagree by a few
+                        percent — Du Bois (1916) is still the clinical default, Mosteller is the mental-math
+                        favorite, and Schlich (2010), fitted to 3-D body scans, is the only one here that
+                        changes with gender.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">Table of average BSAs</h2>
+            <div class="overflow-x-auto">
+            <table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden max-w-md">
+                <thead><tr class="bg-[#E8EAF6] text-left"><th class="px-3 py-2"></th><th class="px-3 py-2">ft<sup>2</sup></th><th class="px-3 py-2">m<sup>2</sup></th></tr></thead>
+                <tbody>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Newborn child</td><td class="px-3 py-1.5 border-b border-gray-100">2.69</td><td class="px-3 py-1.5 border-b border-gray-100">0.25</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Two-year-old child</td><td class="px-3 py-1.5 border-b border-gray-100">5.38</td><td class="px-3 py-1.5 border-b border-gray-100">0.5</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Ten-year-old child</td><td class="px-3 py-1.5 border-b border-gray-100">12.27</td><td class="px-3 py-1.5 border-b border-gray-100">1.14</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Adult female</td><td class="px-3 py-1.5 border-b border-gray-100">17.22</td><td class="px-3 py-1.5 border-b border-gray-100">1.6</td></tr>
+                    <tr><td class="px-3 py-1.5">Adult male</td><td class="px-3 py-1.5">20.45</td><td class="px-3 py-1.5">1.9</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">What BSA is used for</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Clinicians often prefer BSA to body weight because it tracks <strong>metabolic mass</strong> —
+                the body's energy requirement — more accurately. Metabolic mass can be approximated by fat-free
+                mass: everything in the body that is not fat, including bones, tendons, organs, muscle, blood,
+                and nerves. Since fat is not metabolically active, fat-free mass is a reasonable stand-in, and
+                BSA correlates with it. BSA is also used to compute cardiac index, which relates heart
+                performance to body size, and most commonly to set <strong>chemotherapy doses</strong>. That
+                use is debated: for drugs with a narrow therapeutic index — where the gap between an effective
+                dose and a toxic one is small — BSA may not be accurate enough, and BSA itself loses accuracy
+                at the extremes of height and weight, where BMI can be the better estimate. Even so,
+                BSA-based chemotherapy dosing still produces more consistent effects than dosing by weight
+                alone.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">The formulas</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                The most widely used is the Du Bois formula, shown to be effective for estimating body fat in
+                both obese and non-obese patients, unlike <a href="bmi.html" class="text-[#3F51B5] underline">body
+                mass index</a>. In every formula below, BSA is in <strong>m<sup>2</sup></strong>, W is weight
+                in <strong>kg</strong>, and H is height in <strong>cm</strong>:
+            </p>
+            <div class="space-y-4 text-gray-700 leading-7">
+                <div><p><strong>Du Bois formula:</strong></p><p class="pl-5">BSA = 0.007184 × W<sup>0.425</sup> × H<sup>0.725</sup></p><p class="pl-5 text-xs text-gray-500">Du Bois D, Du Bois EF (Jun 1916). "A formula to estimate the approximate surface area if height and weight be known". Archives of Internal Medicine 17 (6): 863-71. PMID 2520314.</p></div>
+                <div><p><strong>Mosteller formula:</strong></p><p class="pl-5">BSA = 0.016667 × W<sup>0.5</sup> × H<sup>0.5</sup></p><p class="pl-5 text-xs text-gray-500">Mosteller RD. "Simplified calculation of body-surface area". N Engl J Med 1987; 317:1098. PMID 3657876.</p></div>
+                <div><p><strong>Haycock formula:</strong></p><p class="pl-5">BSA = 0.024265 × W<sup>0.5378</sup> × H<sup>0.3964</sup></p><p class="pl-5 text-xs text-gray-500">Haycock GB, Schwartz GJ, Wisotsky DH. "Geometric method for measuring body surface area: A height-weight formula validated in infants, children and adults". J Pediatr 1978, 93:62-66.</p></div>
+                <div><p><strong>Gehan and George formula:</strong></p><p class="pl-5">BSA = 0.0235 × W<sup>0.51456</sup> × H<sup>0.42246</sup></p><p class="pl-5 text-xs text-gray-500">Gehan EA, George SL. Cancer Chemother Rep 1970, 54:225-235.</p></div>
+                <div><p><strong>Boyd formula:</strong></p><p class="pl-5">BSA = 0.03330 × W<sup>(0.6157 − 0.0188 × log<sub>10</sub>(W))</sup> × H<sup>0.3</sup></p><p class="pl-5 text-xs text-gray-500">Boyd, Edith (1935). The Growth of the Surface Area of the Human Body. University of Minnesota. The Institute of Child Welfare, Monograph Series, No. x. London: Oxford University Press.</p></div>
+                <div><p><strong>Fujimoto formula:</strong></p><p class="pl-5">BSA = 0.00883 × W<sup>0.444</sup> × H<sup>0.663</sup></p><p class="pl-5 text-xs text-gray-500">Fujimoto S, Watanabe T, Sakamoto A, Yukawa K, Morimoto K. Studies on the physical surface area of Japanese. 18. Calculation formulae in three stages over all ages. Nippon Eiseigaku Zasshi 1968;5:443-50. (The constant also circulates in print as 0.008883; the value 0.00883 is the one that reproduces published Fujimoto results, and is used here.)</p></div>
+                <div><p><strong>Takahira formula:</strong></p><p class="pl-5">BSA = 0.007241 × W<sup>0.425</sup> × H<sup>0.725</sup></p><p class="pl-5 text-xs text-gray-500">Fujimoto S, Watanabe T, Sakamoto A, Yukawa K, Morimoto K. Studies on the physical surface area of Japanese. 18. Calculation formulae in three stages over all ages. Nippon Eiseigaku Zasshi 1968;5:443-50.</p></div>
+                <div><p><strong>Schlich formula:</strong></p><p class="pl-5">Women: BSA = 0.000975482 × W<sup>0.46</sup> × H<sup>1.08</sup></p><p class="pl-5">Men: BSA = 0.000579479 × W<sup>0.38</sup> × H<sup>1.24</sup></p><p class="pl-5 text-xs text-gray-500">Schlich E, Schumm M, Schlich M: "3-D-Body-Scan als anthropometrisches Verfahren zur Bestimmung der spezifischen Körperoberfläche". Ernährungs Umschau 2010;57:178-183.</p></div>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="bmi.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">BMI Calculator</span><span class="block text-sm text-gray-500 mt-1">Body mass index and healthy range</span></a>
+                <a href="lean-body-mass.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Lean Body Mass Calculator</span><span class="block text-sm text-gray-500 mt-1">Lean mass by Boer, James, and Hume</span></a>
+                <a href="body-type.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Body Type Calculator</span><span class="block text-sm text-gray-500 mt-1">Body shape and waist-hip ratio</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+
+        function phpRound(x, nd) {
+            const p = Math.pow(10, nd || 0);
+            return Math.sign(x) * Math.round(Math.abs(x) * p) / p;
+        }
+        function fmt2(x) { return phpRound(x, 2).toFixed(2); }
+        function fmtInt(x) { return Math.round(x).toLocaleString('en-US'); }
+        function radioVal(name) { return document.querySelector(`input[name="${name}"]:checked`).value; }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('formError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+            };
+            const female = radioVal('sex') === 'f';
+            const wRaw = parseFloat($('weight').value);
+            if (isNaN(wRaw) || wRaw <= 0) return fail('Please enter a body weight above 0.');
+            const wu = $('weightUnit').value;
+            const W = wu === 'pound' ? wRaw * 0.45359237 : wu === 'gram' ? wRaw / 1000 : wRaw;
+
+            // Height: feet/inches win when present; the cm field is the alternative.
+            // When the cm field is filled in, the reference announces which height it used.
+            const ftTxt = $('hFeet').value.trim(), inTxt = $('hInch').value.trim(), cmTxt = $('hCm').value.trim();
+            let H, note = '';
+            if (ftTxt !== '' || inTxt !== '') {
+                const ft = parseFloat(ftTxt) || 0, inch = parseFloat(inTxt) || 0;
+                if (ft * 12 + inch <= 0) return fail('Please enter a body height.');
+                H = (ft * 12 + inch) * 2.54;
+                if (cmTxt !== '') note = `Using a body height of ${ftTxt || 0} feet and ${inTxt || 0} inches:`;
+            } else if (cmTxt !== '') {
+                H = parseFloat(cmTxt);
+                if (isNaN(H) || H <= 0) return fail('Please enter a body height.');
+                note = `Using a body height of ${cmTxt} cm:`;
+            } else {
+                return fail('Please enter a body height.');
+            }
+
+            const formulas = [
+                ['Du Bois', 0.007184 * Math.pow(W, 0.425) * Math.pow(H, 0.725)],
+                ['Mosteller', 0.016667 * Math.pow(W, 0.5) * Math.pow(H, 0.5)],
+                ['Haycock', 0.024265 * Math.pow(W, 0.5378) * Math.pow(H, 0.3964)],
+                ['Gehan & George', 0.0235 * Math.pow(W, 0.51456) * Math.pow(H, 0.42246)],
+                ['Boyd', 0.03330 * Math.pow(W, 0.6157 - 0.0188 * Math.log10(W)) * Math.pow(H, 0.3)],
+                // Published results follow the constant 0.00883 (see the formulas section).
+                ['Fujimoto', 0.00883 * Math.pow(W, 0.444) * Math.pow(H, 0.663)],
+                ['Takahira', 0.007241 * Math.pow(W, 0.425) * Math.pow(H, 0.725)],
+                ['Schlich', female ? 0.000975482 * Math.pow(W, 0.46) * Math.pow(H, 1.08)
+                                   : 0.000579479 * Math.pow(W, 0.38) * Math.pow(H, 1.24)]
+            ];
+            let html = '<table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden"><thead><tr class="bg-[#E8EAF6] text-left"><th class="px-3 py-2">Formula</th><th class="px-3 py-2">Results in different units</th></tr></thead><tbody>';
+            for (const [name, m2] of formulas) {
+                html += `<tr><td class="px-3 py-2 border-b border-gray-100 font-medium">${name}</td>` +
+                    `<td class="px-3 py-2 border-b border-gray-100"><strong>${fmt2(m2)}</strong> m<sup>2</sup> &nbsp;|&nbsp; <strong>${fmt2(m2 * 10.7639104)}</strong> ft<sup>2</sup> &nbsp;|&nbsp; <strong>${fmtInt(phpRound(m2 * 1550.0031))}</strong> in<sup>2</sup></td></tr>`;
+            }
+            html += '</tbody></table>';
+            $('resTable').innerHTML = html;
+
+            const noteEl = $('heightNote');
+            if (note) { noteEl.textContent = note; noteEl.classList.remove('hidden'); }
+            else noteEl.classList.add('hidden');
+
+            const bmi = W / Math.pow(H / 100, 2);
+            $('bmiLine').innerHTML = `The Body Mass Index (BMI) of the given weight and height is <strong>${phpRound(bmi, 1).toFixed(1)}</strong> kg/m<sup>2</sup>.`;
+
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+
+            if (push) {
+                const q = new URLSearchParams({ s: radioVal('sex'), w: $('weight').value, wu, ft: $('hFeet').value, inch: $('hInch').value, cm: $('hCm').value });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function clearForm() {
+            document.querySelector('input[name="sex"][value="m"]').checked = true;
+            $('weight').value = 155; $('weightUnit').value = 'pound';
+            $('hFeet').value = 5; $('hInch').value = 9; $('hCm').value = '';
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            const sx = q.get('s'); if (sx) { const r = document.querySelector(`input[name="sex"][value="${sx}"]`); if (r) r.checked = true; }
+            if (q.get('w')) $('weight').value = q.get('w');
+            if (q.get('wu')) $('weightUnit').value = q.get('wu');
+            if (q.get('ft')) $('hFeet').value = q.get('ft');
+            if (q.get('inch')) $('hInch').value = q.get('inch');
+            if (q.get('cm')) $('hCm').value = q.get('cm');
+            calculate(false);
+        })();
+    </script>
+</body>
+                              </html>
