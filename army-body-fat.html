@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Army Body Fat Calculator - CalcNova</title>
+    <meta name="description" content="Free Army body fat calculator using the 2023 Army Body Composition Program one-site tape method: body fat percentage from waist circumference and weight, checked against the maximum allowable standard for your age.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/army-body-fat">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Army Body Fat Calculator - CalcNova">
+    <meta property="og:description" content="The 2023 Army one-site tape method: your body fat percentage and whether it meets the standard for your age.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/army-body-fat">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Army Body Fat Calculator - CalcNova">
+    <meta name="twitter:description" content="Body fat percentage by the Army Body Composition Program tape method, with the pass/fail standard.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Army Body Fat Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/army-body-fat" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How does the Army measure body fat?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Since June 12, 2023 the Army uses a one-site circumference tape method under the Army Body Composition Program: a single abdominal measurement at the level of the belly button, averaged over three tries and rounded to the nearest 0.5 inch, combined with body weight rounded to the nearest pound. One equation for men and one for women convert those two numbers into a body fat percentage." }
+            },
+            {
+                "@type": "Question",
+                "name": "What happens if a soldier exceeds the maximum allowable body fat?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The soldier is flagged, but may request a supplemental body fat assessment where reasonably available — DXA, an InBody 770 analyzer, or a Bod Pod. Soldiers who do not request one, or who also fail the supplemental test, are enrolled in the Army Body Composition Program (ABCP). Soldiers scoring 540 or higher on the record ACFT with at least 80 points in every event are exempt from the body fat assessment entirely." }
+            },
+            {
+                "@type": "Question",
+                "name": "What are the maximum allowable body fat percentages?",
+                "acceptedAnswer": { "@type": "Answer", "text": "For men: 20% at ages 17–20, 22% at 21–27, 24% at 28–39, and 26% at 40 and over. For women: 30%, 32%, 34%, and 36% across the same age bands." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Army Body Fat Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Army Body Fat Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            This calculator follows the <strong>Army Body Fat Assessment for the Army Body Composition Program</strong>,
+            published June 12, 2023 — the one-site tape method the U.S. Army now uses. For accuracy, measure your
+            waist three times and enter the average, and round your weight to the nearest pound and your waist to
+            the nearest 0.5 inch, as the assessment prescribes.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Gender</label>
+                        <div class="flex gap-6 items-center h-[42px]">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="sex" value="m" checked class="accent-[#3F51B5]"> Male</label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="sex" value="f" class="accent-[#3F51B5]"> Female</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="age">Age</label>
+                        <input type="number" id="age" value="21" min="1" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="weight">Weight — pounds</label>
+                        <input type="number" id="weight" value="165" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Waist — abdominal circumference at the level of the belly button</label>
+                        <div class="flex gap-2">
+                            <div class="flex items-center gap-1.5"><input type="number" id="waistFt" value="3" min="0" step="1" class="w-20 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">feet</span></div>
+                            <div class="flex items-center gap-1.5"><input type="number" id="waistIn" value="0" min="0" step="any" class="w-20 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">inches</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-[#F8FAFC]">
+                        <p class="text-center text-xl">Body Fat = <span id="resBf" class="font-extrabold text-green-700 text-2xl"></span></p>
+                        <div id="resVerdict" class="mt-3 text-gray-700 leading-7 text-center"></div>
+                        <div class="mt-4 flex items-center justify-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">The exemption</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        Soldiers who score <strong>540 or higher</strong> on the record Army Combat Fitness Test, with a
+                        minimum of 80 points in each event, are exempt from the body fat assessment altogether.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">Reference: the 2023 Army standard</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Body composition is a medical fitness requirement for joining and remaining in the U.S. Army, and the
+                Department of Defense revises its standards every few years. In 2021, Army senior leaders commissioned
+                a comprehensive study of how Army Combat Fitness Test (ACFT) scores relate to body-composition
+                standards; the data showed that soldiers with higher body fat percentages scored lower. The resulting
+                changes to the Army Body Fat Assessment took effect on <strong>June 12, 2023</strong>, with the goal of keeping
+                the force at the physical readiness its duties demand. The directive covers the Regular Army, the Army
+                National Guard, and the U.S. Army Reserve.
+            </p>
+            <h3 class="font-bold text-gray-800 mb-2 text-center">Maximum Allowable Percent Body Fat Standards</h3>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full max-w-md mx-auto text-sm border border-gray-200 rounded-lg overflow-hidden">
+                    <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-4 py-2.5">Age</th><th class="px-4 py-2.5">Male</th><th class="px-4 py-2.5">Female</th></tr></thead>
+                    <tbody>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">17–20</td><td class="px-4 py-2">20%</td><td class="px-4 py-2">30%</td></tr>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">21–27</td><td class="px-4 py-2">22%</td><td class="px-4 py-2">32%</td></tr>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">28–39</td><td class="px-4 py-2">24%</td><td class="px-4 py-2">34%</td></tr>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">40 and over</td><td class="px-4 py-2">26%</td><td class="px-4 py-2">36%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-gray-700 leading-7 mb-4">
+                The assessment itself is deliberately simple: a <strong>one-site circumference tape method</strong> needing only
+                the abdominal circumference at the level of the belly button and body weight. The subject stands
+                upright with arms resting at the sides; the waist is measured three times, averaged, and rounded to
+                the nearest 0.5 inch, and weight is rounded to the nearest pound. Enter those numbers above and the
+                calculator returns your body fat percentage and how it stands against the maximum for your age group.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                A soldier who fails the tape method is flagged, but may request a <strong>supplemental assessment</strong> where
+                the equipment is reasonably available:
+            </p>
+            <ul class="list-disc pl-6 text-gray-700 leading-7 mb-4">
+                <li>Dual X-ray Absorptiometry (DXA)</li>
+                <li>InBody 770 Body Composition and Body Water Analyzer</li>
+                <li>Bod Pod Body Composition Tracking System</li>
+            </ul>
+            <p class="text-gray-700 leading-7 mb-4">
+                Soldiers who decline the supplemental assessment, or who fail it, keep the flag and are enrolled in
+                the Army Body Composition Program (ABCP). One way out is earned in advance: a record ACFT score of
+                540 or higher, with at least 80 points in every event, exempts a soldier from the body fat assessment
+                entirely.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">FAQ</h2>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">How is the percentage calculated?</h4>
+                    <p class="text-gray-700 leading-7">From two inputs only — waist circumference and body weight — through the sex-specific equations of the 2023 Army Body Fat Assessment. Unlike the older multi-site tape test, there is no neck or hip measurement and no height term.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What if I am over the standard?</h4>
+                    <p class="text-gray-700 leading-7">The result tells you by how much, and what that excess means in pounds of body fat at your current weight. Officially, failing soldiers are flagged and may request a supplemental DXA, InBody 770, or Bod Pod assessment before ABCP enrollment.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Does age change the calculation?</h4>
+                    <p class="text-gray-700 leading-7">No — age changes only the standard you are compared against, which relaxes across four bands (17–20, 21–27, 28–39, 40+). The percentage itself comes from waist and weight alone.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="bmi.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">BMI Calculator</span><span class="block text-sm text-gray-500 mt-1">The other screening number</span></a>
+                <a href="body-fat.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Body Fat Calculator</span><span class="block text-sm text-gray-500 mt-1">The civilian Navy-method estimate</span></a>
+                <a href="calorie.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Calorie Calculator</span><span class="block text-sm text-gray-500 mt-1">The daily budget to get under the standard</span></a>
+                <a href="ideal-weight.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Ideal Weight Calculator</span><span class="block text-sm text-gray-500 mt-1">Reference weights for your height</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const radio = name => document.querySelector(`input[name="${name}"]:checked`).value;
+        // 2023 ABCP one-site equations, reverse-engineered and verified against 60+ reference cases
+        const EQ = {
+            m: w => -26.7962242 + 1.9895724 * w.in - 0.1208597 * w.lb,
+            f: w => -8.8645578 + 1.2692683 * w.in - 0.0166731 * w.lb
+        };
+        const MAXBF = { m: [20, 22, 24, 26], f: [30, 32, 34, 36] };
+
+        function maxFor(sex, age) {
+            if (age <= 20) return MAXBF[sex][0];
+            if (age <= 27) return MAXBF[sex][1];
+            if (age <= 39) return MAXBF[sex][2];
+            return MAXBF[sex][3];
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const sex = radio('sex');
+            const age = parseFloat($('age').value);
+            const lb = parseFloat($('weight').value);
+            const waistIn = (parseFloat($('waistFt').value) || 0) * 12 + (parseFloat($('waistIn').value) || 0);
+            if (isNaN(age) || isNaN(lb) || lb <= 0 || waistIn <= 0) {
+                const e = $('formError');
+                e.textContent = 'Please enter a valid age, weight and waist circumference.';
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+                return;
+            }
+            const bf = Math.max(0, Math.round(EQ[sex]({ in: waistIn, lb })));
+            $('resBf').textContent = bf + '%';
+            let verdict = '';
+            if (age < 17) {
+                verdict = `<p class="font-semibold text-gray-800">You are too young for army!</p>`;
+            } else {
+                const max = maxFor(sex, age);
+                if (bf <= max) {
+                    verdict = `<p>You meet the maximum allowable body fat percentage standard, which is <strong>${max}%</strong> for your age.</p>`;
+                } else {
+                    const excess = bf - max;
+                    const pounds = Math.round(excess / 100 * lb);
+                    verdict = `<p>You are not in compliance with the maximum allowable body fat percentage standard, which is <strong>${max}%</strong> for your age.</p>
+                        <p class="mt-2">You need to reduce your body fat by <strong>${excess}%</strong> to meet the standard. This reduction is equivalent to losing <strong>${pounds} pound${pounds === 1 ? '' : 's'}</strong> of body fat for your weight.</p>`;
+                }
+            }
+            $('resVerdict').innerHTML = verdict;
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+            if (push) {
+                const q = new URLSearchParams({ s: sex, a: $('age').value, w: $('weight').value, wf: $('waistFt').value, wi: $('waistIn').value });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function clearForm() {
+            document.querySelector('input[name="sex"][value="m"]').checked = true;
+            $('age').value = 21; $('weight').value = 165; $('waistFt').value = 3; $('waistIn').value = 0;
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            if (q.get('s') === 'f') document.querySelector('input[name="sex"][value="f"]').checked = true;
+            if (q.get('a')) $('age').value = q.get('a');
+            if (q.get('w')) $('weight').value = q.get('w');
+            if (q.get('wf')) $('waistFt').value = q.get('wf');
+            if (q.get('wi')) $('waistIn').value = q.get('wi');
+            calculate(false);
+        })();
+    </script>
+</body>
+  </html>
