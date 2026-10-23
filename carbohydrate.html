@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbohydrate Calculator - CalcNova</title>
+    <meta name="description" content="Free carbohydrate calculator: how many grams of carbs you need per day at 40%, 55%, 65%, and 75% of your calories, for weight maintenance, loss, and gain — from your age, gender, height, weight, and activity level.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/carbohydrate">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Carbohydrate Calculator - CalcNova">
+    <meta property="og:description" content="Daily carbohydrate grams at four guideline percentages, for five weight goals.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/carbohydrate">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Carbohydrate Calculator - CalcNova">
+    <meta name="twitter:description" content="How many carbs a day? Grams at 40-75% of your daily calories, by goal.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Carbohydrate Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/carbohydrate" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How are the carbohydrate grams calculated?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Your daily calorie allowance is estimated from your BMR (Mifflin St Jeor or Katch-McArdle) times your activity factor, adjusted by goal. Each column then takes that percentage of the calories and divides by 3.75 kcal per gram of carbohydrate." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why 40%, 55%, 65%, and 75%?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The Institute of Medicine recommends 40% to 65% of dietary energy from carbohydrates for American and Canadian adults, while the FAO and WHO jointly recommend 55% to 75%. The four columns span both guidelines, which together cover 40% to 75% of daily caloric intake." }
+            },
+            {
+                "@type": "Question",
+                "name": "Is there a minimum amount of carbohydrate per day?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The Institute of Medicine recommends a minimum of 130 grams of carbohydrates per day for adults, roughly the amount the brain uses as glucose. Carbohydrates are not strictly essential nutrients, but very low intakes should be a deliberate, informed choice." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Carbohydrate Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Carbohydrate Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            How many <strong>carbohydrates</strong> should you eat a day? This calculator estimates your daily
+            calorie allowance from your age, build, and activity level, then shows the grams of carbohydrate that
+            make up <strong>40%, 55%, 65%, and 75%</strong> of that energy — for maintaining your weight, losing
+            it, or gaining it.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="flex gap-2 mb-5 no-print">
+                    <button id="btnUS" onclick="setUnit('us')" class="px-4 py-1.5 rounded-lg font-semibold text-sm bg-gray-200 text-gray-600">US Units</button>
+                    <button id="btnMetric" onclick="setUnit('metric')" class="px-4 py-1.5 rounded-lg font-semibold text-sm bg-[#3F51B5] text-white">Metric Units</button>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="age">Age <span class="font-normal text-gray-500">(ages 18 - 80)</span></label>
+                        <input type="number" id="age" value="25" min="18" max="80" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <span class="block text-sm font-semibold mb-1">Gender</span>
+                        <div class="flex gap-5 pt-2">
+                            <label class="flex items-center gap-2 text-sm"><input type="radio" name="sex" value="m" checked class="accent-[#3F51B5]"> Male</label>
+                            <label class="flex items-center gap-2 text-sm"><input type="radio" name="sex" value="f" class="accent-[#3F51B5]"> Female</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="usInputs" class="hidden grid sm:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Height</label>
+                        <div class="flex gap-2 items-center">
+                            <input type="number" id="hFeet" value="5" min="0" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">feet</span>
+                            <input type="number" id="hInch" value="10" min="0" max="11" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">inches</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="lb">Weight (pounds)</label>
+                        <input type="number" id="lb" value="160" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div id="metricInputs" class="grid sm:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="cm">Height (cm)</label>
+                        <input type="number" id="cm" value="180" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="kg">Weight (kg)</label>
+                        <input type="number" id="kg" value="60" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-sm font-semibold mb-1" for="activity">Activity</label>
+                    <select id="activity" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5] bg-white">
+                        <option value="1.2">Sedentary: little or no exercise</option>
+                        <option value="1.375" selected>Light: exercise 1-3 times/week</option>
+                        <option value="1.465">Moderate: exercise 4-5 times/week</option>
+                        <option value="1.55">Active: daily exercise or intense exercise 3-4 times/week</option>
+                        <option value="1.725">Very Active: intense exercise 6-7 times/week</option>
+                        <option value="1.9">Extra Active: very intense exercise daily, or physical job</option>
+                    </select>
+                </div>
+
+                <details class="mt-4">
+                    <summary class="font-semibold text-[#3F51B5] cursor-pointer text-sm">+ Settings</summary>
+                    <div class="mt-3 pl-1">
+                        <span class="block text-sm font-semibold mb-1">BMR estimation formula:</span>
+                        <div class="flex flex-col gap-2">
+                            <label class="flex items-center gap-2 text-sm"><input type="radio" name="formula" value="m" checked class="accent-[#3F51B5]"> Mifflin St Jeor</label>
+                            <label class="flex items-center gap-2 text-sm flex-wrap"><input type="radio" name="formula" value="k" class="accent-[#3F51B5]"> Katch-McArdle <span class="text-gray-500">(more accurate if you are lean and know your body fat %)</span></label>
+                            <div class="flex items-center gap-2 pl-6">
+                                <label class="text-sm" for="fatPct">Body fat:</label>
+                                <input type="number" id="fatPct" value="20" min="0" max="70" step="any" class="w-24 border border-gray-300 rounded-lg px-3 py-1.5 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">%</span>
+                                <a href="body-fat.html" class="text-sm text-[#3F51B5] underline">Calculate it</a>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <ul class="text-[13px] text-gray-500 mt-4 space-y-0.5 list-none pl-0">
+                    <li><strong>Exercise:</strong> 15-30 minutes of elevated heart rate activity.</li>
+                    <li><strong>Intense exercise:</strong> 45-120 minutes of elevated heart rate activity.</li>
+                    <li><strong>Very intense exercise:</strong> 2+ hours of elevated heart rate activity.</li>
+                </ul>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                        <p class="text-gray-700 leading-7">It is recommended that carbohydrates comprise 40-75% of daily caloric intake.</p>
+                        <div id="resTable" class="mt-4 overflow-x-auto"></div>
+                        <p class="text-sm text-gray-500 leading-6 mt-4">*The Institute of Medicine recommends American and Canadian adults to get 40% to 65% of their dietary energy from carbohydrates. The Food and Agriculture Organization and the World Health Organization jointly recommend 55% to 75% of total energy from carbohydrates, but only 10% directly from sugars.</p>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">The 130-gram floor</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        Whatever percentage you aim for, the Institute of Medicine suggests adults get at least
+                        130 grams of carbohydrate a day — roughly what the brain alone burns as glucose. The
+                        lowest column of a very small calorie allowance can dip under that floor; treat it as a
+                        signal to eat more, not less.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">What are carbohydrates?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Carbohydrates — carbs — are one of the three macronutrients that supply energy, alongside protein
+                and fat. The body breaks them down into glucose, its preferred and most immediate fuel, and what
+                isn't needed right away is stored as glycogen in the liver and muscles, or, once those stores are
+                full, converted to fat. Although carbs are not classed as essential nutrients — the body can make
+                glucose from other sources — they are its most efficient energy supply, and eating them in
+                controlled amounts is linked with lower risk of cardiovascular disease, obesity, and type 2
+                diabetes.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Types of carbohydrates</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Carbs are grouped as <strong>simple</strong> (mono- and disaccharides) or <strong>complex</strong>
+                (oligo- and polysaccharides) — roughly, sugars versus everything else — and into three chemical
+                families. <strong>Sugars</strong> are the simplest form, occurring naturally in fruit, vegetables,
+                and dairy, and in processed form in candy, cakes, cookies, and sweet drinks.
+                <strong>Starches</strong> are complex chains found in beans, vegetables, and grains.
+                <strong>Fiber</strong> is the indigestible complex carb in fruit, vegetables, whole grains, and
+                beans, and it is essential for healthy digestion. Many foods mix types, which is why the labels
+                are a guide rather than a verdict: what matters most is how refined the food is. Complex,
+                fiber-rich carbs digest slowly, keep you full longer, and carry other nutrients with them; simple,
+                refined carbs — the "empty carbs" of soda, juice, and pastries — deliver energy with little else
+                and are easy to over-consume.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">How many carbs should I eat?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                It depends on your size, activity, and goal — which is what the table above estimates. Two
+                reference points frame the answer: the Institute of Medicine recommends a minimum of
+                <strong>130 grams a day</strong> for adults, and guideline ranges put carbohydrate at
+                <strong>40-75% of daily calories</strong>. Source quality matters as much as quantity. Good carbs
+                are moderate in calories, high in nutrients and natural fiber, free of refined sugars and grains,
+                and low in sodium, saturated fat, cholesterol, and trans fats — whole grains, vegetables, fruit,
+                and beans are the textbook examples. Bad carbs invert that list: calorie-dense, nutrient-poor,
+                built on refined grains and added sugars such as corn syrup and fruit juice concentrates. Very
+                restrictive low-carb diets can suit particular people and situations, but they are a deliberate
+                choice, not a default — and if you are considering a drastic change, a dietitian is worth
+                consulting first. For the companion numbers, see the
+                <a href="protein.html" class="text-[#3F51B5] underline">Protein Calculator</a> and the
+                <a href="fat-intake.html" class="text-[#3F51B5] underline">Fat Intake Calculator</a>.
+            </p>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="calorie.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Calorie Calculator</span><span class="block text-sm text-gray-500 mt-1">Daily calories by goal, with zigzag schedules</span></a>
+                <a href="protein.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Protein Calculator</span><span class="block text-sm text-gray-500 mt-1">Protein needs by activity and goal</span></a>
+                <a href="fat-intake.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Fat Intake Calculator</span><span class="block text-sm text-gray-500 mt-1">Daily fat ranges by calorie level</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        let unit = 'metric';
+        const EC = 3.75; // kcal per gram of carbohydrate
+        const PCTS = [0.40, 0.55, 0.65, 0.75];
+
+        function phpRound(x, nd) {
+            const p = Math.pow(10, nd || 0);
+            return Math.sign(x) * Math.round(Math.abs(x) * p) / p;
+        }
+        function fmtInt(x) { return Math.round(x).toLocaleString('en-US'); }
+
+        function setUnit(u) {
+            unit = u;
+            $('usInputs').classList.toggle('hidden', u !== 'us');
+            $('metricInputs').classList.toggle('hidden', u !== 'metric');
+            $('btnUS').className = 'px-4 py-1.5 rounded-lg font-semibold text-sm ' + (u === 'us' ? 'bg-[#3F51B5] text-white' : 'bg-gray-200 text-gray-600');
+            $('btnMetric').className = 'px-4 py-1.5 rounded-lg font-semibold text-sm ' + (u === 'metric' ? 'bg-[#3F51B5] text-white' : 'bg-gray-200 text-gray-600');
+        }
+        function radioVal(name) { return document.querySelector(`input[name="${name}"]:checked`).value; }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('formError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+            };
+            const age = parseFloat($('age').value);
+            if (isNaN(age) || age < 18 || age > 80) return fail('Please enter an age between 18 and 80.');
+            const sex = radioVal('sex');
+            let kg, cm;
+            if (unit === 'us') {
+                const ft = parseFloat($('hFeet').value), inch = parseFloat($('hInch').value), lb = parseFloat($('lb').value);
+                if (isNaN(ft) || isNaN(inch) || isNaN(lb) || lb <= 0 || (ft * 12 + inch) <= 0) return fail('Please enter your height and weight.');
+                cm = (ft * 12 + inch) * 2.54;
+                kg = lb * 0.45359237;
+            } else {
+                cm = parseFloat($('cm').value); kg = parseFloat($('kg').value);
+                if (isNaN(cm) || isNaN(kg) || cm <= 0 || kg <= 0) return fail('Please enter your height and weight.');
+            }
+            const act = parseFloat($('activity').value);
+            const formula = radioVal('formula');
+            let bmr;
+            if (formula === 'k') {
+                const fat = parseFloat($('fatPct').value);
+                if (isNaN(fat) || fat < 0 || fat >= 100) return fail('Please enter a body fat percentage to use the Katch-McArdle formula.');
+                bmr = 370 + 21.6 * (1 - fat / 100) * kg;
+            } else {
+                bmr = 10 * kg + 6.25 * cm - 5 * age + (sex === 'm' ? 5 : -161);
+            }
+            // Everything flows from the UNROUNDED daily allowance; each goal row
+            // adds its delta before any rounding, as the reference does.
+            const base = bmr * act;
+            const goals = unit === 'us'
+                ? [['Weight Maintenance', 0], ['Lose 1 lb/week', -500], ['Lose 2 lb/week', -1000], ['Gain 1 lb/week', 500], ['Gain 2 lb/week', 1000]]
+                : [['Weight Maintenance', 0], ['Lose 0.5 kg/week', -500], ['Lose 1 kg/week', -1000], ['Gain 0.5 kg/week', 500], ['Gain 1 kg/week', 1000]];
+
+            let html = '<table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden"><thead><tr class="bg-[#E8EAF6] text-left">' +
+                '<th class="px-3 py-2">Goal</th><th class="px-3 py-2">Daily Calorie Allowance</th>' +
+                PCTS.map(p => `<th class="px-3 py-2">${Math.round(p * 100)}%*</th>`).join('') + '</tr></thead><tbody>';
+            for (const [label, delta] of goals) {
+                const calU = base + delta;
+                html += `<tr><td class="px-3 py-2 border-b border-gray-100 font-medium">${label}</td>` +
+                    `<td class="px-3 py-2 border-b border-gray-100">${fmtInt(phpRound(calU))} Calories</td>`;
+                for (const p of PCTS) {
+                    const gExact = calU * p / EC;
+                    let cell = `<strong>${fmtInt(phpRound(gExact))}</strong> grams`;
+                    if (unit === 'us') {
+                        cell += `<span class="block text-xs text-gray-400">(${phpRound(gExact / 28.349523125, 2).toFixed(2)} Oz) (${phpRound(gExact / 453.59237, 3).toFixed(3)} lb)</span>`;
+                    }
+                    html += `<td class="px-3 py-2 border-b border-gray-100">${cell}</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            $('resTable').innerHTML = html;
+
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+
+            if (push) {
+                const q = new URLSearchParams({ u: unit, a: $('age').value, s: sex, ft: $('hFeet').value, inch: $('hInch').value, lb: $('lb').value, cm: $('cm').value, kg: $('kg').value, act: $('activity').value, f: formula, fat: $('fatPct').value });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function setDefaults() {
+            $('age').value = 25;
+            document.querySelector('input[name="sex"][value="m"]').checked = true;
+            $('hFeet').value = 5; $('hInch').value = 10; $('lb').value = 160;
+            $('cm').value = 180; $('kg').value = 60;
+            $('activity').value = '1.375';
+            document.querySelector('input[name="formula"][value="m"]').checked = true;
+            $('fatPct').value = 20;
+            setUnit('metric');
+        }
+        function clearForm() {
+            setDefaults();
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            setUnit('metric');
+            const q = new URLSearchParams(location.search);
+            if (q.get('u')) setUnit(q.get('u'));
+            if (q.get('a')) $('age').value = q.get('a');
+            const sx = q.get('s'); if (sx) { const r = document.querySelector(`input[name="sex"][value="${sx}"]`); if (r) r.checked = true; }
+            if (q.get('ft')) $('hFeet').value = q.get('ft');
+            if (q.get('inch')) $('hInch').value = q.get('inch');
+            if (q.get('lb')) $('lb').value = q.get('lb');
+            if (q.get('cm')) $('cm').value = q.get('cm');
+            if (q.get('kg')) $('kg').value = q.get('kg');
+            if (q.get('act')) $('activity').value = q.get('act');
+            const fm = q.get('f'); if (fm) { const r = document.querySelector(`input[name="formula"][value="${fm}"]`); if (r) r.checked = true; }
+            if (q.get('fat')) $('fatPct').value = q.get('fat');
+            calculate(false);
+        })();
+    </script>
+</body>
+</html>
