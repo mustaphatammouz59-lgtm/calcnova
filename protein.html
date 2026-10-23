@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protein Calculator - CalcNova</title>
+    <meta name="description" content="Free protein calculator: your recommended daily protein intake in grams from the ADA, CDC, and WHO — based on your weight, activity level, age, and build.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/protein">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Protein Calculator - CalcNova">
+    <meta property="og:description" content="Daily protein recommendations from three authoritative institutions, in grams.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/protein">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Protein Calculator - CalcNova">
+    <meta name="twitter:description" content="How much protein a day? ADA, CDC, and WHO recommendations in grams.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Protein Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/protein" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How much protein do I need per day?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It depends on your weight and activity. The American Dietetic Association range runs from 0.8-1.0 g per kg of body weight when sedentary up to 1.0-1.8 g per kg when active; the WHO safe lower limit is 0.83 g per kg; and the CDC expresses protein as 10-35% of your daily calories." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why do the three recommendations differ?",
+                "acceptedAnswer": { "@type": "Answer", "text": "They answer different questions. The WHO figure is a safe minimum to avoid deficiency. The ADA range scales with activity, from maintenance up to muscle-building intakes. The CDC range is a share of total energy (10-35% of calories), so it rises with your calorie needs rather than directly with your weight." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is the protein RDA?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The commonly cited recommended dietary allowance is 0.8 g per kg of body weight per day - 56 grams for adult men and 46 grams for adult women in the standard age table. It is a minimum to maintain basic nutritional requirements, not an optimal target for active people." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Protein Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Protein Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            How much <strong>protein</strong> do you need a day? This calculator estimates the daily protein
+            intake adults require to stay healthy, using the published recommendations of three authoritative
+            institutions — the <strong>ADA</strong>, the <strong>CDC</strong>, and the <strong>WHO</strong>.
+            Children, highly active people, and pregnant or nursing women typically need more, and the figures
+            are also useful for monitoring intake with kidney disease, liver disease, diabetes, or other
+            conditions where protein matters.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="flex gap-2 mb-5 no-print">
+                    <button id="btnUS" onclick="setUnit('us')" class="px-4 py-1.5 rounded-lg font-semibold text-sm bg-gray-200 text-gray-600">US Units</button>
+                    <button id="btnMetric" onclick="setUnit('metric')" class="px-4 py-1.5 rounded-lg font-semibold text-sm bg-[#3F51B5] text-white">Metric Units</button>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="age">Age <span class="font-normal text-gray-500">(ages 18 - 80)</span></label>
+                        <input type="number" id="age" value="25" min="18" max="80" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <span class="block text-sm font-semibold mb-1">Gender</span>
+                        <div class="flex gap-5 pt-2">
+                            <label class="flex items-center gap-2 text-sm"><input type="radio" name="sex" value="m" checked class="accent-[#3F51B5]"> Male</label>
+                            <label class="flex items-center gap-2 text-sm"><input type="radio" name="sex" value="f" class="accent-[#3F51B5]"> Female</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="usInputs" class="hidden grid sm:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Height</label>
+                        <div class="flex gap-2 items-center">
+                            <input type="number" id="hFeet" value="5" min="0" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">feet</span>
+                            <input type="number" id="hInch" value="10" min="0" max="11" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">inches</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="lb">Weight (pounds)</label>
+                        <input type="number" id="lb" value="160" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+                <div id="metricInputs" class="grid sm:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="cm">Height (cm)</label>
+                        <input type="number" id="cm" value="180" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="kg">Weight (kg)</label>
+                        <input type="number" id="kg" value="60" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-sm font-semibold mb-1" for="activity">Activity</label>
+                    <select id="activity" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5] bg-white">
+                        <option value="1.2">Sedentary: little or no exercise</option>
+                        <option value="1.375" selected>Light: exercise 1-3 times/week</option>
+                        <option value="1.465">Moderate: exercise 4-5 times/week</option>
+                        <option value="1.55">Active: daily exercise or intense exercise 3-4 times/week</option>
+                        <option value="1.725">Very Active: intense exercise 6-7 times/week</option>
+                        <option value="1.9">Extra Active: very intense exercise daily, or physical job</option>
+                    </select>
+                </div>
+
+                <details class="mt-4">
+                    <summary class="font-semibold text-[#3F51B5] cursor-pointer text-sm">+ Settings</summary>
+                    <div class="mt-3 pl-1">
+                        <span class="block text-sm font-semibold mb-1">BMR estimation formula:</span>
+                        <div class="flex flex-col gap-2">
+                            <label class="flex items-center gap-2 text-sm"><input type="radio" name="formula" value="m" checked class="accent-[#3F51B5]"> Mifflin St Jeor</label>
+                            <label class="flex items-center gap-2 text-sm flex-wrap"><input type="radio" name="formula" value="k" class="accent-[#3F51B5]"> Katch-McArdle <span class="text-gray-500">(more accurate if you are lean and know your body fat %)</span></label>
+                            <div class="flex items-center gap-2 pl-6">
+                                <label class="text-sm" for="fatPct">Body fat:</label>
+                                <input type="number" id="fatPct" value="20" min="0" max="70" step="any" class="w-24 border border-gray-300 rounded-lg px-3 py-1.5 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">%</span>
+                                <a href="body-fat.html" class="text-sm text-[#3F51B5] underline">Calculate it</a>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <ul class="text-[13px] text-gray-500 mt-4 space-y-0.5 list-none pl-0">
+                    <li><strong>Exercise:</strong> 15-30 minutes of elevated heart rate activity.</li>
+                    <li><strong>Intense exercise:</strong> 45-120 minutes of elevated heart rate activity.</li>
+                    <li><strong>Very intense exercise:</strong> 2+ hours of elevated heart rate activity.</li>
+                </ul>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                        <p class="text-gray-700 leading-7">Based on the information given, the following are the basic protein intake recommendations from multiple authoritative institutions:</p>
+                        <div id="resBody" class="mt-4 space-y-3"></div>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">A minimum, not a target</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        The familiar 0.8 g/kg figure is the RDA — the least protein that maintains basic
+                        nutritional requirements for a sedentary adult. Active people, and anyone building
+                        muscle, generally do better higher in the ADA range, up toward 1.8 g/kg.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">What are proteins?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Proteins are one of the three energy-providing macronutrients, with fats and carbohydrates, but
+                energy is almost a side job: proteins do much of the actual work inside cells. They form the
+                structure of tissues and organs, regulate them, and carry signals and molecules around the body.
+                A protein is a chain of amino acids — 20 kinds in total, and their sequence decides the protein's
+                shape and role. Nine of them are <strong>essential amino acids</strong>: the body cannot make
+                them, so they must come from food, and missing them in sufficient amounts can be fatal. Foods
+                supplying all nine in good amounts are <strong>complete protein sources</strong> — animal foods
+                (meat, dairy, eggs, fish) and a few plant foods (soy, quinoa, buckwheat).
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                By the job they do, proteins fall into families: <strong>antibodies</strong>, which bind foreign
+                particles such as viruses and bacteria; <strong>enzymes</strong>, which build new molecules and
+                run the body's chemical reactions; <strong>messengers</strong>, which transmit signals that
+                coordinate body processes; <strong>structural components</strong>, the building blocks that let
+                the body move; and <strong>transport/storage</strong> proteins, which carry molecules where they
+                are needed. With that much riding on them, keeping protein intake adequate is basic maintenance,
+                not a bodybuilding niche.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">How much protein do I need?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Daily need depends on energy intake, growth, and above all body weight and activity level. It is
+                usually quoted per kilogram of body weight, as a share of calories (10-35%), or as a flat figure
+                by age. The commonly cited RDA is <strong>0.8 g/kg</strong> — a minimum for basic nutritional
+                requirements, below which deficiency becomes a risk. The recommended working range is roughly
+                <strong>0.8 to 1.8 g/kg</strong>: the bottom suits sedentary adults, while highly active people
+                and those building muscle sit at the top, with some sources suggesting 1.8 to 2 g/kg for the very
+                active. It is not an exact science — a dietitian, doctor, or qualified trainer can pin down an
+                individual target. The three figures this calculator shows are the ADA range for your activity
+                level, the CDC's 10-35%-of-calories band, and the WHO safe lower limit of 0.83 g/kg.
+            </p>
+
+            <h3 class="text-lg font-bold text-gray-800 mt-6 mb-2">Recommended dietary allowance (RDA) of protein, based on age</h3>
+            <div class="overflow-x-auto">
+            <table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden">
+                <thead><tr class="bg-[#E8EAF6] text-left"><th class="px-3 py-2"></th><th class="px-3 py-2">Protein Needed (grams/day)</th></tr></thead>
+                <tbody>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Age 1 - 3</td><td class="px-3 py-1.5 border-b border-gray-100">13</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Age 4 - 8</td><td class="px-3 py-1.5 border-b border-gray-100">19</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Age 9 - 13</td><td class="px-3 py-1.5 border-b border-gray-100">34</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Age 14 - 18 (Girls)</td><td class="px-3 py-1.5 border-b border-gray-100">46</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Age 14 - 18 (Boys)</td><td class="px-3 py-1.5 border-b border-gray-100">52</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Age 19 - 70+ (Women)</td><td class="px-3 py-1.5 border-b border-gray-100">46</td></tr>
+                    <tr><td class="px-3 py-1.5">Age 19 - 70+ (Men)</td><td class="px-3 py-1.5">56</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3 class="text-lg font-bold text-gray-800 mt-6 mb-2">Extra protein requirements for pregnancy and lactation</h3>
+            <div class="overflow-x-auto">
+            <table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden">
+                <thead><tr class="bg-[#E8EAF6] text-left"><th class="px-3 py-2"></th><th class="px-3 py-2">Safe Intake (grams/day)</th><th class="px-3 py-2">Additional Energy Requirement (kJ/day)</th><th class="px-3 py-2">Protein : energy ratio</th></tr></thead>
+                <tbody>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Pregnancy trimester 1</td><td class="px-3 py-1.5 border-b border-gray-100">1</td><td class="px-3 py-1.5 border-b border-gray-100">375</td><td class="px-3 py-1.5 border-b border-gray-100">0.04</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Pregnancy trimester 2</td><td class="px-3 py-1.5 border-b border-gray-100">10</td><td class="px-3 py-1.5 border-b border-gray-100">1,200</td><td class="px-3 py-1.5 border-b border-gray-100">0.11</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Pregnancy trimester 3</td><td class="px-3 py-1.5 border-b border-gray-100">31</td><td class="px-3 py-1.5 border-b border-gray-100">1,950</td><td class="px-3 py-1.5 border-b border-gray-100">0.23</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Lactation — first 6 months</td><td class="px-3 py-1.5 border-b border-gray-100">19</td><td class="px-3 py-1.5 border-b border-gray-100">2,800</td><td class="px-3 py-1.5 border-b border-gray-100">0.11</td></tr>
+                    <tr><td class="px-3 py-1.5">Lactation — after 6 months</td><td class="px-3 py-1.5">13</td><td class="px-3 py-1.5">1,925</td><td class="px-3 py-1.5">0.11</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Foods high in protein</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Most people get the bulk of their protein from meat and dairy, and those are the easiest route to
+                the RDA — but far from the only one. Plant-based sources usually carry less protein per serving,
+                yet a varied mix of them covers the requirement comfortably, and a blend of meat, dairy, and
+                plant foods is the balanced pattern. Complete proteins (all nine essential amino acids) include,
+                from animal sources: eggs, chicken breast, cottage cheese, Greek yogurt, milk, lean beef, tuna,
+                turkey breast, fish, and shrimp; and from plants: buckwheat, hummus with pita, soy products
+                (tofu, tempeh, edamame), peanut butter on bread, beans with rice, quinoa, hemp and chia seeds,
+                and spirulina. Incomplete proteins are not a problem food either — almonds, oats, broccoli,
+                lentils, Ezekiel bread, chia and pumpkin seeds, peanuts, Brussels sprouts, grapefruit, green
+                peas, avocados, and mushrooms are all healthy high-protein foods; variety across the day supplies
+                the missing amino acids. Balance, as ever, is the point.
+            </p>
+
+            <h3 class="text-lg font-bold text-gray-800 mt-6 mb-2">Amount of protein in common food</h3>
+            <div class="overflow-x-auto">
+            <table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden">
+                <thead><tr class="bg-[#E8EAF6] text-left"><th class="px-3 py-2"></th><th class="px-3 py-2">Protein Amount</th></tr></thead>
+                <tbody>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Milk (1 cup/8 oz)</td><td class="px-3 py-1.5 border-b border-gray-100">8 g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Egg (1 large/50 g)</td><td class="px-3 py-1.5 border-b border-gray-100">6 g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Meat (1 slice / 2 oz)</td><td class="px-3 py-1.5 border-b border-gray-100">14 g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Seafood (2 oz)</td><td class="px-3 py-1.5 border-b border-gray-100">16 g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Bread (1 slice/64 g)</td><td class="px-3 py-1.5 border-b border-gray-100">8 g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Corn (1 cup/166 g)</td><td class="px-3 py-1.5 border-b border-gray-100">16 g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Rice (1 cup/195 g)</td><td class="px-3 py-1.5 border-b border-gray-100">5 g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Dry Bean (1 cup/92 g)</td><td class="px-3 py-1.5 border-b border-gray-100">16 g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Nuts (1 cup/92 g)</td><td class="px-3 py-1.5 border-b border-gray-100">20 g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Fruits and Vegetables (1 cup)</td><td class="px-3 py-1.5 border-b border-gray-100">0-1 g</td></tr>
+                    <tr><td class="px-3 py-1.5 border-b border-gray-100">Pizza (1 slice/107 g)</td><td class="px-3 py-1.5 border-b border-gray-100">12 g</td></tr>
+                    <tr><td class="px-3 py-1.5">Hamburger (medium)</td><td class="px-3 py-1.5">20 g</td></tr>
+                </tbody>
+            </table>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="calorie.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Calorie Calculator</span><span class="block text-sm text-gray-500 mt-1">Daily calories by goal, with zigzag schedules</span></a>
+                <a href="carbohydrate.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Carbohydrate Calculator</span><span class="block text-sm text-gray-500 mt-1">Daily carb needs by guideline</span></a>
+                <a href="fat-intake.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Fat Intake Calculator</span><span class="block text-sm text-gray-500 mt-1">Daily fat ranges by calorie level</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        let unit = 'metric';
+        const EP = 4.1; // kcal per gram of protein
+
+        function phpRound(x, nd) {
+            const p = Math.pow(10, nd || 0);
+            return Math.sign(x) * Math.round(Math.abs(x) * p) / p;
+        }
+        function fmtInt(x) { return Math.round(x).toLocaleString('en-US'); }
+
+        function setUnit(u) {
+            unit = u;
+            $('usInputs').classList.toggle('hidden', u !== 'us');
+            $('metricInputs').classList.toggle('hidden', u !== 'metric');
+            $('btnUS').className = 'px-4 py-1.5 rounded-lg font-semibold text-sm ' + (u === 'us' ? 'bg-[#3F51B5] text-white' : 'bg-gray-200 text-gray-600');
+            $('btnMetric').className = 'px-4 py-1.5 rounded-lg font-semibold text-sm ' + (u === 'metric' ? 'bg-[#3F51B5] text-white' : 'bg-gray-200 text-gray-600');
+        }
+        function radioVal(name) { return document.querySelector(`input[name="${name}"]:checked`).value; }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('formError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+            };
+            const age = parseFloat($('age').value);
+            if (isNaN(age) || age < 18 || age > 80) return fail('Please enter an age between 18 and 80.');
+            const sex = radioVal('sex');
+            let kg, cm;
+            if (unit === 'us') {
+                const ft = parseFloat($('hFeet').value), inch = parseFloat($('hInch').value), lb = parseFloat($('lb').value);
+                if (isNaN(ft) || isNaN(inch) || isNaN(lb) || lb <= 0 || (ft * 12 + inch) <= 0) return fail('Please enter your height and weight.');
+                cm = (ft * 12 + inch) * 2.54;
+                kg = lb * 0.45359237;
+            } else {
+                cm = parseFloat($('cm').value); kg = parseFloat($('kg').value);
+                if (isNaN(cm) || isNaN(kg) || cm <= 0 || kg <= 0) return fail('Please enter your height and weight.');
+            }
+            const act = parseFloat($('activity').value);
+            const formula = radioVal('formula');
+            let bmr;
+            if (formula === 'k') {
+                const fat = parseFloat($('fatPct').value);
+                if (isNaN(fat) || fat < 0 || fat >= 100) return fail('Please enter a body fat percentage to use the Katch-McArdle formula.');
+                bmr = 370 + 21.6 * (1 - fat / 100) * kg;
+            } else {
+                bmr = 10 * kg + 6.25 * cm - 5 * age + (sex === 'm' ? 5 : -161);
+            }
+            const calU = bmr * act; // unrounded daily calories, drives the CDC band
+            // ADA: sedentary 0.8-1.0 g/kg; any higher activity 1.0-1.8 g/kg.
+            const sedentary = act === 1.2;
+            const adaLo = phpRound(kg * (sedentary ? 0.8 : 1.0));
+            const adaHi = phpRound(kg * (sedentary ? 1.0 : 1.8));
+            const cdcLo = phpRound(calU * 0.10 / EP);
+            const cdcHi = phpRound(calU * 0.35 / EP);
+            const who = phpRound(kg * 0.83);
+
+            const row = (name, text) =>
+                `<div class="flex justify-between items-baseline gap-4 py-2 border-b border-gray-100"><span class="text-gray-600 font-medium">${name}</span><span class="text-right text-gray-800">${text}</span></div>`;
+            $('resBody').innerHTML =
+                row('American Dietetic Association (ADA):', `at least <strong>${fmtInt(adaLo)} - ${fmtInt(adaHi)}</strong> grams/day.`) +
+                row('The Centers for Disease Control and Prevention (CDC):', `<strong>${fmtInt(cdcLo)} - ${fmtInt(cdcHi)}</strong> grams/day <span class="text-sm text-gray-500">(10-35% of daily caloric intake)</span>.`) +
+                `<div class="flex justify-between items-baseline gap-4 py-2"><span class="text-gray-600 font-medium">World Health Organization safe lower limit:</span><span class="text-right text-gray-800"><strong>${fmtInt(who)}</strong> grams/day.</span></div>`;
+
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+
+            if (push) {
+                const q = new URLSearchParams({ u: unit, a: $('age').value, s: sex, ft: $('hFeet').value, inch: $('hInch').value, lb: $('lb').value, cm: $('cm').value, kg: $('kg').value, act: $('activity').value, f: formula, fat: $('fatPct').value });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function setDefaults() {
+            $('age').value = 25;
+            document.querySelector('input[name="sex"][value="m"]').checked = true;
+            $('hFeet').value = 5; $('hInch').value = 10; $('lb').value = 160;
+            $('cm').value = 180; $('kg').value = 60;
+            $('activity').value = '1.375';
+            document.querySelector('input[name="formula"][value="m"]').checked = true;
+            $('fatPct').value = 20;
+            setUnit('metric');
+        }
+        function clearForm() {
+            setDefaults();
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            setUnit('metric');
+            const q = new URLSearchParams(location.search);
+            if (q.get('u')) setUnit(q.get('u'));
+            if (q.get('a')) $('age').value = q.get('a');
+            const sx = q.get('s'); if (sx) { const r = document.querySelector(`input[name="sex"][value="${sx}"]`); if (r) r.checked = true; }
+            if (q.get('ft')) $('hFeet').value = q.get('ft');
+            if (q.get('inch')) $('hInch').value = q.get('inch');
+            if (q.get('lb')) $('lb').value = q.get('lb');
+            if (q.get('cm')) $('cm').value = q.get('cm');
+            if (q.get('kg')) $('kg').value = q.get('kg');
+            if (q.get('act')) $('activity').value = q.get('act');
+            const fm = q.get('f'); if (fm) { const r = document.querySelector(`input[name="formula"][value="${fm}"]`); if (r) r.checked = true; }
+            if (q.get('fat')) $('fatPct').value = q.get('fat');
+            calculate(false);
+        })();
+    </script>
+</body>
+                                                                                       </html>
