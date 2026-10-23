@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pace Calculator - CalcNova</title>
+    <meta name="description" content="Free pace calculator: solve for pace, time, or distance, split times for popular race distances, a multipoint segment pace tool, a pace converter, and a finish time predictor.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/pace">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Pace Calculator - CalcNova">
+    <meta property="og:description" content="Pace, time and distance in one solver, plus splits, multipoint segment paces, a pace converter and a finish time predictor.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/pace">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pace Calculator - CalcNova">
+    <meta name="twitter:description" content="Find your pace, finish time, or distance — with splits for popular race distances.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Pace Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/pace" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How do I calculate pace from time and distance?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Divide your time by your distance. A 50:25 finish over 5 kilometers is 3025 seconds / 5 = 605 seconds per kilometer — a 10:05/km pace (16:14 per mile). This calculator does it in eight units at once and projects the same pace onto popular race distances." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is the difference between pace and speed?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Pace is time per unit of distance (minutes per mile or per kilometer) — the language of runners. Speed is distance per unit of time (mph or kph) — the language of vehicles and cycling computers. They are reciprocals: speed = 60 / pace in minutes, with unit conversions." }
+            },
+            {
+                "@type": "Question",
+                "name": "How is maximum heart rate estimated?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The most cited estimate is MHR = 220 − age. It is convenient but rough: individual maximums vary widely even among people of the same age and training, and a cardiac stress test is the accurate measurement. Training zones built on it (aerobic work around 70–80% of MHR, anaerobic around 80–90%) should be treated as starting points." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        .mode-btn { transition: all .15s; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Pace Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Pace Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Estimate the pace of a run, walk, or ride — or work backwards from a pace to a finish time or a distance.
+            Give the solver any two of time, distance, and pace; it finds the third, projects your pace onto popular
+            race distances, and lays out your splits.
+        </p>
+
+        <section class="bg-white rounded-xl shadow-md p-6 border border-gray-100 mt-6 max-w-3xl">
+            <div class="flex gap-2 mb-5 no-print">
+                <button type="button" id="modePace" onclick="setMode('pace')" class="mode-btn flex-1 px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white">Pace</button>
+                <button type="button" id="modeTime" onclick="setMode('time')" class="mode-btn flex-1 px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600">Time</button>
+                <button type="button" id="modeDistance" onclick="setMode('distance')" class="mode-btn flex-1 px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600">Distance</button>
+            </div>
+            <p class="text-sm text-gray-500 mb-4" id="modeHint">Enter time and distance — the calculator finds your pace.</p>
+
+            <div id="rowTime" class="mb-4">
+                <label class="block text-sm font-semibold mb-1" for="time">Time <span class="font-normal text-gray-400">(hh:mm:ss)</span></label>
+                <input type="text" id="time" value="00:50:25" class="w-full sm:w-64 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+            </div>
+            <div id="rowDistance" class="mb-4">
+                <label class="block text-sm font-semibold mb-1" for="dist">Distance</label>
+                <div class="flex flex-wrap gap-2">
+                    <input type="number" id="dist" value="5" min="0" step="any" class="w-32 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    <select id="distUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5]">
+                        <option value="Miles">Miles</option>
+                        <option value="Kilometers" selected>Kilometers</option>
+                        <option value="Meters">Meters</option>
+                        <option value="Yards">Yards</option>
+                    </select>
+                    <select id="eventPick" onchange="pickEvent()" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5] text-gray-600">
+                        <option value="">-- Or pick an event --</option>
+                        <option value="M">Marathon</option>
+                        <option value="HM">Half-Marathon</option>
+                        <option value="1K">1K</option>
+                        <option value="5K">5K</option>
+                        <option value="10K">10K</option>
+                        <option value="1M">1 Miles</option>
+                        <option value="5M">5 Miles</option>
+                        <option value="10M">10 Miles</option>
+                        <option value="800m">800 meters</option>
+                        <option value="1500m">1500 meters</option>
+                    </select>
+                </div>
+            </div>
+            <div id="rowPace" class="mb-4 hidden">
+                <label class="block text-sm font-semibold mb-1" for="pace">Pace <span id="paceHint" class="font-normal text-gray-400">(hh:mm:ss)</span></label>
+                <div class="flex flex-wrap gap-2">
+                    <input type="text" id="pace" value="00:08:10" class="w-32 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    <select id="paceUnit" onchange="paceHintUpdate()" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5]">
+                        <option value="tpm" selected>Per Mile</option>
+                        <option value="tpk">Per Kilometer</option>
+                        <option value="mph">Miles Per Hour</option>
+                        <option value="kph">Kilometers Per Hour</option>
+                        <option value="mpm">Meters Per Minute</option>
+                        <option value="mps">Meters Per Second</option>
+                        <option value="ypm">Yards Per Minute</option>
+                        <option value="yps">Yards Per Second</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex gap-3 mt-5 no-print">
+                <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                <button onclick="clearMain()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+            </div>
+            <p class="text-xs text-gray-400 mt-3">Placeholder zeros are optional in the time and pace fields — 5 minutes 3 seconds can be entered as 5:3.</p>
+            <p id="mainError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+            <div id="mainResult" class="result-box mt-6">
+                <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-[#F8FAFC]">
+                    <div id="mainHeadline"></div>
+                    <h3 class="font-bold text-gray-800 mt-5 mb-2">At this pace, the times required for popular race distances are:</h3>
+                    <div id="raceTable" class="grid sm:grid-cols-2 gap-x-8"></div>
+                    <h3 class="font-bold text-gray-800 mt-5 mb-2">Splits:</h3>
+                    <div id="splitTables" class="grid sm:grid-cols-2 gap-x-8 gap-y-4"></div>
+                    <div class="mt-4 flex items-center gap-3 no-print">
+                        <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                        <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="my-8 bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg no-print max-w-3xl">
+            <p class="font-medium">Advertisement</p>
+            <p class="text-sm">(300 x 250)</p>
+        </div>
+
+        <h2 class="text-2xl font-bold text-[#3F51B5] mt-10 mb-2">Multipoint Pace Calculator</h2>
+        <p class="text-gray-700 leading-7 max-w-3xl">
+            If you record your time at checkpoints along a route — and know the distance to each — this tool works out
+            how fast each segment was, and how your overall pace evolved. Run the same route repeatedly and the
+            segment table shows exactly where you gain or lose time.
+        </p>
+        <section class="bg-white rounded-xl shadow-md p-6 border border-gray-100 mt-4 max-w-3xl">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead><tr class="text-left text-gray-500 border-b border-gray-200"><th class="py-2 pr-2 w-8"></th><th class="py-2 pr-2" colspan="2">Distance (cumulative)</th><th class="py-2">Time (hh:mm:ss)</th></tr></thead>
+                    <tbody id="mpBody"></tbody>
+                </table>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 mt-4">
+                <label class="text-sm font-semibold" for="mpUnit">Your Preferred Pace Unit</label>
+                <select id="mpUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5]">
+                    <option value="tpm" selected>Per Mile</option>
+                    <option value="tpk">Per Kilometer</option>
+                    <option value="mph">Miles Per Hour</option>
+                    <option value="kph">Kilometers Per Hour</option>
+                    <option value="mpm">Meters Per Minute</option>
+                    <option value="mps">Meters Per Second</option>
+                    <option value="ypm">Yards Per Minute</option>
+                    <option value="yps">Yards Per Second</option>
+                </select>
+            </div>
+            <div class="flex gap-3 mt-4 no-print">
+                <button onclick="calcMulti()" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                <button onclick="clearMulti()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+            </div>
+            <p id="mpError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+            <div id="mpResult" class="result-box mt-6">
+                <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-[#F8FAFC]">
+                    <div id="mpTable" class="overflow-x-auto"></div>
+                    <p id="mpAverage" class="mt-4 text-gray-800"></p>
+                    <h4 class="font-bold text-gray-800 mt-5 mb-2">Pace Trends for Sections</h4>
+                    <div id="mpChart"></div>
+                </div>
+            </div>
+        </section>
+
+        <h2 class="text-2xl font-bold text-[#3F51B5] mt-10 mb-2">Pace Converter</h2>
+        <section class="bg-white rounded-xl shadow-md p-6 border border-gray-100 mt-4 max-w-3xl">
+            <div class="flex flex-wrap items-start gap-3">
+                <div>
+                    <input type="text" id="cvFrom" value="5:30" class="w-28 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    <p id="cvHint" class="text-xs text-gray-400 text-right mt-1">hh:mm:ss</p>
+                </div>
+                <select id="cvFromUnit" onchange="cvHintUpdate()" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5]">
+                    <option value="tpm" selected>Per Mile</option>
+                    <option value="tpk">Per Kilometer</option>
+                    <option value="mph">Miles Per Hour</option>
+                    <option value="kph">Kilometers Per Hour</option>
+                    <option value="mpm">Meters Per Minute</option>
+                    <option value="mps">Meters Per Second</option>
+                    <option value="ypm">Yards Per Minute</option>
+                    <option value="yps">Yards Per Second</option>
+                </select>
+                <span class="text-2xl font-bold text-gray-400 px-1">=</span>
+                <div>
+                    <div id="cvResult" class="min-h-[42px] flex items-center font-semibold text-gray-800 px-1">?</div>
+                </div>
+                <select id="cvToUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5]">
+                    <option value="tpm">Per Mile</option>
+                    <option value="tpk" selected>Per Kilometer</option>
+                    <option value="mph">Miles Per Hour</option>
+                    <option value="kph">Kilometers Per Hour</option>
+                    <option value="mpm">Meters Per Minute</option>
+                    <option value="mps">Meters Per Second</option>
+                    <option value="ypm">Yards Per Minute</option>
+                    <option value="yps">Yards Per Second</option>
+                </select>
+            </div>
+            <div class="flex gap-3 mt-4 no-print">
+                <button onclick="calcConvert()" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                <button onclick="clearConvert()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+            </div>
+            <p id="cvError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+            <p id="cvSentence" class="hidden mt-4 text-gray-800"></p>
+        </section>
+
+        <h2 class="text-2xl font-bold text-[#3F51B5] mt-10 mb-2">Finish Time Calculator</h2>
+        <p class="text-gray-700 leading-7 max-w-3xl">
+            Mid-race math: tell it how far you have covered and how long it took, and it projects your finish time
+            for the full distance at your current pace.
+        </p>
+        <section class="bg-white rounded-xl shadow-md p-6 border border-gray-100 mt-4 max-w-3xl">
+            <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold mb-1" for="ftNow">Current Distance Traveled</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="ftNow" value="1" min="0" step="any" class="w-28 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        <select id="ftNowUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5]">
+                            <option value="Miles">Miles</option>
+                            <option value="Kilometers" selected>Kilometers</option>
+                            <option value="Meters">Meters</option>
+                            <option value="Yards">Yards</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1" for="ftTime">Elapsed Time <span class="font-normal text-gray-400">(hh:mm:ss)</span></label>
+                    <input type="text" id="ftTime" value="6:15" class="w-40 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1" for="ftFull">Full Distance</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="ftFull" value="5" min="0" step="any" class="w-28 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        <select id="ftFullUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5]">
+                            <option value="Miles">Miles</option>
+                            <option value="Kilometers" selected>Kilometers</option>
+                            <option value="Meters">Meters</option>
+                            <option value="Yards">Yards</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-3 mt-5 no-print">
+                <button onclick="calcFinish()" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                <button onclick="clearFinish()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+            </div>
+            <p id="ftError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+            <div id="ftResult" class="result-box mt-6">
+                <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-[#F8FAFC]">
+                    <div id="ftBody"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="my-8 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print max-w-3xl">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">Typical races and world record paces</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                To feel what the numbers mean, compare your pace against the fastest humans alive. World record pace
+                barely changes between 100 m and 200 m — sprinters are already at top speed — then stretches steadily
+                as distance forces an aerobic bargain.
+            </p>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                    <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-4 py-2.5">Category</th><th class="px-4 py-2.5">Men's World Record Pace</th><th class="px-4 py-2.5">Women's World Record Pace</th></tr></thead>
+                    <tbody>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">100 meters</td><td class="px-4 py-2">2:35/mile or 1:36/km</td><td class="px-4 py-2">2:49/mile or 1:45/km</td></tr>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">200 meters</td><td class="px-4 py-2">2:35/mile or 1:36/km</td><td class="px-4 py-2">2:52/mile or 1:47/km</td></tr>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">400 meters</td><td class="px-4 py-2">2:54/mile or 1:48/km</td><td class="px-4 py-2">3:12/mile or 1:59/km</td></tr>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">800 meters</td><td class="px-4 py-2">3:23/mile or 2:06/km</td><td class="px-4 py-2">3:48/mile or 2:21/km</td></tr>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">1,500 meters</td><td class="px-4 py-2">3:41/mile or 2:17/km</td><td class="px-4 py-2">4:07/mile or 2:34/km</td></tr>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">1 mile</td><td class="px-4 py-2">3:43/mile or 2:19/km</td><td class="px-4 py-2">4:13/mile or 2:37/km</td></tr>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">5K</td><td class="px-4 py-2">4:04/mile or 2:31/km</td><td class="px-4 py-2">4:34/mile or 2:50/km</td></tr>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">10K</td><td class="px-4 py-2">4:14/mile or 2:38/km</td><td class="px-4 py-2">4:45/mile or 2:57/km</td></tr>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">Half Marathon (13.11 miles / 21.098 km)</td><td class="px-4 py-2">4:27/mile or 2:46/km</td><td class="px-4 py-2">4:58/mile or 3:05/km</td></tr>
+                        <tr class="border-t border-gray-100"><td class="px-4 py-2">Marathon (26.22 miles / 42.195 km)</td><td class="px-4 py-2">4:41/mile or 2:55/km</td><td class="px-4 py-2">5:10/mile or 3:13/km</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Training through pace and heart rate</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Pace measures movement; heart rate measures cost — the number of heart contractions per minute.
+                The two rise together, and using both in training is how you improve performance without
+                over-training: pace tells you what you did, heart rate tells you what it took.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                A typical adult resting heart rate sits between 60 and 100 bpm (some argue the healthy band is really
+                50–90); lower usually means a more efficient heart, though anything under 50 or over 90 deserves a
+                doctor's look. Maximum heart rate is pinned down properly only by a cardiac stress test — ten to
+                twenty minutes of escalating effort under supervision — so most people estimate it with the most
+                cited formula in fitness:
+            </p>
+            <p class="text-center text-xl font-bold text-gray-800 my-4">MHR = 220 − age</p>
+            <p class="text-gray-700 leading-7 mb-4">
+                Treat that number as a sketch, not a measurement: it carries no standard deviation, and real maximums
+                scatter widely between similar people. Still, zones built on it are useful references — an intensity
+                of 60–70% of MHR is the classic fat-burning band, and steady aerobic work generally lives around
+                55–85% of MHR for 20–30 minutes at a time.
+            </p>
+            <h3 class="font-bold text-gray-800 mt-6 mb-2">Aerobic vs. anaerobic</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Aerobic exercise (roughly 70–80% of MHR) is light activity sustained for a long time: oxygen supply
+                meets demand, and muscles produce their energy cleanly. Anaerobic exercise (roughly 80–90%) is the
+                short, intense end — oxygen can't keep up, muscles burn sugar directly, and the byproduct, lactate,
+                produces the familiar burn and eventually forces a stop if it isn't cleared. The pace you can hold
+                while staying aerobic — your aerobic threshold pace — is the foundation of marathon training,
+                because it balances fat and carbohydrate use and can be held for hours. The anaerobic (lactate)
+                threshold is where glycogen takes over as the primary fuel and lactate starts accumulating faster
+                than it can be removed; threshold training exists to push that point later, which is another way of
+                saying: farther and faster before the wall.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                Labs measure thresholds directly, but a good field estimate comes from a 2005 study's method: run a
+                solo 30-minute time trial at maximum sustainable effort and average your heart rate over the last 20
+                minutes — that average estimates your lactate threshold heart rate (in a group, extend the trial to
+                60 minutes). Subtract 30 bpm and you have an estimate of your aerobic threshold heart rate.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">FAQ</h2>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">How do I calculate pace from time and distance?</h4>
+                    <p class="text-gray-700 leading-7">Divide time by distance: 50:25 over 5 km is 3,025 ÷ 5 = 605 seconds per kilometer, a 10:05/km pace. The solver above also converts it to per-mile, mph, kph, meters per minute, and meters per second in one pass.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Pace or speed — which should I train with?</h4>
+                    <p class="text-gray-700 leading-7">Runners think in pace because races are fixed distances and the question is time per kilometer. Cyclists think in speed because wind and terrain make distance-per-hour the natural readout. They are the same information, inverted — the converter above flips between them.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">How accurate is the finish time projection?</h4>
+                    <p class="text-gray-700 leading-7">It assumes you hold your current pace exactly — no fade, no kick, no hills. Real races drift, which is why the multipoint tool matters: it shows whether your segments are speeding up or slowing down, so the projection can be believed or discounted.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="calorie.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Calorie Calculator</span><span class="block text-sm text-gray-500 mt-1">Fuel for the miles</span></a>
+                <a href="bmi.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">BMI Calculator</span><span class="block text-sm text-gray-500 mt-1">Where your weight sits for your height</span></a>
+                <a href="body-fat.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Body Fat Calculator</span><span class="block text-sm text-gray-500 mt-1">The composition behind the weight</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const MILE_KM = 1.60935;          // pace-conversion constant (matches reference behavior)
+        const MILE_M = 1609.344, YARD_M = 0.9144;
+        const DIST_M = { Miles: MILE_M, Kilometers: 1000, Meters: 1, Yards: YARD_M };
+        const PACE_LABEL = { tpm: 'Per Mile', tpk: 'Per Kilometer', mph: 'Miles Per Hour', kph: 'Kilometers Per Hour', mpm: 'Meters Per Minute', mps: 'Meters Per Second', ypm: 'Yards Per Minute', yps: 'Yards Per Second' };
+        const EVENTS = { M: ['42.195', 'Kilometers'], HM: ['21.0975', 'Kilometers'], '1K': ['1', 'Kilometers'], '5K': ['5', 'Kilometers'], '10K': ['10', 'Kilometers'], '1M': ['1', 'Miles'], '5M': ['5', 'Miles'], '10M': ['10', 'Miles'], '800m': ['800', 'Meters'], '1500m': ['1500', 'Meters'] };
+        let mode = 'pace';
+
+        // ---------- formatting ----------
+        function trimNum(n, dp) {
+            let s = n.toFixed(dp);
+            if (s.includes('.')) s = s.replace(/0+$/, '').replace(/\.$/, '');
+            return s;
+        }
+        function commaNum(n, dp) {
+            const [i, f] = n.toFixed(dp).split('.');
+            const ci = i.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            if (dp === 0) return ci;
+            const tf = f.replace(/0+$/, '');
+            return tf ? ci + '.' + tf : ci;
+        }
+        function commaFixed(n, dp) {
+            const [i, f] = n.toFixed(dp).split('.');
+            const ci = i.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return dp === 0 ? ci : ci + '.' + f;
+        }
+        function verbal(sec, trunc) {
+            if (trunc) sec = Math.floor(sec * 100 + 1e-9) / 100; else sec = Math.round(sec * 100) / 100;
+            let h = Math.floor(sec / 3600), m = Math.floor((sec - 3600 * h) / 60), s = sec - 3600 * h - 60 * m;
+            const sv = Math.round(s * 100) / 100;
+            const parts = [];
+            if (h > 0) parts.push(`${h} hour${h === 1 ? '' : 's'}`);
+            if (m > 0) parts.push(`${m} minute${m === 1 ? '' : 's'}`);
+            if (sv > 0 || parts.length === 0) parts.push(`${trimNum(sv, 2)} second${sv === 1 ? '' : 's'}`);
+            if (parts.length === 3) return `${parts[0]}, ${parts[1]}, and ${parts[2]}`;
+            if (parts.length === 2) return `${parts[0]} and ${parts[1]}`;
+            return parts[0];
+        }
+        function hms(sec) {
+            const t = Math.round(sec);
+            const h = Math.floor(t / 3600), m = Math.floor((t - 3600 * h) / 60), s = t - 3600 * h - 60 * m;
+            const p2 = n => String(n).padStart(2, '0');
+            return h > 0 ? `${h}:${p2(m)}:${p2(s)}` : `${m}:${p2(s)}`;
+        }
+        function parseHMS(str) {
+            const parts = String(str).trim().split(':').map(x => parseFloat(x));
+            if (parts.some(isNaN)) return NaN;
+            if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+            if (parts.length === 2) return parts[0] * 60 + parts[1];
+            if (parts.length === 1) return parts[0];
+            return NaN;
+        }
+        // pace value in a given unit -> seconds per km (1.60935 family)
+        function paceToSecPerKm(val, unit) {
+            switch (unit) {
+                case 'tpm': return val / MILE_KM;
+                case 'tpk': return val;
+                case 'mph': return 3600 / (val * MILE_KM);
+                case 'kph': return 3600 / val;
+                case 'mpm': return 60000 / val;
+                case 'mps': return 1000 / val;
+                case 'ypm': return 60000 / (val * YARD_M);
+                case 'yps': return 1000 / (val * YARD_M);
+            }
+        }
+        // seconds per km -> pace value in a given unit (1.60935 family)
+        function secPerKmToPace(spk, unit) {
+            switch (unit) {
+                case 'tpm': return spk * MILE_KM;
+                case 'tpk': return spk;
+                case 'mph': return 3600 / (spk * MILE_KM);
+                case 'kph': return 3600 / spk;
+                case 'mpm': return 60000 / spk;
+                case 'mps': return 1000 / spk;
+                case 'ypm': return 60000 / spk / YARD_M;
+                case 'yps': return 1000 / spk / YARD_M;
+            }
+        }
+        function paceValueFromInput(raw, unit) {
+            return (unit === 'tpm' || unit === 'tpk') ? parseHMS(raw) : parseFloat(raw);
+        }
+        function isTimeUnit(u) { return u === 'tpm' || u === 'tpk'; }
+
+        // ---------- main solver ----------
+        function setMode(m) {
+            mode = m;
+            const on = 'mode-btn flex-1 px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white';
+            const off = 'mode-btn flex-1 px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600';
+            $('modePace').className = m === 'pace' ? on : off;
+            $('modeTime').className = m === 'time' ? on : off;
+            $('modeDistance').className = m === 'distance' ? on : off;
+            $('rowTime').classList.toggle('hidden', m === 'time');
+            $('rowDistance').classList.toggle('hidden', m === 'distance');
+            $('rowPace').classList.toggle('hidden', m === 'pace');
+            $('modeHint').textContent = m === 'pace' ? 'Enter time and distance — the calculator finds your pace.'
+                : m === 'time' ? 'Enter distance and pace — the calculator finds your time.'
+                : 'Enter time and pace — the calculator finds your distance.';
+        }
+        function paceHintUpdate() { $('paceHint').textContent = isTimeUnit($('paceUnit').value) ? '(hh:mm:ss)' : '(a number)'; }
+        function pickEvent() {
+            const v = $('eventPick').value;
+            if (EVENTS[v]) { $('dist').value = EVENTS[v][0]; $('distUnit').value = EVENTS[v][1]; }
+        }
+        function rowLine(label, val) {
+            return `<div class="flex justify-between gap-4 py-1.5 border-b border-gray-100"><span class="text-gray-600">${label}</span><span class="font-semibold text-gray-900 text-right">${val}</span></div>`;
+        }
+        function raceAndSplits(spkRace, journeyKm) {
+            const RACES = [['1K', 1], ['1 mile', MILE_KM], ['3K', 3], ['3 miles', 3 * MILE_KM], ['5K', 5], ['5 miles', 5 * MILE_KM], ['10K', 10], ['10 miles', 10 * MILE_KM], ['Marathon', 42.195], ['½ Marathon', 21.0975], ['400 meters', 0.4], ['800 meters', 0.8]];
+            $('raceTable').innerHTML = RACES.map(([label, km]) => rowLine(label, hms(spkRace * km))).join('');
+            const kmN = Math.floor(journeyKm + 1e-9), miN = Math.floor(journeyKm * 1000 / MILE_M + 1e-9);
+            let html = '';
+            if (kmN >= 1) html += `<div><h4 class="font-semibold text-gray-700 mb-1">Kilometers</h4>${Array.from({ length: kmN }, (_, i) => rowLine(`${i + 1}K`, hms(spkRace * (i + 1)))).join('')}</div>`;
+            if (miN >= 1) html += `<div><h4 class="font-semibold text-gray-700 mb-1">Miles</h4>${Array.from({ length: miN }, (_, i) => rowLine(`${i + 1} mile`, hms(spkRace * MILE_KM * (i + 1)))).join('')}</div>`;
+            $('splitTables').innerHTML = html || '<p class="text-gray-500 text-sm">Cover at least 1 km to see splits.</p>';
+        }
+        function calculate(push) {
+            $('mainError').classList.add('hidden');
+            const timeSec = parseHMS($('time').value);
+            const distVal = parseFloat($('dist').value);
+            const distM = distVal * DIST_M[$('distUnit').value];
+            const paceVal = paceValueFromInput($('pace').value, $('paceUnit').value);
+            const bad = (mode !== 'time' && (isNaN(timeSec) || timeSec <= 0)) || (mode !== 'distance' && (isNaN(distVal) || distVal <= 0)) || (mode !== 'pace' && (isNaN(paceVal) || paceVal <= 0));
+            if (bad) {
+                const e = $('mainError');
+                e.textContent = 'Please enter valid positive values for the two inputs this mode needs.';
+                e.classList.remove('hidden');
+                $('mainResult').style.display = 'none';
+                return;
+            }
+            let spkRace, journeyKm, headline = '';
+            if (mode === 'pace') {
+                spkRace = timeSec / (distM / 1000);
+                journeyKm = distM / 1000;
+                const spm = spkRace * MILE_KM;
+                headline = `<p class="font-bold text-gray-800 mb-2">Pace in different units:</p>
+                    <p class="py-1"><span class="font-bold text-green-700 text-lg">${verbal(spm)}</span> <span class="text-gray-600">per mile</span></p>
+                    <p class="py-1"><span class="font-bold text-green-700 text-lg">${verbal(spkRace)}</span> <span class="text-gray-600">per kilometer</span></p>
+                    <p class="py-1"><span class="font-bold text-green-700 text-lg">${commaNum(3600 / spm, 2)}</span> <span class="text-gray-600">miles/hour</span></p>
+                    <p class="py-1"><span class="font-bold text-green-700 text-lg">${commaNum(3600 / spkRace, 2)}</span> <span class="text-gray-600">kilometers/hour</span></p>
+                    <p class="py-1"><span class="font-bold text-green-700 text-lg">${commaNum(60000 / spkRace, 2)}</span> <span class="text-gray-600">meters/minute</span></p>
+                    <p class="py-1"><span class="font-bold text-green-700 text-lg">${commaNum(1000 / spkRace, 2)}</span> <span class="text-gray-600">meters/second</span></p>`;
+            } else if (mode === 'time') {
+                spkRace = paceToSecPerKm(paceVal, $('paceUnit').value);
+                journeyKm = distM / 1000;
+                // headline total via SI meters (matches the reference's rounding)
+                const speedMs = 1000 / paceToSecPerKmSI(paceVal, $('paceUnit').value);
+                const total = distM / speedMs;
+                headline = `<p class="text-gray-700">With the given distance and pace, the time required will be: <strong class="text-green-700 text-lg">${verbal(total, true)}</strong>.</p>`;
+            } else {
+                spkRace = paceToSecPerKm(paceVal, $('paceUnit').value);
+                const dKm = timeSec / spkRace;
+                const dM = dKm * 1000;
+                journeyKm = dKm;
+                const miles = dKm / MILE_KM;
+                headline = `<p class="text-gray-700 leading-8">With the given time and pace, the distance traveled will be:<br>
+                    <strong class="text-green-700 text-lg">${commaNum(miles, 3)} Miles</strong> <span class="text-gray-500">or</span>
+                    <strong class="text-green-700 text-lg">${commaNum(dM / 1000, 3)} Kilometers</strong> <span class="text-gray-500">or</span>
+                    <strong class="text-green-700 text-lg">${commaFixed(dM, 1)} Meters</strong> <span class="text-gray-500">or</span>
+                    <strong class="text-green-700 text-lg">${commaFixed(miles * 1760, 1)} Yards</strong></p>`;
+            }
+            $('mainHeadline').innerHTML = headline;
+            raceAndSplits(spkRace, journeyKm);
+            $('mainResult').style.display = 'block';
+            $('shareMsg').textContent = '';
+            if (push) {
+                const q = new URLSearchParams({ m: mode });
+                if (mode !== 'time') q.set('t', $('time').value);
+                if (mode !== 'distance') { q.set('d', $('dist').value); q.set('du', $('distUnit').value); }
+                if (mode !== 'pace') { q.set('p', $('pace').value); q.set('pu', $('paceUnit').value); }
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        // SI variant for headline totals: per-mile pace converts with the exact 1609.344 m mile
+        function paceToSecPerKmSI(val, unit) {
+            switch (unit) {
+                case 'tpm': return val * 1000 / MILE_M;
+                case 'mph': return 3600 / (val * MILE_M / 1000);
+                case 'ypm': return 60000 / (val * YARD_M);
+                case 'yps': return 1000 / (val * YARD_M);
+                default: return paceToSecPerKm(val, unit);
+            }
+        }
+        function clearMain() {
+            $('time').value = '00:50:25'; $('dist').value = 5; $('distUnit').value = 'Kilometers';
+            $('pace').value = '00:08:10'; $('paceUnit').value = 'tpm'; $('eventPick').value = '';
+            setMode('pace'); paceHintUpdate(); calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        // ---------- multipoint ----------
+        const MP_DEFAULTS = [[1, 'Kilometers', '3:25'], [2, 'Kilometers', '6:55'], [3, 'Kilometers', '10:25'], [4, 'Kilometers', '14:01'], [5, 'Kilometers', '17:25']];
+        function buildMpRows() {
+            $('mpBody').innerHTML = Array.from({ length: 12 }, (_, i) => {
+                const d = MP_DEFAULTS[i];
+                return `<tr class="border-b border-gray-50">
+                    <td class="py-1.5 pr-2 text-gray-500">${i + 1}.</td>
+                    <td class="py-1.5 pr-2"><input type="text" id="mpd${i}" value="${d ? d[0] : ''}" class="w-20 border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5]"></td>
+                    <td class="py-1.5 pr-2"><select id="mpu${i}" class="border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5]">
+                        <option value="Kilometers" ${d && d[1] === 'Kilometers' ? 'selected' : ''}>Kilometers</option>
+                        <option value="Miles" ${d && d[1] === 'Miles' ? 'selected' : ''}>Miles</option>
+                        <option value="Meters" ${d && d[1] === 'Meters' ? 'selected' : ''}>Meters</option>
+                        <option value="Yards" ${d && d[1] === 'Yards' ? 'selected' : ''}>Yards</option></select></td>
+                    <td class="py-1.5"><input type="text" id="mpt${i}" value="${d ? d[2] : ''}" class="w-24 border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5]"></td></tr>`;
+            }).join('');
+        }
+        function hmsLoose(sec) {
+            const t = Math.round(sec);
+            const h = Math.floor(t / 3600), m = Math.floor((t - 3600 * h) / 60), s = t - 3600 * h - 60 * m;
+            const parts = [];
+            if (h > 0) parts.push(h, m, s); else if (m > 0) parts.push(m, s); else parts.push(0, s);
+            return parts.join(':');
+        }
+        function mpPaceFmt(spk, unit) {
+            const v = secPerKmToPace(spk, unit);
+            if (!isTimeUnit(unit)) return commaNum(v, 2);
+            const t = Math.round(v * 100) / 100;
+            const h = Math.floor(t / 3600), m = Math.floor((t - 3600 * h) / 60);
+            const sInt = Math.floor(t - 3600 * h - 60 * m);
+            const frac = Math.round((t - Math.floor(t)) * 100);
+            if (frac === 0) return hmsLoose(t);
+            const p2 = n => String(n).padStart(2, '0');
+            return h > 0 ? `${h}:${p2(m)}:${p2(sInt)}.${p2(frac)}` : `${m}:${p2(sInt)}.${p2(frac)}`;
+        }
+        function calcMulti() {
+            $('mpError').classList.add('hidden');
+            const pts = [];
+            for (let i = 0; i < 12; i++) {
+                const dv = parseFloat($('mpd' + i).value), tv = parseHMS($('mpt' + i).value);
+                if (!isNaN(dv) && dv > 0 && !isNaN(tv)) pts.push({ dM: dv * DIST_M[$('mpu' + i).value], t: tv, unit: $('mpu' + i).value });
+            }
+            if (pts.length < 2) {
+                const e = $('mpError');
+                e.textContent = 'Enter at least two checkpoints with a distance and a time.';
+                e.classList.remove('hidden');
+                $('mpResult').style.display = 'none';
+                return;
+            }
+            const unit = $('mpUnit').value;
+            const unitHead = isTimeUnit(unit) ? `(H:M:S ${PACE_LABEL[unit]})` : `(${PACE_LABEL[unit]})`;
+            let prevD = 0, prevT = 0, rows = '', chartData = [];
+            pts.forEach((p, i) => {
+                const segD = p.dM - prevD, segT = p.t - prevT;
+                const segSpk = segT / (segD / 1000), accSpk = p.t / (p.dM / 1000);
+                const segInUnit = segD / DIST_M[p.unit];
+                rows += `<tr class="border-t border-gray-100"><td class="px-3 py-2">${i + 1}.</td><td class="px-3 py-2">${trimNum(segInUnit, 3)}</td><td class="px-3 py-2">${hmsLoose(segT)}</td><td class="px-3 py-2 font-semibold">${mpPaceFmt(segSpk, unit)}</td><td class="px-3 py-2 font-semibold">${mpPaceFmt(accSpk, unit)}</td></tr>`;
+                chartData.push(secPerKmToPace(segSpk, unit));
+                prevD = p.dM; prevT = p.t;
+            });
+            $('mpTable').innerHTML = `<table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-3 py-2.5"></th><th class="px-3 py-2.5" colspan="3">This Section</th><th class="px-3 py-2.5">Accumulated Pace ${unitHead}</th></tr>
+                <tr class="bg-[#E8EAF6] text-gray-700"><th class="px-3 py-2"></th><th class="px-3 py-2">Distance (${pts[0].unit})</th><th class="px-3 py-2">Time (H:M:S)</th><th class="px-3 py-2">Pace ${unitHead}</th><th class="px-3 py-2"></th></tr></thead>
+                <tbody>${rows}</tbody></table>`;
+            const totalSpk = prevT / (prevD / 1000);
+            $('mpAverage').innerHTML = isTimeUnit(unit)
+                ? `Average Pace: <strong class="text-green-700">${verbal(secPerKmToPace(totalSpk, unit))}</strong> ${PACE_LABEL[unit]}`
+                : `Average Pace: <strong class="text-green-700">${commaNum(secPerKmToPace(totalSpk, unit), 2)}</strong> ${PACE_LABEL[unit]}`;
+            const max = Math.max(...chartData);
+            $('mpChart').innerHTML = chartData.map((v, i) => `
+                <div class="flex items-center gap-2 mb-1.5">
+                    <span class="w-6 text-xs text-gray-500 text-right">${i + 1}</span>
+                    <div class="bg-[#3F51B5] rounded" style="height:16px;width:${Math.max(2, v / max * 100)}%"></div>
+                    <span class="text-xs text-gray-600">${isTimeUnit(unit) ? mpPaceFmt(paceToSecPerKm(v, unit), unit) : commaNum(v, 2)}</span>
+                </div>`).join('') + `<p class="text-xs text-gray-400 mt-1">Section pace (${PACE_LABEL[unit]}).</p>`;
+            $('mpResult').style.display = 'block';
+        }
+        function clearMulti() {
+            for (let i = 0; i < 12; i++) { $('mpd' + i).value = ''; $('mpt' + i).value = ''; $('mpu' + i).value = 'Kilometers'; }
+            MP_DEFAULTS.forEach((d, i) => { $('mpd' + i).value = d[0]; $('mpu' + i).value = d[1]; $('mpt' + i).value = d[2]; });
+            $('mpUnit').value = 'tpm';
+            calcMulti();
+        }
+
+        // ---------- converter ----------
+        function cvHintUpdate() { $('cvHint').textContent = isTimeUnit($('cvFromUnit').value) ? 'hh:mm:ss' : ''; }
+        function calcConvert() {
+            $('cvError').classList.add('hidden');
+            $('cvSentence').classList.add('hidden');
+            const fu = $('cvFromUnit').value, tu = $('cvToUnit').value;
+            const raw = $('cvFrom').value;
+            const val = paceValueFromInput(raw, fu);
+            if (isNaN(val) || val <= 0) {
+                const e = $('cvError');
+                e.textContent = 'Please enter a valid positive pace.';
+                e.classList.remove('hidden');
+                $('cvResult').textContent = '?';
+                return;
+            }
+            const spk = paceToSecPerKm(val, fu);
+            const out = secPerKmToPace(spk, tu);
+            const srcTxt = isTimeUnit(fu) ? verbal(val) : trimNum(val, 6);
+            const outTxt = isTimeUnit(tu) ? verbal(out) : trimNum(Math.round(out * 1000) / 1000, 3);
+            $('cvResult').textContent = outTxt;
+            const s = $('cvSentence');
+            s.innerHTML = `<strong>${srcTxt}</strong> ${PACE_LABEL[fu]} = <strong class="text-green-700">${outTxt}</strong> ${PACE_LABEL[tu]}`;
+            s.classList.remove('hidden');
+        }
+        function clearConvert() {
+            $('cvFrom').value = '5:30'; $('cvFromUnit').value = 'tpm'; $('cvToUnit').value = 'tpk';
+            cvHintUpdate(); calcConvert();
+        }
+
+        // ---------- finish time ----------
+        function calcFinish() {
+            $('ftError').classList.add('hidden');
+            const nowM = parseFloat($('ftNow').value) * DIST_M[$('ftNowUnit').value];
+            const fullVal = parseFloat($('ftFull').value);
+            const fullM = fullVal * DIST_M[$('ftFullUnit').value];
+            const elapsed = parseHMS($('ftTime').value);
+            if (isNaN(nowM) || nowM <= 0 || isNaN(fullM) || fullM <= 0 || isNaN(elapsed) || elapsed <= 0) {
+                const e = $('ftError');
+                e.textContent = 'Please enter valid positive distances and an elapsed time.';
+                e.classList.remove('hidden');
+                $('ftResult').style.display = 'none';
+                return;
+            }
+            const spk = elapsed / (nowM / 1000);
+            const total = spk * (fullM / 1000);
+            const spm = spk * MILE_KM;
+            const line = (txt, label) => `<p class="py-0.5"><span class="font-bold text-green-700">${txt}</span> <span class="text-gray-600">${label}</span></p>`;
+            $('ftBody').innerHTML = `
+                <p class="text-gray-700">At current pace, it will take <strong class="text-green-700 text-lg">${verbal(total)}</strong> to finish ${trimNum(fullVal, 6)} ${$('ftFullUnit').value}</p>
+                <p class="font-bold text-gray-800 mt-4 mb-1">Your pace so far:</p>
+                ${line(verbal(spm), 'Per Mile')}
+                ${line(verbal(spk), 'Per Kilometer')}
+                ${line(commaNum(3600 / spm, 2), 'Miles Per Hour')}
+                ${line(commaNum(3600 / spk, 2), 'Kilometers Per Hour')}
+                ${line(commaNum(60000 / spk, 2), 'Meters Per Minute')}
+                ${line(commaNum(1000 / spk, 2), 'Meters Per Second')}
+                ${line(commaNum(60000 / spk / YARD_M, 2), 'Yards Per Minute')}
+                ${line(commaNum(1000 / spk / YARD_M, 2), 'Yards Per Second')}`;
+            $('ftResult').style.display = 'block';
+        }
+        function clearFinish() {
+            $('ftNow').value = 1; $('ftNowUnit').value = 'Kilometers'; $('ftTime').value = '6:15';
+            $('ftFull').value = 5; $('ftFullUnit').value = 'Kilometers';
+            calcFinish();
+        }
+
+        // ---------- init ----------
+        buildMpRows();
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            if (q.get('m') === 'time' || q.get('m') === 'distance' || q.get('m') === 'pace') setMode(q.get('m'));
+            if (q.get('t')) $('time').value = q.get('t');
+            if (q.get('d')) $('dist').value = q.get('d');
+            if (q.get('du')) $('distUnit').value = q.get('du');
+            if (q.get('p')) $('pace').value = q.get('p');
+            if (q.get('pu')) $('paceUnit').value = q.get('pu');
+            paceHintUpdate();
+            calculate(false);
+            calcMulti();
+            calcConvert();
+            calcFinish();
+        })();
+    </script>
+</body>
+  </html>
