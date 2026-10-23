@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie Calculator - CalcNova</title>
+    <meta name="description" content="Free calorie calculator: estimate daily calories to maintain, lose, or gain weight using Mifflin-St Jeor, Revised Harris-Benedict, or Katch-McArdle — with zigzag cycling schedules.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/calorie">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Calorie Calculator - CalcNova">
+    <meta property="og:description" content="Daily calorie targets for weight loss, maintenance and gain, plus zigzag cycling schedules and a food energy converter.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/calorie">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Calorie Calculator - CalcNova">
+    <meta name="twitter:description" content="How many calories do you need each day? Targets for losing, maintaining and gaining weight.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Calorie Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/calorie" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Which BMR formula should I use?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Mifflin-St Jeor is the default and is considered the most accurate of the three for most people. Use Katch-McArdle if you know your body fat percentage and are relatively lean — it works from lean body mass instead of total weight. Revised Harris-Benedict is the older standard, kept for comparison." }
+            },
+            {
+                "@type": "Question",
+                "name": "How fast can I safely lose weight?",
+                "acceptedAnswer": { "@type": "Answer", "text": "About 0.25 to 1 kg (0.5 to 2 lb) per week. One kilogram of body fat stores roughly 7,700 kcal, so a 500-calorie daily deficit adds up to about half a kilogram a week. Cutting more than 1,000 calories a day, or eating below about 1,500 calories for men and 1,200 for women without medical supervision, is not recommended." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is zigzag calorie cycling?",
+                "acceptedAnswer": { "@type": "Answer", "text": "A way of spreading the same weekly calorie target unevenly across the week — higher-calorie days mixed with lower-calorie days — so the body is less likely to adapt to a flat restriction and stall. It also leaves room for social meals on the higher days." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is the difference between Calories and kilojoules?",
+                "acceptedAnswer": { "@type": "Answer", "text": "They measure the same energy. The 'Calories' on food labels are kilocalories (kcal); 1 Calorie equals 4.1868 kilojoules. This calculator can show results in either unit — use the Settings above the Calculate button." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        .unit-btn { transition: all .15s; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Calorie Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Calorie Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Estimate how many calories you need each day — to stay the same weight, lose it at a steady rate, or
+            gain. The calculator starts from your basal metabolic rate (BMR) using the formula you choose, scales it
+            by your activity level, then lays out daily targets, two zigzag cycling schedules, and what stepping up
+            your activity could do on its own.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="flex gap-2 mb-5 no-print">
+                    <button type="button" id="btnUS" onclick="setUnit('us')" class="unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600">US Units</button>
+                    <button type="button" id="btnMetric" onclick="setUnit('metric')" class="unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white">Metric Units</button>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="age">Age <span class="font-normal text-gray-400">(ages 15 – 80)</span></label>
+                        <input type="number" id="age" value="25" min="1" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Gender</label>
+                        <div class="flex gap-6 items-center h-[42px]">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="sex" value="m" checked class="accent-[#3F51B5]"> Male</label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="sex" value="f" class="accent-[#3F51B5]"> Female</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="usFields" class="hidden">
+                    <div class="grid sm:grid-cols-3 gap-4 mt-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="feet">Height — feet</label>
+                            <input type="number" id="feet" value="5" min="0" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="inches">Height — inches</label>
+                            <input type="number" id="inches" value="10" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="pounds">Weight — pounds</label>
+                            <input type="number" id="pounds" value="165" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="metricFields">
+                    <div class="grid sm:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="cm">Height — cm</label>
+                            <input type="number" id="cm" value="180" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="kg">Weight — kg</label>
+                            <input type="number" id="kg" value="65" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-sm font-semibold mb-1" for="activity">Activity</label>
+                    <select id="activity" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5] bg-white">
+                        <option value="1">Basal Metabolic Rate (BMR)</option>
+                        <option value="1.2">Sedentary: little or no exercise</option>
+                        <option value="1.375">Light: exercise 1-3 times/week</option>
+                        <option value="1.465" selected>Moderate: exercise 4-5 times/week</option>
+                        <option value="1.55">Active: daily exercise or intense exercise 3-4 times/week</option>
+                        <option value="1.725">Very Active: intense exercise 6-7 times/week</option>
+                        <option value="1.9">Extra Active: very intense exercise daily, or physical job</option>
+                    </select>
+                    <ul class="text-xs text-gray-500 mt-2 space-y-0.5">
+                        <li><strong>Exercise:</strong> 15-30 minutes of elevated heart rate activity.</li>
+                        <li><strong>Intense exercise:</strong> 45-120 minutes of elevated heart rate activity.</li>
+                        <li><strong>Very intense exercise:</strong> 2+ hours of elevated heart rate activity.</li>
+                    </ul>
+                </div>
+
+                <div class="mt-4 no-print">
+                    <button type="button" id="settingsToggle" onclick="toggleSettings()" class="font-bold text-[#3F51B5] hover:underline">+ Settings</button>
+                    <div id="settingsBox" class="hidden mt-3 border border-gray-200 rounded-lg p-4 bg-[#F8FAFC]">
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm font-bold mb-2">Results unit:</p>
+                                <label class="flex items-center gap-2 cursor-pointer mb-1"><input type="radio" name="outunit" value="c" checked class="accent-[#3F51B5]"> Calories</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="outunit" value="j" class="accent-[#3F51B5]"> Kilojoules</label>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold mb-2">BMR estimation formula:</p>
+                                <label class="flex items-center gap-2 cursor-pointer mb-1"><input type="radio" name="formula" value="m" checked class="accent-[#3F51B5]"> Mifflin St Jeor</label>
+                                <label class="flex items-center gap-2 cursor-pointer mb-1"><input type="radio" name="formula" value="h" class="accent-[#3F51B5]"> Revised Harris-Benedict</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="formula" value="k" class="accent-[#3F51B5]"> Katch-McArdle</label>
+                                <div class="flex items-center gap-2 mt-1 ml-6">
+                                    <a href="body-fat.html" class="text-sm text-[#3F51B5] hover:underline">Body Fat:</a>
+                                    <input type="number" id="fatpct" value="20" min="1" max="70" step="any" class="w-20 border border-gray-300 rounded-lg px-2 py-1 outline-none focus:border-[#3F51B5]">
+                                    <span class="text-sm text-gray-500">%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-[#F8FAFC]">
+                        <div id="resBody"></div>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">The 3,500-calorie rule</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        One pound of body fat stores about 3,500 kcal (≈ 7,700 kcal per kg). So a daily deficit of
+                        500 calories should, in theory, remove about a pound a week — real results vary as your
+                        body adapts, which is exactly what the zigzag schedules below are for.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">Food Energy Converter</h2>
+            <p class="text-gray-700 leading-7 mb-4">Convert between Calories and the other common food energy units.</p>
+            <div class="flex flex-wrap items-center gap-3 bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                <input type="number" id="ecVal" value="1" step="any" oninput="convertEnergy()" class="w-28 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                <select id="ecFrom" onchange="convertEnergy()" class="border border-gray-300 rounded-lg px-3 py-2 bg-white outline-none focus:border-[#3F51B5]">
+                    <option value="kcal" selected>Calorie [Nutritional, kcal]</option>
+                    <option value="cal">calorie [cal]</option>
+                    <option value="kJ">Kilojoules [kJ]</option>
+                    <option value="J">joules [J]</option>
+                </select>
+                <span class="font-bold text-gray-600">=</span>
+                <span id="ecOut" class="font-bold text-green-700 text-lg">4.1868</span>
+                <select id="ecTo" onchange="convertEnergy()" class="border border-gray-300 rounded-lg px-3 py-2 bg-white outline-none focus:border-[#3F51B5]">
+                    <option value="kcal">Calorie [Nutritional, kcal]</option>
+                    <option value="cal">calorie [cal]</option>
+                    <option value="kJ" selected>Kilojoules [kJ]</option>
+                    <option value="J">joules [J]</option>
+                </select>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-10 mb-3">The three BMR equations</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Every estimate on this page starts with a basal metabolic rate — the energy you would burn in a day
+                completely at rest. The Harris-Benedict equation was among the first attempts to compute it, and its
+                1984 revision stayed standard until 1990, when the Mifflin-St Jeor equation proved more accurate in
+                study after study. Katch-McArdle takes a different route: it calculates from lean body mass, so it can
+                beat both for lean people who know their body fat percentage. In the Settings you can switch between
+                them and watch the targets move.
+            </p>
+            <div class="grid md:grid-cols-3 gap-4 mb-4">
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">Mifflin-St Jeor</h3>
+                    <p class="text-sm text-gray-700 leading-6">Men: BMR = 10W + 6.25H − 5A + 5<br>Women: BMR = 10W + 6.25H − 5A − 161</p>
+                </div>
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">Revised Harris-Benedict</h3>
+                    <p class="text-sm text-gray-700 leading-6">Men: BMR = 13.397W + 4.799H − 5.677A + 88.362<br>Women: BMR = 9.247W + 3.098H − 4.330A + 447.593</p>
+                </div>
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">Katch-McArdle</h3>
+                    <p class="text-sm text-gray-700 leading-6">BMR = 370 + 21.6 × (1 − F) × W<br><span class="text-gray-500">Same for both sexes — body fat does the differentiating.</span></p>
+                </div>
+            </div>
+            <p class="text-gray-700 leading-7 mb-4">
+                W is weight in kg, H is height in cm, A is age, and F is body fat as a fraction. The BMR is then
+                multiplied by an activity factor (from 1.2 for sedentary to 1.9 for a physical job with daily intense
+                training) to get the calories that maintain your current weight. Losing a pound a week means eating
+                about 500 a day below that line; gaining, the mirror image. Two cautions: cutting more than 1,000 a
+                day courts muscle loss, and as muscle goes, so does BMR — which is why very aggressive diets so
+                often rebound. And keep minimums in view: roughly 1,500 calories a day for men and 1,200 for women
+                unless a doctor is supervising.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Calorie counting, step by step</h2>
+            <ol class="list-decimal pl-6 space-y-2 text-gray-700 leading-7 mb-4">
+                <li><strong>Get your BMR</strong> from one of the equations above — Katch-McArdle if you know your body fat percentage. Treat the number as a good approximation, not gospel: eating exactly 500 below it will not always produce exactly a pound a week.</li>
+                <li><strong>Set the goal.</strong> A pound is about 3,500 calories, so each 500 calories a day of deficit is roughly a pound a week. More than 2 lb (1 kg) a week is a red-flag pace — if that is the plan, involve a doctor or a registered dietitian.</li>
+                <li><strong>Track honestly.</strong> An app, a spreadsheet, or a paper journal all work. Weigh or measure a few typical meals once, and estimating the rest gets much easier.</li>
+                <li><strong>Judge by the week, not the day.</strong> Water retention and meal timing swing daily weight wildly. Weigh under the same conditions (morning, before breakfast) and compare weekly averages.</li>
+                <li><strong>Adjust and keep going.</strong> As you lose weight your BMR drops with it, so re-run this calculator every few kilograms and reset the target.</li>
+            </ol>
+            <p class="text-gray-700 leading-7 mb-4">
+                Counting works because, at the level of energy balance, a calorie is a calorie: sustained deficit
+                loses weight, sustained surplus gains it — the famous "Twinkie diet" experiment proved the arithmetic
+                even on cake snacks, while also proving nothing about health. Food quality still matters for hunger,
+                nutrients, and how many of the label's calories your body actually absorbs, which is why minimally
+                processed food makes any target easier to live on.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Zigzag calorie cycling</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Bodies adapt. Weeks into a flat restriction, the body settles into the lower energy budget and
+                progress can plateau. Zigzag cycling fights that by alternating high- and low-calorie days inside
+                the same weekly total — eat at maintenance twice a week and below target five days (schedule 1), or
+                ramp up and down gradually across the week (schedule 2). The side benefit is freedom: the high days
+                can be placed on the days with the family dinner or the work lunch, as long as the week adds up.
+                There is no proven "best" pattern; swings of a few hundred calories around the target are typical,
+                and the schedules in your result keep every day at or above the recommended minimum.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">How many calories do you actually need?</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                It depends on age, weight, height, sex, activity, and general health — a tall, active 25-year-old man
+                can need twice what a small, sedentary 70-year-old woman needs. As rough guides, adult men typically
+                maintain on 2,000–3,000 calories a day and adult women on 1,600–2,400. Surviving takes far less than
+                thriving: running the body on bare survival rations means it funds only the essentials and skips the
+                rest, so treat the minimums above as floors, not targets.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Not all calories behave the same</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Calories come mainly from carbohydrates, protein, and fat (plus alcohol, which at ~7 kcal per gram
+                of pure "empty" energy is best treated as a luxury). Foods differ in how filling they are, how much
+                energy digestion itself burns, and how honest their labels are — 500 calories of carrots and 500 of
+                popcorn do not leave you equally hungry. Drinks deserve special suspicion: they supply roughly a
+                fifth of a typical diet's calories and barely dent hunger. Water, tea, and unsweetened coffee are
+                the freebies.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Calories in common foods</h2>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                    <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-4 py-2.5">Food</th><th class="px-4 py-2.5">Serving Size</th><th class="px-4 py-2.5">Calories</th><th class="px-4 py-2.5">kJ</th></tr></thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr class="bg-gray-50"><td class="px-4 py-2 font-bold" colspan="4">Fruit</td></tr>
+                        <tr><td class="px-4 py-2">Apple</td><td class="px-4 py-2">1 (4 oz.)</td><td class="px-4 py-2">59</td><td class="px-4 py-2">247</td></tr>
+                        <tr><td class="px-4 py-2">Banana</td><td class="px-4 py-2">1 (6 oz.)</td><td class="px-4 py-2">151</td><td class="px-4 py-2">632</td></tr>
+                        <tr><td class="px-4 py-2">Grapes</td><td class="px-4 py-2">1 cup</td><td class="px-4 py-2">100</td><td class="px-4 py-2">419</td></tr>
+                        <tr><td class="px-4 py-2">Orange</td><td class="px-4 py-2">1 (4 oz.)</td><td class="px-4 py-2">53</td><td class="px-4 py-2">222</td></tr>
+                        <tr><td class="px-4 py-2">Strawberry</td><td class="px-4 py-2">1 cup</td><td class="px-4 py-2">53</td><td class="px-4 py-2">222</td></tr>
+                        <tr><td class="px-4 py-2">Watermelon</td><td class="px-4 py-2">1 cup</td><td class="px-4 py-2">50</td><td class="px-4 py-2">209</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2 font-bold" colspan="4">Vegetables</td></tr>
+                        <tr><td class="px-4 py-2">Broccoli</td><td class="px-4 py-2">1 cup</td><td class="px-4 py-2">45</td><td class="px-4 py-2">188</td></tr>
+                        <tr><td class="px-4 py-2">Carrots</td><td class="px-4 py-2">1 cup</td><td class="px-4 py-2">50</td><td class="px-4 py-2">209</td></tr>
+                        <tr><td class="px-4 py-2">Cucumber</td><td class="px-4 py-2">4 oz.</td><td class="px-4 py-2">17</td><td class="px-4 py-2">71</td></tr>
+                        <tr><td class="px-4 py-2">Lettuce</td><td class="px-4 py-2">1 cup</td><td class="px-4 py-2">5</td><td class="px-4 py-2">21</td></tr>
+                        <tr><td class="px-4 py-2">Tomato</td><td class="px-4 py-2">1 cup</td><td class="px-4 py-2">22</td><td class="px-4 py-2">92</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2 font-bold" colspan="4">Proteins</td></tr>
+                        <tr><td class="px-4 py-2">Egg</td><td class="px-4 py-2">1 large</td><td class="px-4 py-2">78</td><td class="px-4 py-2">327</td></tr>
+                        <tr><td class="px-4 py-2">Chicken, cooked</td><td class="px-4 py-2">2 oz.</td><td class="px-4 py-2">136</td><td class="px-4 py-2">569</td></tr>
+                        <tr><td class="px-4 py-2">Beef, regular, cooked</td><td class="px-4 py-2">2 oz.</td><td class="px-4 py-2">142</td><td class="px-4 py-2">595</td></tr>
+                        <tr><td class="px-4 py-2">Shrimp, cooked</td><td class="px-4 py-2">2 oz.</td><td class="px-4 py-2">56</td><td class="px-4 py-2">234</td></tr>
+                        <tr><td class="px-4 py-2">Tofu</td><td class="px-4 py-2">4 oz.</td><td class="px-4 py-2">86</td><td class="px-4 py-2">360</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2 font-bold" colspan="4">Common Meals / Snacks</td></tr>
+                        <tr><td class="px-4 py-2">Bread, white</td><td class="px-4 py-2">1 slice (1 oz.)</td><td class="px-4 py-2">75</td><td class="px-4 py-2">314</td></tr>
+                        <tr><td class="px-4 py-2">Cheeseburger</td><td class="px-4 py-2">1 sandwich</td><td class="px-4 py-2">285</td><td class="px-4 py-2">1193</td></tr>
+                        <tr><td class="px-4 py-2">Pizza</td><td class="px-4 py-2">1 slice (14")</td><td class="px-4 py-2">285</td><td class="px-4 py-2">1193</td></tr>
+                        <tr><td class="px-4 py-2">Rice</td><td class="px-4 py-2">1 cup cooked</td><td class="px-4 py-2">206</td><td class="px-4 py-2">862</td></tr>
+                        <tr><td class="px-4 py-2">Dark Chocolate</td><td class="px-4 py-2">1 oz.</td><td class="px-4 py-2">155</td><td class="px-4 py-2">649</td></tr>
+                        <tr class="bg-gray-50"><td class="px-4 py-2 font-bold" colspan="4">Beverages / Dairy</td></tr>
+                        <tr><td class="px-4 py-2">Coca-Cola Classic</td><td class="px-4 py-2">1 can</td><td class="px-4 py-2">150</td><td class="px-4 py-2">628</td></tr>
+                        <tr><td class="px-4 py-2">Milk (2%)</td><td class="px-4 py-2">1 cup</td><td class="px-4 py-2">122</td><td class="px-4 py-2">511</td></tr>
+                        <tr><td class="px-4 py-2">Orange Juice</td><td class="px-4 py-2">1 cup</td><td class="px-4 py-2">111</td><td class="px-4 py-2">465</td></tr>
+                        <tr><td class="px-4 py-2">Beer</td><td class="px-4 py-2">1 can</td><td class="px-4 py-2">154</td><td class="px-4 py-2">645</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-sm text-gray-500 mb-4">* 1 cup = ~250 milliliters, 1 tablespoon = 14.2 grams.</p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Calories burned by common exercises</h2>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                    <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-4 py-2.5">Activity (1 hour)</th><th class="px-4 py-2.5">125 lb person</th><th class="px-4 py-2.5">155 lb person</th><th class="px-4 py-2.5">185 lb person</th></tr></thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr><td class="px-4 py-2">Golf (using cart)</td><td class="px-4 py-2">198</td><td class="px-4 py-2">246</td><td class="px-4 py-2">294</td></tr>
+                        <tr><td class="px-4 py-2">Walking (3.5 mph)</td><td class="px-4 py-2">215</td><td class="px-4 py-2">267</td><td class="px-4 py-2">319</td></tr>
+                        <tr><td class="px-4 py-2">Kayaking</td><td class="px-4 py-2">283</td><td class="px-4 py-2">352</td><td class="px-4 py-2">420</td></tr>
+                        <tr><td class="px-4 py-2">Softball/Baseball</td><td class="px-4 py-2">289</td><td class="px-4 py-2">359</td><td class="px-4 py-2">428</td></tr>
+                        <tr><td class="px-4 py-2">Swimming (free-style, moderate)</td><td class="px-4 py-2">397</td><td class="px-4 py-2">492</td><td class="px-4 py-2">587</td></tr>
+                        <tr><td class="px-4 py-2">Tennis (general)</td><td class="px-4 py-2">397</td><td class="px-4 py-2">492</td><td class="px-4 py-2">587</td></tr>
+                        <tr><td class="px-4 py-2">Running (9 minute mile)</td><td class="px-4 py-2">624</td><td class="px-4 py-2">773</td><td class="px-4 py-2">923</td></tr>
+                        <tr><td class="px-4 py-2">Bicycling (12-14 mph, moderate)</td><td class="px-4 py-2">454</td><td class="px-4 py-2">562</td><td class="px-4 py-2">671</td></tr>
+                        <tr><td class="px-4 py-2">Football (general)</td><td class="px-4 py-2">399</td><td class="px-4 py-2">494</td><td class="px-4 py-2">588</td></tr>
+                        <tr><td class="px-4 py-2">Basketball (general)</td><td class="px-4 py-2">340</td><td class="px-4 py-2">422</td><td class="px-4 py-2">503</td></tr>
+                        <tr><td class="px-4 py-2">Soccer (general)</td><td class="px-4 py-2">397</td><td class="px-4 py-2">492</td><td class="px-4 py-2">587</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Energy from common food components</h2>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                    <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-4 py-2.5">Food Component</th><th class="px-4 py-2.5">kJ per gram</th><th class="px-4 py-2.5">Calories (kcal) per gram</th><th class="px-4 py-2.5">kJ per ounce</th><th class="px-4 py-2.5">Calories (kcal) per ounce</th></tr></thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr><td class="px-4 py-2">Fat</td><td class="px-4 py-2">37</td><td class="px-4 py-2">8.8</td><td class="px-4 py-2">1,049</td><td class="px-4 py-2">249</td></tr>
+                        <tr><td class="px-4 py-2">Proteins</td><td class="px-4 py-2">17</td><td class="px-4 py-2">4.1</td><td class="px-4 py-2">482</td><td class="px-4 py-2">116</td></tr>
+                        <tr><td class="px-4 py-2">Carbohydrates</td><td class="px-4 py-2">17</td><td class="px-4 py-2">4.1</td><td class="px-4 py-2">482</td><td class="px-4 py-2">116</td></tr>
+                        <tr><td class="px-4 py-2">Fiber</td><td class="px-4 py-2">8</td><td class="px-4 py-2">1.9</td><td class="px-4 py-2">227</td><td class="px-4 py-2">54</td></tr>
+                        <tr><td class="px-4 py-2">Ethanol (drinking alcohol)</td><td class="px-4 py-2">29</td><td class="px-4 py-2">6.9</td><td class="px-4 py-2">822</td><td class="px-4 py-2">196</td></tr>
+                        <tr><td class="px-4 py-2">Organic acids</td><td class="px-4 py-2">13</td><td class="px-4 py-2">3.1</td><td class="px-4 py-2">369</td><td class="px-4 py-2">88</td></tr>
+                        <tr><td class="px-4 py-2">Polyols (sugar alcohols)</td><td class="px-4 py-2">10</td><td class="px-4 py-2">2.4</td><td class="px-4 py-2">283</td><td class="px-4 py-2">68</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">FAQ</h2>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Which BMR formula should I use?</h4>
+                    <p class="text-gray-700 leading-7">Mifflin-St Jeor by default — it is the most accurate for most people. Katch-McArdle is the better pick if you know your body fat percentage and are fairly lean. Harris-Benedict remains for comparison with older plans.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">How fast can I safely lose weight?</h4>
+                    <p class="text-gray-700 leading-7">About 0.25–1 kg (0.5–2 lb) a week. A 500-calorie daily deficit is the classic prescription for roughly half a kilogram weekly; do not drop below about 1,500 (men) or 1,200 (women) calories a day without medical supervision.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What is zigzag calorie cycling?</h4>
+                    <p class="text-gray-700 leading-7">Spreading the same weekly calories unevenly — high days and low days — to keep the body from adapting to a flat restriction and to leave room for social eating. Your result includes two ready-made weekly schedules.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Calories or kilojoules?</h4>
+                    <p class="text-gray-700 leading-7">Same energy, different label: 1 Calorie = 4.1868 kJ. Switch the results unit in Settings if your food labels speak kilojoules.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="bmi.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">BMI Calculator</span><span class="block text-sm text-gray-500 mt-1">Where your weight sits for your height</span></a>
+                <a href="body-fat.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Body Fat Calculator</span><span class="block text-sm text-gray-500 mt-1">Needed for the Katch-McArdle formula</span></a>
+                <a href="ideal-weight.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Ideal Weight Calculator</span><span class="block text-sm text-gray-500 mt-1">A target weight for your height</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let unit = 'metric';
+        const $ = id => document.getElementById(id);
+        const KJ = 4.1868;
+
+        function setUnit(u) {
+            unit = u;
+            $('usFields').classList.toggle('hidden', u !== 'us');
+            $('metricFields').classList.toggle('hidden', u !== 'metric');
+            const on = 'unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white';
+            const off = 'unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600';
+            $('btnUS').className = u === 'us' ? on : off;
+            $('btnMetric').className = u === 'metric' ? on : off;
+        }
+        function toggleSettings() {
+            const b = $('settingsBox');
+            const open = b.classList.toggle('hidden');
+            $('settingsToggle').textContent = open ? '+ Settings' : '− Settings';
+        }
+        const comma = n => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        const radio = name => document.querySelector(`input[name="${name}"]:checked`).value;
+
+        const LEVELS = [
+            { f: 1.2, row: 'Little or no exercise' },
+            { f: 1.375, row: 'Exercise 1-3 times per week' },
+            { f: 1.465, row: 'Exercise 4-5 times per week' },
+            { f: 1.55, row: 'Daily exercise, or intense exercise 3-4 times per week' },
+            { f: 1.725, row: 'Intense exercise 6-7 times per week' },
+            { f: 1.9, row: 'Very intense exercise daily, or a highly physical job' }
+        ];
+        const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        function bmrCalc(sex, wKg, hCm, age, formula, fatPct) {
+            if (formula === 'h') return sex === 'm' ? 13.397 * wKg + 4.799 * hCm - 5.677 * age + 88.362
+                                                     : 9.247 * wKg + 3.098 * hCm - 4.330 * age + 447.593;
+            if (formula === 'k') return 370 + 21.6 * (1 - fatPct / 100) * wKg;
+            return sex === 'm' ? 10 * wKg + 6.25 * hCm - 5 * age + 5
+                               : 10 * wKg + 6.25 * hCm - 5 * age - 161;
+        }
+
+        function goalRows(maint, minCal, outJ, rateLabels) {
+            // returns {tiers: [{name, rate, val(unrounded in display unit), pct}], warnTier}
+            const conv = v => outJ ? v * KJ : v;
+            const mDisp = outJ ? Math.round(maint * KJ) : maint;
+            const steps = [250, 500, 1000];
+            const tiers = [];
+            const names = ['Mild weight loss', 'Weight loss', 'Extreme weight loss'];
+            const gnames = ['Mild weight gain', 'Weight gain', 'Fast Weight gain'];
+            tiers.push({ name: 'Maintain weight', rate: '', val: mDisp, pct: 100, kind: 'maint' });
+            steps.forEach((s, i) => {
+                const v = outJ ? mDisp - s * KJ : maint - s;
+                tiers.push({ name: names[i], rate: rateLabels[i], val: v, pct: null, kind: 'loss', step: s });
+            });
+            steps.forEach((s, i) => {
+                const v = outJ ? mDisp + s * KJ : maint + s;
+                tiers.push({ name: gnames[i], rate: rateLabels[i], val: v, pct: null, kind: 'gain', step: s });
+            });
+            tiers.forEach(t => { if (t.pct === null) t.pct = Math.round(100 * Math.round(t.val) / Math.round(mDisp)); });
+            let warnTier = null;
+            for (const t of tiers) if (t.kind === 'loss' && Math.round(t.val) < Math.round(conv(minCal))) { warnTier = t; break; }
+            return { tiers, warnTier, mDisp };
+        }
+
+        function zigzag(maintDisp, tiers, minDisp, outUnitName) {
+            const cols = tiers.filter(t => t.kind === 'loss' && Math.round(t.val) >= Math.round(minDisp));
+            if (!cols.length) return '';
+            const minV = minDisp;
+            const s1 = {}, s2 = {};
+            for (const t of cols) {
+                const T = t.val, M = maintDisp;
+                let low = (7 * T - 2 * M) / 5, high = M;
+                if (low < minV) { low = minV; high = (7 * T - 5 * minV) / 2; }
+                s1[t.name] = DAYS.map(d => (d === 'Sunday' || d === 'Saturday') ? high : low);
+                const A = Math.min(t.step ? t.step * (outUnitName === 'kJ' ? KJ : 1) : 0, T - minV);
+                const offs = [-3, -1, 1, 3, 2, 0, -2];
+                s2[t.name] = offs.map(o => (3 * T + o * A) / 3);
+            }
+            const table = (title, data) => {
+                let h = `<h4 class="font-bold text-gray-800 mt-5 mb-2">${title}</h4><div class="overflow-x-auto"><table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden"><thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-3 py-2"></th>${cols.map(c => `<th class="px-3 py-2">${c.name}</th>`).join('')}</tr></thead><tbody>`;
+                DAYS.forEach((d, i) => {
+                    h += `<tr class="${i % 2 ? 'bg-gray-50' : ''}"><td class="px-3 py-1.5 font-medium">${d}</td>${cols.map(c => `<td class="px-3 py-1.5">${comma(data[c.name][i])} ${outUnitName}</td>`).join('')}</tr>`;
+                });
+                return h + '</tbody></table></div>';
+            };
+            return `<h3 class="text-lg font-bold text-gray-800 mt-6">Zigzag Calorie Cycling</h3>
+                <p class="text-gray-700 leading-7 mt-1">As you keep a low-calorie diet, your body will likely adapt to the new, lower energy environment, which can lead to a plateau in your progress. Zigzag calorie cycling alternates higher- and lower-calorie days inside the same weekly total, which can help you overcome the plateau and get back on track. The following are two sample 7-day schedules.</p>
+                ${table('Zigzag diet schedule 1', s1)}${table('Zigzag diet schedule 2', s2)}`;
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const age = parseFloat($('age').value);
+            const sex = radio('sex');
+            let wKg, hCm;
+            if (unit === 'metric') { hCm = parseFloat($('cm').value); wKg = parseFloat($('kg').value); }
+            else {
+                const ft = parseFloat($('feet').value) || 0, inch = parseFloat($('inches').value) || 0;
+                hCm = (ft * 12 + inch) * 2.54; wKg = parseFloat($('pounds').value) / 2.20462;
+            }
+            const factor = parseFloat($('activity').value);
+            const outJ = radio('outunit') === 'j';
+            const formula = radio('formula');
+            const fat = parseFloat($('fatpct').value);
+            if (isNaN(age) || isNaN(hCm) || isNaN(wKg) || hCm <= 0 || wKg <= 0 || (formula === 'k' && (isNaN(fat) || fat <= 0 || fat >= 100))) {
+                const e = $('formError');
+                e.textContent = formula === 'k' ? 'Please enter a valid age, height, weight and a body fat percentage between 1 and 99 for the Katch-McArdle formula.' : 'Please enter a valid age, height and weight.';
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+                return;
+            }
+            const bmr = bmrCalc(sex, wKg, hCm, age, formula, fat || 20);
+            const maintCal = Math.round(bmr * factor);
+            const minCal = sex === 'm' ? 1500 : 1200;
+            const unitName = outJ ? 'kJ' : 'Calories';
+            const perDay = outJ ? 'kJ/day' : 'Calories/day';
+            const rateLabels = unit === 'metric' ? ['0.25 kg/week', '0.5 kg/week', '1 kg/week'] : ['0.5 lb/week', '1 lb/week', '2 lb/week'];
+            let html = '';
+
+            if (factor === 1) {
+                const v = outJ ? Math.round(maintCal * KJ) : maintCal;
+                html = `<div class="flex flex-wrap items-baseline gap-x-3"><span class="font-semibold text-gray-700">Basal Metabolic Rate (BMR)</span><span class="text-2xl font-bold text-gray-900">${comma(v)}</span><span class="text-gray-500">${perDay}</span></div>`;
+            } else {
+                const { tiers, warnTier, mDisp } = goalRows(maintCal, minCal, outJ, rateLabels);
+                html = `<p class="text-gray-700 leading-7 mb-4">The results show a number of daily calorie estimates that can be used as a guideline for how many calories to consume each day to maintain, lose, or gain weight at a chosen rate.</p>`;
+                const rowHtml = t => `<div class="flex flex-wrap items-center gap-x-3 py-2.5 border-b border-gray-100">
+                        <span class="font-semibold text-gray-800 w-44">${t.name}</span>
+                        <span class="text-sm text-gray-500 w-28">${t.rate}</span>
+                        <span class="text-xl font-bold text-gray-900">${comma(t.val)}</span>
+                        <span class="text-sm font-semibold text-[#3F51B5]">${t.pct}%</span>
+                        <span class="text-sm text-gray-500">${perDay}</span></div>`;
+                for (const t of tiers) {
+                    if (t.kind === 'gain') continue;
+                    html += rowHtml(t);
+                    if (t.kind === 'loss' && t.name === 'Extreme weight loss' && warnTier) {
+                        html += `<p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2.5 my-3">Please consult with a doctor when losing ${warnTier.rate.replace('/week', '')} or more per week since it requires that you consume less than the minimum recommendation of ${comma(outJ ? minCal * KJ : minCal)} ${unitName === 'kJ' ? 'kJ' : 'calories'} a day.</p>`;
+                    }
+                }
+                html += `<div class="no-print mt-3"><button type="button" id="gainToggle" onclick="toggleGain()" class="font-semibold text-[#3F51B5] hover:underline">Show info for weight gain</button></div>
+                    <div id="gainBox" class="hidden">${tiers.filter(t => t.kind === 'gain').map(rowHtml).join('')}</div>`;
+                const minDisp = outJ ? minCal * KJ : minCal;
+                html += zigzag(mDisp, tiers, minDisp, unitName);
+                const higher = LEVELS.filter(l => l.f > factor);
+                if (higher.length) {
+                    const wUnit = unit === 'metric' ? 'kg' : 'lb';
+                    html += `<h3 class="text-lg font-bold text-gray-800 mt-6">Activity Level</h3>
+                        <p class="text-gray-700 leading-7 mt-1">Another effective way to lose weight, aside from reducing calorie intake, is increasing your activity level. The following is a general list of estimated weight lost based on varying activity levels and the maintenance intake of ${comma(maintCal)} calories per day.</p>
+                        <div class="overflow-x-auto mt-2"><table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden"><thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-3 py-2">Activity level</th><th class="px-3 py-2">Weight lost per week</th></tr></thead><tbody>
+                        ${higher.map((l, i) => {
+                            let lost = (l.f - factor) * maintCal / 1000;
+                            if (unit !== 'metric') lost *= 2;
+                            return `<tr class="${i % 2 ? 'bg-gray-50' : ''}"><td class="px-3 py-1.5">${l.row}</td><td class="px-3 py-1.5">${lost.toFixed(1)} ${wUnit}</td></tr>`;
+                        }).join('')}
+                        </tbody></table></div>`;
+                }
+                html += `<h3 class="text-lg font-bold text-gray-800 mt-6">What Is Next?</h3>
+                    <ul class="list-disc pl-5 space-y-1.5 text-gray-700">
+                        <li>Choose a method to track your calories and progress — on paper, or electronically using a mobile app.</li>
+                        <li>Track your progress over time and make adjustments as needed. As you lose weight, your basal metabolic rate (BMR) will change accordingly, so revisit your calorie intake plan to keep making progress.</li>
+                    </ul>`;
+            }
+            $('resBody').innerHTML = html;
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+
+            if (push) {
+                const q = new URLSearchParams({ a: $('age').value, s: sex, u: unit, act: $('activity').value, ou: outJ ? 'j' : 'c', f: formula });
+                if (unit === 'metric') { q.set('cm', $('cm').value); q.set('kg', $('kg').value); }
+                else { q.set('ft', $('feet').value); q.set('in', $('inches').value); q.set('lb', $('pounds').value); }
+                if (formula === 'k') q.set('fat', $('fatpct').value);
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function toggleGain() {
+            const b = $('gainBox');
+            const hidden = b.classList.toggle('hidden');
+            $('gainToggle').textContent = hidden ? 'Show info for weight gain' : 'Hide info for weight gain';
+        }
+        function clearForm() {
+            $('age').value = 25;
+            document.querySelector('input[name="sex"][value="m"]').checked = true;
+            $('feet').value = 5; $('inches').value = 10; $('pounds').value = 165;
+            $('cm').value = 180; $('kg').value = 65;
+            $('activity').value = '1.465';
+            document.querySelector('input[name="outunit"][value="c"]').checked = true;
+            document.querySelector('input[name="formula"][value="m"]').checked = true;
+            $('fatpct').value = 20;
+            setUnit('metric');
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+        function convertEnergy() {
+            const toKcal = { kcal: 1, cal: 0.001, kJ: 1 / KJ, J: 0.001 / KJ };
+            const v = parseFloat($('ecVal').value);
+            if (isNaN(v)) { $('ecOut').textContent = '—'; return; }
+            const kcal = v * toKcal[$('ecFrom').value];
+            const out = kcal / toKcal[$('ecTo').value];
+            $('ecOut').textContent = String(parseFloat(out.toFixed(4)));
+        }
+
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            if (q.get('u') === 'us' || q.get('u') === 'metric') setUnit(q.get('u'));
+            if (q.get('a')) $('age').value = q.get('a');
+            if (q.get('s') === 'f') document.querySelector('input[name="sex"][value="f"]').checked = true;
+            if (q.get('cm')) $('cm').value = q.get('cm');
+            if (q.get('kg')) $('kg').value = q.get('kg');
+            if (q.get('ft')) $('feet').value = q.get('ft');
+            if (q.get('in')) $('inches').value = q.get('in');
+            if (q.get('lb')) $('pounds').value = q.get('lb');
+            if (q.get('act')) $('activity').value = q.get('act');
+            if (q.get('ou') === 'j') document.querySelector('input[name="outunit"][value="j"]').checked = true;
+            if (q.get('f') === 'h' || q.get('f') === 'k') document.querySelector(`input[name="formula"][value="${q.get('f')}"]`).checked = true;
+            if (q.get('fat')) $('fatpct').value = q.get('fat');
+            convertEnergy();
+            calculate(false);
+        })();
+    </script>
+</body>
+                              </html>
