@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregnancy Calculator - CalcNova</title>
+    <meta name="description" content="Free pregnancy calculator: a week-by-week pregnancy schedule from your due date, last period, ultrasound, conception date, or IVF transfer date, with milestones and average baby size.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/pregnancy">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Pregnancy Calculator - CalcNova">
+    <meta property="og:description" content="Your current week, trimester, likely conception date, and a full 42-week schedule.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/pregnancy">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pregnancy Calculator - CalcNova">
+    <meta name="twitter:description" content="Estimate your pregnancy schedule from five different starting dates.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Pregnancy Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/pregnancy" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How accurate is a due date?",
+                "acceptedAnswer": { "@type": "Answer", "text": "A due date is the center of a window, not a prediction: fewer than 4% of babies arrive on the exact date, about 60% arrive within a week of it, and almost 90% within two weeks. A normal pregnancy term runs 37 to 42 weeks." }
+            },
+            {
+                "@type": "Question",
+                "name": "Which starting date gives the best estimate?",
+                "acceptedAnswer": { "@type": "Answer", "text": "An early ultrasound is generally the most reliable because it measures the baby directly. A known conception or IVF transfer date is also precise. Last-period dating assumes a 28-day cycle with ovulation on day 14, which is why the cycle-length adjustment matters." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why does pregnancy count from the last period?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Because the first day of the last menstrual period is an observable date, while conception usually is not. Gestational age therefore runs about two weeks ahead of the baby's age since conception: 40 weeks of pregnancy is roughly 38 weeks after conception." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Pregnancy Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Pregnancy Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Estimate your pregnancy schedule from whichever date you know: a <strong>due date</strong>, the first day
+            of your <strong>last period</strong>, an <strong>ultrasound</strong>, a <strong>conception date</strong>,
+            or an <strong>IVF transfer date</strong>. You get your current week, trimester, average baby size, likely
+            conception date, and a week-by-week calendar through week 42.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <label class="block text-sm font-semibold mb-1" for="method">Calculate based on</label>
+                <select id="method" onchange="switchMethod()" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5] bg-white">
+                    <option value="due" selected>Due Date</option>
+                    <option value="lmp">Last Period</option>
+                    <option value="us">Ultrasound</option>
+                    <option value="conception">Conception Date</option>
+                    <option value="ivf">IVF Transfer Date</option>
+                </select>
+
+                <div class="mt-4 space-y-4">
+                    <div id="rowDue">
+                        <label class="block text-sm font-semibold mb-1" for="dueDate">Your due date</label>
+                        <input type="date" id="dueDate" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div id="rowLmp" class="hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="lmpDate">First day of your last period</label>
+                            <input type="date" id="lmpDate" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="cycle">Average length of your cycles</label>
+                            <select id="cycle" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5] bg-white"></select>
+                        </div>
+                    </div>
+                    <div id="rowUs" class="hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="usDate">Ultrasound date</label>
+                            <input type="date" id="usDate" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Length of pregnancy at the time</label>
+                            <div class="flex gap-3 items-center">
+                                <input type="number" id="usWeeks" value="22" min="0" max="42" class="w-24 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-600">weeks</span>
+                                <input type="number" id="usDays" value="6" min="0" max="6" class="w-24 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-600">days</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="rowConception" class="hidden">
+                        <label class="block text-sm font-semibold mb-1" for="conceptionDate">Conception date</label>
+                        <input type="date" id="conceptionDate" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div id="rowIvf" class="hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="ivfDate">Transfer date</label>
+                            <input type="date" id="ivfDate" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold mb-1.5">Embryo age</p>
+                            <div class="flex gap-5">
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="ivfage" value="3" class="accent-[#3F51B5]"> day 3</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="ivfage" value="5" checked class="accent-[#3F51B5]"> day 5</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="ivfage" value="6" class="accent-[#3F51B5]"> day 6</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                        <div id="resText" class="text-gray-800 leading-7"></div>
+                        <div id="resBar" class="hidden mt-3">
+                            <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden"><div id="resBarFill" class="bg-[#4CAF50] h-4 rounded-full" style="width:0%"></div></div>
+                            <p id="resBarLabel" class="text-sm font-semibold text-gray-600 mt-1"></p>
+                        </div>
+                        <div id="resTable" class="overflow-x-auto mt-4"></div>
+                        <p class="text-sm text-gray-500 mt-3">Note: the results of this calculator are estimations based on averages for a single pregnancy. The results for a twin or multiple pregnancy are different.</p>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">A window, not a day</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        Fewer than 4% of babies arrive on their due date — but about 60% arrive within a week of it
+                        and almost 90% within two weeks. The date is the middle of the likely window.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">Pregnancy term and the due date</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Pregnancy — the roughly nine months during which a baby develops — is dated from the first day of
+                the last menstrual period, an observable date, rather than from conception, which usually is not.
+                Birth typically follows about 38 weeks after conception, which is 40 weeks after the last period,
+                and the World Health Organization puts a normal term between 37 and 42 weeks. At the first
+                obstetric visit, a due date is usually estimated from a sonogram; it can also be estimated from the
+                last period, as this calculator does. Treat the date as the center of a window: the actual length
+                of pregnancy varies with the mother's age, previous pregnancy lengths, and her own birth weight,
+                among factors still not fully understood — fewer than 4% of births land on the exact due date,
+                about 60% land within a week of it, and almost 90% within two weeks.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Detecting pregnancy</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Pregnancy announces itself through signs such as a missed period, raised basal body temperature,
+                fatigue, nausea, and more frequent urination — and is confirmed by tests that detect hCG, a hormone
+                present only in pregnancy. Clinical blood tests can detect it six to eight days after fertilization,
+                measure exact amounts, and catch a pregnancy earlier and at lower hormone levels than urine tests,
+                at the cost of time and money. Home urine tests are cheaper and fast; clinical urine tests are not
+                necessarily more accurate than a good home test.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Managing a pregnancy</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                <strong>Medication.</strong> Some medicines can have lasting effects on the fetus, so every
+                medication planned during pregnancy should be cleared with a doctor, who weighs the benefit to the
+                mother against the risk to the baby. <strong>Weight gain</strong> is necessary and expected; the
+                Institute of Medicine recommends overall gains of 28–40 lb for women underweight before pregnancy
+                (BMI under 18.5), 25–35 lb for normal weight (BMI 18.5–24.9), 15–25 lb for overweight (BMI 25–29.9),
+                and 11–20 lb for obesity (BMI over 30) — our
+                <a href="pregnancy-weight-gain.html" class="text-[#3F51B5] hover:underline">Pregnancy Weight Gain Calculator</a>
+                is built on these guidelines. Too little or too much gain raises risks, including gestational
+                hypertension and cesarean delivery. <strong>Exercise:</strong> aerobic exercise helps maintain
+                fitness and may reduce the chance of a C-section; women who trained regularly before pregnancy and
+                have uncomplicated pregnancies can often continue, but the American College of Obstetricians and
+                Gynecologists advises stopping and consulting a doctor if symptoms such as vaginal bleeding,
+                dizziness, headache, chest pain, calf pain or swelling, leaking fluid, decreased fetal movement,
+                or preterm labor appear. <strong>Nutrition:</strong> pregnancy raises energy and micronutrient
+                needs — folic acid (vitamin B9) lowers the risk of certain birth defects, and DHA omega-3, needed
+                for brain and retinal development, reaches the baby through the placenta. A doctor or dietitian can
+                tailor the details to your situation.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">References</h2>
+            <ol class="list-decimal pl-6 text-sm text-gray-600 leading-6">
+                <li>Jukic AM, Baird DD, Weinberg CR, et al. "Length of human pregnancy and contributors to its natural variation." <em>Human Reproduction</em> 28(10), 2013.</li>
+                <li>Moore, Keith. "How accurate are 'due dates'?" BBC, February 3, 2015.</li>
+                <li>Institute of Medicine. <em>Weight Gain During Pregnancy: Reexamining the Guidelines.</em> National Academies Press, 2009.</li>
+                <li>Davies GA, Wolfe LA, Mottola MF, et al. "Exercise in pregnancy and the postpartum period." <em>Journal of Obstetrics and Gynaecology Canada</em> 25(6), 2003.</li>
+                <li>Artal R, O'Toole M. "Guidelines of the ACOG for exercise during pregnancy and the postpartum period." <em>British Journal of Sports Medicine</em> 37, 2003.</li>
+                <li>Lammi-Keefe CJ, Couch SC, Philipson E. <em>Handbook of Nutrition and Pregnancy.</em> Humana Press, 2008.</li>
+            </ol>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="ovulation.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Ovulation Calculator</span><span class="block text-sm text-gray-500 mt-1">Find the fertile window</span></a>
+                <a href="conception.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Conception Calculator</span><span class="block text-sm text-gray-500 mt-1">When conception likely happened</span></a>
+                <a href="due-date.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Due Date Calculator</span><span class="block text-sm text-gray-500 mt-1">Just the due date, fast</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const radio = name => document.querySelector(`input[name="${name}"]:checked`).value;
+        const DAY = 86400000;
+        const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        // Average baby size per week: [inches, inch word, cm, weight, weight word, grams] (published weekly averages)
+        const SIZES = {
+            9: ['0.9', 'inch', '2.3', '0.07', 'ounce', '2'], 10: ['1.22', 'inches', '3.1', '0.14', 'ounce', '4'],
+            11: ['1.61', 'inches', '4.1', '0.25', 'ounce', '7'], 12: ['2.13', 'inches', '5.4', '0.49', 'ounce', '14'],
+            13: ['2.91', 'inches', '7.4', '0.81', 'ounce', '23'], 14: ['3.42', 'inches', '8.7', '1.52', 'ounces', '43'],
+            15: ['3.98', 'inches', '10.1', '2.47', 'ounces', '70'], 16: ['4.57', 'inches', '11.6', '3.53', 'ounces', '100'],
+            17: ['5.12', 'inches', '13', '4.94', 'ounces', '140'], 18: ['5.59', 'inches', '14.2', '6.7', 'ounces', '190'],
+            19: ['6.02', 'inches', '15.3', '8.47', 'ounces', '240'], 20: ['6.46', 'inches', '16.4', '10.58', 'ounces', '300'],
+            21: ['10.51', 'inches', '26.7', '12.7', 'ounces', '360'], 22: ['10.94', 'inches', '27.8', '15.17', 'ounces', '430'],
+            23: ['11.38', 'inches', '28.9', '1.1', 'pounds', '501'], 24: ['11.81', 'inches', '30', '1.32', 'pounds', '600'],
+            25: ['13.62', 'inches', '34.6', '1.46', 'pounds', '660'], 26: ['14.02', 'inches', '35.6', '1.68', 'pounds', '760'],
+            27: ['14.41', 'inches', '36.6', '1.93', 'pounds', '875'], 28: ['14.8', 'inches', '37.6', '2.22', 'pounds', '1,005'],
+            29: ['15.2', 'inches', '38.6', '2.54', 'pounds', '1,153'], 30: ['15.71', 'inches', '39.9', '2.91', 'pounds', '1,319'],
+            31: ['16.18', 'inches', '41.1', '3.31', 'pounds', '1,502'], 32: ['16.69', 'inches', '42.4', '3.75', 'pounds', '1,702'],
+            33: ['17.2', 'inches', '43.7', '4.23', 'pounds', '1,918'], 34: ['17.72', 'inches', '45', '4.73', 'pounds', '2,146'],
+            35: ['18.19', 'inches', '46.2', '5.25', 'pounds', '2,383'], 36: ['18.66', 'inches', '47.4', '5.78', 'pounds', '2,622'],
+            37: ['19.13', 'inches', '48.6', '6.3', 'pounds', '2,859'], 38: ['19.61', 'inches', '49.8', '6.8', 'pounds', '3,083'],
+            39: ['19.96', 'inches', '50.7', '7.25', 'pounds', '3,288'], 40: ['20.16', 'inches', '51.2', '7.63', 'pounds', '3,462']
+        };
+        const MILESTONES = {
+            3: 'Baby conceived', 4: 'Pregnancy test positive', 6: 'Heartbeat detectable by ultrasound',
+            13: 'Miscarriage risk decreases',
+            18: 'Baby begins making noticeable movements, can hear sounds, and gender can be found out.',
+            23: 'Premature baby may survive', 28: 'Baby can breathe', 38: 'Full Term'
+        };
+
+        function parseDate(v) {
+            if (!v) return null;
+            const p = v.split('-').map(Number);
+            return new Date(Date.UTC(p[0], p[1] - 1, p[2]));
+        }
+        function fmt(d) { return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`; }
+        function fmtShort(d) { return `${MONTHS[d.getUTCMonth()].slice(0, 3)} ${d.getUTCDate()}, ${d.getUTCFullYear()}`; }
+        function addDays(d, n) { return new Date(d.getTime() + n * DAY); }
+        function todayUTC() {
+            const t = new Date();
+            return new Date(Date.UTC(t.getFullYear(), t.getMonth(), t.getDate()));
+        }
+        function toISO(d) {
+            const p = n => String(n).padStart(2, '0');
+            return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())}`;
+        }
+        function switchMethod() {
+            const m = $('method').value;
+            $('rowDue').classList.toggle('hidden', m !== 'due');
+            $('rowLmp').classList.toggle('hidden', m !== 'lmp');
+            $('rowUs').classList.toggle('hidden', m !== 'us');
+            $('rowConception').classList.toggle('hidden', m !== 'conception');
+            $('rowIvf').classList.toggle('hidden', m !== 'ivf');
+        }
+        function monthsPart(lmp, today, totalDays) {
+            if (today < lmp) return '';
+            let m = 0;
+            while (true) {
+                const cand = new Date(Date.UTC(lmp.getUTCFullYear(), lmp.getUTCMonth() + m + 1, lmp.getUTCDate()));
+                if (cand <= today) m++; else break;
+            }
+            if (m === 0) return `${totalDays} day${totalDays === 1 ? '' : 's'}`;
+            const anchor = new Date(Date.UTC(lmp.getUTCFullYear(), lmp.getUTCMonth() + m, lmp.getUTCDate()));
+            const rem = Math.round((today - anchor) / DAY);
+            const mw = m === 1 ? 'month' : 'months';
+            return rem === 0 ? `${m} ${mw}` : `${m} ${mw} ${rem} day${rem === 1 ? '' : 's'}`;
+        }
+        function sizeSentence(weekNum) {
+            if (weekNum <= 8) return 'On average, your baby weighs less than 1 gram at this stage.';
+            if (weekNum >= 41) return 'On average, your baby weighs more than 7.63 pounds or 3,462 grams at this stage.';
+            const s = SIZES[weekNum];
+            return `On average, your baby is around ${s[0]} ${s[1]} (${s[2]} cm) long and weighs around ${s[3]} ${s[4]} (${s[5]} grams).`;
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('formError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+            };
+            const method = $('method').value;
+            let lmp = null;
+            if (method === 'due') {
+                const due = parseDate($('dueDate').value);
+                if (!due) return fail('Please pick your due date.');
+                lmp = addDays(due, -280);
+            } else if (method === 'lmp') {
+                const start = parseDate($('lmpDate').value);
+                if (!start) return fail('Please pick the first day of your last period.');
+                lmp = addDays(start, parseInt($('cycle').value) - 28);
+            } else if (method === 'us') {
+                const us = parseDate($('usDate').value);
+                const w = parseInt($('usWeeks').value), dd = parseInt($('usDays').value);
+                if (!us || isNaN(w) || isNaN(dd) || w < 0 || w > 42 || dd < 0 || dd > 6) return fail('Please enter the ultrasound date and the pregnancy length at the time (weeks 0–42, days 0–6).');
+                lmp = addDays(us, -(w * 7 + dd));
+            } else if (method === 'conception') {
+                const c = parseDate($('conceptionDate').value);
+                if (!c) return fail('Please pick the conception date.');
+                lmp = addDays(c, -14);
+            } else {
+                const t = parseDate($('ivfDate').value);
+                if (!t) return fail('Please pick the transfer date.');
+                lmp = addDays(t, -(14 + parseInt(radio('ivfage'))));
+            }
+            const today = todayUTC();
+            const due = addDays(lmp, 280);
+            const conception = addDays(lmp, 14);
+            const d = Math.round((today - lmp) / DAY);
+            const lines = [];
+            let pct = null;
+            const dueMethod = method === 'conception' || method === 'ivf';
+            if (d <= 0) {
+                lines.push(dueMethod
+                    ? `The estimated due date will be <strong>${fmtShort(due)}.</strong>`
+                    : `The baby will likely be conceived on <strong>${fmtShort(conception)}</strong>`);
+                lines.push(`You probably are not pregnant yet. Please use the <a href="conception.html" class="text-[#3F51B5] hover:underline">Conception Calculator</a> to find your fertilization window.`);
+                lines.push('The following are the estimated schedule based on the date you provided.');
+            } else if (d > 294) {
+                lines.push(dueMethod
+                    ? `The estimated due date was <strong>${fmtShort(due)}.</strong>`
+                    : `The baby was likely conceived on <strong>${fmtShort(conception)}</strong>`);
+                lines.push('The following are the estimated schedule based on the date you provided.');
+            } else {
+                const weeks = Math.floor(d / 7), rem = d % 7;
+                const weekNum = Math.ceil(d / 7);
+                lines.push(`You are currently at week <strong>#${weekNum}</strong> (${weeks} week${weeks <= 1 ? '' : 's'} ${rem} day${rem <= 1 ? '' : 's'} or ${monthsPart(lmp, today, d)}) of pregnancy.`);
+                if (dueMethod) lines.push(`The estimated due date is <strong>${fmtShort(due)}.</strong>`);
+                else lines.push(`Your baby was likely conceived on <strong>${fmtShort(conception)}</strong>`);
+                const tri = weekNum <= 12 ? 'first' : weekNum <= 27 ? 'second' : 'third';
+                lines.push(`You are in the ${tri} trimester${weekNum >= 38 ? ' and full term' : ''}.`);
+                lines.push(sizeSentence(weekNum));
+                pct = Math.round(100 * d / 280);
+                if (pct < 100) lines.push(`You are ${pct}% of the way through your pregnancy.`);
+                else pct = null;
+            }
+            $('resText').innerHTML = lines.map(x => `<p class="mb-1.5">${x}</p>`).join('');
+            if (pct !== null) {
+                $('resBar').classList.remove('hidden');
+                $('resBarFill').style.width = pct + '%';
+                $('resBarLabel').textContent = pct + '%';
+            } else $('resBar').classList.add('hidden');
+            let t = `<table class="w-full min-w-[560px] text-sm border border-gray-200 rounded-lg overflow-hidden">
+                <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-3 py-2.5">Week</th><th class="px-3 py-2.5">Date</th><th class="px-3 py-2.5">Trimester</th><th class="px-3 py-2.5">Important Milestones</th></tr></thead><tbody>`;
+            for (let n = 1; n <= 42; n++) {
+                const start = addDays(lmp, 7 * (n - 1) + 1), end = addDays(lmp, 7 * n);
+                const isToday = today >= start && today <= end;
+                const triCell = n === 1 ? 'first trimester' : n === 13 ? 'second trimester' : n === 28 ? 'third trimester' : '';
+                t += `<tr${isToday ? ' class="bg-[#FFF8E1] font-semibold"' : ''}><td class="px-3 py-2 border-t border-gray-100">Week ${n}</td><td class="px-3 py-2 border-t border-gray-100">${fmtShort(start)} - ${fmtShort(end)}${isToday ? ' (today)' : ''}</td><td class="px-3 py-2 border-t border-gray-100">${triCell}</td><td class="px-3 py-2 border-t border-gray-100">${MILESTONES[n] || ''}</td></tr>`;
+            }
+            $('resTable').innerHTML = t + '</tbody></table>';
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+            if (push) {
+                const q = new URLSearchParams({ m: method, dd: $('dueDate').value, lp: $('lmpDate').value, cy: $('cycle').value, cd: $('conceptionDate').value, us: $('usDate').value, uw: $('usWeeks').value, ud: $('usDays').value, ivf: $('ivfDate').value, ia: radio('ivfage') });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function setDefaults() {
+            const t = todayUTC();
+            $('dueDate').value = toISO(addDays(t, 120));
+            $('lmpDate').value = toISO(addDays(t, -160));
+            $('cycle').value = '28';
+            $('conceptionDate').value = toISO(addDays(t, -146));
+            $('usDate').value = toISO(t);
+            $('usWeeks').value = 22; $('usDays').value = 6;
+            $('ivfDate').value = toISO(addDays(t, -155));
+            document.querySelector('input[name="ivfage"][value="5"]').checked = true;
+        }
+        function clearForm() {
+            $('method').value = 'due';
+            setDefaults();
+            switchMethod();
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const sel = $('cycle');
+            for (let c = 22; c <= 44; c++) {
+                const o = document.createElement('option');
+                o.value = c; o.textContent = c + ' days';
+                sel.appendChild(o);
+            }
+            setDefaults();
+            const q = new URLSearchParams(location.search);
+            if (q.get('m')) $('method').value = q.get('m');
+            if (q.get('dd')) $('dueDate').value = q.get('dd');
+            if (q.get('lp')) $('lmpDate').value = q.get('lp');
+            if (q.get('cy')) $('cycle').value = q.get('cy');
+            if (q.get('cd')) $('conceptionDate').value = q.get('cd');
+            if (q.get('us')) $('usDate').value = q.get('us');
+            if (q.get('uw')) $('usWeeks').value = q.get('uw');
+            if (q.get('ud')) $('usDays').value = q.get('ud');
+            if (q.get('ivf')) $('ivfDate').value = q.get('ivf');
+            if (['3', '6'].includes(q.get('ia'))) document.querySelector(`input[name="ivfage"][value="${q.get('ia')}"]`).checked = true;
+            switchMethod();
+            calculate(false);
+        })();
+    </script>
+</body>
+                          </html>
