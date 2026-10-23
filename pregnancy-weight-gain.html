@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregnancy Weight Gain Calculator - CalcNova</title>
+    <meta name="description" content="Free pregnancy weight gain calculator: a week-by-week recommended weight range from your pre-pregnancy BMI, following Institute of Medicine guidelines, for single and twin pregnancies.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/pregnancy-weight-gain">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Pregnancy Weight Gain Calculator - CalcNova">
+    <meta property="og:description" content="Your recommended weight range for this week and every week to delivery.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/pregnancy-weight-gain">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pregnancy Weight Gain Calculator - CalcNova">
+    <meta name="twitter:description" content="IOM-based week-by-week pregnancy weight gain schedule.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Pregnancy Weight Gain Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/pregnancy-weight-gain" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How much weight should I gain during pregnancy?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It depends on your pre-pregnancy BMI. Institute of Medicine guidelines: underweight, 28–40 lb total; normal weight, 25–35 lb; overweight, 15–25 lb; obese, 11–20 lb. Most of it comes after the first trimester, at roughly a pound a week." }
+            },
+            {
+                "@type": "Question",
+                "name": "How much extra should I eat?",
+                "acceptedAnswer": { "@type": "Answer", "text": "About 300 extra calories a day in the second and third trimesters supports the recommended pound-a-week pace — roughly a sandwich and a glass of milk. 'Eating for two' means quality for two, not double portions." }
+            },
+            {
+                "@type": "Question",
+                "name": "What if my weight is outside the recommended range?",
+                "acceptedAnswer": { "@type": "Answer", "text": "A single week outside the range is not an emergency — the schedule is a guideline built on averages, and gain is rarely linear. Persistent large deviations are worth raising with your healthcare provider, since too little gain risks preterm birth and too much raises the chance of complications and cesarean delivery." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        .unit-btn { transition: all .15s; }
+        .unit-btn.active { background: #3F51B5; color: #fff; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Pregnancy Weight Gain Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Pregnancy Weight Gain Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            A week-by-week schedule for healthy weight gain, based on the Institute of Medicine guidelines for your
+            pre-pregnancy BMI. Enter your current week, height, and your weights before pregnancy and now — the
+            calculator shows the recommended range for this week, for delivery, and for every week in between.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="flex gap-2 mb-5 no-print">
+                    <button type="button" id="btnUS" onclick="setUnit('us')" class="unit-btn border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg">US units</button>
+                    <button type="button" id="btnMetric" onclick="setUnit('metric')" class="unit-btn active border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg">Metric units</button>
+                </div>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="stage">Your current pregnancy stage</label>
+                        <select id="stage" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5] bg-white"></select>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold mb-1.5">Pregnant with twins</p>
+                        <div class="flex gap-5 pt-1">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="twins" value="0" checked class="accent-[#3F51B5]"> No</label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="twins" value="1" class="accent-[#3F51B5]"> Yes</label>
+                        </div>
+                    </div>
+                </div>
+                <div id="usInputs" class="hidden mt-4 space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Your height</label>
+                        <div class="flex gap-3 items-center">
+                            <input type="number" id="hFeet" value="5" min="0" class="w-24 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-600">feet</span>
+                            <input type="number" id="hInch" value="6" min="0" class="w-24 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-600">inches</span>
+                        </div>
+                    </div>
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="lbBefore">Weight before pregnancy (pounds)</label>
+                            <input type="number" id="lbBefore" value="120" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="lbNow">Weight now (pounds)</label>
+                            <input type="number" id="lbNow" value="130" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                </div>
+                <div id="metricInputs" class="mt-4 space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="hCm">Your height (cm)</label>
+                        <input type="number" id="hCm" value="165" min="0" step="any" class="w-full sm:w-72 border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="kgBefore">Weight before pregnancy (kg)</label>
+                            <input type="number" id="kgBefore" value="50" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1" for="kgNow">Weight now (kg)</label>
+                            <input type="number" id="kgNow" value="55" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                        <div id="resText" class="text-gray-800 leading-7"></div>
+                        <div id="resTable" class="overflow-x-auto mt-4"></div>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">Where the weight goes</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        The baby is only part of it: enlarged uterus (~2 lb), placenta (~1.5 lb), amniotic fluid
+                        (~2 lb), extra blood (3–4 lb), fluids (2–3 lb), breasts (1–3 lb), and fat stores (6–8 lb)
+                        make up most of a healthy gain.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">Recommended weight gain during pregnancy</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Weight gain in pregnancy is normal and necessary: it supplies the nutrients for the baby's
+                development and stores reserves for breastfeeding. But the amount matters — for each pre-pregnancy
+                BMI range, studies find a band of total gain associated with the best outcomes for mother and baby.
+                The usual pattern is only 1–4 pounds across the first three months, then about a pound a week for
+                the rest of the pregnancy, supported by roughly 300 extra calories a day — a sandwich and a glass
+                of milk, not a second dinner. The Institute of Medicine guidelines:
+            </p>
+            <div class="overflow-x-auto mb-4">
+                <table class="w-full min-w-[540px] text-sm border border-gray-200 rounded-lg overflow-hidden">
+                    <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-3 py-2.5">Prepregnancy BMI (kg/m²)</th><th class="px-3 py-2.5">Category</th><th class="px-3 py-2.5">Total gain range</th><th class="px-3 py-2.5">Total gain — twins</th></tr></thead>
+                    <tbody class="text-gray-700">
+                        <tr><td class="px-3 py-2 border-t border-gray-100">&lt; 18.5</td><td class="px-3 py-2 border-t border-gray-100">Underweight</td><td class="px-3 py-2 border-t border-gray-100">28–40 lbs</td><td class="px-3 py-2 border-t border-gray-100">—</td></tr>
+                        <tr><td class="px-3 py-2 border-t border-gray-100">18.5–24.9</td><td class="px-3 py-2 border-t border-gray-100">Normal Weight</td><td class="px-3 py-2 border-t border-gray-100">25–35 lbs</td><td class="px-3 py-2 border-t border-gray-100">37–54 lbs</td></tr>
+                        <tr><td class="px-3 py-2 border-t border-gray-100">25.0–29.9</td><td class="px-3 py-2 border-t border-gray-100">Overweight</td><td class="px-3 py-2 border-t border-gray-100">15–25 lbs</td><td class="px-3 py-2 border-t border-gray-100">31–50 lbs</td></tr>
+                        <tr><td class="px-3 py-2 border-t border-gray-100">&ge; 30.0</td><td class="px-3 py-2 border-t border-gray-100">Obese</td><td class="px-3 py-2 border-t border-gray-100">11–20 lbs</td><td class="px-3 py-2 border-t border-gray-100">25–42 lbs</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-gray-700 leading-7 mb-4">
+                These are recommendations, not rules — gain varies between women, and a healthcare provider can
+                tailor the target to your specific situation. (The IOM publishes no twin range for underweight
+                pregnancies; this calculator applies the normal-weight twin range in that case.)
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Complications of suboptimal gain</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Too little gain can compromise the baby's growth and raises the risk of preterm birth. Too much
+                gain can complicate labor, produce a significantly larger-than-average baby, increase the chance
+                of a cesarean section, and leave weight that is hard to lose after delivery. The recommended band
+                is where those risks balance.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">What to eat during pregnancy</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                No formula guarantees a healthy baby, and general healthy eating — vegetables, fruits, whole
+                grains, lean proteins, healthy fats — does most of the work. A few nutrients deserve special
+                attention: <strong>folate/folic acid</strong> guards against neural tube defects and premature
+                birth (leafy greens, citrus, beans, peas, supplements); <strong>calcium</strong> builds bones and
+                teeth and supports circulation, muscles, and nerves (dairy, spinach, salmon, kale);
+                <strong>vitamin D</strong> partners with calcium for bone strength (fortified milk, juice, fish,
+                eggs); <strong>protein</strong> drives the baby's growth (lean meat, poultry, fish, eggs, beans,
+                nuts, soy); and <strong>iron</strong> — needed at roughly double the usual intake — builds the
+                extra blood that carries oxygen to the baby (lean red meat, poultry, fish, fortified foods,
+                beans; vitamin C alongside plant iron improves absorption). Many people cover the gaps with a
+                prenatal vitamin — a healthcare professional can say whether you should.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                Just as important is what to avoid: high-mercury fish (the FDA names shark, swordfish, king
+                mackerel, and tilefish; shrimp, salmon, pollock, catfish, cod, tilapia, and light canned tuna are
+                generally considered safer); raw or undercooked seafood, meat, poultry, and eggs; unpasteurized
+                dairy; unwashed produce and raw sprouts; and excess caffeine. Herbal teas are little studied in
+                pregnancy. Alcohol has no proven safe level in pregnancy — it raises the risk of miscarriage,
+                stillbirth, and fetal alcohol syndrome — and smoking before, during, or after pregnancy harms both
+                mother and baby, from premature birth to sudden infant death syndrome. When in doubt about a food,
+                ask a medical professional.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">References</h2>
+            <ol class="list-decimal pl-6 text-sm text-gray-600 leading-6">
+                <li>Institute of Medicine. <em>Weight Gain During Pregnancy: Reexamining the Guidelines.</em> National Academies Press, 2009.</li>
+                <li>Mayo Clinic. "Pregnancy weight gain: What's healthy?" mayoclinic.org.</li>
+            </ol>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="pregnancy.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Pregnancy Calculator</span><span class="block text-sm text-gray-500 mt-1">Your week-by-week schedule</span></a>
+                <a href="pregnancy-conception.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Pregnancy Conception Calculator</span><span class="block text-sm text-gray-500 mt-1">When conception likely happened</span></a>
+                <a href="due-date.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Due Date Calculator</span><span class="block text-sm text-gray-500 mt-1">Count down to delivery</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const radio = name => document.querySelector(`input[name="${name}"]:checked`).value;
+        const LB_PER_KG = 2.20462;
+        // IOM total gain ranges in pounds: [single, twins] per BMI category
+        const TOTALS = {
+            under: { s: [28, 40], t: [37, 54] },
+            normal: { s: [25, 35], t: [37, 54] },
+            over: { s: [15, 25], t: [31, 50] },
+            obese: { s: [11, 20], t: [25, 42] }
+        };
+        let unit = 'metric';
+
+        function setUnit(u) {
+            unit = u;
+            $('btnUS').classList.toggle('active', u === 'us');
+            $('btnMetric').classList.toggle('active', u === 'metric');
+            $('usInputs').classList.toggle('hidden', u !== 'us');
+            $('metricInputs').classList.toggle('hidden', u !== 'metric');
+        }
+        // Schedule in pounds: weeks 1-13 rise linearly to 1.1 (low) / 4.4 (high) lb at week 13,
+        // then linearly to the category total at week 40.
+        function gainLow(week, totalLow) {
+            if (week <= 1) return 0;
+            if (week <= 13) return 1.1 * (week - 1) / 12;
+            return 1.1 + (week - 13) * (totalLow - 1.1) / 27;
+        }
+        function gainHigh(week, totalHigh) {
+            if (week <= 1) return 0;
+            if (week <= 13) return 4.4 * (week - 1) / 12;
+            return 4.4 + (week - 13) * (totalHigh - 4.4) / 27;
+        }
+        const round1 = x => Math.round(x * 10) / 10;
+        function fmtW(x) { return round1(x).toFixed(1); }
+        function fmtGain(x) {
+            if (x === 0) return '0';
+            if (x < 0.1) return String(Math.round(x * 100) / 100);
+            return round1(x).toFixed(1);
+        }
+        function fmtPHP(x) { return String(parseFloat(x.toPrecision(14))); }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('formError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+            };
+            let heightM, beforeLb, nowLb, nowDisp, unitWord;
+            if (unit === 'us') {
+                const ft = parseFloat($('hFeet').value), inch = parseFloat($('hInch').value);
+                beforeLb = parseFloat($('lbBefore').value);
+                nowLb = parseFloat($('lbNow').value);
+                if (isNaN(ft) || isNaN(inch) || (ft * 12 + inch) <= 0) return fail('Please enter a valid height.');
+                if (isNaN(beforeLb) || beforeLb <= 0 || isNaN(nowLb) || nowLb <= 0) return fail('Please enter valid weights before pregnancy and now.');
+                heightM = (ft * 12 + inch) * 0.0254;
+                nowDisp = nowLb;
+                unitWord = 'lbs';
+            } else {
+                const cm = parseFloat($('hCm').value);
+                const kgB = parseFloat($('kgBefore').value), kgN = parseFloat($('kgNow').value);
+                if (isNaN(cm) || cm <= 0) return fail('Please enter a valid height.');
+                if (isNaN(kgB) || kgB <= 0 || isNaN(kgN) || kgN <= 0) return fail('Please enter valid weights before pregnancy and now.');
+                heightM = cm / 100;
+                beforeLb = kgB * LB_PER_KG;
+                nowLb = kgN * LB_PER_KG;
+                nowDisp = kgN;
+                unitWord = 'kgs';
+            }
+            const bmi = (beforeLb / LB_PER_KG) / (heightM * heightM);
+            const cat = bmi < 18.5 ? 'under' : bmi < 25 ? 'normal' : bmi < 30 ? 'over' : 'obese';
+            const catName = { under: 'Underweight', normal: 'Normal Weight', over: 'Overweight', obese: 'Obese' }[cat];
+            const totals = radio('twins') === '1' ? TOTALS[cat].t : TOTALS[cat].s;
+            const conv = unit === 'us' ? x => x : x => x / LB_PER_KG;
+            const stage = parseInt($('stage').value);
+            const wAt = week => [round1(conv(beforeLb + gainLow(week, totals[0]))), round1(conv(beforeLb + gainHigh(week, totals[1])))];
+            const cur = wAt(stage), at40 = wAt(40);
+            let verdict;
+            if (nowDisp < cur[0]) verdict = `Your current weight is <strong>${fmtPHP(cur[0] - nowDisp)} ${unitWord} lower</strong> than the lower bound.`;
+            else if (nowDisp > cur[1]) verdict = `Your current weight is <strong>${fmtPHP(nowDisp - cur[1])} ${unitWord} higher</strong> than the upper bound.`;
+            else verdict = 'Your current weight is in this range.';
+            $('resText').innerHTML =
+                `<p class="mb-1.5">Recommended weight range for week #${stage}: <strong>${fmtW(cur[0])} - ${fmtW(cur[1])} ${unitWord}</strong>. ${verdict}</p>` +
+                `<p class="mb-1.5">Recommended weight range when delivering (40th week): <strong>${fmtW(at40[0])} - ${fmtW(at40[1])} ${unitWord}</strong>.</p>` +
+                `<p class="mb-1.5">Your BMI before pregnancy: <strong>${fmtW(bmi)} kg/m<sup>2</sup></strong> (${catName})</p>` +
+                `<p>The following is the recommended body weight range table for your entire pregnancy period.</p>`;
+            let t = `<table class="w-full min-w-[480px] text-sm border border-gray-200 rounded-lg overflow-hidden">
+                <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-3 py-2.5">Week</th><th class="px-3 py-2.5">Recommended Weight Range</th><th class="px-3 py-2.5">Recommended Weight Gain</th></tr></thead><tbody>`;
+            for (let w = 1; w <= 40; w++) {
+                const gL = conv(gainLow(w, totals[0])), gH = conv(gainHigh(w, totals[1]));
+                const wt = wAt(w);
+                t += `<tr${w === stage ? ' class="bg-[#FFF8E1] font-semibold"' : ''}><td class="px-3 py-2 border-t border-gray-100">Week ${w}</td><td class="px-3 py-2 border-t border-gray-100">${fmtW(wt[0])} - ${fmtW(wt[1])} ${unitWord}</td><td class="px-3 py-2 border-t border-gray-100">${fmtGain(gL)} - ${fmtGain(gH)} ${unitWord}</td></tr>`;
+            }
+            $('resTable').innerHTML = t + '</tbody></table>';
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+            if (push) {
+                const q = new URLSearchParams({ u: unit, s: stage, tw: radio('twins'), hf: $('hFeet').value, hi: $('hInch').value, wb: $('lbBefore').value, wn: $('lbNow').value, hm: $('hCm').value, kb: $('kgBefore').value, kn: $('kgNow').value });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function clearForm() {
+            $('stage').value = '20';
+            document.querySelector('input[name="twins"][value="0"]').checked = true;
+            $('hFeet').value = 5; $('hInch').value = 6; $('lbBefore').value = 120; $('lbNow').value = 130;
+            $('hCm').value = 165; $('kgBefore').value = 50; $('kgNow').value = 55;
+            setUnit('metric');
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const sel = $('stage');
+            for (let w = 1; w <= 40; w++) {
+                const o = document.createElement('option');
+                o.value = w; o.textContent = 'Week ' + w;
+                sel.appendChild(o);
+            }
+            sel.value = '20';
+            const q = new URLSearchParams(location.search);
+            if (q.get('u') === 'us') setUnit('us');
+            if (q.get('s')) sel.value = q.get('s');
+            if (q.get('tw') === '1') document.querySelector('input[name="twins"][value="1"]').checked = true;
+            if (q.get('hf')) $('hFeet').value = q.get('hf');
+            if (q.get('hi')) $('hInch').value = q.get('hi');
+            if (q.get('wb')) $('lbBefore').value = q.get('wb');
+            if (q.get('wn')) $('lbNow').value = q.get('wn');
+            if (q.get('hm')) $('hCm').value = q.get('hm');
+            if (q.get('kb')) $('kgBefore').value = q.get('kb');
+            if (q.get('kn')) $('kgNow').value = q.get('kn');
+            calculate(false);
+        })();
+    </script>
+</body>
+  </html>
