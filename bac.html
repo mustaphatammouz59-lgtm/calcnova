@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAC Calculator - Blood Alcohol Concentration - CalcNova</title>
+    <meta name="description" content="Free BAC calculator: estimate your blood alcohol concentration from the drinks consumed, time since the first drink, gender, and body weight — with a BAC-over-time chart and the time needed to reach 0%.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/bac">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="BAC Calculator - CalcNova">
+    <meta property="og:description" content="Estimate blood alcohol concentration by drinks, weight, gender, and time, with a decay chart.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/bac">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BAC Calculator - CalcNova">
+    <meta name="twitter:description" content="BAC estimate, effects at your level, and hours until 0%.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "BAC Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/bac" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How is BAC estimated here?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The calculator totals the pure alcohol in your drinks (volume × ABV), distributes it through body water using gender-specific Widmark-style factors fitted for each drink type, then subtracts metabolism at the standard average rate of about 0.015% per hour since the first drink. It is an estimate for education only — real BAC varies with food, medication, and individual metabolism." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is the legal BAC limit for driving?",
+                "acceptedAnswer": { "@type": "Answer", "text": "In the United States the limit is 0.08% for drivers aged 21 and over. For drivers under 21 the limit is stricter and varies by state, roughly 0.01% to 0.05%. Many other countries use 0.05% or lower, and some enforce zero tolerance." }
+            },
+            {
+                "@type": "Question",
+                "name": "How long until BAC reaches 0%?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The body clears alcohol at a roughly constant rate, about 0.015% per hour on average, so the time to zero is the current BAC divided by that rate, rounded up to whole hours. Coffee, food, and exercise do not speed this up — only time does." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">BAC Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Blood Alcohol Concentration (BAC) Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Estimate your blood alcohol concentration from what you drank, how long ago you started,
+            your gender, and your body weight — including how your BAC falls over time and how long
+            it will take to reach 0%.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div>
+                    <span class="block text-sm font-semibold mb-1">Gender</span>
+                    <div class="flex gap-5 pt-1">
+                        <label class="flex items-center gap-2 text-sm"><input type="radio" name="sex" value="m" checked class="accent-[#3F51B5]"> Male</label>
+                        <label class="flex items-center gap-2 text-sm"><input type="radio" name="sex" value="f" class="accent-[#3F51B5]"> Female</label>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-sm font-semibold mb-1" for="weight">Body Weight</label>
+                    <div class="flex gap-2">
+                        <input type="number" id="weight" value="70" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                        <select id="weightUnit" class="border border-gray-300 rounded-lg px-2 py-2 outline-none focus:border-[#3F51B5] bg-white text-sm">
+                            <option value="pound">pounds</option>
+                            <option value="kilogram" selected>kilograms</option>
+                            <option value="gram">grams</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <span class="block text-sm font-semibold mb-1">Time Since First Drink</span>
+                    <div class="flex gap-2 items-center">
+                        <input type="number" id="tHour" value="2" min="0" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">hours</span>
+                        <input type="number" id="tMin" value="0" min="0" max="59" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"><span class="text-sm text-gray-500">minutes</span>
+                    </div>
+                </div>
+
+                <h2 class="text-lg font-bold text-gray-800 mt-6 mb-2">Amount of Alcohol Consumed</h2>
+                <div class="overflow-x-auto">
+                <table class="w-full text-sm min-w-[540px]">
+                    <thead><tr class="text-left text-gray-500"><th class="py-1 pr-2">Type</th><th class="py-1 pr-2">Amount</th><th class="py-1 pr-2">Size</th><th class="py-1">ABV</th></tr></thead>
+                    <tbody>
+                        <tr class="border-t border-gray-100">
+                            <td class="py-2 pr-2 font-medium">Beer</td>
+                            <td class="py-2 pr-2"><input type="number" id="bAmt" value="2" min="0" class="w-16 border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5]"></td>
+                            <td class="py-2 pr-2"><select id="bSize" class="border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5] bg-white">
+                                <option value="b250">250ml bottle</option>
+                                <option value="b330" selected>12oz/330ml bottle</option>
+                                <option value="b500">16oz/500ml bottle</option>
+                                <option value="c250">250ml bar cup</option>
+                                <option value="c330">12oz/330ml bar cup (small)</option>
+                                <option value="c500">16oz/500ml bar cup</option>
+                                <option value="c600">20oz/600ml bar cup (tall)</option>
+                                <option value="n330">12oz/330ml can</option>
+                                <option value="n500">16oz/500ml can</option>
+                                <option value="n600">20oz/600ml can</option>
+                                <option value="l1">1 liter</option>
+                            </select></td>
+                            <td class="py-2"><select id="bAbv" class="border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5] bg-white">
+                                <option value="4.2">4.2%, light</option>
+                                <option value="5" selected>5%</option>
+                                <option value="5.8">5.8%</option>
+                            </select></td>
+                        </tr>
+                        <tr class="border-t border-gray-100">
+                            <td class="py-2 pr-2 font-medium">Wine</td>
+                            <td class="py-2 pr-2"><input type="number" id="wAmt" value="" min="0" class="w-16 border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5]"></td>
+                            <td class="py-2 pr-2"><select id="wSize" class="border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5] bg-white">
+                                <option value="c60">2oz/60ml cup (small)</option>
+                                <option value="c150" selected>5oz/150ml cup</option>
+                                <option value="c250">8oz/250ml cup (big)</option>
+                                <option value="b375">375ml bottle</option>
+                                <option value="b500">500ml bottle</option>
+                                <option value="b750">750ml bottle</option>
+                                <option value="l1">1 l bottle</option>
+                                <option value="l15">1.5 l bottle</option>
+                            </select></td>
+                            <td class="py-2"><select id="wAbv" class="border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5] bg-white">
+                                <option value="6">6%</option><option value="7">7%</option><option value="8">8%</option><option value="9">9%</option><option value="10">10%</option><option value="11">11%</option>
+                                <option value="12" selected>12%</option>
+                                <option value="13">13%</option><option value="14">14%</option><option value="15">15%</option><option value="16">16%</option>
+                            </select></td>
+                        </tr>
+                        <tr class="border-t border-gray-100">
+                            <td class="py-2 pr-2 font-medium">Liquor</td>
+                            <td class="py-2 pr-2"><input type="number" id="lAmt" value="" min="0" class="w-16 border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5]"></td>
+                            <td class="py-2 pr-2"><select id="lSize" class="border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5] bg-white">
+                                <option value="s15">0.5oz/15ml shot</option>
+                                <option value="s30">1oz/30ml shot</option>
+                                <option value="s50" selected>1.5oz/50ml shot</option>
+                                <option value="c250">8oz/250ml cup</option>
+                                <option value="b100">100 ml bottle</option>
+                                <option value="b250">250 ml bottle</option>
+                                <option value="b375">375 ml bottle</option>
+                                <option value="b500">500 ml bottle</option>
+                                <option value="b750">750 ml bottle</option>
+                            </select></td>
+                            <td class="py-2"><select id="lAbv" class="border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5] bg-white">
+                                <option value="35">35%</option>
+                                <option value="40" selected>40%</option>
+                                <option value="45">45%</option><option value="50">50%</option><option value="55">55%</option><option value="60">60%</option>
+                            </select></td>
+                        </tr>
+                        <tr class="border-t border-gray-100">
+                            <td class="py-2 pr-2 font-medium">Other</td>
+                            <td class="py-2 pr-2"><input type="number" id="oAmt" value="" min="0" class="w-16 border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5]"></td>
+                            <td class="py-2 pr-2"><div class="flex gap-1">
+                                <input type="number" id="oSize" value="250" min="0" step="any" class="w-20 border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5]">
+                                <select id="oUnit" class="border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5] bg-white">
+                                    <option value="ml" selected>Milliliter, ml</option>
+                                    <option value="l">Liter, l</option>
+                                    <option value="mcup">Cup (Metric)</option>
+                                    <option value="oz">Fluid Oz (US)</option>
+                                    <option value="pint">Pint (US)</option>
+                                    <option value="cup">Cup (US)</option>
+                                    <option value="ioz">Fluid Oz (UK)</option>
+                                    <option value="ipint">Pint (UK)</option>
+                                    <option value="icup">Cup (UK)</option>
+                                </select>
+                            </div></td>
+                            <td class="py-2"><div class="flex items-center gap-1"><input type="number" id="oAbv" value="8" min="0" step="any" class="w-16 border border-gray-300 rounded-lg px-2 py-1.5 outline-none focus:border-[#3F51B5]"><span class="text-gray-500">%</span></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-white">
+                        <p class="text-xl">BAC is around <strong id="bacVal" class="text-[#4CAF50]"></strong>.</p>
+                        <div id="bacDetail">
+                            <p id="hoursLine" class="text-gray-700 mt-2"></p>
+                            <p id="effectsLine" class="text-gray-700 mt-1"></p>
+                            <div id="chartWrap" class="mt-3 overflow-x-auto"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 leading-5 mt-4">* The results are meant for educational purposes only and are not intended to replace the medical advice of doctors or health care providers. Please consult your health care provider regarding specific health conditions.</p>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">Only time sobers you up</h3>
+                    <p class="text-sm text-gray-600 leading-6">
+                        The liver clears alcohol at a roughly constant ~0.015% per hour. Coffee, cold air,
+                        food, and exercise do not change that rate — they can make you feel more awake while
+                        your BAC, and your impairment, stay exactly where they were.
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">What BAC means</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Blood alcohol concentration (BAC) is the standard measure of alcohol intoxication. It is
+                expressed as a percentage of alcohol per volume of blood: in the United States, a BAC of
+                0.08 (0.08%) means 0.08 grams of alcohol per 100 mL of blood. In the US, the legal driving
+                limit is 0.08% for drivers over 21, the legal drinking age; drivers under 21 face stricter
+                limits that vary by state, from about 0.01% to 0.05%.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Alcohol and health</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Alcohol's short-term effects include dehydration and intoxication; longer-term effects can
+                include changes in the metabolism of the liver and brain, and alcoholism — alcohol use that
+                causes problems with mental or physical health. Some studies associate a glass of red wine
+                a day with potential benefits, but those claims have not been rigorously proven, and more
+                recent work recommends that alcohol not be consumed for its potential health benefits.
+                Potential benefits reported for light-to-moderate drinking (about one drink a day: 12 fl oz
+                of beer, 5 fl oz of wine, or 1.5 fl oz of distilled spirits) include reduced risk of heart
+                disease, ischemic stroke, and diabetes — but even light drinking can raise the risk of
+                certain cancers, and the benefits, where they exist, are small next to the risks.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                Heavy drinking — more than three drinks a day for women and men over 65, or more than four
+                drinks a day (or 14 a week) for younger men, in the Mayo Clinic's definition — has no health
+                benefits and is linked to certain cancers, sudden death from pre-existing cardiovascular
+                disease, heart-muscle damage and heart failure, stroke, high blood pressure, liver disease,
+                accidental injury or death, and brain damage. Nobody should start drinking for health
+                benefits; anyone who drinks should discuss with their doctor what is safe for them.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Effects by blood alcohol concentration</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Impairment grows with BAC — from subtle effects detectable only with special tests at
+                0.001–0.029%, through problems with concentration, reflexes, and motor control, to a serious
+                possibility of death at 0.50% or more:
+            </p>
+            <div class="overflow-x-auto">
+            <table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden">
+                <thead><tr class="bg-[#E8EAF6] text-left"><th class="px-3 py-2 whitespace-nowrap">BAC (%)</th><th class="px-3 py-2">Behavior</th><th class="px-3 py-2">Impairment</th></tr></thead>
+                <tbody>
+                    <tr><td class="px-3 py-2 border-b border-gray-100 whitespace-nowrap">0.001–0.029</td><td class="px-3 py-2 border-b border-gray-100">Average individual appears normal</td><td class="px-3 py-2 border-b border-gray-100">Subtle effects that can be detected with special tests</td></tr>
+                    <tr><td class="px-3 py-2 border-b border-gray-100 whitespace-nowrap">0.030–0.059</td><td class="px-3 py-2 border-b border-gray-100">Mild euphoria, relaxation, joyousness, talkativeness, decreased inhibition</td><td class="px-3 py-2 border-b border-gray-100">Concentration</td></tr>
+                    <tr><td class="px-3 py-2 border-b border-gray-100 whitespace-nowrap">0.060–0.099</td><td class="px-3 py-2 border-b border-gray-100">Blunted feelings, reduced sensitivity to pain, euphoria, disinhibition, extraversion</td><td class="px-3 py-2 border-b border-gray-100">Reasoning, depth perception, peripheral vision, glare recovery</td></tr>
+                    <tr><td class="px-3 py-2 border-b border-gray-100 whitespace-nowrap">0.100–0.199</td><td class="px-3 py-2 border-b border-gray-100">Over-expression, boisterousness, possibility of nausea and vomiting</td><td class="px-3 py-2 border-b border-gray-100">Reflexes, reaction time, gross motor control, staggering, slurred speech, temporary erectile dysfunction</td></tr>
+                    <tr><td class="px-3 py-2 border-b border-gray-100 whitespace-nowrap">0.200–0.299</td><td class="px-3 py-2 border-b border-gray-100">Nausea, vomiting, emotional swings, anger or sadness, partial loss of understanding, impaired sensations, decreased libido, possibility of stupor</td><td class="px-3 py-2 border-b border-gray-100">Severe motor impairment, loss of consciousness, memory blackout</td></tr>
+                    <tr><td class="px-3 py-2 border-b border-gray-100 whitespace-nowrap">0.300–0.399</td><td class="px-3 py-2 border-b border-gray-100">Stupor, central nervous system depression, loss of understanding, lapses in and out of consciousness, low possibility of death</td><td class="px-3 py-2 border-b border-gray-100">Bladder function, breathing, dysequilibrium, heart rate</td></tr>
+                    <tr><td class="px-3 py-2 border-b border-gray-100 whitespace-nowrap">0.400–0.500</td><td class="px-3 py-2 border-b border-gray-100">Severe central nervous system depression, coma, possibility of death</td><td class="px-3 py-2 border-b border-gray-100">Breathing, heart rate, positional alcohol nystagmus</td></tr>
+                    <tr><td class="px-3 py-2 whitespace-nowrap">&gt;0.50</td><td class="px-3 py-2">High possibility of death</td><td class="px-3 py-2"></td></tr>
+                </tbody>
+            </table>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="body-surface-area.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Body Surface Area Calculator</span><span class="block text-sm text-gray-500 mt-1">Eight BSA formulas compared</span></a>
+                <a href="calorie.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Calorie Calculator</span><span class="block text-sm text-gray-500 mt-1">Daily energy needs and goals</span></a>
+                <a href="gfr.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">GFR Calculator</span><span class="block text-sm text-gray-500 mt-1">Kidney filtration estimates</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const $ = id => document.getElementById(id);
+
+        // Effective serving sizes in ml, as measured against published results
+        // (several "oz/ml" labels resolve to the oz volume; the liquor 500 ml bottle
+        // measures 510 ml and the wine 1 l bottle 1020 ml in the reference data).
+        const BEER_ML = { b250: 250, b330: 354.88, b500: 473.18, c250: 250, c330: 354.88, c500: 510, c600: 591.47, n330: 354.88, n500: 510, n600: 591.47, l1: 1000 };
+        const WINE_ML = { c60: 60, c150: 150, c250: 250, b375: 375, b500: 500, b750: 750, l1: 1020, l15: 1500 };
+        const LIQUOR_ML = { s15: 15, s30: 30, s50: 50, c250: 250, b100: 100, b250: 250, b375: 375, b500: 510, b750: 750 };
+        const OTHER_ML = { ml: 1, l: 1005.5, mcup: 250, oz: 29.5735, pint: 473.176, cup: 236.588, ioz: 28.4131, ipint: 568.261, icup: 284.131 };
+        // BAC points per ml of pure alcohol for a 70 kg person, by drink family
+        // (Widmark-style body-water distribution; beer/other and wine/liquor differ
+        // measurably in the reference data), scaled by 70 / weight in kg.
+        const K = {
+            m: { fast: 0.0015726, slow: 0.0015542 },
+            f: { fast: 0.0017355, slow: 0.0017151 }
+        };
+        const BETA = 0.015; // average metabolism, % per hour
+
+        const EFFECTS = [
+            [0.03, 'Average individual appears normal.'],
+            [0.06, 'Mild euphoria, relaxation, joyousness, talkativeness, decreased inhibition'],
+            [0.10, 'Blunted feelings, reduced sensitivity to pain, euphoria, disinhibition, extraversion'],
+            [0.20, 'Over-expression, boisterousness, possibility of nausea and vomiting'],
+            [0.30, 'Nausea, vomiting, emotional swings, anger or sadness, partial loss of understanding, impaired sensations, decreased libido, possibility of stupor'],
+            [0.40, 'Stupor, central nervous system depression, loss of understanding, lapses in and out of consciousness, low possibility of death'],
+            [0.501, 'Severe central nervous system depression, coma, possibility of death'],
+            [Infinity, 'High possibility of death']
+        ];
+
+        function phpRound(x, nd) {
+            const p = Math.pow(10, nd || 0);
+            return Math.sign(x) * Math.round(Math.abs(x) * p) / p;
+        }
+        // The reference prints BAC trimmed: 2 decimal places at 1% and above,
+        // 2 significant figures below 1%.
+        function fmtBAC(x) {
+            if (x <= 0) return '0%';
+            if (x >= 1) return String(parseFloat(phpRound(x, 2).toFixed(2))) + '%';
+            return String(parseFloat(x.toPrecision(2))) + '%';
+        }
+        function radioVal(name) { return document.querySelector(`input[name="${name}"]:checked`).value; }
+        function num(id) { const v = parseFloat($(id).value); return isNaN(v) || v < 0 ? 0 : v; }
+
+        function buildChart(bac0, tNow, bacNow) {
+            const tZero = bac0 / BETA;
+            const xMax = Math.max(1, Math.ceil(tZero));
+            const yMax = bac0 * 1.05;
+            const steps = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50];
+            let yStep = steps[steps.length - 1];
+            for (const s of steps) { if (yMax / s <= 6) { yStep = s; break; } }
+            let xStep = 1;
+            while (xMax / xStep > 6) xStep *= (xStep % 3 === 1 ? 2 : 2.5);
+            xStep = Math.max(1, Math.round(xStep));
+            const X = h => 55 + (h / xMax) * 357;
+            const Y = b => 165 - (b / yMax) * 132;
+            let g = '';
+            for (let v = 0; v < yMax - 1e-9; v += yStep) {
+                const y = Y(v).toFixed(2);
+                g += `<line x1="52" y1="${y}" x2="412" y2="${y}" stroke="#999" stroke-width="0.5"/><text x="50" y="${y}" font-size="12" fill="#666" text-anchor="end" dominant-baseline="middle">${parseFloat(v.toFixed(4))}</text>`;
+            }
+            for (let h = 0; h <= xMax; h += xStep) {
+                const x = X(h).toFixed(2);
+                g += `<line x1="${x}" y1="33" x2="${x}" y2="169" stroke="#999" stroke-width="0.5"/><text x="${x}" y="170" font-size="12" fill="#666" text-anchor="middle" dominant-baseline="hanging">${h}h</text>`;
+            }
+            const at = h => Math.max(0, bac0 - BETA * h);
+            const pts = [];
+            for (let h = 0; h < tNow; h++) pts.push(h);
+            pts.push(tNow);
+            const past = pts.map(h => [X(h), Y(at(h))]);
+            const fut = [[X(tNow), Y(bacNow)]];
+            for (let h = Math.floor(tNow) + 1; h < tZero; h++) fut.push([X(h), Y(at(h))]);
+            fut.push([X(tZero), Y(0)]);
+            const line = p => `<path d="M ${p.map(pt => pt[0].toFixed(2) + ' ' + pt[1].toFixed(2)).join(' L ')}" fill="none" stroke-width="4"/>`;
+            const dots = (p, c) => p.map(pt => `<circle cx="${pt[0].toFixed(2)}" cy="${pt[1].toFixed(2)}" r="4" fill="${c}"/>`).join('');
+            let paths = '';
+            if (past.length > 1) paths += line(past).replace('stroke-width', 'stroke="#2b7ddb" stroke-width') + (past.length <= 14 ? dots(past, '#2b7ddb') : '');
+            paths += line(fut).replace('stroke-width', 'stroke="#8bbc21" stroke-width') + (fut.length <= 14 ? dots(fut, '#8bbc21') : '');
+            return `<svg viewBox="0 0 420 200" class="mx-auto" style="max-width:380px;width:100%" role="img" aria-label="BAC change with time chart">` +
+                `<text x="49%" y="20" font-size="18" font-weight="bold" text-anchor="middle" dominant-baseline="middle">BAC Change with Time</text>` +
+                `<text x="240" y="192" font-size="15" text-anchor="middle">Time</text>` +
+                `<text x="13" y="105" font-size="15" text-anchor="middle" transform="rotate(-90,13,105)">BAC (%)</text>` +
+                g + paths + `</svg>`;
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const fail = msg => {
+                const e = $('formError');
+                e.textContent = msg;
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+            };
+            const female = radioVal('sex') === 'f';
+            const wRaw = parseFloat($('weight').value);
+            if (isNaN(wRaw) || wRaw <= 0) return fail('Please enter a body weight above 0.');
+            const wu = $('weightUnit').value;
+            const W = wu === 'pound' ? wRaw * 0.45359237 : wu === 'gram' ? wRaw / 1000 : wRaw;
+            const tHours = num('tHour') + num('tMin') / 60;
+            const k = K[female ? 'f' : 'm'];
+            const scale = 70 / W;
+            const eBeer = num('bAmt') * BEER_ML[$('bSize').value] * parseFloat($('bAbv').value) / 100;
+            const eWine = num('wAmt') * WINE_ML[$('wSize').value] * parseFloat($('wAbv').value) / 100;
+            const eLiquor = num('lAmt') * LIQUOR_ML[$('lSize').value] * parseFloat($('lAbv').value) / 100;
+            const eOther = num('oAmt') * num('oSize') * OTHER_ML[$('oUnit').value] * num('oAbv') / 100;
+            const bac0 = ((eBeer + eOther) * k.fast + (eWine + eLiquor) * k.slow) * scale;
+            const bac = Math.max(0, bac0 - BETA * tHours);
+
+            $('bacVal').textContent = fmtBAC(bac);
+            if (bac > 0) {
+                $('bacDetail').style.display = '';
+                const hrs = Math.ceil(bac / BETA);
+                $('hoursLine').textContent = `It will take around ${hrs} more hour${hrs > 1 ? 's' : ''} to reach 0%.`;
+                const shown = parseFloat(fmtBAC(bac));
+                $('effectsLine').textContent = EFFECTS.find(([lim]) => shown < lim)[1];
+                $('chartWrap').innerHTML = buildChart(bac0, tHours, bac);
+            } else {
+                $('bacDetail').style.display = 'none';
+            }
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+
+            if (push) {
+                const q = new URLSearchParams({
+                    s: radioVal('sex'), w: $('weight').value, wu, th: $('tHour').value, tm: $('tMin').value,
+                    ba: $('bAmt').value, bs: $('bSize').value, babv: $('bAbv').value,
+                    wa: $('wAmt').value, ws: $('wSize').value, wabv: $('wAbv').value,
+                    la: $('lAmt').value, ls: $('lSize').value, labv: $('lAbv').value,
+                    oa: $('oAmt').value, os: $('oSize').value, osu: $('oUnit').value, oabv: $('oAbv').value
+                });
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function clearForm() {
+            document.querySelector('input[name="sex"][value="m"]').checked = true;
+            $('weight').value = 70; $('weightUnit').value = 'kilogram';
+            $('tHour').value = 2; $('tMin').value = 0;
+            $('bAmt').value = 2; $('bSize').value = 'b330'; $('bAbv').value = '5';
+            $('wAmt').value = ''; $('wSize').value = 'c150'; $('wAbv').value = '12';
+            $('lAmt').value = ''; $('lSize').value = 's50'; $('lAbv').value = '40';
+            $('oAmt').value = ''; $('oSize').value = 250; $('oUnit').value = 'ml'; $('oAbv').value = 8;
+            calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            const sx = q.get('s'); if (sx) { const r = document.querySelector(`input[name="sex"][value="${sx}"]`); if (r) r.checked = true; }
+            const set = (id, key) => { if (q.get(key) !== null) $(id).value = q.get(key); };
+            set('weight', 'w'); set('weightUnit', 'wu'); set('tHour', 'th'); set('tMin', 'tm');
+            set('bAmt', 'ba'); set('bSize', 'bs'); set('bAbv', 'babv');
+            set('wAmt', 'wa'); set('wSize', 'ws'); set('wAbv', 'wabv');
+            set('lAmt', 'la'); set('lSize', 'ls'); set('lAbv', 'labv');
+            set('oAmt', 'oa'); set('oSize', 'os'); set('oUnit', 'osu'); set('oAbv', 'oabv');
+            calculate(false);
+        })();
+    </script>
+</body>
+                                  </html>
