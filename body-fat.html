@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Fat Calculator - CalcNova</title>
+    <meta name="description" content="Free body fat calculator: estimate body fat percentage with the U.S. Navy method and the BMI method, plus fat mass, lean mass, and the fat to lose to reach the ideal for your age.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/body-fat">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Body Fat Calculator - CalcNova">
+    <meta property="og:description" content="Body fat percentage from tape measurements (U.S. Navy method) or from BMI — with category, fat mass and lean body mass.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/body-fat">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Body Fat Calculator - CalcNova">
+    <meta name="twitter:description" content="Estimate your body fat percentage with the U.S. Navy method and the BMI method.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Fitness and Health Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/fitness-health" },
+            { "@type": "ListItem", "position": 3, "name": "Body Fat Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/body-fat" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How accurate is the U.S. Navy method?",
+                "acceptedAnswer": { "@type": "Answer", "text": "For most people it lands within a few percentage points of much more expensive methods such as hydrostatic weighing, provided the tape measurements are taken carefully — snug but not compressing the skin, at the navel for men and at the narrowest point for women. It is still an estimate built on population averages." }
+            },
+            {
+                "@type": "Question",
+                "name": "What is a healthy body fat percentage?",
+                "acceptedAnswer": { "@type": "Answer", "text": "By the American Council on Exercise categories, the Fitness range is 14-17% for men and 21-24% for women; Average runs to 24% for men and 31% for women. Jackson & Pollock's ideal figures rise with age — from 8.5% for a 20-year-old man to 20.9% at 55, and 17.7% to 26.3% for women." }
+            },
+            {
+                "@type": "Question",
+                "name": "Which should I trust, the Navy method or the BMI method?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The Navy method, when you can measure yourself: it responds to where you actually carry fat. The BMI method only sees height, weight and age, so it misreads muscular people as fatter and can flatter people with little muscle. Use the BMI figure as a rough cross-check." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why do women need a hip measurement?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Women store proportionally more fat around the hips, so the Navy equation for women includes hip circumference (waist + hip − neck). The men's equation needs only waist and neck." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        .result-box { display: none; }
+        .unit-btn { transition: all .15s; }
+        @media print { nav, footer, .no-print { display: none !important; } .result-box { display: block !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="fitness-health.html" class="hover:text-[#3F51B5]">Fitness &amp; Health</a> &gt; <span class="text-gray-800 font-medium">Body Fat Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Body Fat Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            Estimate your body fat percentage from a few tape measurements. The headline figure uses the
+            <strong>U.S. Navy method</strong> (developed at the Naval Health Research Center); the calculator also reports the
+            <strong>BMI method</strong> estimate for comparison, your fat mass and lean mass, and — for ages 20 to 55 — how much
+            fat stands between you and the Jackson &amp; Pollock ideal for your age. Measure to the nearest ¼ inch (0.5 cm) for
+            the best results.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                <div class="flex gap-2 mb-5 no-print">
+                    <button type="button" id="btnUS" onclick="setUnit('us')" class="unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600">US Units</button>
+                    <button type="button" id="btnMetric" onclick="setUnit('metric')" class="unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white">Metric Units</button>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Gender</label>
+                        <div class="flex gap-6 items-center h-[42px]">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="sex" value="m" checked onchange="sexChanged()" class="accent-[#3F51B5]"> Male</label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="sex" value="f" onchange="sexChanged()" class="accent-[#3F51B5]"> Female</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1" for="age">Age</label>
+                        <input type="number" id="age" value="25" min="1" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]">
+                    </div>
+                </div>
+
+                <div id="metricFields">
+                    <div class="grid sm:grid-cols-2 gap-4 mt-4">
+                        <div><label class="block text-sm font-semibold mb-1" for="kg">Weight — kg</label><input type="number" id="kg" value="70" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                        <div><label class="block text-sm font-semibold mb-1" for="cm">Height — cm</label><input type="number" id="cm" value="178" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                        <div><label class="block text-sm font-semibold mb-1" for="neckCm">Neck — cm</label><input type="number" id="neckCm" value="50" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                        <div><label class="block text-sm font-semibold mb-1" for="waistCm">Waist — cm</label><input type="number" id="waistCm" value="96" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                        <div id="hipMetricRow" class="hidden"><label class="block text-sm font-semibold mb-1" for="hipCm">Hip — cm</label><input type="number" id="hipCm" value="92" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                    </div>
+                </div>
+
+                <div id="usFields" class="hidden">
+                    <div class="grid sm:grid-cols-2 gap-4 mt-4">
+                        <div><label class="block text-sm font-semibold mb-1" for="pounds">Weight — pounds</label><input type="number" id="pounds" value="152" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]"></div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Height — feet / inches</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="hFt" value="5" min="0" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]" aria-label="Height feet">
+                                <input type="number" id="hIn" value="10.5" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]" aria-label="Height inches">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Neck — feet / inches</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="nFt" value="1" min="0" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]" aria-label="Neck feet">
+                                <input type="number" id="nIn" value="7.5" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]" aria-label="Neck inches">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Waist — feet / inches</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="wFt" value="3" min="0" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]" aria-label="Waist feet">
+                                <input type="number" id="wIn" value="1.5" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]" aria-label="Waist inches">
+                            </div>
+                        </div>
+                        <div id="hipUsRow" class="hidden">
+                            <label class="block text-sm font-semibold mb-1">Hip — feet / inches</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="pFt" value="2" min="0" step="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]" aria-label="Hip feet">
+                                <input type="number" id="pIn" value="10.5" min="0" step="any" class="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none focus:border-[#3F51B5]" aria-label="Hip inches">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6 no-print">
+                    <button onclick="calculate(true)" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-8 py-2.5 rounded-lg transition shadow">Calculate</button>
+                    <button onclick="clearForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold px-6 py-2.5 rounded-lg transition">Clear</button>
+                </div>
+                <p id="formError" class="hidden mt-4 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5"></p>
+
+                <div id="resultBox" class="result-box mt-6">
+                    <div class="bg-[#3F51B5] text-white rounded-t-xl px-5 py-3 font-bold text-lg">Result</div>
+                    <div class="border border-t-0 border-gray-200 rounded-b-xl px-5 py-4 bg-[#F8FAFC]">
+                        <p class="text-center text-xl">Body Fat: <span id="resHeadline" class="font-extrabold text-green-700 text-2xl"></span></p>
+                        <div id="resGauge" class="mt-4 mb-2"></div>
+                        <div id="resTable"></div>
+                        <div class="mt-4 flex items-center gap-3 no-print">
+                            <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                            <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">How to measure</h3>
+                    <ul class="text-sm text-gray-600 leading-6 list-disc pl-4 space-y-1">
+                        <li><strong>Waist:</strong> horizontal, at the navel for men; at the narrowest point for women. Don't suck your stomach in.</li>
+                        <li><strong>Neck:</strong> just below the larynx (Adam's apple), tape sloping slightly down toward the front. Don't flare your neck.</li>
+                        <li><strong>Hips (women):</strong> the largest horizontal measure around the hips.</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">Reference tables</h2>
+            <div class="grid md:grid-cols-2 gap-6 mb-4">
+                <div>
+                    <h3 class="font-bold text-gray-800 mb-2">American Council on Exercise categories</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                            <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-4 py-2.5">Description</th><th class="px-4 py-2.5">Women</th><th class="px-4 py-2.5">Men</th></tr></thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr><td class="px-4 py-2">Essential fat</td><td class="px-4 py-2">10-13%</td><td class="px-4 py-2">2-5%</td></tr>
+                                <tr><td class="px-4 py-2">Athletes</td><td class="px-4 py-2">14-20%</td><td class="px-4 py-2">6-13%</td></tr>
+                                <tr><td class="px-4 py-2">Fitness</td><td class="px-4 py-2">21-24%</td><td class="px-4 py-2">14-17%</td></tr>
+                                <tr><td class="px-4 py-2">Average</td><td class="px-4 py-2">25-31%</td><td class="px-4 py-2">18-24%</td></tr>
+                                <tr><td class="px-4 py-2">Obese</td><td class="px-4 py-2">32+%</td><td class="px-4 py-2">25+%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-800 mb-2">Jackson &amp; Pollock ideal body fat percentages</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                            <thead><tr class="bg-[#3F51B5] text-white text-left"><th class="px-4 py-2.5">Age</th><th class="px-4 py-2.5">Women</th><th class="px-4 py-2.5">Men</th></tr></thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr><td class="px-4 py-2">20</td><td class="px-4 py-2">17.7%</td><td class="px-4 py-2">8.5%</td></tr>
+                                <tr><td class="px-4 py-2">25</td><td class="px-4 py-2">18.4%</td><td class="px-4 py-2">10.5%</td></tr>
+                                <tr><td class="px-4 py-2">30</td><td class="px-4 py-2">19.3%</td><td class="px-4 py-2">12.7%</td></tr>
+                                <tr><td class="px-4 py-2">35</td><td class="px-4 py-2">21.5%</td><td class="px-4 py-2">13.7%</td></tr>
+                                <tr><td class="px-4 py-2">40</td><td class="px-4 py-2">22.2%</td><td class="px-4 py-2">15.3%</td></tr>
+                                <tr><td class="px-4 py-2">45</td><td class="px-4 py-2">22.9%</td><td class="px-4 py-2">16.4%</td></tr>
+                                <tr><td class="px-4 py-2">50</td><td class="px-4 py-2">25.2%</td><td class="px-4 py-2">18.9%</td></tr>
+                                <tr><td class="px-4 py-2">55</td><td class="px-4 py-2">26.3%</td><td class="px-4 py-2">20.9%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Body fat, overweight, and obesity</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Body fat — adipose tissue, in the scientific term — is not dead weight. It stores the lipids your body
+                turns into energy, secretes hormones, cushions organs, and insulates you. It comes in two kinds.
+                <strong>Essential fat</strong> is the floor your body needs to stay alive and keep reproductive function working:
+                roughly 2–5% in men and 10–13% in women, which is why healthy ranges sit higher for women (about 21–33%)
+                than for men (about 8–19%). Chasing a percentage at or below the essential floor is a conversation to
+                have with a doctor, not a calculator. <strong>Storage fat</strong> is everything above that — subcutaneous fat
+                under the skin and visceral fat packed around the organs inside the abdomen. It is the visceral kind
+                that does most of the damage.
+            </p>
+            <p class="text-gray-700 leading-7 mb-4">
+                Excess storage fat is the road to overweight and then obesity — a condition the WHO counts among the
+                leading preventable causes of death, linked to cardiovascular disease, stroke, type 2 diabetes,
+                certain cancers, sleep apnea, and shorter life expectancy. Visceral fat is metabolically active in
+                the worst way: it disturbs hormone balance, nudges LDL ("bad") cholesterol up and HDL ("good")
+                cholesterol down, and promotes insulin resistance. Note the flip side, too: "overweight" on a scale
+                does not automatically mean over-fat — muscle, bone, and water all weigh something, which is why
+                heavily muscled people can be classified overweight while carrying little fat. That gap between
+                weight and fat is the whole reason this calculator exists.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">How the U.S. Navy method works</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                The equations come from work by Hodgdon and Beckett at the Naval Health Research Center (1984), fitted
+                against hydrostatic weighing. Two versions exist — one in inches, one in centimeters:
+            </p>
+            <div class="grid md:grid-cols-2 gap-4 mb-4">
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">Men</h3>
+                    <p class="text-sm text-gray-700 leading-6">
+                        USC: BFP = 86.010·log<sub>10</sub>(waist − neck) − 70.041·log<sub>10</sub>(height) + 36.76<br>
+                        Metric: BFP = 495 / (1.0324 − 0.19077·log<sub>10</sub>(waist − neck) + 0.15456·log<sub>10</sub>(height)) − 450
+                    </p>
+                </div>
+                <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+                    <h3 class="font-bold text-gray-800 mb-2">Women</h3>
+                    <p class="text-sm text-gray-700 leading-6">
+                        USC: BFP = 163.205·log<sub>10</sub>(waist + hip − neck) − 97.684·log<sub>10</sub>(height) − 78.387<br>
+                        Metric: BFP = 495 / (1.29579 − 0.35004·log<sub>10</sub>(waist + hip − neck) + 0.22100·log<sub>10</sub>(height)) − 450
+                    </p>
+                </div>
+            </div>
+            <p class="text-gray-700 leading-7 mb-4">
+                From the percentage, the masses follow directly: <strong>Fat Mass = BF × Weight</strong> and
+                <strong>Lean Mass = Weight − Fat Mass</strong>. Treat the result as a solid estimate, not a lab value — the
+                equations are averages fitted across many bodies. For clinical precision, bioelectric impedance or
+                hydrostatic density testing is the next step up.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">The BMI method</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                The second estimate needs nothing but height, weight, and age. It first computes your
+                <a href="bmi.html" class="text-[#3F51B5] hover:underline">BMI</a>, then applies the Deurenberg equations:
+            </p>
+            <div class="bg-[#F8FAFC] border border-gray-200 rounded-xl p-4 mb-4">
+                <p class="text-sm text-gray-700 leading-7">
+                    Adult men: BFP = 1.20 × BMI + 0.23 × Age − 16.2<br>
+                    Adult women: BFP = 1.20 × BMI + 0.23 × Age − 5.4<br>
+                    Boys: BFP = 1.51 × BMI − 0.70 × Age − 2.2<br>
+                    Girls: BFP = 1.51 × BMI − 0.70 × Age + 1.4
+                </p>
+            </div>
+            <p class="text-gray-700 leading-7 mb-4">
+                Because it never looks at your shape, the BMI method inherits every BMI limitation — it overstates
+                fat on the muscular and understates it on the lightly built. The Navy figure is the one to act on;
+                the BMI figure is a sanity check.
+            </p>
+
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">FAQ</h2>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">How accurate is the U.S. Navy method?</h4>
+                    <p class="text-gray-700 leading-7">Within a few percentage points of hydrostatic weighing for most people — if the tape work is careful. Measure snug, not tight, and at the right landmarks (see the sidebar). Sloppy measurements are the main source of error.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What is a healthy body fat percentage?</h4>
+                    <p class="text-gray-700 leading-7">The ACE "Fitness" band is 14–17% for men and 21–24% for women, with "Average" running to 24% and 31%. Jackson &amp; Pollock's ideals rise with age — see the table above. This calculator shows the ideal-based rows for ages 20–55.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Which should I trust, the Navy method or the BMI method?</h4>
+                    <p class="text-gray-700 leading-7">The Navy method — it responds to where fat actually sits on your body. The BMI method is blind to the difference between muscle and fat.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">Why do women need a hip measurement?</h4>
+                    <p class="text-gray-700 leading-7">Women store proportionally more fat around the hips, so the women's Navy equation includes hip circumference. The men's equation needs only waist and neck.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="bmi.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">BMI Calculator</span><span class="block text-sm text-gray-500 mt-1">The height-weight index behind the BMI method</span></a>
+                <a href="calorie.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Calorie Calculator</span><span class="block text-sm text-gray-500 mt-1">Feed this percentage into Katch-McArdle</span></a>
+                <a href="ideal-weight.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Ideal Weight Calculator</span><span class="block text-sm text-gray-500 mt-1">A target weight for your height</span></a>
+                <a href="fitness-health.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Fitness &amp; Health Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let unit = 'metric';
+        const $ = id => document.getElementById(id);
+        const radio = name => document.querySelector(`input[name="${name}"]:checked`).value;
+        const fmt1 = n => (Math.round(n * 10) / 10).toFixed(1);
+
+        const JP = { // Jackson & Pollock ideal body fat % by age (20..55 step 5)
+            m: [8.5, 10.5, 12.7, 13.7, 15.3, 16.4, 18.9, 20.9],
+            f: [17.7, 18.4, 19.3, 21.5, 22.2, 22.9, 25.2, 26.3]
+        };
+        function jpIdeal(sex, age) {
+            if (age < 20 || age > 55) return null;
+            const t = JP[sex], pos = (age - 20) / 5, i = Math.floor(pos);
+            if (i >= 7) return t[7];
+            return t[i] + (t[i + 1] - t[i]) * (pos - i);
+        }
+        function category(sex, bf) {
+            const bands = sex === 'm'
+                ? [[6, 'Essential fat'], [14, 'Athletes'], [18, 'Fitness'], [25, 'Average']]
+                : [[14, 'Essential fat'], [21, 'Athletes'], [25, 'Fitness'], [32, 'Average']];
+            for (const [limit, name] of bands) if (bf < limit) return name;
+            return 'Obese';
+        }
+        function gauge(sex, bf) {
+            const max = 45;
+            const bands = sex === 'm'
+                ? [[2, 6, '#f59e0b', 'Essential'], [6, 14, '#84cc16', 'Athletes'], [14, 18, '#22c55e', 'Fitness'], [18, 25, '#eab308', 'Average'], [25, 45, '#dc2626', 'Obese']]
+                : [[10, 14, '#f59e0b', 'Essential'], [14, 21, '#84cc16', 'Athletes'], [21, 25, '#22c55e', 'Fitness'], [25, 32, '#eab308', 'Average'], [32, 45, '#dc2626', 'Obese']];
+            const pos = Math.max(0, Math.min(100, bf / max * 100));
+            let h = `<div class="relative pt-5"><div class="absolute -top-0 transform -translate-x-1/2 text-center" style="left:${pos}%"><div class="text-xs font-bold text-gray-800">${fmt1(bf)}%</div><div class="text-[#3F51B5] leading-none">&#9660;</div></div><div class="flex h-4 rounded-full overflow-hidden">`;
+            for (const [a, b, c] of bands) h += `<div style="width:${(b - a) / max * 100}%;background:${c}"></div>`;
+            h += `</div><div class="flex text-[11px] text-gray-500 mt-1">`;
+            for (const [a, b, , name] of bands) h += `<div class="text-center" style="width:${(b - a) / max * 100}%">${name}</div>`;
+            return h + '</div></div>';
+        }
+
+        function setUnit(u) {
+            unit = u;
+            $('usFields').classList.toggle('hidden', u !== 'us');
+            $('metricFields').classList.toggle('hidden', u !== 'metric');
+            const on = 'unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-[#3F51B5] bg-[#3F51B5] text-white';
+            const off = 'unit-btn flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold border border-gray-300 text-gray-600';
+            $('btnUS').className = u === 'us' ? on : off;
+            $('btnMetric').className = u === 'metric' ? on : off;
+        }
+        function sexChanged() {
+            const f = radio('sex') === 'f';
+            $('hipMetricRow').classList.toggle('hidden', !f);
+            $('hipUsRow').classList.toggle('hidden', !f);
+        }
+
+        function calculate(push) {
+            $('formError').classList.add('hidden');
+            const sex = radio('sex');
+            const age = parseFloat($('age').value);
+            let wKg, hCm, neckCm, waistCm, hipCm, wDisp, wUnit;
+            if (unit === 'metric') {
+                wKg = parseFloat($('kg').value); hCm = parseFloat($('cm').value);
+                neckCm = parseFloat($('neckCm').value); waistCm = parseFloat($('waistCm').value);
+                hipCm = parseFloat($('hipCm').value);
+                wDisp = wKg; wUnit = 'kg';
+            } else {
+                const lb = parseFloat($('pounds').value);
+                wKg = lb / 2.20462;
+                hCm = ((parseFloat($('hFt').value) || 0) * 12 + (parseFloat($('hIn').value) || 0)) * 2.54;
+                neckCm = ((parseFloat($('nFt').value) || 0) * 12 + (parseFloat($('nIn').value) || 0)) * 2.54;
+                waistCm = ((parseFloat($('wFt').value) || 0) * 12 + (parseFloat($('wIn').value) || 0)) * 2.54;
+                hipCm = ((parseFloat($('pFt').value) || 0) * 12 + (parseFloat($('pIn').value) || 0)) * 2.54;
+                wDisp = lb; wUnit = 'lbs';
+            }
+            const spread = sex === 'm' ? waistCm - neckCm : waistCm + hipCm - neckCm;
+            if (isNaN(age) || isNaN(wKg) || isNaN(hCm) || wKg <= 0 || hCm <= 0 || isNaN(spread) || spread <= 0 || (sex === 'f' && (isNaN(hipCm) || hipCm <= 0))) {
+                const e = $('formError');
+                e.textContent = 'Please check your entries: weight, height and measurements must be positive, and the waist must exceed the neck' + (sex === 'f' ? ' (waist + hip must exceed the neck, and a hip measurement is required for women).' : '.');
+                e.classList.remove('hidden');
+                $('resultBox').style.display = 'none';
+                return;
+            }
+            const log10 = Math.log10;
+            let bf;
+            if (sex === 'm') bf = 495 / (1.0324 - 0.19077 * log10(waistCm - neckCm) + 0.15456 * log10(hCm)) - 450;
+            else bf = 495 / (1.29579 - 0.35004 * log10(waistCm + hipCm - neckCm) + 0.22100 * log10(hCm)) - 450;
+
+            const fatMass = bf / 100 * wDisp;
+            const leanMass = wDisp - fatMass;
+            const bmi = wKg / Math.pow(hCm / 100, 2);
+            let bfBmi;
+            if (age < 18) bfBmi = sex === 'm' ? 1.51 * bmi - 0.70 * age - 2.2 : 1.51 * bmi - 0.70 * age + 1.4;
+            else bfBmi = sex === 'm' ? 1.20 * bmi + 0.23 * age - 16.2 : 1.20 * bmi + 0.23 * age - 5.4;
+
+            $('resHeadline').textContent = fmt1(bf) + '%';
+            $('resGauge').innerHTML = gauge(sex, bf);
+            const row = (label, val) => `<div class="flex justify-between gap-4 py-2 border-b border-gray-100"><span class="text-gray-600">${label}</span><span class="font-semibold text-gray-900 text-right">${val}</span></div>`;
+            let rows = row('Body Fat (U.S. Navy Method)', fmt1(bf) + '%')
+                + row('Body Fat Category', category(sex, bf))
+                + row('Body Fat Mass', fmt1(fatMass) + ' ' + wUnit)
+                + row('Lean Body Mass', fmt1(leanMass) + ' ' + wUnit);
+            const ideal = jpIdeal(sex, age);
+            if (ideal !== null) {
+                rows += row('Ideal Body Fat for Given Age (Jackson & Pollock)', fmt1(ideal) + '%');
+                if (bf > ideal) rows += row('Body Fat to Lose to Reach Ideal', fmt1((bf - ideal) / 100 * wDisp) + ' ' + wUnit);
+            }
+            rows += row('Body Fat (BMI method)', fmt1(bfBmi) + '%');
+            $('resTable').innerHTML = rows;
+            $('resultBox').style.display = 'block';
+            $('shareMsg').textContent = '';
+
+            if (push) {
+                const q = new URLSearchParams({ s: sex, a: $('age').value, u: unit });
+                if (unit === 'metric') { q.set('kg', $('kg').value); q.set('cm', $('cm').value); q.set('neck', $('neckCm').value); q.set('waist', $('waistCm').value); if (sex === 'f') q.set('hip', $('hipCm').value); }
+                else {
+                    q.set('lb', $('pounds').value);
+                    q.set('hft', $('hFt').value); q.set('hin', $('hIn').value);
+                    q.set('nft', $('nFt').value); q.set('nin', $('nIn').value);
+                    q.set('wft', $('wFt').value); q.set('win', $('wIn').value);
+                    if (sex === 'f') { q.set('pft', $('pFt').value); q.set('pin', $('pIn').value); }
+                }
+                history.replaceState(null, '', '?' + q.toString());
+            }
+        }
+        function clearForm() {
+            document.querySelector('input[name="sex"][value="m"]').checked = true;
+            $('age').value = 25;
+            $('kg').value = 70; $('cm').value = 178; $('neckCm').value = 50; $('waistCm').value = 96; $('hipCm').value = 92;
+            $('pounds').value = 152;
+            $('hFt').value = 5; $('hIn').value = 10.5; $('nFt').value = 1; $('nIn').value = 7.5;
+            $('wFt').value = 3; $('wIn').value = 1.5; $('pFt').value = 2; $('pIn').value = 10.5;
+            setUnit('metric'); sexChanged(); calculate(true);
+        }
+        function copyShare() {
+            const done = () => { $('shareMsg').textContent = 'Link copied — it opens with these exact inputs.'; };
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done);
+            else done();
+        }
+
+        (function init() {
+            const q = new URLSearchParams(location.search);
+            if (q.get('u') === 'us' || q.get('u') === 'metric') setUnit(q.get('u'));
+            if (q.get('s') === 'f') document.querySelector('input[name="sex"][value="f"]').checked = true;
+            if (q.get('a')) $('age').value = q.get('a');
+            if (q.get('kg')) $('kg').value = q.get('kg');
+            if (q.get('cm')) $('cm').value = q.get('cm');
+            if (q.get('neck')) $('neckCm').value = q.get('neck');
+            if (q.get('waist')) $('waistCm').value = q.get('waist');
+            if (q.get('hip')) $('hipCm').value = q.get('hip');
+            if (q.get('lb')) $('pounds').value = q.get('lb');
+            if (q.get('hft')) $('hFt').value = q.get('hft');
+            if (q.get('hin')) $('hIn').value = q.get('hin');
+            if (q.get('nft')) $('nFt').value = q.get('nft');
+            if (q.get('nin')) $('nIn').value = q.get('nin');
+            if (q.get('wft')) $('wFt').value = q.get('wft');
+            if (q.get('win')) $('wIn').value = q.get('win');
+            if (q.get('pft')) $('pFt').value = q.get('pft');
+            if (q.get('pin')) $('pIn').value = q.get('pin');
+            sexChanged();
+            calculate(false);
+        })();
+    </script>
+</body>
+                          </html>
