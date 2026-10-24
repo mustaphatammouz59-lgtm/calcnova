@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fraction Calculator — Add, Subtract, Multiply, Divide &amp; Simplify Fractions | CalcNova</title>
+<meta name="description" content="Free fraction calculator with step-by-step solutions: add, subtract, multiply and divide fractions and mixed numbers, simplify fractions, and convert between fractions and decimals — including very big numbers." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/fraction" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 .12em;line-height:1.2}
+  .frac .fn{border-bottom:2px solid #1F2937;padding:0 .32em}
+  .frac .fd{padding:0 .32em}
+  .eq{font-size:1.3rem;line-height:1.9;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .eq .sgn{font-weight:600}
+  .steps{font-size:1.08rem;line-height:2.1;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .fin{width:5.2rem;text-align:center;font-size:1.15rem;padding:.45rem .2rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .finw{width:9.5rem;text-align:center;font-size:1.15rem;padding:.45rem .2rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .finw:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .finbig{width:100%;min-width:11rem;text-align:center;font-size:1.02rem;padding:.45rem .2rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .finbig:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .bar{height:2.5px;background:#1F2937;margin:3px 2px}
+  .opsel{font-size:1.2rem;padding:.4rem .3rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  details.expl summary{cursor:pointer;color:#3F51B5;font-weight:600}
+  .pfrac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 .1em;line-height:1.15;font-size:.92em}
+  .pfrac .fn{border-bottom:1.5px solid #334155;padding:0 .25em}
+  .pfrac .fd{padding:0 .25em}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do you add fractions with different denominators?","acceptedAnswer":{"@type":"Answer","text":"Find a common denominator — the least common multiple (LCM) of the two denominators is the most efficient choice. Multiply each numerator and denominator by whatever makes the denominators equal, then add the numerators and keep the common denominator. Simplify the result by dividing the numerator and denominator by their greatest common factor. The calculator above shows every one of these steps."}},
+{"@type":"Question","name":"How do you multiply and divide fractions?","acceptedAnswer":{"@type":"Answer","text":"To multiply fractions, multiply the numerators together and the denominators together, then simplify. To divide fractions, multiply the first fraction by the reciprocal of the second — flip the second fraction's numerator and denominator — and then multiply as usual."}},
+{"@type":"Question","name":"How do you convert a decimal to a fraction?","acceptedAnswer":{"@type":"Answer","text":"Write the decimal over the power of ten matching its last decimal place (for example, 1.375 = 1375/1000), then divide the numerator and denominator by their greatest common factor to simplify (1375/1000 = 11/8 = 1 3/8)."}},
+{"@type":"Question","name":"Can this calculator handle very big fractions?","acceptedAnswer":{"@type":"Answer","text":"Yes. The Big Number Fraction Calculator at the bottom of the page uses exact integer arithmetic, so numerators and denominators with dozens of digits are computed exactly, with no rounding."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Fraction Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Fraction Calculator</h1>
+  <p class="text-slate-600 mb-5 max-w-3xl">Six fraction tools on one page: a fraction calculator, a mixed numbers calculator, a simplify fractions calculator, decimal-to-fraction and fraction-to-decimal converters, and a big number fraction calculator for very large integers. Every answer is simplified automatically and shown with its calculation steps. In each fraction field, the box above the black line is the numerator and the box below it is the denominator.</p>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2 space-y-10">
+
+      <!-- TOOL 1: fraction -->
+      <section id="tool1" class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-4">Fraction Calculator</h2>
+        <div class="flex items-center justify-center gap-3 flex-wrap">
+          <div><input id="t1" class="fin" value="2" maxlength="8" inputmode="numeric" /><div class="bar"></div><input id="b1" class="fin" value="7" maxlength="8" inputmode="numeric" /></div>
+          <select id="op1" class="opsel"><option value="+">+</option><option value="-">−</option><option value="*">x</option><option value="/">÷</option></select>
+          <div><input id="t2" class="fin" value="3" maxlength="8" inputmode="numeric" /><div class="bar"></div><input id="b2" class="fin" value="8" maxlength="8" inputmode="numeric" /></div>
+          <span class="text-3xl font-bold">=</span><span class="text-3xl text-slate-400">?</span>
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button onclick="calc1()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearTool(1)" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="res1" class="hidden mt-5"></div>
+      </section>
+
+      <!-- TOOL 5: mixed numbers -->
+      <section id="mixednumbers" class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-2">Mixed Numbers Calculator</h2>
+        <p class="text-sm text-slate-500 mb-4">Enter each value as a mixed number (like <b>-2 3/4</b>), a fraction (like <b>3/4</b>), or a whole number.</p>
+        <div class="flex items-center justify-center gap-3 flex-wrap">
+          <input id="c5num1" class="finw" value="-2 3/4" maxlength="12" />
+          <select id="op5" class="opsel"><option value="+">+</option><option value="-">−</option><option value="*">x</option><option value="/">÷</option></select>
+          <input id="c5num2" class="finw" value="3 5/7" maxlength="12" />
+          <span class="text-3xl font-bold">=</span><span class="text-3xl text-slate-400">?</span>
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button onclick="calc5()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearTool(5)" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="res5" class="hidden mt-5"></div>
+      </section>
+
+      <!-- TOOL 4: simplify -->
+      <section id="simplify" class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-4">Simplify Fractions Calculator</h2>
+        <div class="flex items-center justify-center gap-3 flex-wrap">
+          <input id="c4l1" class="fin" value="2" maxlength="10" inputmode="numeric" />
+          <div><input id="c4t1" class="fin" value="21" maxlength="10" inputmode="numeric" /><div class="bar"></div><input id="c4b1" class="fin" value="98" maxlength="10" inputmode="numeric" /></div>
+          <span class="text-3xl font-bold">=</span><span class="text-3xl text-slate-400">?</span>
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button onclick="calc4()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearTool(4)" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="res4" class="hidden mt-5"></div>
+      </section>
+
+      <!-- TOOL 2: decimal to fraction -->
+      <section id="decimal2fraction" class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-4">Decimal to Fraction Calculator</h2>
+        <div class="flex items-center justify-center gap-3 flex-wrap">
+          <input id="c2d1" class="finw" value="1.375" maxlength="18" inputmode="decimal" />
+          <span class="text-3xl font-bold">=</span><span class="text-3xl text-slate-400">?</span>
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button onclick="calc2()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearTool(2)" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="res2" class="hidden mt-5"></div>
+      </section>
+
+      <!-- TOOL 3: fraction to decimal -->
+      <section id="fraction2decimal" class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-4">Fraction to Decimal Calculator</h2>
+        <div class="flex items-center justify-center gap-3 flex-wrap">
+          <div><input id="c3t1" class="finw" value="2" maxlength="18" inputmode="numeric" /><div class="bar"></div><input id="c3b1" class="finw" value="7" maxlength="18" inputmode="numeric" /></div>
+          <span class="text-3xl font-bold">=</span><span class="text-3xl text-slate-400">?</span>
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button onclick="calc3()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearTool(3)" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="res3" class="hidden mt-5"></div>
+      </section>
+
+      <!-- TOOL 6: big number -->
+      <section id="bignumber" class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-2">Big Number Fraction Calculator</h2>
+        <p class="text-sm text-slate-500 mb-4">Use this calculator if the numerators or denominators are very big integers. Results are exact — no rounding.</p>
+        <div class="flex items-start justify-center gap-3 flex-wrap">
+          <div class="w-64 max-w-full"><input id="c6t1" class="finbig" value="1234" /><div class="bar"></div><input id="c6b1" class="finbig" value="748892928829" /></div>
+          <select id="op6" class="opsel mt-3"><option value="+">+</option><option value="-">−</option><option value="*">x</option><option value="/">÷</option></select>
+          <div class="w-64 max-w-full"><input id="c6t2" class="finbig" value="33434421132232234333" /><div class="bar"></div><input id="c6b2" class="finbig" value="8877277388288288288" /></div>
+          <span class="text-3xl font-bold mt-3">=</span><span class="text-3xl text-slate-400 mt-3">?</span>
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button onclick="calc6()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearTool(6)" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="res6" class="hidden mt-5"></div>
+      </section>
+
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/scientific">Scientific Calculator</a></li>
+          <li><a class="hover:underline" href="/percent">Percentage Calculator</a></li>
+          <li><a class="hover:underline" href="/exponent">Exponent Calculator</a></li>
+          <li><a class="hover:underline" href="/lcm">Least Common Multiple Calculator</a></li>
+          <li><a class="hover:underline" href="/gcf">Greatest Common Factor Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">Quick tips</h3>
+        <p>Adding and subtracting need a <b>common denominator</b>; multiplying and dividing do not. Every result on this page is reduced to its lowest terms automatically — divide the top and bottom by their greatest common factor.</p>
+      </div>
+    </aside>
+  </div>
+
+  <section class="bg-white rounded-xl shadow p-6 mt-10 max-w-none">
+    <h2 class="text-2xl font-bold mb-3">What is a fraction?</h2>
+    <div class="flex flex-col sm:flex-row gap-5 items-start">
+      <p class="text-slate-600 flex-1">A fraction is a number that represents part of a whole. It is written with two numbers separated by a line: the <b>numerator</b> (top) counts how many equal parts you have, and the <b>denominator</b> (bottom) says how many equal parts the whole was divided into. In the fraction <span class="pfrac"><span class="fn">3</span><span class="fd">8</span></span>, the numerator is 3 and the denominator is 8. Picture a pie cut into 8 equal slices: eating 3 slices means you ate <span class="pfrac"><span class="fn">3</span><span class="fd">8</span></span> of the pie, and <span class="pfrac"><span class="fn">5</span><span class="fd">8</span></span> remains — the shaded pie alongside shows exactly that. A denominator can never be 0, because dividing a whole into zero parts is meaningless and the fraction would be undefined.</p>
+      <svg width="150" height="150" viewBox="0 0 100 100" class="shrink-0 mx-auto" role="img" aria-label="Pie chart showing 3 of 8 slices shaded"><circle cx="50" cy="50" r="46" fill="#E2E8F0" stroke="#94A3B8"/><path d="M50 50 L50 4 A46 46 0 0 1 82.5 17.5 Z" fill="#3F51B5"/><path d="M50 50 L82.5 17.5 A46 46 0 0 1 96 50 Z" fill="#3F51B5"/><path d="M50 50 L96 50 A46 46 0 0 1 82.5 82.5 Z" fill="#3F51B5"/><g stroke="#F8FAFC" stroke-width="1.6"><line x1="50" y1="50" x2="50" y2="4"/><line x1="50" y1="50" x2="82.5" y2="17.5"/><line x1="50" y1="50" x2="96" y2="50"/><line x1="50" y1="50" x2="82.5" y2="82.5"/><line x1="50" y1="50" x2="50" y2="96"/><line x1="50" y1="50" x2="17.5" y2="82.5"/><line x1="50" y1="50" x2="4" y2="50"/><line x1="50" y1="50" x2="17.5" y2="17.5"/></g></svg>
+    </div>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Addition</h3>
+    <p class="text-slate-600">Unlike whole numbers, fractions can only be added directly when they share a denominator. One reliable method is to multiply each fraction's numerator and denominator by the other fraction's denominator, which guarantees a common denominator:</p>
+    <p class="text-center my-3 text-lg"><span class="pfrac"><span class="fn">a</span><span class="fd">b</span></span> + <span class="pfrac"><span class="fn">c</span><span class="fd">d</span></span> = <span class="pfrac"><span class="fn">a×d</span><span class="fd">b×d</span></span> + <span class="pfrac"><span class="fn">c×b</span><span class="fd">d×b</span></span> = <span class="pfrac"><span class="fn">ad + bc</span><span class="fd">bd</span></span></p>
+    <p class="text-slate-600">A tidier method uses the <a class="text-[#3F51B5] font-medium hover:underline" href="/lcm">least common multiple (LCM)</a> of the denominators as the common denominator — it keeps the numbers smaller and the answer closer to simplified form. For <span class="pfrac"><span class="fn">3</span><span class="fd">4</span></span> + <span class="pfrac"><span class="fn">1</span><span class="fd">6</span></span>, the LCM of 4 and 6 is 12: multiply the first fraction by 3 and the second by 2 to get <span class="pfrac"><span class="fn">9</span><span class="fd">12</span></span> + <span class="pfrac"><span class="fn">2</span><span class="fd">12</span></span> = <span class="pfrac"><span class="fn">11</span><span class="fd">12</span></span>. The calculator above uses the LCM method in its steps.</p>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Subtraction</h3>
+    <p class="text-slate-600">Subtraction works exactly like addition — reach a common denominator first, then subtract the numerators:</p>
+    <p class="text-center my-3 text-lg"><span class="pfrac"><span class="fn">a</span><span class="fd">b</span></span> − <span class="pfrac"><span class="fn">c</span><span class="fd">d</span></span> = <span class="pfrac"><span class="fn">ad − bc</span><span class="fd">bd</span></span>&nbsp;&nbsp;·&nbsp;&nbsp; EX: <span class="pfrac"><span class="fn">3</span><span class="fd">4</span></span> − <span class="pfrac"><span class="fn">1</span><span class="fd">6</span></span> = <span class="pfrac"><span class="fn">7</span><span class="fd">12</span></span></p>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Multiplication</h3>
+    <p class="text-slate-600">Multiplying is the simplest operation: no common denominator is needed. Multiply the numerators together and the denominators together, then simplify if possible:</p>
+    <p class="text-center my-3 text-lg"><span class="pfrac"><span class="fn">a</span><span class="fd">b</span></span> × <span class="pfrac"><span class="fn">c</span><span class="fd">d</span></span> = <span class="pfrac"><span class="fn">ac</span><span class="fd">bd</span></span>&nbsp;&nbsp;·&nbsp;&nbsp; EX: <span class="pfrac"><span class="fn">3</span><span class="fd">4</span></span> × <span class="pfrac"><span class="fn">1</span><span class="fd">6</span></span> = <span class="pfrac"><span class="fn">3</span><span class="fd">24</span></span> = <span class="pfrac"><span class="fn">1</span><span class="fd">8</span></span></p>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Division</h3>
+    <p class="text-slate-600">To divide by a fraction, multiply by its <b>reciprocal</b> — the fraction flipped upside down. The reciprocal of <span class="pfrac"><span class="fn">3</span><span class="fd">4</span></span> is <span class="pfrac"><span class="fn">4</span><span class="fd">3</span></span>, so division turns into the multiplication you already know:</p>
+    <p class="text-center my-3 text-lg"><span class="pfrac"><span class="fn">a</span><span class="fd">b</span></span> ÷ <span class="pfrac"><span class="fn">c</span><span class="fd">d</span></span> = <span class="pfrac"><span class="fn">a</span><span class="fd">b</span></span> × <span class="pfrac"><span class="fn">d</span><span class="fd">c</span></span> = <span class="pfrac"><span class="fn">ad</span><span class="fd">bc</span></span>&nbsp;&nbsp;·&nbsp;&nbsp; EX: <span class="pfrac"><span class="fn">3</span><span class="fd">4</span></span> ÷ <span class="pfrac"><span class="fn">1</span><span class="fd">6</span></span> = <span class="pfrac"><span class="fn">18</span><span class="fd">4</span></span> = <span class="pfrac"><span class="fn">9</span><span class="fd">2</span></span> = 4 <span class="pfrac"><span class="fn">1</span><span class="fd">2</span></span></p>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Simplification</h3>
+    <p class="text-slate-600">A fraction is simplified when its numerator and denominator share no common factor larger than 1. To simplify, divide both by their <a class="text-[#3F51B5] font-medium hover:underline" href="/gcf">greatest common factor (GCF)</a>: <span class="pfrac"><span class="fn">220</span><span class="fd">440</span></span> is far easier to work with as <span class="pfrac"><span class="fn">1</span><span class="fd">2</span></span>. Results on this page are always returned in lowest terms, in both improper-fraction form (like <span class="pfrac"><span class="fn">9</span><span class="fd">2</span></span>) and mixed-number form (4 <span class="pfrac"><span class="fn">1</span><span class="fd">2</span></span>).</p>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Converting between fractions and decimals</h3>
+    <p class="text-slate-600">Each place to the right of a decimal point is a power of ten: tenths are 10<sup>1</sup>, hundredths 10<sup>2</sup>, thousandths 10<sup>3</sup>, and so on. So a decimal becomes a fraction by writing its digits over that power of ten and simplifying — 0.1234 extends to the fourth decimal place, giving <span class="pfrac"><span class="fn">1234</span><span class="fd">10000</span></span>, which simplifies to <span class="pfrac"><span class="fn">617</span><span class="fd">5000</span></span>. Going the other way, a fraction becomes a decimal by dividing the numerator by the denominator: <span class="pfrac"><span class="fn">2</span><span class="fd">7</span></span> = 0.28571428571429… The two converter tools above handle both directions.</p>
+  </section>
+
+  <section class="bg-white rounded-xl shadow p-6 mt-6">
+    <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+    <div class="space-y-4 text-slate-600">
+      <div><h3 class="font-semibold text-slate-800">How do you add fractions with different denominators?</h3><p>Find a common denominator — the least common multiple (LCM) of the two denominators is the most efficient choice. Multiply each numerator and denominator by whatever makes the denominators equal, then add the numerators and keep the common denominator. Simplify the result by dividing the numerator and denominator by their greatest common factor. The calculator above shows every one of these steps.</p></div>
+      <div><h3 class="font-semibold text-slate-800">How do you multiply and divide fractions?</h3><p>To multiply fractions, multiply the numerators together and the denominators together, then simplify. To divide fractions, multiply the first fraction by the reciprocal of the second — flip the second fraction's numerator and denominator — and then multiply as usual.</p></div>
+      <div><h3 class="font-semibold text-slate-800">How do you convert a decimal to a fraction?</h3><p>Write the decimal over the power of ten matching its last decimal place (for example, 1.375 = 1375/1000), then divide the numerator and denominator by their greatest common factor to simplify (1375/1000 = 11/8 = 1 3/8).</p></div>
+      <div><h3 class="font-semibold text-slate-800">Can this calculator handle very big fractions?</h3><p>Yes. The Big Number Fraction Calculator at the bottom of the page uses exact integer arithmetic, so numerators and denominators with dozens of digits are computed exactly, with no rounding.</p></div>
+    </div>
+  </section>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+/* ---------- exact rational engine (BigInt) ---------- */
+const B = (x) => BigInt(x);
+function bgcd(a, b) { a = a < 0n ? -a : a; b = b < 0n ? -b : b; while (b) { const t = a % b; a = b; b = t; } return a; }
+function blcm(a, b) { return a / bgcd(a, b) * b; }
+function simp(n, d) { if (d < 0n) { n = -n; d = -d; } if (n === 0n) return [0n, 1n]; const g = bgcd(n, d); return [n / g, d / g]; }
+const OPS = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+
+function fr(n, d) { return '<span class="frac"><span class="fn">' + n + '</span><span class="fd">' + d + '</span></span>'; }
+function frS(n, d) { /* signed fraction: sign outside, stack of absolute values */
+  n = B(n); d = B(d); if (d < 0n) { n = -n; d = -d; }
+  return (n < 0n ? '<span class="sgn">−</span> ' : '') + fr(String(n < 0n ? -n : n), String(d));
+}
+function mixedS(n, d) { /* signed mixed number rendering of n/d (assumed simplified, |n|>d, rem>0) */
+  n = B(n); d = B(d); const s = n < 0n ? '<span class="sgn">−</span>' : ''; const a = n < 0n ? -n : n;
+  return s + (a / d).toString() + ' ' + fr(String(a % d), String(d));
+}
+function renderValue(n, d) { /* steps-final rendering: int / proper fraction / mixed only */
+  const [sn, sd] = simp(B(n), B(d));
+  if (sn === 0n) return '0';
+  if (sd === 1n) return String(sn);
+  const a = sn < 0n ? -sn : sn;
+  if (a < sd) return frS(sn, sd);
+  return mixedS(sn, sd);
+}
+function renderHeadline(n, d) { /* fraction, plus "= mixed" when improper (C1/C5 style) */
+  const [sn, sd] = simp(B(n), B(d));
+  if (sn === 0n) return '0';
+  if (sd === 1n) return String(sn);
+  const a = sn < 0n ? -sn : sn;
+  if (a < sd) return frS(sn, sd);
+  return frS(sn, sd) + ' = ' + mixedS(sn, sd);
+}
+function fmtDec(x) { /* PHP-style: 14 significant digits */
+  if (!isFinite(x)) return String(x);
+  if (Number.isInteger(x)) return String(x);
+  return String(parseFloat(x.toPrecision(14)));
+}
+function decLine(n, d) { const [sn, sd] = simp(B(n), B(d)); if (sd === 1n) return ''; return '<p class="mt-3 text-slate-700">Result in decimals: <b>' + fmtDec(Number(sn) / Number(sd)) + '</b></p>'; }
+
+function addSubStages(n1, d1, op, n2, d2, echo) {
+  /* LCM chain for + and -; returns {stages, n, d} with n/d the RAW result over the LCM */
+  const L = blcm(d1, d2), k1 = L / d1, k2 = L / d2;
+  const a = n1 * k1, b = n2 * k2;
+  const n = op === '+' ? a + b : a - b;
+  const st = [];
+  if (echo) st.push(echo);
+  if (k1 > 1n || k2 > 1n) {
+    const s1 = k1 > 1n ? fr(n1 + ' × ' + k1, d1 + ' × ' + k1) : frS(n1, d1);
+    const s2 = k2 > 1n ? fr(n2 + ' × ' + k2, d2 + ' × ' + k2) : frS(n2, d2);
+    st.push(s1 + ' ' + OPS[op] + ' ' + s2);
+  }
+  st.push(fr(a + ' ' + OPS[op] + ' ' + b, String(L)));
+  const ev = L === 1n ? String(n) : fr(String(n), String(L));
+  st.push(ev);
+  const [sn, sd] = simp(n, L), g = bgcd(n, L);
+  if (g > 1n) {
+    st.push(fr(n + ' / ' + g, L + ' / ' + g));
+    if (sd === 1n) st.push(renderValue(sn, sd));
+    else { st.push(frS(sn, sd)); if (renderValue(sn, sd) !== frS(sn, sd)) st.push(renderValue(sn, sd)); }
+  } else if (renderValue(sn, sd) !== ev) {
+    st.push(renderValue(sn, sd));
+  }
+  return { stages: st, n: n, d: L };
+}
+function mulStages(n1, d1, n2, d2, echo, recipEcho) {
+  const st = [];
+  if (echo) st.push(echo);
+  if (recipEcho) st.push(recipEcho);
+  const rn = n1 * n2, rd = d1 * d2;
+  st.push(fr(n1 + ' × ' + n2, d1 + ' × ' + d2));
+  const [sn, sd] = simp(rn, rd), g = bgcd(rn, rd);
+  if (g > 1n) {
+    st.push(fr(String(rn), String(rd)));
+    st.push(fr(rn + ' / ' + g, rd + ' / ' + g));
+    if (sd === 1n) st.push(renderValue(sn, sd));
+    else { st.push(frS(sn, sd)); if (renderValue(sn, sd) !== frS(sn, sd)) st.push(renderValue(sn, sd)); }
+  } else {
+    st.push(renderValue(sn, sd));
+  }
+  return { stages: st, n: rn, d: rd };
+}
+function opStages(n1, d1, op, n2, d2, echo) {
+  if (op === '+' || op === '-') return addSubStages(n1, d1, op, n2, d2, echo);
+  if (op === '*') return mulStages(n1, d1, n2, d2, echo, null);
+  const [rn2, rd2] = simp(d2, n2); /* reciprocal of n2/d2 */
+  return mulStages(n1, d1, rn2, rd2, echo, frS(n1, d1) + ' × ' + frS(rn2, rd2));
+}
+function explain(op, n1, d1, n2, d2, rn, rd) {
+  const echo = frS(n1, d1) + ' ' + OPS[op] + ' ' + frS(n2, d2);
+  const head = 'For the problem: ' + echo + ' = ?<br>';
+  if (op === '+' || op === '-') {
+    const L = blcm(d1, d2), k1 = L / d1, k2 = L / d2, a = n1 * k1, b = n2 * k2;
+    const s1 = k1 > 1n ? fr(n1 + ' × ' + k1, d1 + ' × ' + k1) : frS(n1, d1);
+    const s2 = k2 > 1n ? fr(n2 + ' × ' + k2, d2 + ' × ' + k2) : frS(n2, d2);
+    return head + 'The least common multiple (LCM) of ' + d1 + ' and ' + d2 + ' is ' + L + '. Multiply the numerator and denominator of each fraction by whatever value will make each denominator equal to the LCM: ' + s1 + ' ' + OPS[op] + ' ' + s2 + '. Now that the fractions have like denominators, ' + (op === '+' ? 'add' : 'subtract') + ' the numerators: ' + fr(a + ' ' + OPS[op] + ' ' + b, String(L)) + ' = ' + renderValue(rn, rd) + '. The result is: ' + echo + ' = ' + renderHeadline(rn, rd) + '.';
+  }
+  if (op === '*') {
+    const g = bgcd(rn, rd);
+    let t = head + 'Multiply the numerators by each other, and do the same with the denominators, to form a new fraction: ' + fr(n1 + ' × ' + n2, d1 + ' × ' + d2) + ' = ' + fr(String(rn), String(rd)) + '.';
+    if (g > 1n) t += ' The greatest common factor (GCF) of ' + rn + ' and ' + rd + ' is ' + g + ', so the result can be simplified by dividing both the numerator and denominator by ' + g + ': ' + fr(rn + ' / ' + g, rd + ' / ' + g) + ' = ' + renderValue(rn, rd) + '.';
+    return t + ' The result is: ' + echo + ' = ' + renderHeadline(rn, rd) + '.';
+  }
+  const [rn2, rd2] = simp(d2, n2), g = bgcd(rn, rd);
+  let t = head + 'Dividing by a fraction is the same as multiplying by its reciprocal, so flip the second fraction: ' + echo + ' = ' + frS(n1, d1) + ' × ' + frS(rn2, rd2) + '. Then multiply the numerators and denominators: ' + fr(n1 + ' × ' + rn2, d1 + ' × ' + rd2) + ' = ' + fr(String(rn), String(rd)) + '.';
+  if (g > 1n) t += ' The greatest common factor (GCF) of ' + rn + ' and ' + rd + ' is ' + g + ', so divide both the numerator and denominator by ' + g + ' to simplify: ' + fr(rn + ' / ' + g, rd + ' / ' + g) + ' = ' + renderValue(rn, rd) + '.';
+  return t + ' The result is: ' + echo + ' = ' + renderHeadline(rn, rd) + '.';
+}
+function showRes(id, html) { const e = document.getElementById(id); e.innerHTML = html; e.classList.remove('hidden'); e.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+function errRes(id, msg) { showRes(id, '<p class="text-red-600 font-semibold text-lg">' + msg + '</p>'); }
+function stepsBlock(title, stages, expl) {
+  let h = '<div class="border-t mt-4 pt-4"><p class="font-bold mb-1">' + title + '</p><div class="steps">' + stages.join(' &nbsp;=&nbsp; ') + '</div>';
+  if (expl) h += '<details class="expl mt-2"><summary>+ Show further explanation</summary><div class="mt-2 text-slate-600 text-[1.02rem] leading-relaxed">' + expl + '</div></details>';
+  return h + '</div>';
+}
+function shareRow(tool, params) {
+  return '<div class="mt-4"><button onclick="copyShare(\'' + tool + '\',' + JSON.stringify(params).replace(/"/g, '&quot;') + ')" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="sh' + tool + '" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function copyShare(tool, params) {
+  const u = new URL(location.href); u.search = ''; u.hash = tool;
+  for (const k in params) u.searchParams.set(k, params[k]);
+  const done = () => { document.getElementById('sh' + tool).textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+
+/* ---------- Tool 1: fraction calculator ---------- */
+function pieSVG(val) {
+  const v = Math.max(0, Math.min(1, val));
+  if (v >= 1) return '<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#3F51B5"/><circle cx="40" cy="40" r="36" fill="none" stroke="#94A3B8"/></svg>';
+  if (v <= 0) return '<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#E5E7EB" stroke="#94A3B8"/></svg>';
+  const a = v * 2 * Math.PI, x = 40 + 36 * Math.sin(a), y = 40 - 36 * Math.cos(a), laf = v > 0.5 ? 1 : 0;
+  return '<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#E5E7EB" stroke="#94A3B8"/><path d="M40 40 L40 4 A36 36 0 ' + laf + ' 1 ' + x.toFixed(1) + ' ' + y.toFixed(1) + ' Z" fill="#3F51B5"/></svg>';
+}
+function parseIntField(id) { const s = document.getElementById(id).value.trim(); if (!/^-?\d+$/.test(s)) return null; return B(s); }
+function calc1() {
+  const t1 = parseIntField('t1'), b1 = parseIntField('b1'), t2 = parseIntField('t2'), b2 = parseIntField('b2'), op = document.getElementById('op1').value;
+  if (t1 === null || b1 === null || t2 === null || b2 === null || t1 === 0n || b1 === 0n || t2 === 0n || b2 === 0n) return errRes('res1', 'Please provide none zero numbers.');
+  const [n1, d1] = simp(t1, b1), [n2, d2] = simp(t2, b2);
+  const echo = frS(n1, d1) + ' ' + OPS[op] + ' ' + frS(n2, d2);
+  const r = opStages(n1, d1, op, n2, d2, echo);
+  const [sn, sd] = simp(r.n, r.d);
+  let pies = '';
+  const v1 = Number(n1) / Number(d1), v2 = Number(n2) / Number(d2), vr = Number(sn) / Number(sd);
+  if (n1 >= 0n && n2 >= 0n && v1 <= 1 && v2 <= 1 && vr >= 0) {
+    pies = '<div class="flex items-center gap-2 mt-4 flex-wrap">' + pieSVG(v1) + '<span class="text-2xl font-bold">' + OPS[op] + '</span>' + pieSVG(v2) + '<span class="text-2xl font-bold">=</span>' + pieSVG(vr) + '</div>';
+  }
+  showRes('res1',
+    '<h3 class="text-lg font-bold text-[#3F51B5]">Result</h3>' +
+    '<div class="eq">' + echo + ' = ' + renderHeadline(sn, sd) + '</div>' +
+    decLine(sn, sd) + pies +
+    stepsBlock('Calculation steps:', r.stages, explain(op, n1, d1, n2, d2, sn, sd)) +
+    shareRow('tool1', { t1: String(t1), b1: String(b1), op: op, t2: String(t2), b2: String(b2) }));
+}
+
+/* ---------- Tool 5: mixed numbers ---------- */
+function parseMixed(s) {
+  s = s.trim();
+  let m = /^(-)?(\d+)\s+(\d+)\s*\/\s*(\d+)$/.exec(s);
+  if (m) { const sg = m[1] ? -1n : 1n; return { whole: sg * B(m[2]), fn: sg * B(m[3]), fd: B(m[4]), hasWhole: true }; }
+  m = /^(-)?(\d+)\s*\/\s*(\d+)$/.exec(s);
+  if (m) { const sg = m[1] ? -1n : 1n; return { whole: 0n, fn: sg * B(m[2]), fd: B(m[3]), hasWhole: false }; }
+  m = /^(-)?(\d+)$/.exec(s);
+  if (m) { const sg = m[1] ? -1n : 1n; return { whole: sg * B(m[2]), fn: 0n, fd: 1n, hasWhole: true }; }
+  return null;
+}
+function enteredForm(p) { /* how the operand was entered, for echo stages */
+  if (p.hasWhole && p.fn !== 0n) { const s = p.whole < 0n ? '<span class="sgn">−</span>' : ''; const aw = p.whole < 0n ? -p.whole : p.whole; const af = p.fn < 0n ? -p.fn : p.fn; return s + aw + ' ' + fr(String(af), String(p.fd)); }
+  if (p.hasWhole) return String(p.whole);
+  return frS(p.fn, p.fd);
+}
+function calc5() {
+  const s1 = document.getElementById('c5num1').value, s2 = document.getElementById('c5num2').value, op = document.getElementById('op5').value;
+  const p1 = parseMixed(s1), p2 = parseMixed(s2);
+  if (!p1) return errRes('res5', 'The calculator do not understand the input of ' + s1.trim() + '.');
+  if (!p2) return errRes('res5', 'The calculator do not understand the input of ' + s2.trim() + '.');
+  if (p1.fd === 0n || p2.fd === 0n) return errRes('res5', 'Denominator can not be 0.');
+  const e1 = enteredForm(p1), e2 = enteredForm(p2);
+  const echo = e1 + ' ' + OPS[op] + ' ' + e2;
+  const n1 = p1.whole * p1.fd + p1.fn, n2 = p2.whole * p2.fd + p2.fn;
+  const [sn, sd] = simp(op === '+' ? n1 * p2.fd + n2 * p1.fd : op === '-' ? n1 * p2.fd - n2 * p1.fd : op === '*' ? n1 * n2 : n1 * p2.fd, op === '/' ? p1.fd * n2 : p1.fd * p2.fd);
+  let stages, expl;
+  if (op === '+' || op === '-') {
+    if (p1.hasWhole || p2.hasWhole) {
+      const W = op === '+' ? p1.whole + p2.whole : p1.whole - p2.whole;
+      const f1s = p1.fn === 0n ? '0' : fr(String(p1.fn), String(p1.fd));
+      const f2s = p2.fn === 0n ? '0' : fr(String(p2.fn), String(p2.fd));
+      stages = [echo, '(' + p1.whole + ' ' + OPS[op] + ' ' + p2.whole + ') + (' + f1s + ' ' + OPS[op] + ' ' + f2s + ')'];
+      const fc = addSubStages(p1.fn, p1.fd, op, p2.fn, p2.fd, null);
+      for (let i = 0; i < fc.stages.length - 1; i++) stages.push(W + ' + ' + fc.stages[i]);
+      const lastF = fc.stages[fc.stages.length - 1];
+      const [fn2, fd2] = simp(fc.n, fc.d);
+      if (fd2 === 1n && fn2 !== 0n) stages.push(W + ' + ' + fn2);
+      else if (fn2 !== 0n && (fn2 < 0n ? -fn2 : fn2) > fd2) stages.push(W + ' + ' + renderValue(fn2, fd2));
+      else if (fn2 !== 0n && (fn2 < 0n ? -fn2 : fn2) === fd2) stages.push(W + ' + ' + frS(fn2, fd2));
+      else stages.push(W + ' + ' + lastF);
+      stages.push(renderValue(sn, sd));
+      expl = 'For the problem: ' + echo + ' = ?<br>When ' + (op === '+' ? 'adding' : 'subtracting') + ' mixed numbers, handle the whole-number parts and the fraction parts separately: ' + echo + ' = (' + p1.whole + ' ' + OPS[op] + ' ' + p2.whole + ') + (' + f1s + ' ' + OPS[op] + ' ' + f2s + '), then combine the two results into a single value and simplify. The result is: ' + echo + ' = ' + renderHeadline(sn, sd) + '.';
+    } else {
+      const r = opStages(p1.fn, p1.fd, op, p2.fn, p2.fd, echo);
+      stages = r.stages;
+      expl = explain(op, p1.fn, p1.fd, p2.fn, p2.fd, sn, sd);
+    }
+  } else {
+    if (op === '/' && n2 === 0n) return errRes('res5', 'Denominator can not be 0.');
+    const conv = frS(n1, p1.fd) + ' ' + OPS[op] + ' ' + frS(n2, p2.fd);
+    const r = opStages(n1, p1.fd, op, n2, p2.fd, echo);
+    if (p1.hasWhole || p2.hasWhole) r.stages.splice(1, 0, conv);
+    stages = r.stages;
+    expl = 'For the problem: ' + echo + ' = ?<br>Convert mixed numbers to improper fractions first: ' + echo + ' = ' + conv + '. ' + (op === '*' ? 'Then multiply the numerators and the denominators and simplify.' : 'Then multiply by the reciprocal of the second fraction and simplify.') + ' The result is: ' + echo + ' = ' + renderHeadline(sn, sd) + '.';
+  }
+  showRes('res5',
+    '<h3 class="text-lg font-bold text-[#3F51B5]">Result</h3>' +
+    '<div class="eq">' + echo + ' = ' + renderHeadline(sn, sd) + '</div>' +
+    decLine(sn, sd) +
+    stepsBlock('Calculation steps:', stages, expl) +
+    shareRow('mixednumbers', { c5num1: s1.trim(), c5op: op, c5num2: s2.trim() }));
+}
+
+/* ---------- Tool 4: simplify ---------- */
+function calc4() {
+  const w = parseIntField('c4l1'), t = parseIntField('c4t1'), b = parseIntField('c4b1');
+  if (w === null || t === null || b === null || b === 0n) return errRes('res4', 'Please provide numbers as inputs.');
+  const sgn = (w < 0n || (w === 0n && t < 0n)) ? -1n : 1n;
+  const aw = w < 0n ? -w : w, at = t < 0n ? -t : t, ab = b < 0n ? -b : b;
+  const N = sgn * (aw * ab + at), D = ab;
+  const [sn, sd] = simp(N, D), g = bgcd(N, D);
+  const echo = (sgn < 0n ? '<span class="sgn">−</span>' : '') + aw + ' ' + fr(String(at), String(ab));
+  let head;
+  if (sd === 1n) head = frS(sn, 1n) + ' = ' + sn;
+  else if ((sn < 0n ? -sn : sn) < sd) head = frS(sn, sd);
+  else head = frS(sn, sd) + ' = ' + mixedS(sn, sd);
+  let body;
+  if (g <= 1n) {
+    body = '<p class="mt-3 text-slate-700">This fraction is in the simplest form already.</p>';
+  } else {
+    const pre = sgn < 0n ? '<span class="sgn">−</span> ' : '';
+    const stages = [echo];
+    if (w !== 0n) stages.push(pre + fr(String(N < 0n ? -N : N), String(D)));
+    stages.push(pre + fr((N < 0n ? -N : N) + ' ÷ ' + g, D + ' ÷ ' + g));
+    stages.push(pre + fr(String(sn < 0n ? -sn : sn), String(sd)));
+    if (sd !== 1n && (sn < 0n ? -sn : sn) > sd) stages.push(mixedS(sn, sd));
+    body = stepsBlock('Calculation steps:', stages, null);
+  }
+  showRes('res4',
+    '<h3 class="text-lg font-bold text-[#3F51B5]">Result</h3>' +
+    '<div class="eq">' + echo + ' = ' + head + '</div>' +
+    '<p class="mt-3 text-slate-700">Result in decimals: <b>' + fmtDec(Number(sn) / Number(sd)) + '</b></p>' +
+    body +
+    shareRow('simplify', { c4l1: String(w), c4t1: String(t), c4b1: String(b) }));
+}
+
+/* ---------- Tool 2: decimal to fraction ---------- */
+function calc2() {
+  const raw = document.getElementById('c2d1').value.trim();
+  if (!/^-?(\d+(\.\d*)?|\.\d+)$/.test(raw)) return errRes('res2', 'Please provide numbers as inputs.');
+  const neg = raw.startsWith('-');
+  const body = neg ? raw.slice(1) : raw;
+  const dot = body.indexOf('.');
+  let intPart = dot < 0 ? body : (body.slice(0, dot) || '0');
+  let fracPart = dot < 0 ? '' : body.slice(dot + 1);
+  fracPart = fracPart.replace(/0+$/, '');
+  const k = fracPart.length;
+  const pow = 10n ** B(k);
+  const digits = (intPart + fracPart) === '' ? 0n : B(intPart + fracPart || '0');
+  const N = neg ? -digits : digits, D = pow;
+  const [sn, sd] = simp(N, D), g = bgcd(N, D);
+  const decTxt = (neg ? '-' : '') + intPart + (k ? '.' + fracPart : '');
+  const pre = neg ? '<span class="sgn">−</span> ' : '';
+  let head;
+  if (sd === 1n) head = String(sn);
+  else if ((sn < 0n ? -sn : sn) < sd) head = frS(sn, sd);
+  else head = frS(sn, sd) + ' = ' + mixedS(sn, sd);
+  const stages = [decTxt];
+  stages.push(pre + fr(decTxt.replace('-', '') + ' × ' + pow, '1 × ' + pow));
+  stages.push(pre + fr(String(digits), String(pow)));
+  if (g > 1n) {
+    stages.push(pre + fr(digits + ' ÷ ' + g, pow + ' ÷ ' + g));
+    stages.push(pre + fr(String(sn < 0n ? -sn : sn), String(sd)));
+  }
+  if (sd !== 1n && (sn < 0n ? -sn : sn) > sd) stages.push(mixedS(sn, sd));
+  showRes('res2',
+    '<h3 class="text-lg font-bold text-[#3F51B5]">Result</h3>' +
+    '<div class="eq">' + decTxt + ' = ' + head + '</div>' +
+    stepsBlock('Calculation steps:', stages, null) +
+    shareRow('decimal2fraction', { c2d1: raw }));
+}
+
+/* ---------- Tool 3: fraction to decimal ---------- */
+function calc3() {
+  const t = parseIntField('c3t1'), b = parseIntField('c3b1');
+  if (t === null || b === null) return errRes('res3', 'Please provide numbers as inputs.');
+  if (b === 0n) return errRes('res3', 'The denominator cannot be 0.');
+  const [sn, sd] = simp(t, b);
+  showRes('res3',
+    '<h3 class="text-lg font-bold text-[#3F51B5]">Result</h3>' +
+    '<div class="eq">' + fr(String(t), String(b)) + ' = <b>' + fmtDec(Number(sn) / Number(sd)) + '</b></div>' +
+    shareRow('fraction2decimal', { c3t1: String(t), c3b1: String(b) }));
+}
+
+/* ---------- Tool 6: big number ---------- */
+function calc6() {
+  const t1 = parseIntField('c6t1'), b1 = parseIntField('c6b1'), t2 = parseIntField('c6t2'), b2 = parseIntField('c6b2'), op = document.getElementById('op6').value;
+  if (t1 === null || b1 === null || t2 === null || b2 === null || t1 === 0n || b1 === 0n || t2 === 0n || b2 === 0n) return errRes('res6', 'Please provide none zero numbers.');
+  const [n1, d1] = simp(t1, b1), [n2, d2] = simp(t2, b2);
+  let rn, rd;
+  if (op === '+') { rn = n1 * d2 + n2 * d1; rd = d1 * d2; }
+  else if (op === '-') { rn = n1 * d2 - n2 * d1; rd = d1 * d2; }
+  else if (op === '*') { rn = n1 * n2; rd = d1 * d2; }
+  else { rn = n1 * d2; rd = d1 * n2; }
+  const [sn, sd] = simp(rn, rd);
+  let head;
+  if (sn === 0n) head = '0';
+  else if (sd === 1n) head = frS(sn, 1n) + ' = ' + sn;
+  else if ((sn < 0n ? -sn : sn) < sd) head = frS(sn, sd);
+  else head = frS(sn, sd) + ' = ' + mixedS(sn, sd);
+  showRes('res6',
+    '<h3 class="text-lg font-bold text-[#3F51B5]">Result</h3>' +
+    '<div class="eq">' + frS(n1, d1) + ' ' + OPS[op] + ' ' + frS(n2, d2) + ' = ' + head + '</div>' +
+    shareRow('bignumber', { c6t1: String(t1), c6b1: String(b1), c6op: op, c6t2: String(t2), c6b2: String(b2) }));
+}
+
+/* ---------- clear + share restore ---------- */
+const DEFAULTS = { t1: '2', b1: '7', op1: '+', t2: '3', b2: '8', c5num1: '-2 3/4', op5: '+', c5num2: '3 5/7', c4l1: '2', c4t1: '21', c4b1: '98', c2d1: '1.375', c3t1: '2', c3b1: '7', c6t1: '1234', c6b1: '748892928829', op6: '+', c6t2: '33434421132232234333', c6b2: '8877277388288288288' };
+const TOOL_FIELDS = { 1: ['t1', 'b1', 'op1', 't2', 'b2'], 5: ['c5num1', 'op5', 'c5num2'], 4: ['c4l1', 'c4t1', 'c4b1'], 2: ['c2d1'], 3: ['c3t1', 'c3b1'], 6: ['c6t1', 'c6b1', 'op6', 'c6t2', 'c6b2'] };
+function clearTool(n) {
+  for (const f of TOOL_FIELDS[n]) document.getElementById(f).value = DEFAULTS[f];
+  const r = document.getElementById('res' + n); r.classList.add('hidden'); r.innerHTML = '';
+}
+(function () {
+  const q = new URLSearchParams(location.search);
+  const set = (id, key) => { if (q.has(key)) document.getElementById(id).value = q.get(key); };
+  let ran = null;
+  if (q.has('t1')) { set('t1', 't1'); set('b1', 'b1'); set('op1', 'op'); set('t2', 't2'); set('b2', 'b2'); calc1(); ran = 'tool1'; }
+  else if (q.has('c5num1')) { set('c5num1', 'c5num1'); set('op5', 'c5op'); set('c5num2', 'c5num2'); calc5(); ran = 'mixednumbers'; }
+  else if (q.has('c4l1')) { set('c4l1', 'c4l1'); set('c4t1', 'c4t1'); set('c4b1', 'c4b1'); calc4(); ran = 'simplify'; }
+  else if (q.has('c2d1')) { set('c2d1', 'c2d1'); calc2(); ran = 'decimal2fraction'; }
+  else if (q.has('c3t1')) { set('c3t1', 'c3t1'); set('c3b1', 'c3b1'); calc3(); ran = 'fraction2decimal'; }
+  else if (q.has('c6t1')) { set('c6t1', 'c6t1'); set('c6b1', 'c6b1'); set('op6', 'c6op'); set('c6t2', 'c6t2'); set('c6b2', 'c6b2'); calc6(); ran = 'bignumber'; }
+  if (ran) setTimeout(() => document.getElementById(ran).scrollIntoView({ behavior: 'smooth' }), 60);
+})();
+</script>
+
+</body>
+            </html>
