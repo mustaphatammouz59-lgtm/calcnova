@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Calculators - CalcNova</title>
+    <meta name="description" content="Free math calculators: a basic calculator plus 38 tools for fractions, percentages, statistics, geometry, binary and hex, exponents, logs, matrices and more.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/math">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Math Calculators - CalcNova">
+    <meta property="og:description" content="Fractions, percentage, standard deviation, triangle, binary, quadratic formula and 32 more free math calculators.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/math">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Math Calculators - CalcNova">
+    <meta name="twitter:description" content="The complete CalcNova math library — arithmetic, statistics and geometry.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Math Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/math" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Are these math calculators free?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes — every calculator on CalcNova is free, needs no sign-up, and runs entirely in your browser. Nothing you type is sent to a server." }
+            },
+            {
+                "@type": "Question",
+                "name": "What can the basic calculator on this page do?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It handles everyday arithmetic with a running expression display, memory keys (M+, M-, MR), an Ans key for the last answer, EXP for entering scientific notation, and RND for a random decimal. For powers, roots, trigonometry, and logarithms, open the Scientific Calculator." }
+            },
+            {
+                "@type": "Question",
+                "name": "How accurate are the results?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The integer tools — factors, greatest common factor, least common multiple — are exact. Decimal results are computed in double precision and displayed to 12 significant digits, and the statistics and geometry tools use the standard textbook formulas, each checked against reference examples before release." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .cat-title { font-size: 1.05rem; font-weight: 800; color: #111827; margin: 1.4rem 0 0.5rem; padding-bottom: 0.3rem; border-bottom: 2px solid #E5E7EB; }
+        .calc-list div { padding: 0.22rem 0; }
+        .calc-list a { color: #3F51B5; font-size: 0.95rem; }
+        .calc-list a:hover { text-decoration: underline; }
+        @media print { nav, footer, .no-print { display: none !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <span class="text-gray-800 font-medium">Math Calculators</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Math Calculators</h1>
+        <div class="flex flex-col lg:flex-row gap-8 mt-2 items-start">
+            <div class="max-w-3xl">
+                <p class="text-gray-700 leading-7">
+                    Use the basic math calculator to do simple calculations, or use one of the calculators below.
+                    The complete CalcNova math library covers everyday arithmetic and fractions, a full statistics
+                    set — standard deviation, probability, z-scores, confidence intervals — and the geometry tools
+                    for triangles, circles, areas, and volumes. Every calculator is free, runs in your browser, and
+                    shows its result the moment you ask for it.
+                </p>
+                <p class="text-sm text-gray-500 mt-2"><strong class="text-green-600">38 calculators</strong> across three categories — math, statistics, and geometry.</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md border border-gray-200 p-3 w-full max-w-[340px] shrink-0 no-print">
+                <div class="bg-[#3F51B5] rounded-lg px-3 pt-2 pb-2.5 text-right mb-2 overflow-hidden">
+                    <div id="calcExpr" class="text-[#C5CAE9] text-xs h-4 truncate">&nbsp;</div>
+                    <div class="flex justify-between items-end">
+                        <span id="memMark" class="text-[#C5CAE9] text-xs font-bold invisible">M</span>
+                        <span id="calcOut" class="text-white text-3xl font-semibold truncate">0</span>
+                    </div>
+                </div>
+                <div class="space-y-1.5">
+                <div class="grid grid-cols-5 gap-1.5"><button type="button" onclick="press('7')" class="bg-gray-50 hover:bg-gray-200 border border-gray-300 text-gray-800 rounded-md py-2 text-sm transition">7</button><button type="button" onclick="press('8')" class="bg-gray-50 hover:bg-gray-200 border border-gray-300 text-gray-800 rounded-md py-2 text-sm transition">8</button><button type="button" onclick="press('9')" class="bg-gray-50 hover:bg-gray-200 border border-gray-300 text-gray-800 rounded-md py-2 text-sm transition">9</button><button type="button" onclick="press('+')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] border border-[#C5CAE9] text-[#3F51B5] font-semibold rounded-md py-2 text-sm transition">+</button><button type="button" onclick="press('bk')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] border border-[#C5CAE9] text-[#3F51B5] font-semibold rounded-md py-2 text-sm transition">Back</button></div>
+                <div class="grid grid-cols-5 gap-1.5"><button type="button" onclick="press('4')" class="bg-gray-50 hover:bg-gray-200 border border-gray-300 text-gray-800 rounded-md py-2 text-sm transition">4</button><button type="button" onclick="press('5')" class="bg-gray-50 hover:bg-gray-200 border border-gray-300 text-gray-800 rounded-md py-2 text-sm transition">5</button><button type="button" onclick="press('6')" class="bg-gray-50 hover:bg-gray-200 border border-gray-300 text-gray-800 rounded-md py-2 text-sm transition">6</button><button type="button" onclick="press('-')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] border border-[#C5CAE9] text-[#3F51B5] font-semibold rounded-md py-2 text-sm transition">–</button><button type="button" onclick="press('ans')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] border border-[#C5CAE9] text-[#3F51B5] font-semibold rounded-md py-2 text-sm transition">Ans</button></div>
+                <div class="grid grid-cols-5 gap-1.5"><button type="button" onclick="press('1')" class="bg-gray-50 hover:bg-gray-200 border border-gray-300 text-gray-800 rounded-md py-2 text-sm transition">1</button><button type="button" onclick="press('2')" class="bg-gray-50 hover:bg-gray-200 border border-gray-300 text-gray-800 rounded-md py-2 text-sm transition">2</button><button type="button" onclick="press('3')" class="bg-gray-50 hover:bg-gray-200 border border-gray-300 text-gray-800 rounded-md py-2 text-sm transition">3</button><button type="button" onclick="press('*')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] border border-[#C5CAE9] text-[#3F51B5] font-semibold rounded-md py-2 text-sm transition">×</button><button type="button" onclick="press('M+')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] border border-[#C5CAE9] text-[#3F51B5] font-semibold rounded-md py-2 text-sm transition">M+</button></div>
+                <div class="grid grid-cols-5 gap-1.5"><button type="button" onclick="press('0')" class="bg-gray-50 hover:bg-gray-200 border border-gray-300 text-gray-800 rounded-md py-2 text-sm transition">0</button><button type="button" onclick="press('.')" class="bg-gray-50 hover:bg-gray-200 border border-gray-300 text-gray-800 rounded-md py-2 text-sm transition">.</button><button type="button" onclick="press('EXP')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] border border-[#C5CAE9] text-[#3F51B5] font-semibold rounded-md py-2 text-sm transition">EXP</button><button type="button" onclick="press('/')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] border border-[#C5CAE9] text-[#3F51B5] font-semibold rounded-md py-2 text-sm transition">÷</button><button type="button" onclick="press('M-')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] border border-[#C5CAE9] text-[#3F51B5] font-semibold rounded-md py-2 text-sm transition">M-</button></div>
+                <div class="grid grid-cols-5 gap-1.5"><button type="button" onclick="press('+/-')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] border border-[#C5CAE9] text-[#3F51B5] font-semibold rounded-md py-2 text-sm transition">±</button><button type="button" onclick="press('RND')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] border border-[#C5CAE9] text-[#3F51B5] font-semibold rounded-md py-2 text-sm transition">RND</button><button type="button" onclick="press('C')" class="bg-[#3F51B5] hover:bg-[#303F9F] text-white font-bold rounded-md py-2 text-sm transition">AC</button><button type="button" onclick="press('=')" class="bg-[#3F51B5] hover:bg-[#303F9F] text-white font-bold rounded-md py-2 text-sm transition">=</button><button type="button" onclick="press('MR')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] border border-[#C5CAE9] text-[#3F51B5] font-semibold rounded-md py-2 text-sm transition">MR</button></div>
+                </div>
+                <div id="calcHist" class="mt-2 text-xs text-gray-400 leading-5 min-h-[20px]"></div>
+            </div>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">AdSense Space</p>
+            <p class="text-sm">(728x90 Leaderboard)</p>
+        </div>
+
+        <div class="max-w-md mb-2 no-print">
+            <input type="text" id="calcSearch" placeholder="🔍 Search calculators… (e.g. fraction, triangle, statistics)" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 outline-none focus:border-[#3F51B5] shadow-sm">
+        </div>
+        <p id="noMatch" class="text-sm text-gray-500 hidden">No calculator matches that search yet — try a shorter word.</p>
+
+        <div class="grid md:grid-cols-2 gap-x-12">
+            <div>
+                <section class="cat-block">
+                    <h2 class="cat-title">Math Calculators</h2>
+                    <div class="calc-list">
+                        <div><a href="scientific.html">Scientific Calculator</a></div>
+                        <div><a href="fraction.html">Fraction Calculator</a></div>
+                        <div><a href="percent.html">Percentage Calculator</a></div>
+                        <div><a href="random-number-generator.html">Random Number Generator</a></div>
+                        <div><a href="percent-error.html">Percent Error Calculator</a></div>
+                        <div><a href="exponent.html">Exponent Calculator</a></div>
+                        <div><a href="binary.html">Binary Calculator</a></div>
+                        <div><a href="hex.html">Hex Calculator</a></div>
+                        <div><a href="half-life.html">Half-Life Calculator</a></div>
+                        <div><a href="quadratic-formula.html">Quadratic Formula Calculator</a></div>
+                        <div><a href="log.html">Log Calculator</a></div>
+                        <div><a href="ratio.html">Ratio Calculator</a></div>
+                        <div><a href="root.html">Root Calculator</a></div>
+                        <div><a href="lcm.html">Least Common Multiple Calculator</a></div>
+                        <div><a href="gcf.html">Greatest Common Factor Calculator</a></div>
+                        <div><a href="factor.html">Factor Calculator</a></div>
+                        <div><a href="rounding.html">Rounding Calculator</a></div>
+                        <div><a href="matrix.html">Matrix Calculator</a></div>
+                        <div><a href="scientific-notation.html">Scientific Notation Calculator</a></div>
+                        <div><a href="big-number.html">Big Number Calculator</a></div>
+                    </div>
+                </section>
+            </div>
+            <div>
+                <section class="cat-block">
+                    <h2 class="cat-title">Statistics</h2>
+                    <div class="calc-list">
+                        <div><a href="standard-deviation.html">Standard Deviation Calculator</a></div>
+                        <div><a href="number-sequence.html">Number Sequence Calculator</a></div>
+                        <div><a href="sample-size.html">Sample Size Calculator</a></div>
+                        <div><a href="probability.html">Probability Calculator</a></div>
+                        <div><a href="statistics.html">Statistics Calculator</a></div>
+                        <div><a href="mean-median-mode-range.html">Mean, Median, Mode, Range Calculator</a></div>
+                        <div><a href="permutation-and-combination.html">Permutation and Combination Calculator</a></div>
+                        <div><a href="z-score.html">Z-score Calculator</a></div>
+                        <div><a href="confidence-interval.html">Confidence Interval Calculator</a></div>
+                    </div>
+                </section>
+                <section class="cat-block">
+                    <h2 class="cat-title">Geometry</h2>
+                    <div class="calc-list">
+                        <div><a href="triangle.html">Triangle Calculator</a></div>
+                        <div><a href="volume.html">Volume Calculator</a></div>
+                        <div><a href="slope.html">Slope Calculator</a></div>
+                        <div><a href="area.html">Area Calculator</a></div>
+                        <div><a href="distance.html">Distance Calculator</a></div>
+                        <div><a href="circle.html">Circle Calculator</a></div>
+                        <div><a href="surface-area.html">Surface Area Calculator</a></div>
+                        <div><a href="pythagorean-theorem.html">Pythagorean Theorem Calculator</a></div>
+                        <div><a href="right-triangle.html">Right Triangle Calculator</a></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <section class="container mx-auto px-4 py-8 no-print">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-4">How to Pick the Right Calculator</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Start from the problem in front of you. <strong>Everyday arithmetic</strong> — the basic calculator above
+                handles it; step up to the <a href="scientific.html" class="text-[#3F51B5] font-semibold hover:underline">scientific calculator</a>
+                for powers, roots, and trigonometry, and the
+                <a href="percent.html" class="text-[#3F51B5] font-semibold hover:underline">percentage calculator</a> for discounts, tips, and
+                percent change. <strong>Fractions and whole numbers</strong> — the
+                <a href="fraction.html" class="text-[#3F51B5] font-semibold hover:underline">fraction calculator</a> adds, simplifies, and converts;
+                the <a href="lcm.html" class="text-[#3F51B5] font-semibold hover:underline">least common multiple</a> and
+                <a href="gcf.html" class="text-[#3F51B5] font-semibold hover:underline">greatest common factor</a> calculators find common ground
+                between numbers, and the <a href="factor.html" class="text-[#3F51B5] font-semibold hover:underline">factor calculator</a> breaks a
+                number down completely. <strong>Algebra</strong> — solve equations with the
+                <a href="quadratic-formula.html" class="text-[#3F51B5] font-semibold hover:underline">quadratic formula calculator</a>, and work
+                powers and roots with the <a href="exponent.html" class="text-[#3F51B5] font-semibold hover:underline">exponent</a>,
+                <a href="log.html" class="text-[#3F51B5] font-semibold hover:underline">log</a>, and
+                <a href="root.html" class="text-[#3F51B5] font-semibold hover:underline">root</a> calculators.
+                <strong>Statistics</strong> — summarize a data set with
+                <a href="statistics.html" class="text-[#3F51B5] font-semibold hover:underline">statistics</a> or
+                <a href="mean-median-mode-range.html" class="text-[#3F51B5] font-semibold hover:underline">mean, median, mode, range</a>, measure
+                spread with <a href="standard-deviation.html" class="text-[#3F51B5] font-semibold hover:underline">standard deviation</a>, and go
+                further with the <a href="z-score.html" class="text-[#3F51B5] font-semibold hover:underline">z-score</a>,
+                <a href="confidence-interval.html" class="text-[#3F51B5] font-semibold hover:underline">confidence interval</a>, and
+                <a href="probability.html" class="text-[#3F51B5] font-semibold hover:underline">probability</a> calculators.
+                <strong>Geometry</strong> — the <a href="triangle.html" class="text-[#3F51B5] font-semibold hover:underline">triangle calculator</a>
+                solves any triangle from partial information, backed by the
+                <a href="pythagorean-theorem.html" class="text-[#3F51B5] font-semibold hover:underline">Pythagorean theorem</a> and
+                <a href="right-triangle.html" class="text-[#3F51B5] font-semibold hover:underline">right triangle</a> calculators, while
+                <a href="area.html" class="text-[#3F51B5] font-semibold hover:underline">area</a>,
+                <a href="volume.html" class="text-[#3F51B5] font-semibold hover:underline">volume</a>, and
+                <a href="surface-area.html" class="text-[#3F51B5] font-semibold hover:underline">surface area</a> cover shapes in two and three
+                dimensions. <strong>Other bases and big numbers</strong> — convert and compute with the
+                <a href="binary.html" class="text-[#3F51B5] font-semibold hover:underline">binary</a> and
+                <a href="hex.html" class="text-[#3F51B5] font-semibold hover:underline">hex</a> calculators, and use
+                <a href="scientific-notation.html" class="text-[#3F51B5] font-semibold hover:underline">scientific notation</a> and the
+                <a href="big-number.html" class="text-[#3F51B5] font-semibold hover:underline">big number calculator</a> when ordinary calculators
+                run out of digits.
+            </p>
+
+            <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg">
+                <p class="font-medium">AdSense Space</p>
+                <p class="text-sm">(In-Article Fluid Banner)</p>
+            </div>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">A note on accuracy</h3>
+            <p class="text-gray-700 leading-7 mb-4">
+                Math leaves less room for approximation than most subjects, so these tools are built to be exact
+                where exactness exists: factors, greatest common factors, and least common multiples are computed
+                with integer arithmetic and are never rounded. Decimal results are computed in double precision and
+                shown to 12 significant digits — enough to expose a repeating decimal for what it is instead of
+                hiding it. Statistics and geometry use the standard textbook formulas (sample vs. population
+                standard deviation is always labeled, so you know which one you are getting), and every calculator
+                is checked against reference examples before it is released.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mt-6 mb-3">FAQ</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-800">Are these calculators free?</h4>
+                    <p class="text-gray-700">Yes — no sign-up, and everything runs in your browser. Nothing you type is sent to a server.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">What can the basic calculator on this page do?</h4>
+                    <p class="text-gray-700">Everyday arithmetic with a running expression display, memory keys (M+, M-, MR), an Ans key for the last answer, EXP for entering scientific notation, and RND for a random decimal. For powers, roots, trigonometry, and logarithms, open the Scientific Calculator.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800">How accurate are the results?</h4>
+                    <p class="text-gray-700">The integer tools — factors, greatest common factor, least common multiple — are exact. Decimal results are computed in double precision and displayed to 12 significant digits, and the statistics and geometry tools use the standard textbook formulas, each checked against reference examples before release.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // ---- Hub search filter ----
+        document.getElementById('calcSearch').addEventListener('input', function () {
+            const q = this.value.trim().toLowerCase();
+            let anyVisible = false;
+            document.querySelectorAll('.cat-block').forEach(block => {
+                let blockVisible = false;
+                block.querySelectorAll('.calc-list > div').forEach(item => {
+                    const match = !q || item.textContent.toLowerCase().includes(q);
+                    item.style.display = match ? '' : 'none';
+                    if (match) { blockVisible = true; anyVisible = true; }
+                });
+                block.style.display = blockVisible ? '' : 'none';
+            });
+            document.getElementById('noMatch').classList.toggle('hidden', anyVisible || !q);
+        });
+
+        // ---- Basic calculator (original implementation) ----
+        let expr = '', ansVal = 0, memVal = 0, justEq = false, errShown = false, histLines = [];
+        const outEl = document.getElementById('calcOut');
+        const exprEl = document.getElementById('calcExpr');
+        const histEl = document.getElementById('calcHist');
+        const memEl = document.getElementById('memMark');
+
+        function fmtNum(x) {
+            if (typeof x !== 'number' || isNaN(x)) return 'Error';
+            if (!isFinite(x)) return 'Error';
+            if (x === 0) return '0';
+            return String(parseFloat(x.toPrecision(12)));
+        }
+        function glyphs(s) { return s.replace(/\*/g, '×').replace(/\//g, '÷').replace(/-/g, '−'); }
+        function tokenize(s) {
+            const toks = [];
+            let i = 0;
+            while (i < s.length) {
+                const c = s[i];
+                if (/[0-9.]/.test(c) || (c === 'E' && toks.length && typeof toks[toks.length - 1] === 'number')) {
+                    let j = i, num = '';
+                    while (j < s.length && /[0-9.]/.test(s[j])) { num += s[j]; j++; }
+                    if (s[j] === 'E') {
+                        num += 'E'; j++;
+                        if (s[j] === '+' || s[j] === '-') { num += s[j]; j++; }
+                        while (j < s.length && /[0-9]/.test(s[j])) { num += s[j]; j++; }
+                    }
+                    toks.push(parseFloat(num));
+                    i = j;
+                } else if ('+-*/'.includes(c)) { toks.push(c); i++; }
+                else i++;
+            }
+            return toks;
+        }
+        function evaluate(s) {
+            const toks = tokenize(s);
+            let pos = 0;
+            function parseFactor() {
+                let t = toks[pos];
+                if (t === '-') { pos++; return -parseFactor(); }
+                if (t === '+') { pos++; return parseFactor(); }
+                if (typeof t === 'number') { pos++; return t; }
+                return NaN;
+            }
+            function parseTerm() {
+                let v = parseFactor();
+                while (toks[pos] === '*' || toks[pos] === '/') { const op = toks[pos++]; const r = parseFactor(); v = op === '*' ? v * r : v / r; }
+                return v;
+            }
+            function parseExpr() {
+                let v = parseTerm();
+                while (toks[pos] === '+' || toks[pos] === '-') { const op = toks[pos++]; const r = parseTerm(); v = op === '+' ? v + r : v - r; }
+                return v;
+            }
+            if (!toks.length) return NaN;
+            const v = parseExpr();
+            return pos === toks.length ? v : NaN;
+        }
+        function preview() {
+            let s = expr;
+            while (s && '+-*/E'.includes(s[s.length - 1])) s = s.slice(0, -1);
+            if (!s) return '0';
+            const v = evaluate(s);
+            return isNaN(v) ? '0' : fmtNum(v);
+        }
+        function render() {
+            exprEl.innerHTML = expr ? glyphs(expr) : '&nbsp;';
+            outEl.textContent = errShown ? 'Error' : (justEq ? fmtNum(ansVal) : preview());
+            memEl.classList.toggle('invisible', memVal === 0);
+            histEl.innerHTML = histLines.slice(-3).map(h => `<div>${h}</div>`).join('');
+        }
+        function currentNumberSegment() {
+            const m = expr.match(/[0-9.]*$/);
+            return m ? m[0] : '';
+        }
+        function insertText(t) {
+            if (justEq) { expr = ''; justEq = false; }
+            expr += t;
+        }
+        function press(k) {
+            if (/^[0-9]$/.test(k)) { insertText(k); }
+            else if (k === '.') {
+                if (justEq) { expr = ''; justEq = false; }
+                const seg = currentNumberSegment();
+                if (!seg.includes('.')) expr += seg === '' ? '0.' : '.';
+            }
+            else if ('+-*/'.includes(k)) {
+                if (justEq) { expr = fmtNum(ansVal); justEq = false; }
+                if (expr === '') { if (k === '-') expr = '-'; }
+                else if ('+-*/'.includes(expr[expr.length - 1])) {
+                    if (k === '-' && expr[expr.length - 1] !== '-') expr += '-';
+                    else expr = expr.slice(0, -1) + k;
+                }
+                else expr += k;
+            }
+            else if (k === 'bk') { expr = expr.slice(0, -1); justEq = false; }
+            else if (k === 'C') { expr = ''; justEq = false; }
+            else if (k === 'ans') { insertText(fmtNum(ansVal)); }
+            else if (k === 'MR') { insertText(fmtNum(memVal)); }
+            else if (k === 'EXP') {
+                const seg = expr.match(/[0-9.]+$/);
+                if (seg && !seg[0].includes('E') && !expr.endsWith('E')) { expr += 'E'; justEq = false; }
+            }
+            else if (k === 'RND') { insertText(fmtNum(parseFloat(Math.random().toPrecision(6)))); }
+            else if (k === '+/-') {
+                const m = expr.match(/(.*?)([0-9][0-9.]*(?:E[+-]?[0-9]*)?)$/);
+                if (m) {
+                    const head = m[1], num = m[2];
+                    if (head.endsWith('(-')) expr = head.slice(0, -2) + num;
+                    else if (head === '' || '+-*/'.includes(head[head.length - 1])) {
+                        if (head.endsWith('-') && (head.length === 1 || '+-*/'.includes(head[head.length - 2]))) expr = head.slice(0, -1) + num;
+                        else expr = head + '-' + num;
+                    }
+                }
+                justEq = false;
+            }
+            else if (k === 'M+' || k === 'M-') {
+                let s = expr;
+                while (s && '+-*/E'.includes(s[s.length - 1])) s = s.slice(0, -1);
+                const v = s ? evaluate(s) : ansVal;
+                if (!isNaN(v) && isFinite(v)) { memVal += k === 'M+' ? v : -v; }
+            }
+            else if (k === '=') {
+                if (expr) {
+                    const v = evaluate(expr);
+                    if (!isNaN(v) && isFinite(v)) {
+                        histLines.push(`${glyphs(expr)} = ${fmtNum(v)}`);
+                        ansVal = v;
+                        justEq = true;
+                    } else {
+                        histLines.push(`${glyphs(expr)} = Error`);
+                        expr = '';
+                        justEq = false;
+                        errShown = true;
+                        render();
+                        errShown = false;
+                        return;
+                    }
+                }
+            }
+            render();
+        }
+        document.addEventListener('keydown', function (e) {
+            const t = e.target;
+            if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+            const map = { Enter: '=', '=': '=', Escape: 'C', Backspace: 'bk' };
+            const k = map[e.key] || (/^[0-9.+\-*/]$/.test(e.key) ? e.key : null);
+            if (k) { e.preventDefault(); press(k); }
+        });
+        render();
+    </script>
+</body>
+  </html>
