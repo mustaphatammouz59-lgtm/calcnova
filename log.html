@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Log Calculator (Logarithm) — Solve log_b(x) = y for Any Base | CalcNova</title>
+<meta name="description" content="Free log calculator: solve for the unknown in the logarithm equation log_b(x) = y using base e, 2, 10, or any other base, with the answer verified in both log and power form." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/log" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.1rem;padding:.5rem .6rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .eq{font-size:1.25rem;line-height:1.8;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .rule{font-size:1.2rem}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do you solve a logarithm equation for the unknown?","acceptedAnswer":{"@type":"Answer","text":"In log_b(x) = y, any one value can be found from the other two: y = log_b(x) (the log itself), x = b^y (rewrite the equation in power form), and b = x^(1/y) (take the y-th root of x). Enter any two values and this calculator solves for the third."}},
+{"@type":"Question","name":"What is the difference between log, ln, and log2?","acceptedAnswer":{"@type":"Answer","text":"They are the same operation with different bases: log usually means base 10 (common in science and engineering), ln means base e (the natural logarithm, common in math and physics), and log2 means base 2 (common in computer science)."}},
+{"@type":"Question","name":"Why can't the base of a logarithm be 1 or negative?","acceptedAnswer":{"@type":"Answer","text":"A base of 1 never changes as it is raised to powers (1 to any power is 1), so log base 1 is undefined except trivially. Negative bases produce values that jump between positive and negative and are undefined for most exponents, so logarithms require a positive base other than 1."}},
+{"@type":"Question","name":"What is the log of a negative number or zero?","acceptedAnswer":{"@type":"Answer","text":"For real-number logarithms, the argument x must be positive: no power of a positive base produces zero or a negative number, so log of 0 or of a negative value is undefined. As x approaches 0 from above, log_b(x) falls toward negative infinity (for b > 1)."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Log Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Log Calculator (Logarithm)</h1>
+  <p class="text-slate-600 mb-5 max-w-3xl">Please provide any two values to calculate the third in the logarithm equation <b>log<sub>b</sub> x = y</b>. It can accept "e" as a base input.</p>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2">
+      <section class="bg-white rounded-xl shadow p-5">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="text-3xl font-bold">log</span>
+          <div class="flex-1 min-w-[130px]">
+            <input id="xv" class="fin" value="100" aria-label="x value" />
+            <input id="base" class="fin mt-1.5 !w-2/3 !text-base" value="e" aria-label="base" />
+          </div>
+          <span class="text-3xl font-bold">=</span>
+          <div class="flex-1 min-w-[130px]">
+            <input id="yv" class="fin" value="" aria-label="y value" />
+            <div class="mt-1.5 text-sm text-slate-400">base ↑ · result y →</div>
+          </div>
+        </div>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcLog()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearLog()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resLog" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-3">What is Log?</h2>
+        <p class="text-slate-600">The logarithm, or log, is the inverse of the mathematical operation of <a class="text-[#3F51B5] font-medium hover:underline" href="/exponent">exponentiation</a>. This means that the log of a number is the power that a fixed base has to be raised to in order to yield the number. Conventionally, log implies that base 10 is being used, though the base can technically be anything. When the base is e, ln is usually written rather than log<sub>e</sub>. log<sub>2</sub>, the <a class="text-[#3F51B5] font-medium hover:underline" href="/binary">binary</a> logarithm, is another base typically used with logarithms. If, for example:</p>
+        <p class="text-center my-3 rule">x = b<sup>y</sup> &nbsp;;&nbsp; then y = log<sub>b</sub> x &nbsp;;&nbsp; where b is the base</p>
+        <p class="text-slate-600">Each of the mentioned bases is typically used in different applications. Base 10 is commonly used in science and engineering, base e in math and physics, and base 2 in computer science.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Basic Log Rules</h3>
+        <p class="text-slate-600">When the argument of a logarithm is the product of two numerals, the logarithm can be re-written as the sum of the logarithm of each of the numerals.</p>
+        <p class="text-center my-3 rule">log<sub>b</sub>(x × y) = log<sub>b</sub> x + log<sub>b</sub> y<br /><span class="text-base text-slate-500">EX: log(1 × 10) = log(1) + log(10) = 0 + 1 = 1</span></p>
+        <p class="text-slate-600">When the argument of a logarithm is a fraction, the logarithm can be re-written as the subtraction of the logarithm of the numerator minus the logarithm of the denominator.</p>
+        <p class="text-center my-3 rule">log<sub>b</sub>(x / y) = log<sub>b</sub> x − log<sub>b</sub> y<br /><span class="text-base text-slate-500">EX: log(10 / 2) = log(10) − log(2) = 1 − 0.301 = 0.699</span></p>
+        <p class="text-slate-600">If there is an exponent in the argument of a logarithm, the exponent can be pulled out of the logarithm and multiplied.</p>
+        <p class="text-center my-3 rule">log<sub>b</sub> x<sup>y</sup> = y × log<sub>b</sub> x<br /><span class="text-base text-slate-500">EX: log(2<sup>6</sup>) = 6 × log(2) = 1.806</span></p>
+        <p class="text-slate-600">It is also possible to change the base of the logarithm using the following rule.</p>
+        <p class="text-center my-3 rule">log<sub>b</sub>(x) = log<sub>k</sub>(x) / log<sub>k</sub>(b)<br /><span class="text-base text-slate-500">EX: log<sub>10</sub>(x) = log<sub>2</sub>(x) / log<sub>2</sub>(10)</span></p>
+        <p class="text-slate-600">To switch the base and argument, use the following rule.</p>
+        <p class="text-center my-3 rule">log<sub>b</sub>(c) = 1 / log<sub>c</sub>(b)<br /><span class="text-base text-slate-500">EX: log<sub>5</sub>(2) = 1 / log<sub>2</sub>(5)</span></p>
+        <p class="text-slate-600">Other common logarithms to take note of include:</p>
+        <p class="text-center my-3 rule">log<sub>b</sub>(1) = 0<br />log<sub>b</sub>(b) = 1<br />log<sub>b</sub>(0) = undefined<br />lim<sub>x→0</sub> log<sub>b</sub>(x) = −∞<br />ln(e<sup>x</sup>) = x</p>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div class="space-y-4 text-slate-600">
+          <div><h3 class="font-semibold text-slate-800">How do you solve a logarithm equation for the unknown?</h3><p>In log<sub>b</sub>(x) = y, any one value can be found from the other two: y = log<sub>b</sub>(x) (the log itself), x = b<sup>y</sup> (rewrite the equation in power form), and b = x<sup>1/y</sup> (take the y-th root of x). Enter any two values and this calculator solves for the third.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What is the difference between log, ln, and log2?</h3><p>They are the same operation with different bases: log usually means base 10 (common in science and engineering), ln means base e (the natural logarithm, common in math and physics), and log<sub>2</sub> means base 2 (common in computer science).</p></div>
+          <div><h3 class="font-semibold text-slate-800">Why can't the base of a logarithm be 1 or negative?</h3><p>A base of 1 never changes as it is raised to powers (1 to any power is 1), so log base 1 is undefined except trivially. Negative bases produce values that jump between positive and negative and are undefined for most exponents, so logarithms require a positive base other than 1.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What is the log of a negative number or zero?</h3><p>For real-number logarithms, the argument x must be positive: no power of a positive base produces zero or a negative number, so log of 0 or of a negative value is undefined. As x approaches 0 from above, log<sub>b</sub>(x) falls toward negative infinity (for b &gt; 1).</p></div>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/scientific">Scientific Calculator</a></li>
+          <li><a class="hover:underline" href="/exponent">Exponent Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">Three bases to know</h3>
+        <p>log<sub>10</sub> (common log) powers the pH and Richter scales; ln (base e) governs growth and decay; log<sub>2</sub> counts doublings — bits, binary search steps, and tournament rounds.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+function fmtPHP(x) { /* PHP float-to-string at 14 significant digits */
+  if (Number.isNaN(x)) return 'NAN';
+  if (x === Infinity) return 'INF';
+  if (x === -Infinity) return '-INF';
+  if (x === 0) return '0';
+  const neg = x < 0, ax = Math.abs(x);
+  const parts = ax.toExponential(13).split('e');
+  const e10 = parseInt(parts[1], 10);
+  let digits = parts[0].replace('.', '').replace(/0+$/, '');
+  if (digits === '') digits = '0';
+  let out;
+  if (e10 >= 14 || e10 <= -5) {
+    const mm = digits.length > 1 ? digits[0] + '.' + digits.slice(1) : digits + '.0';
+    out = mm + 'E' + (e10 < 0 ? '-' : '+') + Math.abs(e10);
+  } else if (e10 >= 0) {
+    out = digits.length > e10 + 1 ? digits.slice(0, e10 + 1) + '.' + digits.slice(e10 + 1) : digits + '0'.repeat(e10 + 1 - digits.length);
+  } else {
+    out = '0.' + '0'.repeat(-e10 - 1) + digits;
+  }
+  return (neg ? '-' : '') + out;
+}
+function showRes(html) { const e = document.getElementById('resLog'); e.innerHTML = html; e.classList.remove('hidden'); }
+function banner(lines) {
+  return '<div class="bg-[#3F51B5] text-white font-bold rounded-lg px-4 py-3"><div class="text-base mb-1">Result</div>' +
+    lines.map(l => '<div class="eq">' + l + '</div>').join('') + '</div>' + shareLog();
+}
+function parseNum(s) { /* '' -> undefined; invalid -> null; the base field also accepts 'e' */
+  s = s.trim();
+  if (s === '') return undefined;
+  if (!/^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/.test(s)) return null;
+  return parseFloat(s);
+}
+function calcLog() {
+  const xs = document.getElementById('xv').value;
+  const bs = document.getElementById('base').value;
+  const ys = document.getElementById('yv').value;
+  const x = parseNum(xs);
+  const y = parseNum(ys);
+  const baseIsE = bs.trim() === 'e';
+  const b = baseIsE ? Math.E : parseNum(bs);
+  if (x === null || y === null || b === null) return showRes(banner(['Please provide numeric values for any two of the three fields. The base can be "e".']));
+  const solved = (xv2, bv, yv2, varName) => {
+    const bDisp = baseIsE && varName !== 'b' ? 'e' : fmtPHP(bv);
+    return banner([
+      'Answer: ' + varName + ' = ' + fmtPHP(varName === 'x' ? xv2 : varName === 'b' ? bv : yv2),
+      'log<sub>' + bDisp + '</sub>(' + fmtPHP(xv2) + ') = ' + fmtPHP(yv2),
+      bDisp + '<sup>' + fmtPHP(yv2) + '</sup> = ' + fmtPHP(xv2)]);
+  };
+  if (x !== undefined && b !== undefined) { /* solve y (wins even when y is also given) */
+    if (!(x > 0)) return showRes(banner(['For a real-valued logarithm, x must be positive.']));
+    if (!(b > 0)) return showRes(banner(['The base must be positive.']));
+    if (b === 1) return showRes(banner(['Unable to solve!']));
+    const yv2 = baseIsE ? Math.log(x) : Math.log(x) / Math.log(b);
+    return showRes(solved(x, b, yv2, 'y'));
+  }
+  if (b !== undefined && y !== undefined) { /* solve x */
+    if (!(b > 0)) return showRes(banner(['The base must be positive.']));
+    const xv2 = baseIsE ? Math.exp(y) : Math.pow(b, y);
+    return showRes(solved(xv2, b, y, 'x'));
+  }
+  if (x !== undefined && y !== undefined) { /* solve b */
+    if (!(x > 0)) return showRes(banner(['For a real-valued logarithm, x must be positive.']));
+    if (y === 0) return showRes(banner(['Unable to solve!']));
+    const bv = Math.pow(x, 1 / y);
+    return showRes(solved(x, bv, y, 'b'));
+  }
+  return showRes(banner(['Please provide numeric values for any two of the three fields. The base can be "e".']));
+}
+function shareLog() {
+  return '<div class="mt-4"><button onclick="copyLog()" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="shLog" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function copyLog() {
+  const u = new URL(location.href); u.search = ''; u.hash = '';
+  u.searchParams.set('xv', document.getElementById('xv').value);
+  u.searchParams.set('base', document.getElementById('base').value);
+  u.searchParams.set('yv', document.getElementById('yv').value);
+  const done = () => { document.getElementById('shLog').textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+function clearLog() {
+  document.getElementById('xv').value = '100'; document.getElementById('base').value = 'e'; document.getElementById('yv').value = '';
+  const r = document.getElementById('resLog'); r.classList.add('hidden'); r.innerHTML = '';
+}
+(function () {
+  const q = new URLSearchParams(location.search);
+  if (q.has('xv') || q.has('base') || q.has('yv')) {
+    if (q.has('xv')) document.getElementById('xv').value = q.get('xv');
+    if (q.has('base')) document.getElementById('base').value = q.get('base');
+    if (q.has('yv')) document.getElementById('yv').value = q.get('yv');
+    calcLog();
+  }
+})();
+</script>
+
+</body>
+  </html>
