@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator - CalcNova</title>
+    <meta name="description" content="Free online scientific calculator with trig, logs, powers, roots, factorial and memory — click the buttons or type on your keyboard, in degrees or radians.">
+    <link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/scientific">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CalcNova">
+    <meta property="og:title" content="Scientific Calculator - CalcNova">
+    <meta property="og:description" content="A full scientific calculator in your browser: sin, cos, tan, ln, log, powers, roots, factorial, memory and Ans.">
+    <meta property="og:url" content="https://calcnova.mustaphatammouz59.workers.dev/scientific">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Scientific Calculator - CalcNova">
+    <meta name="twitter:description" content="Click or type to calculate — degrees or radians, with history and memory.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://calcnova.mustaphatammouz59.workers.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "Math Calculators", "item": "https://calcnova.mustaphatammouz59.workers.dev/math" },
+            { "@type": "ListItem", "position": 3, "name": "Scientific Calculator", "item": "https://calcnova.mustaphatammouz59.workers.dev/scientific" }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Can I type instead of clicking the buttons?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. The calculator accepts keyboard input: digits, +, -, *, /, ^, %, parentheses, Enter for equals, Backspace to delete, and Escape to clear — just like a physical calculator." }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I switch between degrees and radians?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Use the Deg / Rad toggle above the keypad. Trig functions (sin, cos, tan) interpret their input in the selected unit, and the inverse functions (sin⁻¹, cos⁻¹, tan⁻¹) return their answer in it. Degrees is the default." }
+            },
+            {
+                "@type": "Question",
+                "name": "How precise is this calculator?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Calculations run in double precision (about 15 significant digits internally) and results are displayed to 12 significant digits, switching to exponential notation for very large or very small results. Factorials are exact for whole numbers up to 170." }
+            }
+        ]
+    }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        ::selection { background: #3F51B5; color: #fff; }
+        #sciInPut { min-height: 1.75rem; word-break: break-all; }
+        .num { font-variant-numeric: tabular-nums; }
+        @media print { nav, footer, .no-print { display: none !important; } }
+    </style>
+</head>
+<body class="text-gray-800">
+    <nav class="bg-[#3F51B5] text-white p-4 shadow-md no-print">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold tracking-wide">CalcNova</a>
+            <a href="sign-in.html" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition inline-block">Sign in</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-4 text-sm text-gray-500 no-print">
+        <a href="index.html" class="hover:text-[#3F51B5]">Home</a> &gt; <a href="math.html" class="hover:text-[#3F51B5]">Math</a> &gt; <span class="text-gray-800 font-medium">Scientific Calculator</span>
+    </div>
+
+    <main class="container mx-auto px-4 pb-6">
+        <h1 class="text-3xl font-bold text-[#3F51B5]">Scientific Calculator</h1>
+        <p class="text-gray-700 leading-7 mt-2 max-w-3xl">
+            A full scientific calculator that runs in your browser. Click the buttons or type on your
+            keyboard to perform calculations as you would on a physical calculator — trigonometry,
+            logarithms, powers, roots, factorials, memory, and a running history of your last results.
+        </p>
+
+        <div class="grid lg:grid-cols-3 gap-6 mt-6 items-start">
+            <section class="lg:col-span-2 bg-white rounded-xl shadow-md p-4 sm:p-5 border border-gray-100">
+                <div class="bg-[#F1F5F9] border border-gray-200 rounded-lg px-4 py-3 mb-3 text-right">
+                    <div id="sciInPut" class="text-gray-500 text-lg num"></div>
+                    <div id="sciOutPut" class="text-3xl font-bold text-gray-900 num">0</div>
+                </div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+<div class="grid grid-cols-5 gap-1.5">
+<button onclick="press('sin')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">sin</button>
+<button onclick="press('cos')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">cos</button>
+<button onclick="press('tan')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">tan</button>
+<span class="flex items-center justify-center gap-2 text-sm bg-[#E8EAF6] rounded-lg py-2"><label class="cursor-pointer"><input type="radio" name="anglemode" value="deg" checked class="accent-[#3F51B5]" onchange="angleMode='deg'"> Deg</label><label class="cursor-pointer"><input type="radio" name="anglemode" value="rad" class="accent-[#3F51B5]" onchange="angleMode='rad'"> Rad</label></span>
+<button onclick="press('asin')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">sin⁻¹</button>
+<button onclick="press('acos')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">cos⁻¹</button>
+<button onclick="press('atan')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">tan⁻¹</button>
+<button onclick="press('pi')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">π</button>
+<button onclick="press('e')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">e</button>
+<button onclick="press('pow')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">xʸ</button>
+<button onclick="press('x3')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">x³</button>
+<button onclick="press('x2')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">x²</button>
+<button onclick="press('ex')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">eˣ</button>
+<button onclick="press('10x')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">10ˣ</button>
+<button onclick="press('apow')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">ʸ√x</button>
+<button onclick="press('cbrt')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">∛x</button>
+<button onclick="press('sqrt')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">√x</button>
+<button onclick="press('ln')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">ln</button>
+<button onclick="press('log')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">log</button>
+<button onclick="press('lp')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">(</button>
+<button onclick="press('rp')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">)</button>
+<button onclick="press('inv')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">1/x</button>
+<button onclick="press('pc')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">%</button>
+<button onclick="press('fact')" class="bg-[#E8EAF6] hover:bg-[#C5CAE9] text-[#283593] font-medium rounded-lg py-2 text-sm sm:text-base transition">n!</button>
+                </div>
+                <div class="grid grid-cols-5 gap-1.5 content-start">
+<button onclick="press('7')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">7</button>
+<button onclick="press('8')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">8</button>
+<button onclick="press('9')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">9</button>
+<button onclick="press('+')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">+</button>
+<button onclick="press('bk')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">Back</button>
+<button onclick="press('4')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">4</button>
+<button onclick="press('5')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">5</button>
+<button onclick="press('6')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">6</button>
+<button onclick="press('-')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">−</button>
+<button onclick="press('ans')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">ans</button>
+<button onclick="press('1')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">1</button>
+<button onclick="press('2')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">2</button>
+<button onclick="press('3')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">3</button>
+<button onclick="press('*')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">×</button>
+<button onclick="press('M+')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">M+</button>
+<button onclick="press('0')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">0</button>
+<button onclick="press('.')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 font-semibold rounded-lg py-2 text-sm sm:text-base transition">.</button>
+<button onclick="press('EXP')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">EXP</button>
+<button onclick="press('/')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">÷</button>
+<button onclick="press('M-')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">M-</button>
+<button onclick="press('+/-')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">+/-</button>
+<button onclick="press('RND')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">RND</button>
+<button onclick="press('C')" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold rounded-lg py-2 text-sm sm:text-base transition">AC</button>
+<button onclick="press('=')" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold rounded-lg py-2 text-sm sm:text-base transition">=</button>
+<button onclick="press('MR')" class="bg-[#FFF3E0] hover:bg-[#FFE0B2] text-[#E65100] font-medium rounded-lg py-2 text-sm sm:text-base transition">MR</button>
+                </div>
+            
+                </div>
+                <div id="scihistory" class="mt-3 text-sm text-gray-400 num space-y-0.5"></div>
+                <div class="mt-4 flex items-center gap-3 no-print">
+                    <button onclick="copyShare()" class="bg-white border border-[#3F51B5] text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg hover:bg-[#E8EAF6] transition text-sm">Copy Share Link</button>
+                    <span id="shareMsg" class="text-sm text-green-600 font-medium"></span>
+                </div>
+            </section>
+
+            <aside class="space-y-6 no-print">
+                <div class="bg-gray-100 border-2 border-dashed border-gray-300 p-6 text-center text-gray-500 rounded-lg">
+                    <p class="font-medium">Advertisement</p>
+                    <p class="text-sm">(300 x 250)</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">Quick tips</h3>
+                    <ul class="text-sm text-gray-600 leading-6 list-disc pl-4 space-y-1">
+                        <li><strong>Deg / Rad</strong> — trig uses the unit you select; degrees is the default.</li>
+                        <li><strong>Ans</strong> — recalls the last result, so you can chain calculations.</li>
+                        <li><strong>EXP</strong> — enter powers of ten: 2 EXP 3 means 2×10³ = 2000.</li>
+                        <li><strong>M+ / M− / MR</strong> — a memory register, independent of the display.</li>
+                        <li><strong>ʸ√x</strong> — type the root first: 3 ʸ√ 8 = 2.</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+
+        <div class="my-6 bg-gray-100 border-2 border-dashed border-gray-300 p-8 text-center text-gray-500 rounded-lg no-print">
+            <p class="font-medium">Advertisement — In-Article</p>
+            <p class="text-sm">(Responsive Fluid)</p>
+        </div>
+
+        <section class="bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100 mt-6">
+            <h2 class="text-2xl font-bold text-[#3F51B5] mb-3">How to use it</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Build an expression exactly as you would write it: the display shows the expression as you
+                type and a live result underneath. Parentheses group as usual, multiplication is implied
+                where mathematics implies it — 2π and 2(3+4) both work — and pressing <strong>=</strong> records the
+                calculation in the history and makes the result available through <strong>Ans</strong>. Function keys
+                such as sin, ln, and √ insert the function and an opening parenthesis; close it yourself or
+                let the calculator close it when you press =. Postfix keys act on the value just before them:
+                x² squares, n! takes the factorial, % divides by 100, and 1/x inverts.
+            </p>
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">The functions at a glance</h2>
+            <div class="overflow-x-auto">
+            <table class="w-full text-[15px] border border-gray-200 rounded-lg overflow-hidden">
+                <thead><tr class="bg-[#E8EAF6] text-left"><th class="px-3 py-2">Keys</th><th class="px-3 py-2">What they do</th></tr></thead>
+                <tbody>
+                    <tr><td class="px-3 py-2 border-b border-gray-100 font-medium whitespace-nowrap">sin cos tan · sin⁻¹ cos⁻¹ tan⁻¹</td><td class="px-3 py-2 border-b border-gray-100">Trigonometry and inverse trigonometry, in degrees or radians (see the Deg/Rad toggle).</td></tr>
+                    <tr><td class="px-3 py-2 border-b border-gray-100 font-medium whitespace-nowrap">xʸ · ʸ√x · x² · x³ · √x · ∛x</td><td class="px-3 py-2 border-b border-gray-100">Powers and roots. xʸ is a general power; ʸ√x takes the y-th root of x (enter y first); the rest are the common fixed cases.</td></tr>
+                    <tr><td class="px-3 py-2 border-b border-gray-100 font-medium whitespace-nowrap">ln · log · eˣ · 10ˣ</td><td class="px-3 py-2 border-b border-gray-100">Natural logarithm, base-10 logarithm, and their inverse exponentials.</td></tr>
+                    <tr><td class="px-3 py-2 border-b border-gray-100 font-medium whitespace-nowrap">n! · % · 1/x · ±</td><td class="px-3 py-2 border-b border-gray-100">Factorial (exact for whole numbers to 170, via the gamma function beyond), percent (divide by 100), reciprocal, and sign change of the last value or group.</td></tr>
+                    <tr><td class="px-3 py-2 border-b border-gray-100 font-medium whitespace-nowrap">π · e · EXP · RND</td><td class="px-3 py-2 border-b border-gray-100">The constants π and e, scientific-notation entry (×10ⁿ), and a random decimal between 0 and 1.</td></tr>
+                    <tr><td class="px-3 py-2 font-medium whitespace-nowrap">Ans · M+ · M− · MR · Back · AC</td><td class="px-3 py-2">Last answer, memory add/subtract/recall, delete the last entry, and all-clear (AC clears the expression; memory survives until you overwrite it).</td></tr>
+                </tbody>
+            </table>
+            </div>
+            <h2 class="text-2xl font-bold text-[#3F51B5] mt-8 mb-3">Keyboard shortcuts</h2>
+            <p class="text-gray-700 leading-7 mb-4">
+                Digits and <strong>. + − * /</strong> type directly; <strong>^</strong> is power, <strong>%</strong> is percent, and
+                <strong>( )</strong> group. <strong>Enter</strong> or <strong>=</strong> evaluates, <strong>Backspace</strong> deletes the last entry, and
+                <strong>Escape</strong> clears. The calculator keeps double precision internally — roughly 15 significant
+                digits — and displays 12, switching to exponential notation outside that comfortable range,
+                so a result like 0.1 + 0.2 shows the honest 0.3 rather than a trail of binary rounding dust.
+            </p>
+        </section>
+
+        <section class="mt-8 no-print">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Related Calculators</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="fraction.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Fraction Calculator</span><span class="block text-sm text-gray-500 mt-1">Add, subtract, multiply, divide fractions</span></a>
+                <a href="percent.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Percentage Calculator</span><span class="block text-sm text-gray-500 mt-1">Percentages and percent change</span></a>
+                <a href="exponent.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">Exponent Calculator</span><span class="block text-sm text-gray-500 mt-1">Powers with worked steps</span></a>
+                <a href="math.html" class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-[#3F51B5] transition"><span class="font-semibold text-[#3F51B5]">All Math Calculators</span><span class="block text-sm text-gray-500 mt-1">The complete section</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 mt-12 no-print">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-3 space-x-4 text-sm">
+                <a href="index.html" class="hover:text-white">Home</a>
+                <a href="about.html" class="hover:text-white">About Us</a>
+                <a href="sitemap.html" class="hover:text-white">Sitemap</a>
+                <a href="terms.html" class="hover:text-white">Terms of Use</a>
+                <a href="privacy.html" class="hover:text-white">Privacy Policy</a>
+            </div>
+            <p class="text-sm">&copy; 2026 CalcNova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+/* ============ scientific calculator (original implementation) ============ */
+let tokens = [], ansVal = 0, memVal = 0, angleMode = 'deg';
+const T = {
+  num: d => ({ k: 'num', d: String(d), val: null }),
+  numv: v => ({ k: 'num', d: fmtVal(v), val: v }),
+  op: (d, v) => ({ k: 'op', d, v }),
+  fn: (d, name) => ({ k: 'fn', d, name }),
+  lp: () => ({ k: 'lp', d: '(' }),
+  rp: () => ({ k: 'rp', d: ')' }),
+  cnst: (d, val) => ({ k: 'const', d, val }),
+  post: (d, kind) => ({ k: 'post', d, kind }),
+};
+function lastTok() { return tokens[tokens.length - 1]; }
+function press(key) {
+  if (/^[0-9]$/.test(key)) {
+    const l = lastTok();
+    if (l && l.k === 'num' && l.val === null) l.d += key;
+    else if (l && l.k === 'rp') { tokens.push(T.op('×', '*'), T.num(key)); }
+    else tokens.push(T.num(key));
+  } else if (key === '.') {
+    const l = lastTok();
+    if (l && l.k === 'num' && l.val === null) { if (!l.d.includes('.')) l.d += '.'; }
+    else tokens.push(T.num('0.'));
+  } else if (['+', '-', '*', '/'].includes(key)) {
+    const d = { '+': '+', '-': '−', '*': '×', '/': '÷' }[key];
+    if (!tokens.length && key !== '-') return render();
+    tokens.push(T.op(d, key));
+  } else if (key === 'pow') tokens.push(T.op('^', '^'));
+  else if (key === 'apow') tokens.push(T.op(' ʸ√ ', 'root'));
+  else if (key === 'EXP') tokens.push(T.op('E', 'exp'));
+  else if (key === 'lp') { const l = lastTok(); if (l && (l.k === 'num' || l.k === 'const' || l.k === 'rp' || l.k === 'post')) tokens.push(T.op('×', '*')); tokens.push(T.lp()); }
+  else if (key === 'rp') tokens.push(T.rp());
+  else if (key === 'pi') tokens.push(T.cnst('π', Math.PI));
+  else if (key === 'e') tokens.push(T.cnst('e', Math.E));
+  else if (key === 'ans') { if (!(tokens.length === 1 && tokens[0].k === 'num' && tokens[0].val === ansVal)) tokens.push(T.numv(ansVal)); }
+  else if (key === 'MR') tokens.push(T.numv(memVal));
+  else if (['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'ln', 'log', 'sqrt', 'cbrt'].includes(key)) {
+    const d = { sin: 'sin(', cos: 'cos(', tan: 'tan(', asin: 'sin⁻¹(', acos: 'cos⁻¹(', atan: 'tan⁻¹(', ln: 'ln(', log: 'log(', sqrt: '√(', cbrt: '∛(' }[key];
+    tokens.push(T.fn(d, key));
+  }
+  else if (key === 'ex') { tokens.push(T.fn('e^(', 'exp')); }
+  else if (key === '10x') { tokens.push(T.fn('10^(', 'pow10')); }
+  else if (key === 'x2') tokens.push(T.post('²', 'sq'));
+  else if (key === 'x3') tokens.push(T.post('³', 'cb'));
+  else if (key === 'inv') tokens.push(T.post('⁻¹', 'inv'));
+  else if (key === 'pc') tokens.push(T.post('%', 'pct'));
+  else if (key === 'fact') tokens.push(T.post('!', 'fact'));
+  else if (key === 'RND') tokens.push(T.numv(Math.random()));
+  else if (key === '+/-') negateLast();
+  else if (key === 'bk') {
+    const l = lastTok();
+    if (l && l.k === 'num' && l.val === null) { l.d = l.d.slice(0, -1); if (l.d === '' || l.d === '-') tokens.pop(); }
+    else tokens.pop();
+  }
+  else if (key === 'C') { tokens = []; }
+  else if (key === 'M+' || key === 'M-') {
+    const v = tryEval(); if (v !== null) { memVal += (key === 'M+' ? v : -v); flashMem(); }
+    return render(false);
+  }
+  else if (key === '=') {
+    const v = tryEval();
+    if (v !== null) {
+      const expr = tokens.map(t => t.d).join('');
+      ansVal = v;
+      const h = document.getElementById('scihistory');
+      const line = document.createElement('div');
+      line.textContent = expr + ' = ' + fmtVal(v);
+      h.prepend(line);
+      while (h.children.length > 5) h.removeChild(h.lastChild);
+      tokens = [T.numv(v)];
+    }
+    return render(false);
+  }
+  render(true);
+}
+function negateLast() {
+  if (!tokens.length) { tokens.push(T.op('−', '-')); return; }
+  let depth = 0, start = tokens.length - 1;
+  if (lastTok().k === 'rp') { for (let i = tokens.length - 1; i >= 0; i--) { if (tokens[i].k === 'rp') depth++; if (tokens[i].k === 'lp') { depth--; if (depth === 0) { start = i; break; } } if (tokens[i].k === 'fn' && depth === 0) { start = i; break; } } }
+  tokens.splice(start, 0, T.lp(), T.num('-1'), T.op('×', '*'));
+  tokens.push(T.rp());
+}
+function flashMem() { const o = document.getElementById('sciOutPut'); o.style.color = '#3F51B5'; setTimeout(() => o.style.color = '', 350); }
+function gamma(z) { const c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7]; if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gamma(1 - z)); z -= 1; let x = c[0]; for (let i = 1; i < 9; i++) x += c[i] / (z + i); const t = z + 7.5; return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * x; }
+function fact(n) { if (n < 0 && Number.isInteger(n)) return NaN; if (Number.isInteger(n) && n >= 0 && n <= 170) { let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; } return gamma(n + 1); }
+function applyFn(name, x) {
+  const deg = angleMode === 'deg', toRad = v => deg ? v * Math.PI / 180 : v, fromRad = v => deg ? v * 180 / Math.PI : v;
+  switch (name) {
+    case 'sin': return Math.sin(toRad(x)); case 'cos': return Math.cos(toRad(x)); case 'tan': return Math.tan(toRad(x));
+    case 'asin': return fromRad(Math.asin(x)); case 'acos': return fromRad(Math.acos(x)); case 'atan': return fromRad(Math.atan(x));
+    case 'ln': return Math.log(x); case 'log': return Math.log10(x);
+    case 'sqrt': return Math.sqrt(x); case 'cbrt': return Math.cbrt(x);
+    case 'exp': return Math.exp(x); case 'pow10': return Math.pow(10, x);
+  }
+  return NaN;
+}
+function evaluate(toks) {
+  let pos = 0;
+  const peek = () => toks[pos], next = () => toks[pos++];
+  function parseExpr() { let v = parseTerm(); while (peek() && peek().k === 'op' && (peek().v === '+' || peek().v === '-')) { const o = next().v; const r = parseTerm(); v = o === '+' ? v + r : v - r; } return v; }
+  function startsAtom(t) { return t && (t.k === 'num' || t.k === 'const' || t.k === 'lp' || t.k === 'fn'); }
+  function parseTerm() { let v = parseFactor(); for (;;) { const t = peek(); if (t && t.k === 'op' && (t.v === '*' || t.v === '/')) { next(); const r = parseFactor(); v = t.v === '*' ? v * r : v / r; } else if (startsAtom(t)) { v = v * parseFactor(); } else break; } return v; }
+  function parseFactor() {
+    if (peek() && peek().k === 'op' && peek().v === '-') { next(); return -parseFactor(); }
+    if (peek() && peek().k === 'op' && peek().v === '+') { next(); return parseFactor(); }
+    let v = parsePostfixed();
+    const t = peek();
+    if (t && t.k === 'op' && (t.v === '^' || t.v === 'root' || t.v === 'exp')) { next(); const r = parseFactor(); v = t.v === '^' ? Math.pow(v, r) : t.v === 'root' ? Math.pow(r, 1 / v) : v * Math.pow(10, r); }
+    return v;
+  }
+  function parsePostfixed() {
+    let v = parseAtom();
+    while (peek() && peek().k === 'post') { const p = next().kind; v = p === 'sq' ? v * v : p === 'cb' ? v * v * v : p === 'inv' ? 1 / v : p === 'pct' ? v / 100 : fact(v); }
+    return v;
+  }
+  function parseAtom() {
+    const t = next();
+    if (!t) throw new Error('empty');
+    if (t.k === 'num') { const v = t.val !== null ? t.val : parseFloat(t.d); if (isNaN(v)) throw new Error('nan'); return v; }
+    if (t.k === 'const') return t.val;
+    if (t.k === 'fn') { const arg = parseExpr(); if (peek() && peek().k === 'rp') next(); return applyFn(t.name, arg); }
+    if (t.k === 'lp') { const v = parseExpr(); if (peek() && peek().k === 'rp') next(); return v; }
+    throw new Error('bad token');
+  }
+  const v = parseExpr();
+  return v;
+}
+function closedToks() {
+  const out = tokens.slice();
+  let depth = 0;
+  for (const t of out) { if (t.k === 'lp' || t.k === 'fn') depth++; if (t.k === 'rp') depth--; }
+  while (depth-- > 0) out.push(T.rp());
+  return out;
+}
+function tryEval() { if (!tokens.length) return null; try { const v = evaluate(closedToks()); return (typeof v === 'number' && !isNaN(v)) ? v : null; } catch (e) { return null; } }
+function fmtVal(v) {
+  if (v === null || v === undefined || isNaN(v)) return 'Error';
+  if (!isFinite(v)) return v > 0 ? '∞' : '-∞';
+  const r = parseFloat(v.toPrecision(12));
+  if (r !== 0 && (Math.abs(r) >= 1e15 || Math.abs(r) < 1e-10)) return r.toExponential(7).replace(/(\.\d*?)0+e/, '$1e').replace(/\.e/, 'e');
+  return String(r);
+}
+function render() {
+  document.getElementById('sciInPut').textContent = tokens.map(t => t.d).join('');
+  const out = document.getElementById('sciOutPut');
+  if (!tokens.length) { out.textContent = '0'; return; }
+  const v = tryEval();
+  out.textContent = v !== null ? fmtVal(v) : (tokens.map(t => t.d).join('') || '0');
+}
+document.addEventListener('keydown', e => {
+  if (e.target && (e.target.tagName === 'TEXTAREA' || (e.target.tagName === 'INPUT' && !['radio', 'checkbox', 'button'].includes(e.target.type)))) return;
+  if (/^[0-9.]$/.test(e.key)) press(e.key);
+  else if (['+', '-', '*', '/'].includes(e.key)) press(e.key);
+  else if (e.key === '^') press('pow');
+  else if (e.key === '%') press('pc');
+  else if (e.key === '(') press('lp');
+  else if (e.key === ')') press('rp');
+  else if (e.key === 'Enter' || e.key === '=') { e.preventDefault(); press('='); }
+  else if (e.key === 'Backspace') press('bk');
+  else if (e.key === 'Escape') press('C');
+});
+/* ============ share link ============ */
+function copyShare() {
+  try {
+    const state = { t: tokens, a: ansVal, m: memVal, mode: angleMode };
+    const s = btoa(unescape(encodeURIComponent(JSON.stringify(state)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    history.replaceState(null, '', '?s=' + s);
+  } catch (e) { /* state too large or not serializable: share the plain page URL */ }
+  const done = () => { document.getElementById('shareMsg').textContent = 'Link copied — it opens with this exact calculation.'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(location.href).then(done, done); else done();
+}
+(function restoreShare() {
+  const q = new URLSearchParams(location.search).get('s');
+  if (!q) return;
+  try {
+    const state = JSON.parse(decodeURIComponent(escape(atob(q.replace(/-/g, '+').replace(/_/g, '/')))));
+    if (Array.isArray(state.t)) {
+      tokens = state.t; ansVal = state.a || 0; memVal = state.m || 0;
+      if (state.mode === 'rad' || state.mode === 'deg') {
+        angleMode = state.mode;
+        const r = document.querySelector('input[name="anglemode"][value="' + angleMode + '"]');
+        if (r) r.checked = true;
+      }
+      render(false);
+    }
+  } catch (e) { /* ignore a malformed share link */ }
+})();
+
+    </script>
+</body>
+                      </html>
