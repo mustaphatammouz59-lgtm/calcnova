@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Percentage Calculator — Percent of a Number, Difference &amp; Change | CalcNova</title>
+<meta name="description" content="Free percentage calculator: find a percent of a number, what percent one number is of another, percentage difference, and percentage increase or decrease — with step-by-step solutions." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/percent" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:8.5rem;text-align:center;font-size:1.15rem;padding:.45rem .2rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .finw{width:100%;font-size:1.1rem;padding:.5rem .6rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .finw:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .pctwrap{position:relative;display:inline-block}
+  .pctwrap .fin{padding-right:1.7rem}
+  .pctwrap .sign{position:absolute;right:.55rem;top:50%;transform:translateY(-50%);color:#64748B;font-weight:600;pointer-events:none}
+  .eq{font-size:1.25rem;line-height:1.7;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .steps{font-size:1.05rem;line-height:1.9;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 .12em;line-height:1.2}
+  .frac .fn{border-bottom:2px solid #1F2937;padding:0 .32em}
+  .frac .fd{padding:0 .32em}
+  .opsel{font-size:1.1rem;padding:.45rem .3rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I calculate a percentage of a number?","acceptedAnswer":{"@type":"Answer","text":"Convert the percentage to a decimal by dividing by 100, then multiply by the number. For example, 5% of 30 is 0.05 × 30 = 1.5. The first calculator on this page also works in reverse: give it any two of the percentage, the base value, and the result, and it finds the third."}},
+{"@type":"Question","name":"What is the difference between percentage difference and percentage change?","acceptedAnswer":{"@type":"Answer","text":"Percentage difference treats the two values symmetrically: it divides the absolute difference by the average of the two values, so swapping them gives the same answer. Percentage change is directional: it divides the difference by the original (starting) value, so an increase from 6 to 10 is 66.67% while the decrease from 10 to 6 is 40%."}},
+{"@type":"Question","name":"How do I calculate a percentage increase?","acceptedAnswer":{"@type":"Answer","text":"Divide the new value by the original value and subtract 1, then multiply by 100. Or directly: new value = original × (1 + percent/100). For example, 500 increased by 10% is 500 × 1.1 = 550. For a decrease, use (1 − percent/100): 500 decreased by 10% is 500 × 0.9 = 450."}},
+{"@type":"Question","name":"How do I convert a percent to a decimal or a fraction?","acceptedAnswer":{"@type":"Answer","text":"Divide by 100: 35% = 0.35. As a fraction, write the percent over 100 and simplify: 35% = 35/100 = 7/20. To go the other way, multiply a decimal by 100 and add the % sign."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Percentage Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Percentage Calculator</h1>
+  <p class="text-slate-600 mb-5 max-w-3xl">Work out percentages in every direction: a percent of a number, what percent one number is of another, the percentage difference between two values, and percentage increase or decrease. Each answer comes with the steps used to reach it.</p>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2 space-y-10">
+
+      <!-- TOOL 1: main three-value solver -->
+      <section id="tool1" class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-2">Percentage Calculator</h2>
+        <p class="text-sm text-slate-500 mb-4">Please provide any two values below and click the "Calculate" button to get the third value.</p>
+        <div class="flex items-center justify-center gap-2 flex-wrap text-xl">
+          <span class="pctwrap"><input id="cpar1" class="fin" inputmode="decimal" /><span class="sign">%</span></span>
+          <span>of</span>
+          <input id="cpar2" class="fin" inputmode="decimal" />
+          <span>=</span>
+          <input id="cpar3" class="fin" inputmode="decimal" />
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button onclick="calcMain()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearPct('main')" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resMain" class="hidden mt-5"></div>
+      </section>
+
+      <!-- TOOL 2: common phrases -->
+      <section id="pctcommon" class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-4">Percentage Calculator in Common Phrases</h2>
+        <div class="space-y-5">
+          <div>
+            <div class="flex items-center gap-2 flex-wrap text-lg">
+              <span>what is</span>
+              <span class="pctwrap"><input id="c21par1" class="fin" inputmode="decimal" /><span class="sign">%</span></span>
+              <span>of</span>
+              <input id="c21par2" class="fin" inputmode="decimal" />
+              <button onclick="calc21()" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-5 py-2 rounded-lg text-base">Calculate</button>
+            </div>
+            <div id="res21" class="hidden mt-3"></div>
+          </div>
+          <div class="border-t pt-5">
+            <div class="flex items-center gap-2 flex-wrap text-lg">
+              <input id="c22par1" class="fin" inputmode="decimal" />
+              <span>is what % of</span>
+              <input id="c22par2" class="fin" inputmode="decimal" />
+              <button onclick="calc22()" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-5 py-2 rounded-lg text-base">Calculate</button>
+            </div>
+            <div id="res22" class="hidden mt-3"></div>
+          </div>
+          <div class="border-t pt-5">
+            <div class="flex items-center gap-2 flex-wrap text-lg">
+              <input id="c23par1" class="fin" inputmode="decimal" />
+              <span>is</span>
+              <span class="pctwrap"><input id="c23par2" class="fin" inputmode="decimal" /><span class="sign">%</span></span>
+              <span>of what</span>
+              <button onclick="calc23()" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-5 py-2 rounded-lg text-base">Calculate</button>
+            </div>
+            <div id="res23" class="hidden mt-3"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TOOL 3: percentage difference -->
+      <section id="pctdifference" class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-4">Percentage Difference Calculator</h2>
+        <div class="grid sm:grid-cols-2 gap-4 max-w-lg">
+          <label class="block"><span class="text-sm font-medium text-slate-600">Value 1</span><input id="c3par1" class="finw mt-1" inputmode="decimal" /></label>
+          <label class="block"><span class="text-sm font-medium text-slate-600">Value 2</span><input id="c3par2" class="finw mt-1" inputmode="decimal" /></label>
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button onclick="calcDiff()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearPct('diff')" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resDiff" class="hidden mt-5"></div>
+      </section>
+
+      <!-- TOOL 4: percentage change -->
+      <section id="pctincrease" class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-2">Percentage Change Calculator</h2>
+        <p class="text-sm text-slate-500 mb-4">Please provide any two values below and click the "Calculate" button to get the third value.</p>
+        <div class="flex items-center justify-center gap-2 flex-wrap text-xl">
+          <input id="c2par1" class="fin" inputmode="decimal" />
+          <select id="c2type" class="opsel"><option value="increase">Increase</option><option value="decrease">Decrease</option></select>
+          <span class="pctwrap"><input id="c2par2" class="fin" inputmode="decimal" /><span class="sign">%</span></span>
+          <span>=</span>
+          <input id="c2par3" class="fin" inputmode="decimal" />
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button onclick="calcChange()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearPct('change')" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resChange" class="hidden mt-5"></div>
+      </section>
+
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/scientific">Scientific Calculator</a></li>
+          <li><a class="hover:underline" href="/fraction">Fraction Calculator</a></li>
+          <li><a class="hover:underline" href="/percent-error">Percent Error Calculator</a></li>
+          <li><a class="hover:underline" href="/ratio">Ratio Calculator</a></li>
+          <li><a class="hover:underline" href="/discount">Discount Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">Quick tips</h3>
+        <p>A <b>percentage difference</b> compares two values symmetrically (swap them and the answer is the same), while a <b>percentage change</b> is measured against the starting value only — so the increase from 6 to 10 (66.67%) is bigger than the decrease from 10 to 6 (40%).</p>
+      </div>
+    </aside>
+  </div>
+
+  <section class="bg-white rounded-xl shadow p-6 mt-10 max-w-none">
+    <h2 class="text-2xl font-bold mb-3">What is a percentage?</h2>
+    <p class="text-slate-600">A percentage is a number or ratio that expresses a fraction of 100. It is a dimensionless way to compare two numbers — the same job done by ratios, fractions, and decimals. Percentages are written with the "%" sign (or the words "percent" or "pct"), so 35% is exactly the decimal 0.35 and the fraction <span class="frac"><span class="fn">7</span><span class="fd">20</span></span>. To find the percentage that one number represents of another, compute the ratio and multiply by 100. If 25 of the 50 students in a class are male, the ratio is <span class="frac"><span class="fn">25</span><span class="fd">50</span></span> = 0.5, and 0.5 × 100 = 50 — so males are 50% of the class.</p>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Percentage formula</h3>
+    <p class="text-slate-600">Almost every percentage question fits one algebraic equation with three values:</p>
+    <p class="text-center my-3 text-xl font-semibold">P × V<sub>1</sub> = V<sub>2</sub></p>
+    <p class="text-slate-600">P is the percentage (in decimal form), V<sub>1</sub> is the value the percentage acts on, and V<sub>2</sub> is the result. Given any two values, the third follows. For example, if P × 30 = 1.5, then P = <span class="frac"><span class="fn">1.5</span><span class="fd">30</span></span> = 0.05, and multiplying by 100 converts that back to a percent: 5%. Working by hand, keep the percentage as a decimal inside the formula and convert at the end; the calculators above accept the percent directly, which is the same thing with the conversion done for you.</p>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Percentage difference formula</h3>
+    <p class="text-slate-600">The percentage difference between two values divides the absolute difference between them by their average, then multiplies by 100:</p>
+    <p class="text-center my-3 text-lg">Percentage Difference = <span class="frac"><span class="fn">|V<sub>1</sub> − V<sub>2</sub>|</span><span class="fd">(V<sub>1</sub> + V<sub>2</sub>)/2</span></span> × 100</p>
+    <p class="text-slate-600">Because it uses the average, neither value is treated as "the original," and swapping the two values changes nothing. Example: the difference between 10 and 6 is <span class="frac"><span class="fn">|10 − 6|</span><span class="fd">(10 + 6)/2</span></span> = <span class="frac"><span class="fn">4</span><span class="fd">8</span></span> = 0.5 = 50%.</p>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Percentage change formula</h3>
+    <p class="text-slate-600">Percentage change is directional: it compares the difference between two values with the <i>initial</i> value. To change a number by a percentage, convert the percent to a decimal and multiply the original number by (1 + decimal) for an increase or (1 − decimal) for a decrease:</p>
+    <p class="text-center my-3 text-lg">500 increased by 10% → 500 × (1 + 0.1) = 550<br />500 decreased by 10% → 500 × (1 − 0.1) = 450</p>
+    <p class="text-slate-600">Going backwards — from the starting and ending values to the percent — divide the end value by the start value and subtract 1. That asymmetry is why going from 6 to 10 is a 66.67% increase but coming back from 10 to 6 is only a 40% decrease.</p>
+  </section>
+
+  <section class="bg-white rounded-xl shadow p-6 mt-6">
+    <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+    <div class="space-y-4 text-slate-600">
+      <div><h3 class="font-semibold text-slate-800">How do I calculate a percentage of a number?</h3><p>Convert the percentage to a decimal by dividing by 100, then multiply by the number. For example, 5% of 30 is 0.05 × 30 = 1.5. The first calculator on this page also works in reverse: give it any two of the percentage, the base value, and the result, and it finds the third.</p></div>
+      <div><h3 class="font-semibold text-slate-800">What is the difference between percentage difference and percentage change?</h3><p>Percentage difference treats the two values symmetrically: it divides the absolute difference by the average of the two values, so swapping them gives the same answer. Percentage change is directional: it divides the difference by the original (starting) value, so an increase from 6 to 10 is 66.67% while the decrease from 10 to 6 is 40%.</p></div>
+      <div><h3 class="font-semibold text-slate-800">How do I calculate a percentage increase?</h3><p>Divide the new value by the original value and subtract 1, then multiply by 100. Or directly: new value = original × (1 + percent/100). For example, 500 increased by 10% is 500 × 1.1 = 550. For a decrease, use (1 − percent/100): 500 decreased by 10% is 500 × 0.9 = 450.</p></div>
+      <div><h3 class="font-semibold text-slate-800">How do I convert a percent to a decimal or a fraction?</h3><p>Divide by 100: 35% = 0.35. As a fraction, write the percent over 100 and simplify: 35% = 35/100 = 7/20. To go the other way, multiply a decimal by 100 and add the % sign.</p></div>
+    </div>
+  </section>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+function fmtDec(x) { /* PHP-style: 14 significant digits */
+  if (!isFinite(x)) return String(x);
+  if (Number.isInteger(x)) return String(x);
+  return String(parseFloat(x.toPrecision(14)));
+}
+function num(id) {
+  const s = document.getElementById(id).value.trim();
+  if (s === '') return null;
+  const v = parseFloat(s);
+  return isNaN(v) ? null : v;
+}
+function fr(n, d) { return '<span class="frac"><span class="fn">' + n + '</span><span class="fd">' + d + '</span></span>'; }
+function showRes(id, html) { const e = document.getElementById(id); e.innerHTML = html; e.classList.remove('hidden'); }
+function resultBlock(headline, sentence, steps) {
+  let h = '<div class="bg-[#3F51B5] text-white font-bold text-xl rounded-lg px-4 py-3">Result: ' + headline + '</div>';
+  if (sentence) h += '<div class="eq mt-3">' + sentence + '</div>';
+  if (steps) h += '<div class="border-t mt-3 pt-3"><p class="font-bold mb-1">Steps:</p><div class="steps">' + steps + '</div></div>';
+  return h;
+}
+function msgBlock(msg) { return '<p class="text-red-600 font-semibold">' + msg + '</p>'; }
+function shareRow(tool, params) {
+  return '<div class="mt-4"><button onclick="copyShare(\'' + tool + '\',' + JSON.stringify(params).replace(/"/g, '&quot;') + ')" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="sh' + tool + '" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function copyShare(tool, params) {
+  const u = new URL(location.href); u.search = ''; u.hash = tool;
+  for (const k in params) u.searchParams.set(k, params[k]);
+  const done = () => { document.getElementById('sh' + tool).textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+
+/* ---------- main solver: P% of V1 = V2 ---------- */
+function calcMain() {
+  const P = num('cpar1'), V1 = num('cpar2'), V2 = num('cpar3');
+  if (P !== null && V1 !== null) {
+    const r = P / 100 * V1;
+    showRes('resMain', resultBlock(fmtDec(r),
+      fmtDec(P) + '% of ' + fmtDec(V1) + ' = <b>' + fmtDec(r) + '</b>',
+      fmtDec(P) + '% of ' + fmtDec(V1) + ' = ' + fmtDec(P / 100) + ' × ' + fmtDec(V1) + ' = ' + fmtDec(r)) +
+      shareRow('tool1', { cpar1: P, cpar2: V1 }));
+  } else if (P !== null && V2 !== null) {
+    if (P === 0) return showRes('resMain', msgBlock('Cannot find the base value when the percentage is 0 — any base would give a result of 0.'));
+    const r = V2 / (P / 100);
+    showRes('resMain', resultBlock(fmtDec(r),
+      fmtDec(P) + '% of <b>' + fmtDec(r) + '</b> = ' + fmtDec(V2),
+      fmtDec(V2) + ' ÷ ' + fmtDec(P) + '% = ' + fmtDec(V2) + ' ÷ ' + fmtDec(P / 100) + ' = ' + fmtDec(r)) +
+      shareRow('tool1', { cpar1: P, cpar3: V2 }));
+  } else if (V1 !== null && V2 !== null) {
+    if (V1 === 0) return showRes('resMain', msgBlock('Cannot find the percentage when the base value is 0 — division by zero.'));
+    const r = V2 / V1 * 100;
+    showRes('resMain', resultBlock(fmtDec(r) + '%',
+      '<b>' + fmtDec(r) + '%</b> of ' + fmtDec(V1) + ' = ' + fmtDec(V2),
+      fmtDec(V2) + ' ÷ ' + fmtDec(V1) + ' = ' + fmtDec(V2 / V1) + ' = ' + fmtDec(r) + '%') +
+      shareRow('tool1', { cpar2: V1, cpar3: V2 }));
+  } else {
+    showRes('resMain', msgBlock('Please provide any two values to get the third value.'));
+  }
+}
+
+/* ---------- common phrases ---------- */
+function calc21() {
+  const P = num('c21par1'), V = num('c21par2');
+  if (P === null || V === null) return showRes('res21', msgBlock('Please provide both values.'));
+  const r = P / 100 * V;
+  showRes('res21', resultBlock(fmtDec(r),
+    '<b>' + fmtDec(r) + '</b> is ' + fmtDec(P) + '% of ' + fmtDec(V) + '.',
+    fmtDec(P) + '% × ' + fmtDec(V) + ' = ' + fmtDec(r)) +
+    shareRow('pctcommon', { c21par1: P, c21par2: V }));
+}
+function calc22() {
+  const A = num('c22par1'), Bv = num('c22par2');
+  if (A === null || Bv === null) return showRes('res22', msgBlock('Please provide both values.'));
+  if (Bv === 0) return showRes('res22', msgBlock('Cannot find the percentage when the second value is 0 — division by zero.'));
+  const r = A / Bv * 100;
+  showRes('res22', resultBlock(fmtDec(r) + '%',
+    fmtDec(A) + ' is <b>' + fmtDec(r) + '%</b> of ' + fmtDec(Bv) + '.',
+    fmtDec(A) + ' ÷ ' + fmtDec(Bv) + ' = ' + fmtDec(A / Bv) + ' = ' + fmtDec(r) + '%') +
+    shareRow('pctcommon', { c22par1: A, c22par2: Bv }));
+}
+function calc23() {
+  const A = num('c23par1'), P = num('c23par2');
+  if (A === null || P === null) return showRes('res23', msgBlock('Please provide both values.'));
+  if (P === 0) return showRes('res23', msgBlock('Cannot find the base value when the percentage is 0 — division by zero.'));
+  const r = A / (P / 100);
+  showRes('res23', resultBlock(fmtDec(r),
+    fmtDec(A) + ' is ' + fmtDec(P) + '% of <b>' + fmtDec(r) + '</b>.',
+    fmtDec(A) + ' ÷ ' + fmtDec(P) + '% = ' + fmtDec(r)) +
+    shareRow('pctcommon', { c23par1: A, c23par2: P }));
+}
+
+/* ---------- percentage difference ---------- */
+function calcDiff() {
+  const V1 = num('c3par1'), V2 = num('c3par2');
+  if (V1 === null || V2 === null) return showRes('resDiff', msgBlock('Please provide both values.'));
+  if (V1 <= 0 || V2 < 0) return showRes('resDiff', msgBlock('Please provide a positive first value and a non-negative second value.'));
+  const diff = Math.abs(V1 - V2), avg = (V1 + V2) / 2;
+  const D = diff / avg * 100;
+  const dir = V2 > V1 ? 'increase' : (V2 < V1 ? 'decrease' : 'increase');
+  const CP = diff / V1 * 100;
+  const steps1 = 'Difference of ' + fmtDec(V1) + ' and ' + fmtDec(V2) + ' = ' +
+    fr('|' + fmtDec(V1) + ' − ' + fmtDec(V2) + '|', fr(fmtDec(V1) + ' + ' + fmtDec(V2), '2')) +
+    ' = ' + fr(fmtDec(diff), fmtDec(avg)) + ' = ' + fmtDec(diff / avg) + ' = ' + fmtDec(D) + '%';
+  const steps2 = 'Percentage of ' + dir + ' = ' +
+    fr('|' + fmtDec(V1) + ' − ' + fmtDec(V2) + '|', fmtDec(V1)) +
+    ' = ' + fr(fmtDec(diff), fmtDec(V1)) + ' = ' + fmtDec(diff / V1) + ' = ' + fmtDec(CP) + '%';
+  showRes('resDiff', resultBlock(fmtDec(D),
+    'Difference of ' + fmtDec(V1) + ' and ' + fmtDec(V2) + ' are <b>' + fmtDec(D) + '%</b>',
+    steps1) +
+    '<div class="eq mt-4">' + fmtDec(V2) + ' is a <b>' + fmtDec(CP) + '%</b> ' + dir + ' of ' + fmtDec(V1) + '.</div>' +
+    '<div class="border-t mt-3 pt-3"><p class="font-bold mb-1">Steps:</p><div class="steps">' + steps2 + '</div></div>' +
+    shareRow('pctdifference', { c3par1: V1, c3par2: V2 }));
+}
+
+/* ---------- percentage change ---------- */
+function calcChange() {
+  const V1 = num('c2par1'), P = num('c2par2'), V2 = num('c2par3');
+  const type = document.getElementById('c2type').value;
+  const word = type; /* 'increase' | 'decrease' */
+  const sgn = type === 'increase' ? 1 : -1;
+  if (V1 !== null && P !== null) {
+    const r = V1 * (1 + sgn * P / 100);
+    showRes('resChange', resultBlock(fmtDec(r),
+      fmtDec(V1) + ' ' + word + ' ' + fmtDec(P) + '% = <b>' + fmtDec(r) + '</b>',
+      fmtDec(V1) + ' ' + word + ' ' + fmtDec(P) + '% = ' + fmtDec(V1) + ' × (1 ' + (sgn > 0 ? '+' : '-') + ' ' + fmtDec(P) + '%) = ' + fmtDec(V1) + ' × (1 ' + (sgn > 0 ? '+' : '-') + ' ' + fmtDec(P / 100) + ') = ' + fmtDec(r)) +
+      shareRow('pctincrease', { c2par1: V1, c2type: type, c2par2: P }));
+  } else if (V1 !== null && V2 !== null) {
+    if (V1 === 0) return showRes('resChange', msgBlock('Cannot find the percentage change when the starting value is 0 — division by zero.'));
+    const r = sgn > 0 ? (V2 / V1 - 1) * 100 : (1 - V2 / V1) * 100;
+    const steps = sgn > 0
+      ? 'Result = ' + fmtDec(V2) + ' ÷ ' + fmtDec(V1) + ' -1 = ' + fmtDec(V2 / V1 - 1) + ' = ' + fmtDec(r) + '%'
+      : 'Result = 1 - ' + fmtDec(V2) + ' ÷ ' + fmtDec(V1) + ' = ' + fmtDec(1 - V2 / V1) + ' = ' + fmtDec(r) + '%';
+    showRes('resChange', resultBlock(fmtDec(r) + '%',
+      fmtDec(V1) + ' ' + word + ' <b>' + fmtDec(r) + '%</b> = ' + fmtDec(V2),
+      steps) +
+      shareRow('pctincrease', { c2par1: V1, c2type: type, c2par3: V2 }));
+  } else if (P !== null && V2 !== null) {
+    const f = 1 + sgn * P / 100;
+    if (f === 0) return showRes('resChange', msgBlock('Cannot find the starting value — it would require dividing by zero.'));
+    const r = V2 / f;
+    showRes('resChange', resultBlock(fmtDec(r),
+      '<b>' + fmtDec(r) + '</b> ' + word + ' ' + fmtDec(P) + '% = ' + fmtDec(V2),
+      'Result = ' + fmtDec(V2) + ' ÷ (1 ' + (sgn > 0 ? '+' : '-') + ' ' + fmtDec(P) + '%) = ' + fmtDec(r)) +
+      shareRow('pctincrease', { c2type: type, c2par2: P, c2par3: V2 }));
+  } else {
+    showRes('resChange', msgBlock('Please provide any two values to get the third value.'));
+  }
+}
+
+/* ---------- clear + share restore ---------- */
+function clearPct(which) {
+  const map = { main: ['cpar1', 'cpar2', 'cpar3', 'resMain'], diff: ['c3par1', 'c3par2', 'resDiff'], change: ['c2par1', 'c2par2', 'c2par3', 'resChange'] };
+  for (const id of map[which]) {
+    const e = document.getElementById(id);
+    if (id.startsWith('res')) { e.classList.add('hidden'); e.innerHTML = ''; } else e.value = '';
+  }
+}
+(function () {
+  const q = new URLSearchParams(location.search);
+  const set = (id, key) => { if (q.has(key)) document.getElementById(id).value = q.get(key); };
+  let target = null;
+  if (q.has('cpar1') || q.has('cpar2') || q.has('cpar3')) { set('cpar1', 'cpar1'); set('cpar2', 'cpar2'); set('cpar3', 'cpar3'); calcMain(); target = 'tool1'; }
+  else if (q.has('c21par1')) { set('c21par1', 'c21par1'); set('c21par2', 'c21par2'); calc21(); target = 'pctcommon'; }
+  else if (q.has('c22par1')) { set('c22par1', 'c22par1'); set('c22par2', 'c22par2'); calc22(); target = 'pctcommon'; }
+  else if (q.has('c23par1')) { set('c23par1', 'c23par1'); set('c23par2', 'c23par2'); calc23(); target = 'pctcommon'; }
+  else if (q.has('c3par1')) { set('c3par1', 'c3par1'); set('c3par2', 'c3par2'); calcDiff(); target = 'pctdifference'; }
+  else if (q.has('c2par1') || q.has('c2par2') || q.has('c2par3')) { set('c2par1', 'c2par1'); set('c2type', 'c2type'); set('c2par2', 'c2par2'); set('c2par3', 'c2par3'); calcChange(); target = 'pctincrease'; }
+  if (target) setTimeout(() => document.getElementById(target).scrollIntoView({ behavior: 'smooth' }), 60);
+})();
+</script>
+
+</body>
+  </html>
