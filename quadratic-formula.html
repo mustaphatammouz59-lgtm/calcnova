@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quadratic Formula Calculator — Solve ax² + bx + c = 0 | CalcNova</title>
+<meta name="description" content="Free quadratic formula calculator: solve ax^2 + bx + c = 0 for any a, b, and c (fractions allowed), with the full step-by-step substitution, simplified radicals, and real or imaginary solutions." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/quadratic-formula" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.1rem;padding:.5rem .6rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .eq{font-size:1.2rem;line-height:1.9;overflow-x:auto;white-space:nowrap;padding-bottom:.35rem}
+  .steps{font-size:1.05rem;line-height:2.1;overflow-x:auto;white-space:nowrap;padding-bottom:.35rem}
+  .frac{display:inline-block;vertical-align:middle;text-align:center;margin:0 .12em}
+  .frac>span{display:block;padding:0 .25em;line-height:1.3;font-size:.92em}
+  .frac .top{border-bottom:1.5px solid currentColor}
+  .rad{border-top:1.5px solid currentColor;padding:0 .18em}
+  .bigform{font-size:1.5rem}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do you solve a quadratic equation with the quadratic formula?","acceptedAnswer":{"@type":"Answer","text":"Write the equation as ax^2 + bx + c = 0, identify a, b, and c, and substitute them into x = (-b ± sqrt(b^2 - 4ac)) / 2a. The plus and minus give the two roots; if the discriminant b^2 - 4ac is zero there is one repeated root, and if it is negative the roots are imaginary."}},
+{"@type":"Question","name":"What does the discriminant tell you?","acceptedAnswer":{"@type":"Answer","text":"The discriminant D = b^2 - 4ac determines the nature of the roots: if D > 0 the equation has two distinct real roots, if D = 0 it has one repeated real root, and if D < 0 it has two imaginary (complex) roots."}},
+{"@type":"Question","name":"What if a = 0 in a quadratic equation?","acceptedAnswer":{"@type":"Answer","text":"If a = 0 the equation is no longer quadratic — it is the linear equation bx + c = 0, whose solution is x = -c/b. This calculator handles that case automatically."}},
+{"@type":"Question","name":"Can the coefficients be fractions?","acceptedAnswer":{"@type":"Answer","text":"Yes. Fractional values such as 3/4 can be entered for any of a, b, and c, and the steps keep the coefficients as exact fractions until the final decimal roots."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Quadratic Formula Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Quadratic Formula Calculator</h1>
+  <p class="text-slate-600 mb-5 max-w-3xl">The calculator below solves the quadratic equation <b>ax<sup>2</sup> + bx + c = 0</b>.</p>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2">
+      <section class="bg-white rounded-xl shadow p-5">
+        <div class="flex flex-wrap items-end gap-3">
+          <label class="block flex-1 min-w-[110px]"><span class="text-lg font-bold">a =</span><input id="av" class="fin mt-1" value="1" /></label>
+          <label class="block flex-1 min-w-[110px]"><span class="text-lg font-bold">b =</span><input id="bv" class="fin mt-1" value="1" /></label>
+          <label class="block flex-1 min-w-[110px]"><span class="text-lg font-bold">c =</span><input id="cv" class="fin mt-1" value="1/4" /></label>
+        </div>
+        <p class="text-sm text-slate-500 mt-3">Fractional values such as 3/4 can be used.</p>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcQF()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearQF()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resQF" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-3">Quadratic Equations and the Quadratic Formula</h2>
+        <p class="text-slate-600">In algebra, a quadratic equation is any polynomial equation of the second degree, with the form:</p>
+        <p class="text-center my-3 bigform">ax<sup>2</sup> + bx + c = 0</p>
+        <p class="text-slate-600">where <b>x</b> is the unknown, <b>a</b> is the quadratic coefficient, <b>b</b> the linear coefficient, and <b>c</b> the constant. The coefficients are known numbers; <b>a</b> cannot be 0, or the equation would be linear rather than quadratic. A quadratic equation can be solved in several ways — factoring, the quadratic formula, completing the square, or graphing. Only the quadratic formula, and the basics of completing the square (which its derivation uses), are covered here. The formula is:</p>
+        <p class="text-center my-3 bigform">x = <span class="frac"><span class="top">−b ± √<span class="rad">b<sup>2</sup> − 4ac</span></span><span>2a</span></span></p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Derivation of the Quadratic Formula</h3>
+        <p class="text-slate-600">Start from ax<sup>2</sup> + bx + c = 0 and multiply through by <span class="frac"><span class="top">1</span><span>a</span></span> to make the first coefficient 1:</p>
+        <p class="text-center my-3">x<sup>2</sup> + <span class="frac"><span class="top">b</span><span>a</span></span>x + <span class="frac"><span class="top">c</span><span>a</span></span> = 0 &nbsp;&nbsp;→&nbsp;&nbsp; x<sup>2</sup> + <span class="frac"><span class="top">b</span><span>a</span></span>x = −<span class="frac"><span class="top">c</span><span>a</span></span></p>
+        <p class="text-slate-600">From this point the square can be completed using the relationship x<sup>2</sup> + bx + c = (x − h)<sup>2</sup> + k. Add <span class="frac"><span class="top">b</span><span>2a</span></span> squared to both sides:</p>
+        <p class="text-center my-3">x<sup>2</sup> + <span class="frac"><span class="top">b</span><span>a</span></span>x + (<span class="frac"><span class="top">b</span><span>2a</span></span>)<sup>2</sup> = −<span class="frac"><span class="top">c</span><span>a</span></span> + (<span class="frac"><span class="top">b</span><span>2a</span></span>)<sup>2</sup></p>
+        <p class="text-slate-600">Simplifying the left side into a squared bracket and combining the right side over the denominator 4a<sup>2</sup> <i>(Simplify)</i>:</p>
+        <p class="text-center my-3">(x + <span class="frac"><span class="top">b</span><span>2a</span></span>)<sup>2</sup> = <span class="frac"><span class="top">b<sup>2</sup> − 4ac</span><span>4a<sup>2</sup></span></span></p>
+        <p class="text-slate-600">Take the square root of both sides <i>(Square root both sides)</i>, then solve for x <i>(Solve for x)</i>:</p>
+        <p class="text-center my-3">x + <span class="frac"><span class="top">b</span><span>2a</span></span> = ±<span class="frac"><span class="top">√<span class="rad">b<sup>2</sup> − 4ac</span></span><span>2a</span></span> &nbsp;&nbsp;→&nbsp;&nbsp; x = <span class="frac"><span class="top">−b ± √<span class="rad">b<sup>2</sup> − 4ac</span></span><span>2a</span></span></p>
+        <p class="text-slate-600">Recall that the ± exists as a function of computing a square root, making both the positive and negative roots solutions of the quadratic equation. The <b>x</b> values found through the quadratic formula are the roots of the equation — the points where its parabola crosses the x-axis. The formula also provides the axis of symmetry of the parabola, x = −b/(2a). The quadratic formula has many real-world applications, such as calculating areas, projectile trajectories, and speed, among others.</p>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div class="space-y-4 text-slate-600">
+          <div><h3 class="font-semibold text-slate-800">How do you solve a quadratic equation with the quadratic formula?</h3><p>Write the equation as ax<sup>2</sup> + bx + c = 0, identify a, b, and c, and substitute them into x = (−b ± √(b<sup>2</sup> − 4ac)) / 2a. The plus and minus give the two roots; if the discriminant b<sup>2</sup> − 4ac is zero there is one repeated root, and if it is negative the roots are imaginary.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What does the discriminant tell you?</h3><p>The discriminant D = b<sup>2</sup> − 4ac determines the nature of the roots: if D &gt; 0 the equation has two distinct real roots, if D = 0 it has one repeated real root, and if D &lt; 0 it has two imaginary (complex) roots.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What if a = 0 in a quadratic equation?</h3><p>If a = 0 the equation is no longer quadratic — it is the linear equation bx + c = 0, whose solution is x = −c/b. This calculator handles that case automatically.</p></div>
+          <div><h3 class="font-semibold text-slate-800">Can the coefficients be fractions?</h3><p>Yes. Fractional values such as 3/4 can be entered for any of a, b, and c, and the steps keep the coefficients as exact fractions until the final decimal roots.</p></div>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/scientific">Scientific Calculator</a></li>
+          <li><a class="hover:underline" href="/fraction">Fraction Calculator</a></li>
+          <li><a class="hover:underline" href="/root">Root Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">Reading the discriminant</h3>
+        <p>Before solving, glance at D = b<sup>2</sup> − 4ac: positive means two real roots, zero means the parabola just touches the x-axis at one repeated root, and negative means the parabola never crosses it — the roots are imaginary.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+/* Exact rational arithmetic on BigInt numerator/denominator pairs. */
+function bgcd(a, b) { a = a < 0n ? -a : a; b = b < 0n ? -b : b; while (b) { const t = a % b; a = b; b = t; } return a === 0n ? 1n : a; }
+function rat(n, d) { if (d < 0n) { n = -n; d = -d; } const g = bgcd(n, d); return { n: n / g, d: d / g }; }
+function parseVal(s) {
+  s = s.trim();
+  if (s === '') return null;
+  let m = /^([+-]?\d+)\s*\/\s*([+-]?\d+)$/.exec(s);
+  if (m) { const den = BigInt(m[2]); if (den === 0n) return null; return { r: rat(BigInt(m[1]), den), frac: true }; }
+  m = /^([+-]?)(\d*)(?:\.(\d*))?$/.exec(s);
+  if (m && (m[2] !== '' || (m[3] !== undefined && m[3] !== ''))) {
+    const intPart = m[2] === '' ? '0' : m[2];
+    const decPart = m[3] || '';
+    let num = BigInt(intPart + decPart);
+    if (m[1] === '-') num = -num;
+    return { r: rat(num, 10n ** BigInt(decPart.length)), frac: false };
+  }
+  return null;
+}
+function rAdd(x, y) { return rat(x.n * y.d + y.n * x.d, x.d * y.d); }
+function rMul(x, y) { return rat(x.n * y.n, x.d * y.d); }
+function rNeg(x) { return { n: -x.n, d: x.d }; }
+function rAbs(x) { return { n: x.n < 0n ? -x.n : x.n, d: x.d }; }
+function rVal(x) { return Number(x.n) / Number(x.d); }
+function terminates(x) { let d = x.d; while (d % 2n === 0n) d /= 2n; while (d % 5n === 0n) d /= 5n; return d === 1n; }
+function decStr(x) { /* exact decimal string for a terminating rational */
+  let d = x.d, twos = 0n, fives = 0n;
+  while (d % 2n === 0n) { d /= 2n; twos++; }
+  while (d % 5n === 0n) { d /= 5n; fives++; }
+  const k = twos > fives ? twos : fives;
+  let num = x.n * (2n ** (k - twos)) * (5n ** (k - fives));
+  const neg = num < 0n; if (neg) num = -num;
+  let s = num.toString().padStart(Number(k) + 1, '0');
+  if (k > 0n) s = s.slice(0, s.length - Number(k)) + '.' + s.slice(s.length - Number(k));
+  return (neg ? '-' : '') + s;
+}
+function fracHTML(top, bot) { return '<span class="frac"><span class="top">' + top + '</span><span>' + bot + '</span></span>'; }
+function ratHTML(x) { /* signed rational as integer or stacked fraction */
+  if (x.d === 1n) return x.n.toString();
+  return (x.n < 0n ? '−' : '') + fracHTML((x.n < 0n ? -x.n : x.n).toString(), x.d.toString());
+}
+function valHTML(pv) { /* an entered value: stacked fraction if typed as one, decimal if typed as decimal */
+  if (pv.frac) return ratHTML(pv.r);
+  if (pv.r.d === 1n) return pv.r.n.toString();
+  return decStr(pv.r);
+}
+function compHTML(x, preferDec) { /* a computed rational: decimal when it terminates and decimals are in play */
+  if (x.d === 1n) return x.n.toString();
+  if (preferDec && terminates(x)) return decStr(x);
+  return ratHTML(x);
+}
+function radHTML(inner) { return '√<span class="rad">' + inner + '</span>'; }
+function factorSquares(nBig) { /* n = k^2 * m with m squarefree; Numbers, with a trial bound */
+  let n = Number(nBig);
+  if (!Number.isSafeInteger(n)) return { k: 1, m: nBig.toString() };
+  let k = 1, m = n;
+  for (let i = 2; i * i <= m && i <= 100000; i++) {
+    while (m % (i * i) === 0) { m /= i * i; k *= i; }
+  }
+  return { k, m: String(m) };
+}
+function fmtPHP(x) { /* PHP float-to-string at 14 significant digits */
+  if (Number.isNaN(x)) return 'NAN';
+  if (x === Infinity) return 'INF';
+  if (x === -Infinity) return '-INF';
+  if (x === 0) return '0';
+  const neg = x < 0, ax = Math.abs(x);
+  const parts = ax.toExponential(13).split('e');
+  const e10 = parseInt(parts[1], 10);
+  let digits = parts[0].replace('.', '').replace(/0+$/, '');
+  if (digits === '') digits = '0';
+  let out;
+  if (e10 >= 14 || e10 <= -5) {
+    const mm = digits.length > 1 ? digits[0] + '.' + digits.slice(1) : digits + '.0';
+    out = mm + 'E' + (e10 < 0 ? '-' : '+') + Math.abs(e10);
+  } else if (e10 >= 0) {
+    out = digits.length > e10 + 1 ? digits.slice(0, e10 + 1) + '.' + digits.slice(e10 + 1) : digits + '0'.repeat(e10 + 1 - digits.length);
+  } else {
+    out = '0.' + '0'.repeat(-e10 - 1) + digits;
+  }
+  return (neg ? '-' : '') + out;
+}
+function showRes(html) { const e = document.getElementById('resQF'); e.innerHTML = html; e.classList.remove('hidden'); }
+function banner(eqLine, solLine, stepsHTML) {
+  return '<div class="bg-[#3F51B5] text-white font-bold rounded-lg px-4 py-3"><div class="text-base mb-1">Result</div>' +
+    '<div class="eq">' + eqLine + '</div>' +
+    '<div class="eq">' + solLine + '</div>' +
+    (stepsHTML ? '<div class="mt-2 text-base">Steps:</div><div class="steps font-medium">' + stepsHTML + '</div>' : '') +
+    '</div>' + shareQF();
+}
+function msgBanner(t) {
+  return '<div class="bg-[#3F51B5] text-white font-bold rounded-lg px-4 py-3"><div class="text-base mb-1">Result</div><div class="eq">' + t + '</div></div>' + shareQF();
+}
+function termHTML(coefPV, sym, first) { /* one polynomial term, e.g. - (3/4)x^2 ; returns '' when coef is 0 */
+  const r = coefPV.r;
+  if (r.n === 0n) return '';
+  const mag = rAbs(r);
+  const magPV = { r: mag, frac: coefPV.frac };
+  const coefStr = (mag.n === 1n && mag.d === 1n && sym !== '') ? '' : (coefPV.frac ? ratHTML(mag) : valHTML(magPV));
+  const body = coefStr + sym;
+  if (first) return (r.n < 0n ? '−' : '') + body;
+  return (r.n < 0n ? ' − ' : ' + ') + body;
+}
+function equationHTML(pa, pb, pc) {
+  let s = '';
+  s += termHTML(pa, 'x<sup>2</sup>', true);
+  const bFirst = s === '';
+  s += termHTML(pb, 'x', bFirst);
+  const cFirst = s === '';
+  if (pc.r.n !== 0n) {
+    const cStr = pc.frac ? ratHTML(rAbs(pc.r)) : valHTML({ r: rAbs(pc.r), frac: false });
+    s += cFirst ? (pc.r.n < 0n ? '−' + cStr : cStr) : (pc.r.n < 0n ? ' − ' + cStr : ' + ' + cStr);
+  }
+  if (s === '') s = '0';
+  return s + ' = 0';
+}
+function parenIfNeeded(html, needed) { return needed ? '(' + html + ')' : html; }
+function calcQF() {
+  const pa = parseVal(document.getElementById('av').value);
+  const pb = parseVal(document.getElementById('bv').value);
+  const pc = parseVal(document.getElementById('cv').value);
+  if (!pa || !pb || !pc) return showRes(msgBanner('Please provide numeric values for a, b, and c — fractions such as 3/4 are allowed.'));
+  const a = pa.r, b = pb.r, c = pc.r;
+  const anyDec = !pa.frac && !pb.frac && !pc.frac && (a.d !== 1n || b.d !== 1n || c.d !== 1n);
+  const eqLine = 'Equation: ' + equationHTML(pa, pb, pc);
+  /* Linear case a = 0 */
+  if (a.n === 0n) {
+    if (b.n === 0n) return showRes(msgBanner('With a = 0 and b = 0 there is no equation to solve. Enter a non-zero value for a or b.'));
+    const x = rVal(rNeg(c)) / rVal(b);
+    const steps = 'x = ' + fracHTML('−c', 'b') + ' = ' + fracHTML(compHTML(rNeg(c), anyDec), compHTML(b, anyDec)) + ' = ' + fmtPHP(x);
+    return showRes(banner(eqLine, 'Solution: x = ' + fmtPHP(x), steps));
+  }
+  const D = rAdd(rMul(b, b), rNeg(rMul(rat(4n, 1n), rMul(a, c))));
+  const twoA = rMul(rat(2n, 1n), a);
+  const negB = rNeg(b);
+  const rePart = rat(negB.n * twoA.d, negB.d * twoA.n); /* -b / (2a), exact (sign normalized by rat) */
+  /* Steps S1, S2, S3 */
+  const s1 = 'x = ' + fracHTML('−b ± ' + radHTML('b<sup>2</sup> − 4ac'), '2a');
+  const bParen = b.n < 0n || (b.d !== 1n);
+  const s2num = '−' + parenIfNeeded(valHTML(pb), bParen) + ' ± ' + radHTML(
+    parenIfNeeded(valHTML(pb), bParen) + '<sup>2</sup> − 4 × ' + parenIfNeeded(valHTML(pa), a.n < 0n) + ' × ' + parenIfNeeded(valHTML(pc), c.n < 0n));
+  const s2 = 'x = ' + fracHTML(s2num, '2 × ' + valHTML(pa));
+  const s3 = 'x = ' + fracHTML(compHTML(negB, anyDec) + ' ± ' + radHTML(compHTML(D, anyDec)), compHTML(twoA, anyDec));
+  /* S4: split form with simplified radical part */
+  const absD = rAbs(D);
+  const fs = factorSquares(absD.n * absD.d);
+  const coeffR = rat(BigInt(fs.k) * twoA.d, absD.d * (twoA.n < 0n ? -twoA.n : twoA.n)); /* k / (q * |2a|), reduced */
+  let radPart;
+  const mIsOne = fs.m === '1';
+  if (mIsOne) {
+    radPart = ratHTML(coeffR);
+  } else if (coeffR.n === 1n && coeffR.d === 1n) {
+    radPart = '√' + fs.m;
+  } else if (coeffR.d === 1n) {
+    radPart = coeffR.n.toString() + '√' + fs.m;
+  } else {
+    radPart = fracHTML(coeffR.n.toString(), coeffR.d.toString()) + '√' + fs.m;
+  }
+  const reHTML = compHTML(rePart, anyDec);
+  const radVal = Math.sqrt(rVal(absD)) / Math.abs(rVal(twoA));
+  const reVal = rVal(rePart);
+  let solLine, s4, s5;
+  if (D.n > 0n) {
+    const x1 = reVal + radVal, x2 = reVal - radVal;
+    const hi = Math.max(x1, x2), lo = Math.min(x1, x2);
+    solLine = 'Solutions: x = ' + fmtPHP(hi) + ' or x = ' + fmtPHP(lo);
+    s4 = reHTML + ' ± ' + radPart;
+    s5 = fmtPHP(hi) + ' or ' + fmtPHP(lo);
+  } else if (D.n === 0n) {
+    solLine = 'Solution: x = ' + fmtPHP(reVal);
+    s4 = reHTML;
+    s5 = fmtPHP(reVal);
+  } else {
+    const im = radVal;
+    const imStr = Math.abs(im - 1) < 1e-15 ? 'i' : fmtPHP(im) + 'i';
+    const cx = reVal === 0 ? '± ' + imStr : fmtPHP(reVal) + ' ± ' + imStr;
+    solLine = 'There are two imaginary solutions: x = ' + cx;
+    s4 = reHTML + ' ± ' + radPart + 'i';
+    if (mIsOne && coeffR.n === 1n && coeffR.d === 1n) s4 = reHTML + ' ± i';
+    s5 = cx;
+  }
+  const steps = s1 + ' = ' + s2.replace(/^x = /, '') + ' = ' + s3.replace(/^x = /, '') + ' = ' + s4 + ' = ' + s5;
+  return showRes(banner(eqLine, solLine, steps));
+}
+function shareQF() {
+  return '<div class="mt-4"><button onclick="copyQF()" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="shQF" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function copyQF() {
+  const u = new URL(location.href); u.search = ''; u.hash = '';
+  u.searchParams.set('av', document.getElementById('av').value);
+  u.searchParams.set('bv', document.getElementById('bv').value);
+  u.searchParams.set('cv', document.getElementById('cv').value);
+  const done = () => { document.getElementById('shQF').textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+function clearQF() {
+  document.getElementById('av').value = '1'; document.getElementById('bv').value = '1'; document.getElementById('cv').value = '1/4';
+  const r = document.getElementById('resQF'); r.classList.add('hidden'); r.innerHTML = '';
+}
+(function () {
+  const q = new URLSearchParams(location.search);
+  if (q.has('av') || q.has('bv') || q.has('cv')) {
+    if (q.has('av')) document.getElementById('av').value = q.get('av');
+    if (q.has('bv')) document.getElementById('bv').value = q.get('bv');
+    if (q.has('cv')) document.getElementById('cv').value = q.get('cv');
+    calcQF();
+  }
+})();
+</script>
+
+</body>
+          </html>
