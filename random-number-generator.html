@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Random Number Generator — Integers &amp; Decimals, Any Range | CalcNova</title>
+<meta name="description" content="Two free random number generators for a user-defined min and max range. Generate random integers or decimals with high precision, with options for duplicates, sorting, and up to 999 numbers at once." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/random-number-generator" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.1rem;padding:.5rem .6rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .fins{width:6rem;text-align:center;font-size:1.05rem;padding:.45rem .2rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fins:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .rnum{font-size:1.6rem;font-weight:600;word-break:break-all;padding-top:.35rem;line-height:1.35}
+  .ropt{display:inline-flex;align-items:center;gap:.35rem;margin-right:1.1rem;cursor:pointer}
+  .ropt input{accent-color:#3F51B5;width:1.05rem;height:1.05rem}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Are the generated numbers really random?","acceptedAnswer":{"@type":"Answer","text":"They are pseudo-random: CalcNova generates them locally in your browser using the Web Crypto API, which provides cryptographically strong randomness. That is more than sufficient for games, sampling, simulations, and everyday choices — but like all software generators, it should not be relied on as a source of true randomness from a physical process."}},
+{"@type":"Question","name":"How big can the numbers be?","acceptedAnswer":{"@type":"Answer","text":"The simple generator works with integers of a few thousand digits, and the comprehensive generator supports up to 999 digits of decimal precision. All arithmetic is exact, so no range is too large to sample uniformly."}},
+{"@type":"Question","name":"How do I generate numbers without repeats?","acceptedAnswer":{"@type":"Answer","text":"In the comprehensive generator, request more than one number and set \"Allow duplication in results?\" to No. Every number in the set will then be unique. If the range contains fewer distinct values than the amount requested, the generator says so instead of looping forever."}},
+{"@type":"Question","name":"How many numbers can I generate at once?","acceptedAnswer":{"@type":"Answer","text":"The comprehensive generator creates up to 999 numbers per run, and can sort them in ascending or descending order."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Random Number Generator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Random Number Generator</h1>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2 space-y-10">
+
+      <!-- SIMPLE -->
+      <section id="simple" class="bg-white rounded-xl shadow p-5">
+        <p class="text-slate-600 mb-4">This version of the generator creates a random integer. It can deal with very large integers up to a few thousand digits.</p>
+        <div class="grid sm:grid-cols-2 gap-4 max-w-lg">
+          <label class="block"><span class="text-sm font-medium text-slate-600">Lower Limit</span><input id="slower" class="fin mt-1" value="1" /></label>
+          <label class="block"><span class="text-sm font-medium text-slate-600">Upper Limit</span><input id="supper" class="fin mt-1" value="100" /></label>
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button onclick="genSimple()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Generate</button>
+          <button onclick="clearSimple()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resSimple" class="hidden mt-5"></div>
+      </section>
+
+      <!-- COMPREHENSIVE -->
+      <section id="comprehensive" class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-2">Comprehensive Version</h2>
+        <p class="text-slate-600 mb-4">This version of the generator can create one or many random integers or decimals. It can deal with very large numbers with up to 999 digits of precision.</p>
+        <div class="grid sm:grid-cols-2 gap-4 max-w-lg">
+          <label class="block"><span class="text-sm font-medium text-slate-600">Lower Limit</span><input id="clower" class="fin mt-1" value="0.2" /></label>
+          <label class="block"><span class="text-sm font-medium text-slate-600">Upper Limit</span><input id="cupper" class="fin mt-1" value="112.5" /></label>
+        </div>
+        <div class="mt-4 flex items-center gap-2 flex-wrap">
+          <span class="text-sm font-medium text-slate-600">Generate</span>
+          <input id="cnums" class="fins" value="1" maxlength="3" oninput="shDupSort()" />
+          <span class="text-slate-600">numbers</span>
+        </div>
+        <div id="dupsort" class="hidden mt-4 space-y-3">
+          <div>
+            <p class="text-sm font-medium text-slate-600 mb-1.5">Allow duplication in results?</p>
+            <label class="ropt"><input type="radio" name="cdup" value="y" checked /> Yes</label>
+            <label class="ropt"><input type="radio" name="cdup" value="n" /> No</label>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-slate-600 mb-1.5">Sort the results?</p>
+            <label class="ropt"><input type="radio" name="csort" value="a" /> Ascend</label>
+            <label class="ropt"><input type="radio" name="csort" value="d" /> Descend</label>
+            <label class="ropt"><input type="radio" name="csort" value="n" checked /> No</label>
+          </div>
+        </div>
+        <div class="mt-4">
+          <p class="text-sm font-medium text-slate-600 mb-1.5">Type of result to generate?</p>
+          <label class="ropt"><input type="radio" name="cnumt" value="i" onchange="shPres()" /> Integer</label>
+          <label class="ropt"><input type="radio" name="cnumt" value="d" checked onchange="shPres()" /> Decimal</label>
+          <div id="precision" class="mt-3 flex items-center gap-2">
+            <span class="text-sm font-medium text-slate-600">Precision:</span>
+            <input id="cprec" class="fins" value="50" maxlength="3" />
+            <span class="text-slate-600">digits</span>
+          </div>
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button onclick="genComp()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Generate</button>
+          <button onclick="clearComp()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resComp" class="hidden mt-5"></div>
+      </section>
+
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/scientific">Scientific Calculator</a></li>
+          <li><a class="hover:underline" href="/fraction">Fraction Calculator</a></li>
+          <li><a class="hover:underline" href="/percent">Percentage Calculator</a></li>
+          <li><a class="hover:underline" href="/probability">Probability Calculator</a></li>
+          <li><a class="hover:underline" href="/statistics">Statistics Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">Quick tips</h3>
+        <p>Need lottery-style picks? Use the comprehensive version with <b>Integer</b>, set "Allow duplication" to <b>No</b>, and sort ascending. Need a random decimal for a simulation? Keep the type on <b>Decimal</b> and raise the precision.</p>
+      </div>
+    </aside>
+  </div>
+
+  <section class="bg-white rounded-xl shadow p-6 mt-10 max-w-none">
+    <h2 class="text-2xl font-bold mb-3">What is a random number?</h2>
+    <p class="text-slate-600">A random number is a number drawn from a pool of limited or unlimited numbers with no discernible pattern that would let anyone predict it. The draws are almost always independent of each other: each result has the same chance regardless of what came before. A pool of numbers can also follow a distribution — the heights of students in a school, for instance, cluster around the median height in a normal distribution, so a randomly picked student is more likely to be near the middle than very tall or very short. The generators above instead spread their numbers <b>evenly</b> (uniformly) across the whole range you set, and every draw is independent.</p>
+    <h3 class="text-lg font-bold mt-6 mb-2">Hardware and pseudo-random generators</h3>
+    <p class="text-slate-600">A random number generator is any device or program that produces numbers within a defined scope. Hardware generators rely on physical processes — dice, coin flips, atmospheric or thermal noise, and other quantum phenomena — to produce true randomness. Computer-based generators are almost always <b>pseudo-random</b>: algorithms whose output approximates the statistical behavior of truly random sequences without being truly random. The generators on this page are pseudo-random in that sense (powered by your browser's cryptographic randomness source), and like all software generators they suit games, sampling, and simulations well, but should not be used for cryptographic purposes such as generating keys or passwords.</p>
+  </section>
+
+  <section class="bg-white rounded-xl shadow p-6 mt-6">
+    <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+    <div class="space-y-4 text-slate-600">
+      <div><h3 class="font-semibold text-slate-800">Are the generated numbers really random?</h3><p>They are pseudo-random: CalcNova generates them locally in your browser using the Web Crypto API, which provides cryptographically strong randomness. That is more than sufficient for games, sampling, simulations, and everyday choices — but like all software generators, it should not be relied on as a source of true randomness from a physical process.</p></div>
+      <div><h3 class="font-semibold text-slate-800">How big can the numbers be?</h3><p>The simple generator works with integers of a few thousand digits, and the comprehensive generator supports up to 999 digits of decimal precision. All arithmetic is exact, so no range is too large to sample uniformly.</p></div>
+      <div><h3 class="font-semibold text-slate-800">How do I generate numbers without repeats?</h3><p>In the comprehensive generator, request more than one number and set "Allow duplication in results?" to No. Every number in the set will then be unique. If the range contains fewer distinct values than the amount requested, the generator says so instead of looping forever.</p></div>
+      <div><h3 class="font-semibold text-slate-800">How many numbers can I generate at once?</h3><p>The comprehensive generator creates up to 999 numbers per run, and can sort them in ascending or descending order.</p></div>
+    </div>
+  </section>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+/* ---------- uniform random BigInt in [lo, hi] via Web Crypto ---------- */
+function randBelow(range) { /* 0 .. range inclusive-exclusive bound: returns BigInt in [0, range] */
+  if (range <= 0n) return 0n;
+  const bits = range.toString(2).length;
+  const bytes = Math.ceil(bits / 8);
+  const buf = new Uint8Array(bytes);
+  while (true) {
+    crypto.getRandomValues(buf);
+    let v = 0n;
+    for (let i = 0; i < bytes; i++) v = (v << 8n) | BigInt(buf[i]);
+    v &= (1n << BigInt(bits)) - 1n;
+    if (v <= range) return v;
+  }
+}
+function randRange(lo, hi) { return lo + randBelow(hi - lo); }
+
+/* exact decimal string -> { neg, digits(BigInt of all digits), scale } */
+function parseDec(s) {
+  s = s.trim();
+  const m = /^(-)?(\d+)(?:\.(\d+))?$/.exec(s) || /^(-)?\.(\d+)$/.exec(s);
+  if (!m) return null;
+  if (m.length === 4) return { neg: !!m[1], int: m[2], frac: m[3] || '' };
+  return { neg: !!m[1], int: '0', frac: m[2] };
+}
+function decToScaled(d, W) { /* value * 10^W as BigInt; when frac is longer than W the dropped digits must be zeros (integer check guarantees this) */
+  let digits;
+  if (d.frac.length <= W) digits = d.int + d.frac.padEnd(W, '0');
+  else digits = d.int + d.frac.slice(0, W);
+  digits = digits.replace(/^0+(?=\d)/, '');
+  const v = BigInt(digits === '' ? '0' : digits);
+  return d.neg ? -v : v;
+}
+function ceilDiv(a, b) { /* b > 0 */ return a >= 0n ? (a + b - 1n) / b : a / b; }
+function floorDiv(a, b) { return a >= 0n ? a / b : -((-a + b - 1n) / b); }
+function fmtScaled(n, p) { /* BigInt at scale 10^p -> decimal string with exactly p fraction digits */
+  const neg = n < 0n;
+  let s = (neg ? -n : n).toString().padStart(p + 1, '0');
+  if (p === 0) return (neg ? '-' : '') + s;
+  return (neg ? '-' : '') + s.slice(0, s.length - p) + '.' + s.slice(s.length - p);
+}
+function radio(name) { const e = document.querySelector('input[name="' + name + '"]:checked'); return e ? e.value : ''; }
+function showRes(id, html) { const e = document.getElementById(id); e.innerHTML = html; e.classList.remove('hidden'); }
+function errList(id, msgs) {
+  showRes(id, '<h3 class="text-lg font-bold text-[#3F51B5]">Result</h3>' + msgs.map(m => '<p class="text-red-600 font-semibold mt-1">' + m + '</p>').join(''));
+}
+function resultNums(id, nums) {
+  showRes(id, '<h3 class="text-lg font-bold text-[#3F51B5]">Result</h3><div>' + nums.map(n => '<div class="rnum">' + n + '</div>').join('') + '</div>');
+}
+function shareRow(tool, params) {
+  return '<div class="mt-4"><button onclick="copyShare(\'' + tool + '\',' + JSON.stringify(params).replace(/"/g, '&quot;') + ')" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link (same settings, fresh numbers)</button> <span id="sh' + tool + '" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function copyShare(tool, params) {
+  const u = new URL(location.href); u.search = ''; u.hash = tool;
+  for (const k in params) u.searchParams.set(k, params[k]);
+  const done = () => { document.getElementById('sh' + tool).textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+
+/* ---------- simple generator ---------- */
+function parseBigIntField(id) {
+  const s = document.getElementById(id).value.trim();
+  if (!/^-?\d+$/.test(s) || s.replace('-', '').length > 5000) return null;
+  return BigInt(s);
+}
+function genSimple() {
+  const lo = parseBigIntField('slower'), hi = parseBigIntField('supper');
+  const errs = [];
+  if (lo === null) errs.push('Please provide a valid integer as lower limit value.');
+  if (hi === null) errs.push('Please provide a valid integer as upper limit value.');
+  if (!errs.length && lo >= hi) errs.push('The lower limit value needs to be smaller than the upper limit value.');
+  if (errs.length) return errList('resSimple', errs);
+  resultNums('resSimple', [randRange(lo, hi).toString()]);
+  const e = document.getElementById('resSimple');
+  e.innerHTML += shareRow('simple', { slower: lo.toString(), supper: hi.toString() });
+}
+function clearSimple() {
+  document.getElementById('slower').value = '1';
+  document.getElementById('supper').value = '100';
+  const r = document.getElementById('resSimple'); r.classList.add('hidden'); r.innerHTML = '';
+}
+
+/* ---------- comprehensive generator ---------- */
+function shDupSort() {
+  const v = document.getElementById('cnums').value.trim();
+  const n = /^\d+$/.test(v) ? parseInt(v, 10) : 0;
+  document.getElementById('dupsort').classList.toggle('hidden', !(n > 1));
+}
+function shPres() {
+  document.getElementById('precision').style.display = radio('cnumt') === 'd' ? 'flex' : 'none';
+}
+function genComp() {
+  const loS = document.getElementById('clower').value, hiS = document.getElementById('cupper').value;
+  const type = radio('cnumt') || 'd';
+  const errs = [];
+  const loD = parseDec(loS), hiD = parseDec(hiS);
+  const isInt = (d) => d && (d.frac === '' || /^0+$/.test(d.frac));
+  if (type === 'i') {
+    if (!isInt(loD)) errs.push('Please provide an integer as lower limit value.');
+    if (!isInt(hiD)) errs.push('Please provide an integer as upper limit value.');
+  } else {
+    if (!loD) errs.push('Please provide a valid number as lower limit value.');
+    if (!hiD) errs.push('Please provide a valid number as upper limit value.');
+  }
+  const cntS = document.getElementById('cnums').value.trim();
+  const cnt = /^\d+$/.test(cntS) ? parseInt(cntS, 10) : 0;
+  if (!(cnt >= 1 && cnt <= 999)) errs.push('Please provide a positve integer as the amount of numbers to generate.');
+  let prec = 0;
+  if (type === 'd') {
+    const pS = document.getElementById('cprec').value.trim();
+    prec = /^\d+$/.test(pS) ? parseInt(pS, 10) : 0;
+    if (!(prec >= 1 && prec <= 999)) errs.push('Please provide a positve integer as the precision.');
+  }
+  if (errs.length) return errList('resComp', errs);
+  const dup = cnt > 1 ? (radio('cdup') || 'y') : 'y';
+  const sort = cnt > 1 ? (radio('csort') || 'n') : 'n';
+  let loU, hiU, fmt;
+  if (type === 'i') {
+    loU = decToScaled(loD, 0); hiU = decToScaled(hiD, 0);
+    if (loU >= hiU) return errList('resComp', ['The lower limit value needs to be smaller than the upper limit value.']);
+    fmt = (n) => n.toString();
+  } else {
+    const Wv = Math.max(loD.frac.length, hiD.frac.length);
+    if (decToScaled(loD, Wv) >= decToScaled(hiD, Wv)) return errList('resComp', ['The lower limit value needs to be smaller than the upper limit value.']);
+    const W = Math.max(prec, Wv);
+    const step = 10n ** BigInt(W - prec);
+    loU = ceilDiv(decToScaled(loD, W), step);
+    hiU = floorDiv(decToScaled(hiD, W), step);
+    if (loU > hiU) return errList('resComp', ['The range is too small for the chosen precision.']);
+    fmt = (n) => fmtScaled(n, prec);
+  }
+  const rangeSize = hiU - loU + 1n;
+  if (dup === 'n' && BigInt(cnt) > rangeSize) return errList('resComp', ['The range is too small to generate ' + cnt + ' unique numbers.']);
+  let vals = [];
+  if (dup === 'n') {
+    const seen = new Set();
+    while (vals.length < cnt) { const v = randRange(loU, hiU); const k = v.toString(); if (!seen.has(k)) { seen.add(k); vals.push(v); } }
+  } else {
+    for (let i = 0; i < cnt; i++) vals.push(randRange(loU, hiU));
+  }
+  if (sort === 'a') vals.sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
+  if (sort === 'd') vals.sort((a, b) => a > b ? -1 : a < b ? 1 : 0);
+  resultNums('resComp', vals.map(fmt));
+  const e = document.getElementById('resComp');
+  e.innerHTML += shareRow('comprehensive', { clower: loS.trim(), cupper: hiS.trim(), cnums: cnt, cdup: dup, csort: sort, cnumt: type, cprec: prec });
+}
+function clearComp() {
+  document.getElementById('clower').value = '0.2';
+  document.getElementById('cupper').value = '112.5';
+  document.getElementById('cnums').value = '1';
+  document.getElementById('cprec').value = '50';
+  document.querySelector('input[name="cdup"][value="y"]').checked = true;
+  document.querySelector('input[name="csort"][value="n"]').checked = true;
+  document.querySelector('input[name="cnumt"][value="d"]').checked = true;
+  shDupSort(); shPres();
+  const r = document.getElementById('resComp'); r.classList.add('hidden'); r.innerHTML = '';
+}
+(function () {
+  const q = new URLSearchParams(location.search);
+  const set = (id, key) => { if (q.has(key)) document.getElementById(id).value = q.get(key); };
+  const setRadio = (name, key) => { if (q.has(key)) { const e = document.querySelector('input[name="' + name + '"][value="' + q.get(key) + '"]'); if (e) e.checked = true; } };
+  let target = null;
+  if (q.has('slower')) { set('slower', 'slower'); set('supper', 'supper'); genSimple(); target = 'simple'; }
+  else if (q.has('clower')) {
+    set('clower', 'clower'); set('cupper', 'cupper'); set('cnums', 'cnums'); set('cprec', 'cprec');
+    setRadio('cdup', 'cdup'); setRadio('csort', 'csort'); setRadio('cnumt', 'cnumt');
+    shDupSort(); shPres(); genComp(); target = 'comprehensive';
+  }
+  if (target) setTimeout(() => document.getElementById(target).scrollIntoView({ behavior: 'smooth' }), 60);
+})();
+</script>
+
+</body>
+  </html>
