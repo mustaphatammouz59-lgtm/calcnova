@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hex Calculator — Add, Subtract, Multiply, Divide &amp; Convert | CalcNova</title>
+<meta name="description" content="Free hex calculator: add, subtract, multiply and divide hexadecimal values, and convert between hexadecimal and decimal values, with results shown in both systems." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/hex" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.1rem;padding:.5rem .6rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .eq{font-size:1.15rem;line-height:1.8;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .ctable{border-collapse:collapse;margin:0 auto}
+  .ctable th,.ctable td{border:1px solid #CBD5E1;padding:.35rem 1rem;text-align:center}
+  .ctable th{background:#EEF2FF;color:#3F51B5}
+  .multT{border-collapse:collapse;margin:0 auto;font-size:.78rem}
+  .multT th,.multT td{border:1px solid #CBD5E1;padding:.14rem .3rem;text-align:center;min-width:1.7rem}
+  .multT th{background:#3F51B5;color:#fff}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do you convert hex to decimal?","acceptedAnswer":{"@type":"Answer","text":"Multiply each hex digit by its place value — powers of 16 starting from 16^0 on the right — and add the results, counting A through F as 10 through 15. For example, 2AA = (2 × 256) + (10 × 16) + (10 × 1) = 682."}},
+{"@type":"Question","name":"How do you convert decimal to hex?","acceptedAnswer":{"@type":"Answer","text":"Find the largest power of 16 that fits in the number, count how many times it goes in (that count is the hex digit for that place), subtract, and repeat with the remainder. For example, 1500 = (5 × 256) + (13 × 16) + 12, and since 13 is D and 12 is C, 1500 is 5DC in hex."}},
+{"@type":"Question","name":"Why is hexadecimal used in computing?","acceptedAnswer":{"@type":"Answer","text":"Each hex digit represents exactly 4 binary digits (a nibble), so long binary values compress into short hex strings that convert back exactly — the binary value 1010101010 is simply 2AA in hex. Memory addresses, color codes, and byte values are therefore usually written in hex."}},
+{"@type":"Question","name":"How does hex addition work?","acceptedAnswer":{"@type":"Answer","text":"Add column by column as in decimal, converting A–F to 10–15 as needed, and carry 1 to the next column whenever a column totals 16 or more. For example, B + 8 = 19 in decimal, which is 13 in hex: write 3, carry 1."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Hex Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Hex Calculator</h1>
+  <p class="text-slate-600 mb-5 max-w-3xl">Perform addition, subtraction, multiplication, and division on hexadecimal values, and convert between hexadecimal and decimal values.</p>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2">
+      <section class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-4">Hexadecimal Calculation — Add, Subtract, Multiply, or Divide</h2>
+        <div class="flex flex-wrap items-end gap-2">
+          <input id="number1" class="fin flex-1 min-w-[120px]" value="8AB" maxlength="64" />
+          <select id="c2op" class="fin !w-auto font-sans">
+            <option value="+" selected>+</option>
+            <option value="-">−</option>
+            <option value="x">×</option>
+            <option value="/">÷</option>
+          </select>
+          <input id="number2" class="fin flex-1 min-w-[120px]" value="B78" maxlength="64" />
+          <span class="text-2xl font-bold pb-1">= ?</span>
+        </div>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcOp()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearOp()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resOp" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-5 mt-6" id="hex2decimal">
+        <h2 class="text-xl font-bold mb-4">Convert Hexadecimal Value to Decimal Value</h2>
+        <label class="block"><span class="text-sm font-medium text-slate-600">Hexadecimal Value:</span>
+          <span class="flex items-end gap-2 mt-1"><input id="b2dnumber1" class="fin flex-1" value="DAD" maxlength="64" /><span class="text-2xl font-bold pb-1">= ?</span></span></label>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcH2d()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearH2d()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resH2d" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-5 mt-6" id="decimal2hex">
+        <h2 class="text-xl font-bold mb-4">Convert Decimal Value to Hexadecimal Value</h2>
+        <label class="block"><span class="text-sm font-medium text-slate-600">Decimal Value:</span>
+          <span class="flex items-end gap-2 mt-1"><input id="d2bnumber1" class="fin flex-1" value="170" /><span class="text-2xl font-bold pb-1">= ?</span></span></label>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcD2h()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearD2h()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resD2h" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-3">The Hexadecimal System</h2>
+        <p class="text-slate-600">The hexadecimal number system (hex) functions virtually identically to the decimal and binary systems — it simply uses a base of 16 instead of 10 or 2. Hex uses the digits 0–9 as decimal does, plus the letters A, B, C, D, E, and F to represent the values 10–15 (lowercase a–f mean the same). Every hex digit represents exactly 4 binary digits, called a nibble, which makes large binary numbers much simpler to write: the binary value 1010101010 is just 2AA in hex. This is why computers use hex to compress large binary values into a form that converts easily between the two systems.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Hex/Decimal Conversion</h3>
+        <table class="ctable"><tr><th>Hex</th><th>Binary</th><th>Decimal</th></tr>
+          <tr><td>0</td><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td><td>1</td></tr><tr><td>2</td><td>10</td><td>2</td></tr><tr><td>3</td><td>11</td><td>3</td></tr><tr><td>4</td><td>100</td><td>4</td></tr><tr><td>5</td><td>101</td><td>5</td></tr><tr><td>6</td><td>110</td><td>6</td></tr><tr><td>7</td><td>111</td><td>7</td></tr><tr><td>8</td><td>1000</td><td>8</td></tr><tr><td>9</td><td>1001</td><td>9</td></tr><tr><td>A</td><td>1010</td><td>10</td></tr><tr><td>B</td><td>1011</td><td>11</td></tr><tr><td>C</td><td>1100</td><td>12</td></tr><tr><td>D</td><td>1101</td><td>13</td></tr><tr><td>E</td><td>1110</td><td>14</td></tr><tr><td>F</td><td>1111</td><td>15</td></tr><tr><td>14</td><td>10100</td><td>20</td></tr><tr><td>3F</td><td>111111</td><td>63</td></tr>
+        </table>
+        <h3 class="text-lg font-bold mt-6 mb-2">Converting between hex and decimal</h3>
+        <p class="text-slate-600">Converting between decimal and hex uses the place values of each system, in much the same way as <a class="text-[#3F51B5] font-medium hover:underline" href="/binary">binary conversion</a>. In 2AA, the rightmost A is the ones place (16<sup>0</sup>), the next A is the 16<sup>1</sup> place, and the 2 is the 16<sup>2</sup> place. Since A counts as 10: 2AA = (2 × 16<sup>2</sup>) + (A × 16<sup>1</sup>) + (A × 16<sup>0</sup>) = (2 × 256) + (10 × 16) + (10 × 1) = 512 + 160 + 10 = <b>682</b>. The same method works for any hex value — for example, 1024 = (1 × 16<sup>3</sup>) + (0 × 16<sup>2</sup>) + (2 × 16<sup>1</sup>) + (4 × 16<sup>0</sup>) = 4096 + 0 + 32 + 4 = 4132.</p>
+        <p class="text-slate-600 mt-3">Going the other way, from decimal to hex: find the largest power of 16 that fits in the number, note how many times it goes in — that count is the digit for that place — subtract that many times the power, and repeat with the remainder until 16 is larger than what is left; the final remainder is the 16<sup>0</sup> digit. For 1500: the largest power is 16<sup>2</sup> = 256, and 256 × 5 = 1280, leaving 220; 16 × 13 = 208, leaving 12; 12 is the ones digit. So 1500 = (5 × 16<sup>2</sup>) + (13 × 16<sup>1</sup>) + (12 × 16<sup>0</sup>), and since 13 is D and 12 is C, 1500 is <b>5DC</b> in hex.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Hex Addition</h3>
+        <p class="text-slate-600">Hex addition follows the decimal rules, with the letter numerals A–F as the only extra ingredient — it helps to keep their decimal values (10–15) in mind. Work column by column in decimal and convert back: in the calculator's default example, B + 8 = 11 + 8 = 19, and 19 is 13 in hex, so write 3 and carry 1; the next column is 1 + A (10) + 7 = 18, which is 12 in hex — write 2, carry 1; the last column is 1 + 8 + B (11) = 20, which is 14 in hex. So 8AB + B78 = <b>1423</b>.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Hex Subtraction</h3>
+        <p class="text-slate-600">Subtraction works the same way, except for borrowing: <b>a borrowed "1" in hex is worth 16, not 10</b>, because the column it comes from is 16 times larger. In 5DC − 3AF, the first column has C (12) − F (15), so borrow from the D: D becomes C, and the first column computes 16 + 12 − 15 = 13, which is D. The remaining columns need no borrowing: C − A = 2 and 5 − 3 = 2, giving <b>22D</b>. If the number being subtracted is larger, swap the two, subtract, and put a negative sign on the result — 3AF − 5DC = −22D.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Hex Multiplication</h3>
+        <p class="text-slate-600">Multiplication is the trickiest of the four by hand, because the products are bigger and constant conversion between hex and decimal is needed at each step — a multiplication table (below) helps. The method is otherwise the familiar one: multiply by each digit, convert each partial result to hex, shift, and add. For example, FA × C3: 3 × A = 1E and 3 × F = 2D with the carry makes 2EE for the first row; C × A = 78 and C × F = BB for the second row (BB80); adding gives <b>BE6E</b>.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Hex Division</h3>
+        <p class="text-slate-600">Long division in hex is identical to long division in decimal, except that the multiplications and subtractions along the way are done in hex (converting to decimal, dividing, and converting back also works). For example, FACE ÷ 12 proceeds: 12 × D = EA, FA − EA = 10; bring down C, 12 × E = 10C, 10C − FC = 10; bring down E, 12 × F = 10E, remainder 0 — quotient <b>DEF</b>. Remember that borrowing during the hex subtractions moves 16, not 10.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Hexadecimal Multiplication Table</h3>
+        <div class="overflow-x-auto pb-2"><table class="multT"><tr><th>×</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>1</th><th>0</th></tr><tr><th>1</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>10</td></tr><tr><th>2</th><td>2</td><td>4</td><td>6</td><td>8</td><td>A</td><td>C</td><td>E</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td><td>1A</td><td>1C</td><td>1E</td><td>20</td></tr><tr><th>3</th><td>3</td><td>6</td><td>9</td><td>C</td><td>F</td><td>12</td><td>15</td><td>18</td><td>1B</td><td>1E</td><td>21</td><td>24</td><td>27</td><td>2A</td><td>2D</td><td>30</td></tr><tr><th>4</th><td>4</td><td>8</td><td>C</td><td>10</td><td>14</td><td>18</td><td>1C</td><td>20</td><td>24</td><td>28</td><td>2C</td><td>30</td><td>34</td><td>38</td><td>3C</td><td>40</td></tr><tr><th>5</th><td>5</td><td>A</td><td>F</td><td>14</td><td>19</td><td>1E</td><td>23</td><td>28</td><td>2D</td><td>32</td><td>37</td><td>3C</td><td>41</td><td>46</td><td>4B</td><td>50</td></tr><tr><th>6</th><td>6</td><td>C</td><td>12</td><td>18</td><td>1E</td><td>24</td><td>2A</td><td>30</td><td>36</td><td>3C</td><td>42</td><td>48</td><td>4E</td><td>54</td><td>5A</td><td>60</td></tr><tr><th>7</th><td>7</td><td>E</td><td>15</td><td>1C</td><td>23</td><td>2A</td><td>31</td><td>38</td><td>3F</td><td>46</td><td>4D</td><td>54</td><td>5B</td><td>62</td><td>69</td><td>70</td></tr><tr><th>8</th><td>8</td><td>10</td><td>18</td><td>20</td><td>28</td><td>30</td><td>38</td><td>40</td><td>48</td><td>50</td><td>58</td><td>60</td><td>68</td><td>70</td><td>78</td><td>80</td></tr><tr><th>9</th><td>9</td><td>12</td><td>1B</td><td>24</td><td>2D</td><td>36</td><td>3F</td><td>48</td><td>51</td><td>5A</td><td>63</td><td>6C</td><td>75</td><td>7E</td><td>87</td><td>90</td></tr><tr><th>A</th><td>A</td><td>14</td><td>1E</td><td>28</td><td>32</td><td>3C</td><td>46</td><td>50</td><td>5A</td><td>64</td><td>6E</td><td>78</td><td>82</td><td>8C</td><td>96</td><td>A0</td></tr><tr><th>B</th><td>B</td><td>16</td><td>21</td><td>2C</td><td>37</td><td>42</td><td>4D</td><td>58</td><td>63</td><td>6E</td><td>79</td><td>84</td><td>8F</td><td>9A</td><td>A5</td><td>B0</td></tr><tr><th>C</th><td>C</td><td>18</td><td>24</td><td>30</td><td>3C</td><td>48</td><td>54</td><td>60</td><td>6C</td><td>78</td><td>84</td><td>90</td><td>9C</td><td>A8</td><td>B4</td><td>C0</td></tr><tr><th>D</th><td>D</td><td>1A</td><td>27</td><td>34</td><td>41</td><td>4E</td><td>5B</td><td>68</td><td>75</td><td>82</td><td>8F</td><td>9C</td><td>A9</td><td>B6</td><td>C3</td><td>D0</td></tr><tr><th>E</th><td>E</td><td>1C</td><td>2A</td><td>38</td><td>46</td><td>54</td><td>62</td><td>70</td><td>7E</td><td>8C</td><td>9A</td><td>A8</td><td>B6</td><td>C4</td><td>D2</td><td>E0</td></tr><tr><th>F</th><td>F</td><td>1E</td><td>2D</td><td>3C</td><td>4B</td><td>5A</td><td>69</td><td>78</td><td>87</td><td>96</td><td>A5</td><td>B4</td><td>C3</td><td>D2</td><td>E1</td><td>F0</td></tr><tr><th>10</th><td>10</td><td>20</td><td>30</td><td>40</td><td>50</td><td>60</td><td>70</td><td>80</td><td>90</td><td>A0</td><td>B0</td><td>C0</td><td>D0</td><td>E0</td><td>F0</td><td>100</td></tr></table></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div class="space-y-4 text-slate-600">
+          <div><h3 class="font-semibold text-slate-800">How do you convert hex to decimal?</h3><p>Multiply each hex digit by its place value — powers of 16 starting from 16<sup>0</sup> on the right — and add the results, counting A through F as 10 through 15. For example, 2AA = (2 × 256) + (10 × 16) + (10 × 1) = 682.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How do you convert decimal to hex?</h3><p>Find the largest power of 16 that fits in the number, count how many times it goes in (that count is the hex digit for that place), subtract, and repeat with the remainder. For example, 1500 = (5 × 256) + (13 × 16) + 12, and since 13 is D and 12 is C, 1500 is 5DC in hex.</p></div>
+          <div><h3 class="font-semibold text-slate-800">Why is hexadecimal used in computing?</h3><p>Each hex digit represents exactly 4 binary digits (a nibble), so long binary values compress into short hex strings that convert back exactly — the binary value 1010101010 is simply 2AA in hex. Memory addresses, color codes, and byte values are therefore usually written in hex.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How does hex addition work?</h3><p>Add column by column as in decimal, converting A–F to 10–15 as needed, and carry 1 to the next column whenever a column totals 16 or more. For example, B + 8 = 19 in decimal, which is 13 in hex: write 3, carry 1.</p></div>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/binary">Binary Calculator</a></li>
+          <li><a class="hover:underline" href="/ip-subnet">IP Subnet Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">Exact at any size</h3>
+        <p>All arithmetic here is exact integer arithmetic, so long hex values convert and compute without the rounding that floating-point tools show at that scale.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+function hexPrint(v) {
+  const neg = v < 0n;
+  return (neg ? '-' : '') + (neg ? -v : v).toString(16).toUpperCase();
+}
+function parseHex(s) { /* BigInt or null when invalid; empty counts as 0 */
+  s = s.trim();
+  if (s === '') return 0n;
+  if (!/^[0-9a-fA-F]+$/.test(s)) return null;
+  return BigInt('0x' + s);
+}
+function showRes(id, html) { const e = document.getElementById(id); e.innerHTML = html; e.classList.remove('hidden'); }
+function resBlock(lines, share) {
+  return '<div class="bg-[#3F51B5] text-white font-bold rounded-lg px-4 py-3"><div class="text-base mb-1">Result</div>' +
+    lines.map(l => '<div class="eq">' + l + '</div>').join('') + '</div>' + share;
+}
+function opGlyph(op) { return op === '-' ? '−' : op === 'x' ? '×' : op === '/' ? '÷' : '+'; }
+function calcOp() {
+  const n1 = document.getElementById('number1').value, n2 = document.getElementById('number2').value;
+  const op = document.getElementById('c2op').value;
+  const a = parseHex(n1), b = parseHex(n2);
+  if (a === null || b === null) return showRes('resOp', resBlock(['Please enter hexadecimal values using only the digits 0-9 and A-F.'], shareOp()));
+  if (op === '/' && b === 0n) return showRes('resOp', resBlock(['Cannot divide by zero.'], shareOp()));
+  const g = opGlyph(op);
+  let rh, rd;
+  if (op === '+') { rh = hexPrint(a + b); rd = (a + b).toString(); }
+  else if (op === '-') { rh = hexPrint(a - b); rd = (a - b).toString(); }
+  else if (op === 'x') { rh = hexPrint(a * b); rd = (a * b).toString(); }
+  else {
+    const q = a / b, r = a % b;
+    rh = hexPrint(q) + (r !== 0n ? ' Remainder : ' + hexPrint(r) : '');
+    rd = q.toString() + (r !== 0n ? ' Remainder : ' + r.toString() : '');
+  }
+  showRes('resOp', resBlock([
+    'Hex value: ' + n1.trim() + ' ' + g + ' ' + n2.trim() + ' = ' + rh,
+    'Decimal value: ' + a.toString() + ' ' + g + ' ' + b.toString() + ' = ' + rd], shareOp()));
+}
+function calcH2d() {
+  const v = parseHex(document.getElementById('b2dnumber1').value);
+  if (v === null) return showRes('resH2d', resBlock(['Please enter a hexadecimal value using only the digits 0-9 and A-F.'], shareH2d()));
+  showRes('resH2d', resBlock(['Decimal value: ' + v.toString()], shareH2d()));
+}
+function calcD2h() {
+  const s = document.getElementById('d2bnumber1').value.trim();
+  if (!/^[+-]?(\d+(\.\d*)?|\.\d+)$/.test(s)) return showRes('resD2h', resBlock(['Please enter a decimal value.'], shareD2h()));
+  const neg = s.startsWith('-');
+  const intPart = s.replace(/^[+-]/, '').split('.')[0] || '0';
+  let v = BigInt(intPart);
+  if (neg) v = -v;
+  showRes('resD2h', resBlock(['Hexadecimal value: ' + hexPrint(v)], shareD2h()));
+}
+function shareBtn(fn, span) {
+  return '<div class="mt-4"><button onclick="' + fn + '" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="' + span + '" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function shareOp() { return shareBtn('copyOp()', 'shOp'); }
+function shareH2d() { return shareBtn('copyH2d()', 'shH2d'); }
+function shareD2h() { return shareBtn('copyD2h()', 'shD2h'); }
+function doShare(params, span) {
+  const u = new URL(location.href); u.search = ''; u.hash = '';
+  for (const k in params) u.searchParams.set(k, params[k]);
+  const done = () => { document.getElementById(span).textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+function copyOp() { doShare({ calctype: 'op', number1: document.getElementById('number1').value, c2op: document.getElementById('c2op').value, number2: document.getElementById('number2').value }, 'shOp'); }
+function copyH2d() { doShare({ calctype: 'b2d', b2dnumber1: document.getElementById('b2dnumber1').value }, 'shH2d'); }
+function copyD2h() { doShare({ calctype: 'd2b', d2bnumber1: document.getElementById('d2bnumber1').value }, 'shD2h'); }
+function clearOp() { document.getElementById('number1').value = '8AB'; document.getElementById('number2').value = 'B78'; document.getElementById('c2op').value = '+'; hideRes('resOp'); }
+function clearH2d() { document.getElementById('b2dnumber1').value = 'DAD'; hideRes('resH2d'); }
+function clearD2h() { document.getElementById('d2bnumber1').value = '170'; hideRes('resD2h'); }
+function hideRes(id) { const r = document.getElementById(id); r.classList.add('hidden'); r.innerHTML = ''; }
+(function () {
+  const q = new URLSearchParams(location.search);
+  const ct = q.get('calctype');
+  if (ct === 'op') {
+    if (q.has('number1')) document.getElementById('number1').value = q.get('number1');
+    if (q.has('number2')) document.getElementById('number2').value = q.get('number2');
+    if (q.has('c2op')) document.getElementById('c2op').value = q.get('c2op');
+    calcOp();
+  } else if (ct === 'b2d') {
+    if (q.has('b2dnumber1')) document.getElementById('b2dnumber1').value = q.get('b2dnumber1');
+    calcH2d();
+  } else if (ct === 'd2b') {
+    if (q.has('d2bnumber1')) document.getElementById('d2bnumber1').value = q.get('d2bnumber1');
+    calcD2h();
+  }
+})();
+</script>
+
+</body>
+  </html>
