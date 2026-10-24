@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rounding Calculator — Round to Nearest, Fractions &amp; 9 Modes | CalcNova</title>
+<meta name="description" content="Free rounding calculator: round numbers to tenths, hundredths, thousands, millions, or fractions like 1/8, using nearest, half up/down, ceiling, floor, half to even/odd, and half away/towards zero modes." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/rounding" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.05rem;padding:.5rem .6rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .eq{font-size:1.2rem;line-height:1.8;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .frac{display:inline-block;vertical-align:middle;text-align:center;margin:0 .12em}
+  .frac>span{display:block;padding:0 .25em;line-height:1.3;font-size:.92em}
+  .frac .top{border-bottom:1.5px solid currentColor}
+  .rtable{border-collapse:collapse;margin:.5rem auto 1rem}
+  .rtable td{padding:.15rem 1.1rem;text-align:center;font-size:1.05rem}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What does \"round half up\" mean?","acceptedAnswer":{"@type":"Answer","text":"Values exactly halfway between the two rounding candidates go to the larger (more positive) one: 5.5 rounds to 6 and -5.5 rounds to -5. Round half down is the mirror image: 5.5 rounds to 5 and -5.5 to -6."}},
+{"@type":"Question","name":"What is the difference between \"round to the nearest\" and \"round half away from zero\"?","acceptedAnswer":{"@type":"Answer","text":"On this calculator they agree: non-tie values go to the closest candidate, and exact halves go away from zero — 5.5 to 6 and -5.5 to -6. \"Round half away from zero\" simply names that tie rule explicitly."}},
+{"@type":"Question","name":"Why does 2.675 round to 2.68 here?","acceptedAnswer":{"@type":"Answer","text":"Because the rounding is done on the decimal value you typed: 2.675 is exactly halfway between 2.67 and 2.68, and the default tie rule sends it away from zero, to 2.68. (Software that rounds the binary floating-point approximation instead sometimes gives 2.67, because 2.675 is stored as slightly less.)"}},
+{"@type":"Question","name":"What is round half to even (bankers' rounding)?","acceptedAnswer":{"@type":"Answer","text":"Exact halves go to the candidate whose last kept digit is even: 5.5 rounds to 6 but 6.5 rounds to 6, and 0.125 to the nearest hundredth is 0.12. Over many roundings this cancels the upward bias of always rounding halves up, which is why banks and statisticians use it."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Rounding Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Rounding Calculator</h1>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2">
+      <section class="bg-white rounded-xl shadow p-5">
+        <label class="block text-sm font-semibold text-slate-500">Number</label>
+        <input id="cnum" class="fin mt-1" value="" />
+        <label class="block text-sm font-semibold text-slate-500 mt-4">Precision</label>
+        <div id="cpreWrap">
+          <select id="cpre" class="fin mt-1">
+            <optgroup label="Decimal">
+              <option value="1">Tenths (1)</option>
+              <option value="2">Hundredths (2)</option>
+              <option value="3">Thousandths (3)</option>
+              <option value="4">Ten Thousandths (4)</option>
+              <option value="5">Hundred Thousandths (5)</option>
+              <option value="6">Millionths (6)</option>
+            </optgroup>
+            <optgroup label="Whole Number">
+              <option value="0" selected>Ones (0)</option>
+              <option value="-1">Tens (-1)</option>
+              <option value="-2">Hundreds (-2)</option>
+              <option value="-3">Thousands (-3)</option>
+              <option value="-6">Millions (-6)</option>
+            </optgroup>
+            <optgroup label="Fraction">
+              <option value="12">1/2</option>
+              <option value="14">1/4</option>
+              <option value="18">1/8</option>
+              <option value="116">1/16</option>
+              <option value="132">1/32</option>
+              <option value="164">1/64</option>
+            </optgroup>
+          </select>
+        </div>
+        <div id="cprenWrap" class="hidden">
+          <input id="cpren" type="number" class="fin mt-1" min="-1000" max="1000" value="2" />
+          <p class="text-xs text-slate-400 mt-1">Precision of -1000 to 1000 digits</p>
+        </div>
+        <div class="mt-4 border border-slate-200 rounded-lg p-4">
+          <div class="font-bold text-slate-700 mb-2">Settings</div>
+          <label class="block text-sm font-semibold text-slate-500">Rounding Mode:</label>
+          <select id="cmode" class="fin mt-1">
+            <option value="nearest" selected>Round to the nearest (default)</option>
+            <option value="up">Round half up</option>
+            <option value="down">Round half down</option>
+            <option value="ceil">Round up (ceiling)</option>
+            <option value="floor">Round down (floor)</option>
+            <option value="even">Round half to even</option>
+            <option value="odd">Round half to odd</option>
+            <option value="away">Round half away from zero</option>
+            <option value="toward">Round half towards zero</option>
+          </select>
+          <label class="block text-sm font-semibold text-slate-500 mt-3">Rounding Precision:</label>
+          <div class="mt-1 space-y-1 text-slate-600">
+            <label class="block"><input type="radio" name="sp" value="0" checked onclick="shPrec()" /> Select a precision level</label>
+            <label class="block"><input type="radio" name="sp" value="1" onclick="shPrec()" /> Input a precision level</label>
+          </div>
+        </div>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcRound()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearRound()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resRound" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-3">Rounding Methods</h2>
+        <p class="text-slate-600">Rounding a number involves replacing the number with an approximation of the number that results in a shorter, simpler, or more explicit representation of said number based on specific rounding definitions. For example, if rounding the number 2.7 to the nearest integer, 2.7 would be rounded to 3.</p>
+        <p class="text-slate-600 mt-3">There are various rounding definitions that can be used to round a number. The calculator defaults to rounding to the nearest integer, but settings can be changed to use other rounding modes and levels of precision. All the rounding modes the calculator is capable of are described below.</p>
+        <h3 class="text-lg font-bold mt-5 mb-1">Round half up</h3>
+        <p class="text-slate-600">This rounding method is one of the more common rounding methods used. It means rounding values that are halfway between the chosen rounding precision up. For example, when rounding to the ones place:</p>
+        <table class="rtable"><tr><td>5.50</td><td>⇒</td><td>6</td></tr><tr><td>5.51</td><td>⇒</td><td>6</td></tr><tr><td>5.49</td><td>⇒</td><td>5</td></tr></table>
+        <p class="text-slate-600">When the value being rounded is negative, the definition is somewhat ambiguous. Some round −5.5 to −5, some round to −6. We agree here the "up" can be thought of as rounding values that are halfway towards the bigger or more positive value. For example, when rounding to the ones place:</p>
+        <table class="rtable"><tr><td>-5.50</td><td>⇒</td><td>-5</td></tr><tr><td>-5.51</td><td>⇒</td><td>-6</td></tr><tr><td>-5.49</td><td>⇒</td><td>-5</td></tr></table>
+        <h3 class="text-lg font-bold mt-5 mb-1">Round half down</h3>
+        <p class="text-slate-600">Rounding half down is similar to rounding half up, except that it means rounding values that are halfway between the chosen rounding precision down, rather than up. For example, when rounding to the ones place:</p>
+        <table class="rtable"><tr><td>5.50</td><td>⇒</td><td>5</td></tr><tr><td>5.51</td><td>⇒</td><td>6</td></tr><tr><td>5.49</td><td>⇒</td><td>5</td></tr></table>
+        <p class="text-slate-600">In the case of negative numbers, same as rounding half up, the definition is ambiguous. We agree here rounding half down can be thought of as rounding values that are halfway towards the smaller or more negative value. For example, when rounding to the ones place:</p>
+        <table class="rtable"><tr><td>-5.50</td><td>⇒</td><td>-6</td></tr><tr><td>-5.51</td><td>⇒</td><td>-6</td></tr><tr><td>-5.49</td><td>⇒</td><td>-5</td></tr></table>
+        <h3 class="text-lg font-bold mt-5 mb-1">Round up (ceiling)</h3>
+        <p class="text-slate-600">Rounding up, sometimes referred to as "taking the ceiling" of a number means rounding up towards the nearest integer. For example, when rounding to the ones place, any non-integer value will be rounded up to the next highest integer:</p>
+        <table class="rtable"><tr><td>5.01</td><td>⇒</td><td>6</td></tr></table>
+        <p class="text-slate-600">In the case of negative numbers, rounding up means rounding a non-integer negative number to its next closest, more positive integer. For example:</p>
+        <table class="rtable"><tr><td>-5.01</td><td>⇒</td><td>-5</td></tr><tr><td>-5.50</td><td>⇒</td><td>-5</td></tr><tr><td>-5.99</td><td>⇒</td><td>-5</td></tr></table>
+        <h3 class="text-lg font-bold mt-5 mb-1">Round down (floor)</h3>
+        <p class="text-slate-600">Rounding down, sometimes referred to as "taking the floor" of a number means rounding down towards the nearest integer. For example, when rounding to the ones place, any non-integer value will be rounded down to the next lowest integer:</p>
+        <table class="rtable"><tr><td>5.99</td><td>⇒</td><td>5</td></tr></table>
+        <p class="text-slate-600">In the case of negative numbers, rounding down means rounding a non-integer negative number to its next nearest, more negative integer. For example:</p>
+        <table class="rtable"><tr><td>-5.01</td><td>⇒</td><td>-6</td></tr><tr><td>-5.50</td><td>⇒</td><td>-6</td></tr><tr><td>-5.99</td><td>⇒</td><td>-6</td></tr></table>
+        <h3 class="text-lg font-bold mt-5 mb-1">Round half to even</h3>
+        <p class="text-slate-600">Rounding half to even can be used as a tie-breaking rule since it does not have any biases based on positive or negative numbers or rounding towards or away from zero, as some of the other rounding methods do. For this method, half values are rounded to the nearest even integer. For example:</p>
+        <table class="rtable"><tr><td>5.5</td><td>⇒</td><td>6</td></tr><tr><td>6.5</td><td>⇒</td><td>6</td></tr><tr><td>-7.5</td><td>⇒</td><td>-8</td></tr><tr><td>-8.5</td><td>⇒</td><td>-8</td></tr></table>
+        <h3 class="text-lg font-bold mt-5 mb-1">Round half to odd</h3>
+        <p class="text-slate-600">Rounding half to odd is similar to rounding half to even (above), and can be used as a tie-breaking rule. For this method, half values are rounded to the nearest odd integer. For example:</p>
+        <table class="rtable"><tr><td>5.5</td><td>⇒</td><td>5</td></tr><tr><td>6.5</td><td>⇒</td><td>7</td></tr><tr><td>-7.5</td><td>⇒</td><td>-7</td></tr><tr><td>-8.5</td><td>⇒</td><td>-9</td></tr></table>
+        <h3 class="text-lg font-bold mt-5 mb-1">Round half away from zero</h3>
+        <p class="text-slate-600">Rounding half away from zero can be used as a tie-breaking rule, and means exactly as the phrase describes: rounding half values away from zero. It has no biases towards positive or negative numbers, but does have a bias away from zero. Another way to think about this rounding method is to round a half value towards the next integer closer to positive or negative infinity based on whether the value is positive or negative, respectively. For example:</p>
+        <table class="rtable"><tr><td>5.5</td><td>⇒</td><td>6</td></tr><tr><td>-5.5</td><td>⇒</td><td>-6</td></tr></table>
+        <h3 class="text-lg font-bold mt-5 mb-1">Round half towards zero</h3>
+        <p class="text-slate-600">Rounding half towards zero is similar to rounding half away from zero, except that it rounds in the opposite direction. It has no biases towards positive or negative numbers, but does have a bias towards zero. The method means that half values will be rounded towards the next integer that is closer to zero than it is to positive or negative infinity. For example:</p>
+        <table class="rtable"><tr><td>5.5</td><td>⇒</td><td>5</td></tr><tr><td>-5.5</td><td>⇒</td><td>-5</td></tr></table>
+        <h3 class="text-lg font-bold mt-5 mb-1">Rounding to fractions</h3>
+        <p class="text-slate-600">Rounding to fractions involves rounding a given value to the nearest multiple of the chosen fraction. For example, rounding to the nearest 1/8:</p>
+        <table class="rtable">
+          <tr><td>15.65</td><td>⇒</td><td id="fx1"></td></tr>
+          <tr><td>15.70</td><td>⇒</td><td id="fx2"></td></tr>
+          <tr><td>15.80</td><td>⇒</td><td id="fx3"></td></tr>
+        </table>
+        <p class="text-slate-600">This can be particularly useful in the context of engineering, where fractions are widely used to describe the size of components such as pipes and bolts.</p>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div class="space-y-4 text-slate-600">
+          <div><h3 class="font-semibold text-slate-800">What does "round half up" mean?</h3><p>Values exactly halfway between the two rounding candidates go to the larger (more positive) one: 5.5 rounds to 6 and −5.5 rounds to −5. Round half down is the mirror image: 5.5 rounds to 5 and −5.5 to −6.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What is the difference between "round to the nearest" and "round half away from zero"?</h3><p>On this calculator they agree: non-tie values go to the closest candidate, and exact halves go away from zero — 5.5 to 6 and −5.5 to −6. "Round half away from zero" simply names that tie rule explicitly.</p></div>
+          <div><h3 class="font-semibold text-slate-800">Why does 2.675 round to 2.68 here?</h3><p>Because the rounding is done on the decimal value you typed: 2.675 is exactly halfway between 2.67 and 2.68, and the default tie rule sends it away from zero, to 2.68. (Software that rounds the binary floating-point approximation instead sometimes gives 2.67, because 2.675 is stored as slightly less.)</p></div>
+          <div><h3 class="font-semibold text-slate-800">What is round half to even (bankers' rounding)?</h3><p>Exact halves go to the candidate whose last kept digit is even: 5.5 rounds to 6 but 6.5 rounds to 6, and 0.125 to the nearest hundredth is 0.12. Over many roundings this cancels the upward bias of always rounding halves up, which is why banks and statisticians use it.</p></div>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/fraction">Fraction Calculator</a></li>
+          <li><a class="hover:underline" href="/percent">Percentage Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">Why so many modes?</h3>
+        <p>Always rounding halves up inflates totals over large datasets — invoices, grades, measurements. Half-to-even is the standard fix in finance and statistics because the even/odd split makes tie errors cancel out on average.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+/* Exact decimal parsing: returns {neg, digits (string, no leading zeros), exp10}
+   with value = +/- digits * 10^(exp10 - (digits.length - 1)) normalized, plus
+   num/den BigInts for the exact rational. */
+function parseDecimal(str) {
+  const m = /^([+-]?)(\d*)(?:\.(\d*))?(?:[eE]([+-]?\d+))?$/.exec(str.trim());
+  if (!m) return null;
+  const intPart = m[2] || '', fracPart = m[3] || '';
+  if (intPart === '' && fracPart === '') return null;
+  let digits = (intPart + fracPart).replace(/^0+/, '');
+  let exp10; /* value = 0.digits * 10^exp10 form via pointPos */
+  let pointPos = intPart.length + (m[4] ? parseInt(m[4], 10) : 0);
+  const leadingZeros = (intPart + fracPart).length - (intPart + fracPart).replace(/^0+/, '').length - 0;
+  if (digits === '') return { zero: true, neg: false };
+  /* adjust pointPos by stripped leading zeros */
+  const raw = intPart + fracPart;
+  let firstSig = 0; while (raw[firstSig] === '0') firstSig++;
+  pointPos -= firstSig;
+  const trailing = digits.length;
+  digits = digits.replace(/0+$/, '');
+  return { zero: false, neg: m[1] === '-', digits, pointPos, scaleDigits: trailing };
+  /* value = digits(as integer) * 10^(pointPos - trailingBeforeTrim) -- computed in toRational */
+}
+function toRational(p) {
+  if (p.zero) return { num: 0n, den: 1n };
+  const raw = p.digits;
+  /* value = raw * 10^(pointPos - raw.length) at first significant digit basis:
+     digits are significant digits; exponent of last digit = pointPos - raw.length */
+  const e = BigInt(p.pointPos - raw.length);
+  let num = BigInt(raw), den = 1n;
+  if (e >= 0n) num *= 10n ** e; else den = 10n ** (-e);
+  if (p.neg) num = -num;
+  return { num, den };
+}
+function echoPHP(p) {
+  if (p.zero) return '0';
+  /* 14 significant digits, PHP-style */
+  let d = p.digits;
+  let pp = p.pointPos;
+  if (d.length > 14) {
+    const keep = d.slice(0, 14), rest = d.slice(14);
+    d = keep;
+    if (rest[0] >= '5') {
+      d = (BigInt(keep) + 1n).toString();
+      if (d.length > 14) { d = d.slice(0, 14); pp += 1; }
+    }
+  }
+  d = d.replace(/0+$/, '') || '0';
+  const exp10 = pp - 1;
+  let out;
+  if (exp10 >= -4 && exp10 < 14) {
+    if (pp <= 0) out = '0.' + '0'.repeat(-pp) + d;
+    else if (pp >= d.length) out = d + '0'.repeat(pp - d.length);
+    else out = d.slice(0, pp) + '.' + d.slice(pp);
+  } else {
+    const mant = d.length > 1 ? d[0] + '.' + d.slice(1) : d;
+    const e = (exp10 < 0 ? '-' : '+') + String(Math.abs(exp10)).padStart(2, '0');
+    out = mant + 'e' + e;
+  }
+  return (p.neg ? '-' : '') + out;
+}
+/* Round rational num/den to a multiple of stepNum/stepDen under mode.
+   Returns BigInt k such that result = k * stepNum/stepDen scaled so that
+   step is 1 unit: caller passes scaled rational v = x / step as num/den. */
+function roundScaled(num, den, mode) { /* den > 0 */
+  const neg = num < 0n;
+  const a = neg ? -num : num;
+  let lo = a / den; const rem = a % den;
+  if (rem === 0n) return neg ? -lo : lo; /* exact multiple */
+  let kAbs;
+  const cmp = (2n * rem > den) ? 1 : (2n * rem === den ? 0 : -1);
+  const loEven = lo % 2n === 0n;
+  const ceilAbs = lo + 1n, floorAbs = lo;
+  switch (mode) {
+    case 'ceil': kAbs = neg ? floorAbs : ceilAbs; return neg ? -kAbs : kAbs;
+    case 'floor': kAbs = neg ? ceilAbs : floorAbs; return neg ? -kAbs : kAbs;
+    case 'up': /* ties toward +inf */
+      if (cmp > 0) kAbs = ceilAbs; else if (cmp < 0) kAbs = floorAbs; else kAbs = neg ? floorAbs : ceilAbs;
+      return neg ? -kAbs : kAbs;
+    case 'down': /* ties toward -inf */
+      if (cmp > 0) kAbs = ceilAbs; else if (cmp < 0) kAbs = floorAbs; else kAbs = neg ? ceilAbs : floorAbs;
+      return neg ? -kAbs : kAbs;
+    case 'even':
+      if (cmp > 0) kAbs = ceilAbs; else if (cmp < 0) kAbs = floorAbs; else kAbs = loEven ? floorAbs : ceilAbs;
+      return neg ? -kAbs : kAbs;
+    case 'odd':
+      if (cmp > 0) kAbs = ceilAbs; else if (cmp < 0) kAbs = floorAbs; else kAbs = loEven ? ceilAbs : floorAbs;
+      return neg ? -kAbs : kAbs;
+    case 'toward':
+      if (cmp > 0) kAbs = ceilAbs; else if (cmp < 0) kAbs = floorAbs; else kAbs = floorAbs;
+      return neg ? -kAbs : kAbs;
+    default: /* nearest & away: ties away from zero */
+      if (cmp > 0) kAbs = ceilAbs; else if (cmp < 0) kAbs = floorAbs; else kAbs = ceilAbs;
+      return neg ? -kAbs : kAbs;
+  }
+}
+function fmtScaledDecimal(k, prec) { /* k * 10^-prec as a trimmed decimal string */
+  const neg = k < 0n; let s = (neg ? -k : k).toString();
+  let out;
+  if (prec <= 0) out = s + '0'.repeat(-prec);
+  else {
+    s = s.padStart(prec + 1, '0');
+    const ip = s.slice(0, s.length - prec), fp = s.slice(s.length - prec).replace(/0+$/, '');
+    out = fp ? ip + '.' + fp : ip;
+  }
+  return (neg && out !== '0' ? '-' : '') + out;
+}
+function unitText(prec) {
+  if (prec === 0) return 'integer';
+  if (prec > 0) return '0.' + '0'.repeat(prec - 1) + '1';
+  return '1' + '0'.repeat(-prec);
+}
+const MODE_SUFFIX = {
+  nearest: '', up: ' using the half up method', down: ' using the half down method',
+  even: ' using the half to even method', odd: ' using the half to odd method',
+  away: ' using the half away from zero method', toward: ' using the half towards zero method'
+};
+const FRAC_DEN = { '12': 2, '14': 4, '18': 8, '116': 16, '132': 32, '164': 64 };
+function showRes(html) { const e = document.getElementById('resRound'); e.innerHTML = html; e.classList.remove('hidden'); }
+function banner(lines) {
+  return '<div class="bg-[#3F51B5] text-white font-bold rounded-lg px-4 py-3"><div class="text-base mb-1">Result</div>' +
+    lines.map(l => '<div class="eq">' + l + '</div>').join('') + '</div>' + shareRound();
+}
+function shPrec() {
+  const custom = document.querySelector('input[name="sp"]:checked').value === '1';
+  document.getElementById('cpreWrap').classList.toggle('hidden', custom);
+  document.getElementById('cprenWrap').classList.toggle('hidden', !custom);
+}
+function getPrec() {
+  const custom = document.querySelector('input[name="sp"]:checked').value === '1';
+  if (custom) {
+    const v = parseInt(document.getElementById('cpren').value, 10);
+    if (Number.isNaN(v)) return { err: 'Please provide a precision between -1000 and 1000.' };
+    return { prec: Math.max(-1000, Math.min(1000, v)) };
+  }
+  const sel = document.getElementById('cpre').value;
+  if (FRAC_DEN[sel]) return { frac: FRAC_DEN[sel] };
+  return { prec: parseInt(sel, 10) };
+}
+function calcRound() {
+  const rawStr = document.getElementById('cnum').value;
+  const p = parseDecimal(rawStr);
+  if (!p) return showRes(banner(['Please provide a valid number to round.']));
+  const { num, den } = toRational(p);
+  const mode = document.getElementById('cmode').value;
+  const pr = getPrec();
+  if (pr.err) return showRes(banner([pr.err]));
+  if (pr.frac) {
+    const D = BigInt(pr.frac);
+    const k = roundScaled(num * D, den, mode); /* result = k / D */
+    let html;
+    if (k === 0n) html = '0';
+    else {
+      const neg = k < 0n, a = neg ? -k : k;
+      const whole = a / D, rem = a % D;
+      if (rem === 0n) html = (neg ? '-' : '') + whole.toString();
+      else {
+        const frac = '<span class="frac"><span class="top">' + rem.toString() + '</span><span>' + D.toString() + '</span></span>';
+        html = whole === 0n ? (neg ? '-' : '') + frac : (neg ? '-' : '') + whole.toString() + ' ' + frac;
+      }
+    }
+    return showRes(banner([html]));
+  }
+  const prec = pr.prec;
+  /* scaled value v = x / 10^-prec = x * 10^prec */
+  let sNum = num, sDen = den;
+  if (prec >= 0) sNum = num * (10n ** BigInt(prec)); else sDen = den * (10n ** BigInt(-prec));
+  const k = roundScaled(sNum, sDen, mode);
+  const r = fmtScaledDecimal(k, prec);
+  const unit = unitText(prec);
+  let sentence;
+  if (mode === 'ceil') sentence = r + ' is the result of rounding ' + echoPHP(p) + ' up to the nearest ' + unit + '.';
+  else if (mode === 'floor') sentence = r + ' is the result of rounding ' + echoPHP(p) + ' down to the nearest ' + unit + '.';
+  else sentence = r + ' is the result of rounding ' + echoPHP(p) + ' to the nearest ' + unit + MODE_SUFFIX[mode] + '.';
+  return showRes(banner([sentence]));
+}
+function shareRound() {
+  return '<div class="mt-4"><button onclick="copyRound()" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="shRound" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function copyRound() {
+  const u = new URL(location.href); u.search = ''; u.hash = '';
+  u.searchParams.set('cnum', document.getElementById('cnum').value);
+  const custom = document.querySelector('input[name="sp"]:checked').value === '1';
+  u.searchParams.set('sp', custom ? '1' : '0');
+  if (custom) u.searchParams.set('cpren', document.getElementById('cpren').value);
+  else u.searchParams.set('cpre', document.getElementById('cpre').value);
+  u.searchParams.set('cmode', document.getElementById('cmode').value);
+  const done = () => { document.getElementById('shRound').textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+function clearRound() {
+  document.getElementById('cnum').value = '';
+  document.getElementById('cpre').value = '0';
+  document.getElementById('cmode').value = 'nearest';
+  document.querySelector('input[name="sp"][value="0"]').checked = true;
+  shPrec();
+  const r = document.getElementById('resRound'); r.classList.add('hidden'); r.innerHTML = '';
+}
+function fracHTMLs(num, den) { return '<span class="frac"><span class="top">' + num + '</span><span>' + den + '</span></span>'; }
+document.getElementById('fx1').innerHTML = '15 ' + fracHTMLs(5, 8) + ' = 15.625';
+document.getElementById('fx2').innerHTML = '15 ' + fracHTMLs(6, 8) + ' = 15.75';
+document.getElementById('fx3').innerHTML = '15 ' + fracHTMLs(6, 8) + ' = 15.75';
+(function () {
+  const q = new URLSearchParams(location.search);
+  if (q.has('cmode')) document.getElementById('cmode').value = q.get('cmode');
+  if (q.get('sp') === '1') {
+    document.querySelector('input[name="sp"][value="1"]').checked = true;
+    if (q.has('cpren')) document.getElementById('cpren').value = q.get('cpren');
+    shPrec();
+  } else if (q.has('cpre')) document.getElementById('cpre').value = q.get('cpre');
+  if (q.has('cnum')) { document.getElementById('cnum').value = q.get('cnum'); calcRound(); }
+})();
+</script>
+
+</body>
+  </html>
