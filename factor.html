@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Factor Calculator — Factors, Factor Pairs &amp; Prime Factors | CalcNova</title>
+<meta name="description" content="Free factor calculator: list all factors and factor pairs of an integer, its prime factorization, and a factor tree." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/factor" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.1rem;padding:.5rem .6rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .eq{font-size:1.15rem;line-height:1.8;overflow-wrap:anywhere}
+  .sline{font-size:1.08rem;line-height:1.9;overflow-wrap:anywhere}
+  .stepsbox{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:.75rem;padding:1rem 1.25rem;margin-top:1rem}
+  .tree{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.05rem;line-height:1.7;white-space:pre}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is a factor?","acceptedAnswer":{"@type":"Answer","text":"An integer a is a factor of another integer b if b can be divided by a with no remainder. The factors of 30 are 1, 2, 3, 5, 6, 10, 15, and 30 — each of them divides 30 exactly."}},
+{"@type":"Question","name":"What is prime factorization?","acceptedAnswer":{"@type":"Answer","text":"Prime factorization expresses a number as the product of prime numbers: 120 = 2 x 2 x 2 x 3 x 5. Every integer greater than 1 has exactly one prime factorization, which is why it is sometimes called the fundamental theorem of arithmetic."}},
+{"@type":"Question","name":"What is a factor tree?","acceptedAnswer":{"@type":"Answer","text":"A factor tree breaks a number down step by step: write the number, split off one factor pair, and keep splitting the composite parts until every branch ends in a prime. For 120: 120 = 60 x 2, 60 = 30 x 2, 30 = 15 x 2, 15 = 5 x 3."}},
+{"@type":"Question","name":"How many factors does a number have?","acceptedAnswer":{"@type":"Answer","text":"From the prime factorization: if n = p^a x q^b x ..., the number of factors is (a+1)(b+1)... For 120 = 2^3 x 3 x 5 that is 4 x 2 x 2 = 16 factors. A prime number has exactly 2 factors: 1 and itself."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Factor Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Factor Calculator</h1>
+  <p class="text-slate-600 mb-5 max-w-3xl">Please provide an integer to calculate its factors and prime factors.</p>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2">
+      <section class="bg-white rounded-xl shadow p-5">
+        <input id="cvar" class="fin" value="120" maxlength="14" />
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcFactor()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearFactor()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resFactor" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-3">What is a Factor?</h2>
+        <p class="text-slate-600">In multiplication, factors are the integers that are multiplied together to find other integers. For example, 6 × 5 = 30. In this example, 6 and 5 are the factors of 30. 1, 2, 3, 10, 15, and 30 would also be factors of 30. Essentially, an integer <b>a</b> is a factor of another integer <b>b</b>, so long as <b>b</b> can be divided by <b>a</b> with no remainder. Factors are important when working with fractions, as well as when trying to find patterns within numbers.</p>
+        <p class="text-slate-600 mt-3">Prime factorization involves finding the prime numbers that, when multiplied, return the number being addressed. For example, the prime factorization of 120 results in 2 × 2 × 2 × 3 × 5. It can be helpful to use a factor tree when computing the prime factorizations of numbers. Using 120:</p>
+        <div class="stepsbox"><div class="tree">120
+├─ 2
+└─ 60
+   ├─ 2
+   └─ 30
+      ├─ 2
+      └─ 15
+         ├─ 3
+         └─ 5</div></div>
+        <p class="text-slate-600 mt-3">From the simple example of 120, it is clear that prime factorization can become quite tedious fairly quickly. Unfortunately, there is currently no known algorithm for prime factorization that is efficient for very large numbers. Many calculators, including the one on this page, cannot calculate prime factorizations beyond a certain magnitude. One concerted effort between several researchers to factor RSA-768, a 232-digit number, took 2 years using hundreds of machines.</p>
+        <p class="text-slate-600 mt-3">Although no efficient algorithm has been found, it also has yet to be proven that no such algorithm exists — leaving room for anyone interested in having their name in a mathematical algorithm to formulate one (or prove in some self-named theorem that one doesn't exist)!</p>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div class="space-y-4 text-slate-600">
+          <div><h3 class="font-semibold text-slate-800">What is a factor?</h3><p>An integer a is a factor of another integer b if b can be divided by a with no remainder. The factors of 30 are 1, 2, 3, 5, 6, 10, 15, and 30 — each of them divides 30 exactly.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What is prime factorization?</h3><p>Prime factorization expresses a number as the product of prime numbers: 120 = 2 × 2 × 2 × 3 × 5. Every integer greater than 1 has exactly one prime factorization, which is why it is sometimes called the fundamental theorem of arithmetic.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What is a factor tree?</h3><p>A factor tree breaks a number down step by step: write the number, split off one factor pair, and keep splitting the composite parts until every branch ends in a prime. For 120: 120 = 60 × 2, 60 = 30 × 2, 30 = 15 × 2, 15 = 5 × 3.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How many factors does a number have?</h3><p>From the prime factorization: if n = p<sup>a</sup> × q<sup>b</sup> × …, the number of factors is (a+1)(b+1)… For 120 = 2<sup>3</sup> × 3 × 5 that is 4 × 2 × 2 = 16 factors. A prime number has exactly 2 factors: 1 and itself.</p></div>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/lcm">LCM Calculator</a></li>
+          <li><a class="hover:underline" href="/gcf">GCF Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">Perfect numbers</h3>
+        <p>A number whose factors (excluding itself) sum back to the number is called perfect: 28 = 1 + 2 + 4 + 7 + 14. The next ones are 496 and 8128 — they get rare quickly.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+function showRes(id, html) { const e = document.getElementById(id); e.innerHTML = html; e.classList.remove('hidden'); }
+function banner(lines, extraHtml) {
+  return '<div class="bg-[#3F51B5] text-white font-bold rounded-lg px-4 py-3"><div class="text-base mb-1">Result</div>' +
+    lines.map(l => '<div class="eq">' + l + '</div>').join('') + '</div>' + (extraHtml || '') + shareFactor();
+}
+function factorizeNum(n) { /* n: Number >= 2 -> ascending prime list */
+  const out = [];
+  let d = 2;
+  while (d * d <= n) {
+    while (n % d === 0) { out.push(d); n /= d; }
+    d = d === 2 ? 3 : d + 2;
+  }
+  if (n > 1) out.push(n);
+  return out;
+}
+function calcFactor() {
+  const raw = document.getElementById('cvar').value.trim();
+  if (!/^-?\d+$/.test(raw)) return showRes('resFactor', banner(['Please provide an integer.']));
+  const n = Number(raw);
+  if (n <= 0) return showRes('resFactor', banner(['Please provide a positive integer.']));
+  if (raw.replace('-', '').length > 14) return showRes('resFactor', banner(['Please provide an integer of at most 14 digits.']));
+  if (n === 1) return showRes('resFactor', banner(['Factors: (1, 1)']));
+  const pf = factorizeNum(n);
+  if (pf.length === 1) return showRes('resFactor', banner([n + ' is a prime number.', 'Factors: (1, ' + n + ')']));
+  const pairs = [];
+  for (let d = 1; d * d <= n; d++) if (n % d === 0) pairs.push([d, n / d]);
+  const divisors = [];
+  for (const [d, q] of pairs) { divisors.push(d); if (q !== d) divisors.push(q); }
+  divisors.sort((x, y) => x - y);
+  const lines = [
+    'Factors: ' + divisors.join(', '),
+    'Factor Pairs: ' + pairs.map(([d, q]) => '(' + d + ', ' + q + ')').join(' '),
+    'Prime factors: ' + n + ' = ' + pf.join(' × ')
+  ];
+  const rows = [String(n)];
+  let m = n;
+  for (let i = 0; i < pf.length - 1; i++) { m = m / pf[i]; rows.push(m + ' × ' + pf[i]); }
+  const tree = '<div class="stepsbox text-slate-700"><div class="font-bold text-slate-800 mb-2">Factor Tree:</div><div class="tree">' + rows.join('\n') + '</div></div>';
+  return showRes('resFactor', banner(lines, tree));
+}
+function shareFactor() {
+  return '<div class="mt-4"><button onclick="copyFactor()" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="shFactor" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function copyFactor() {
+  const u = new URL(location.href); u.search = ''; u.hash = '';
+  u.searchParams.set('cvar', document.getElementById('cvar').value);
+  const done = () => { document.getElementById('shFactor').textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+function clearFactor() {
+  document.getElementById('cvar').value = '120';
+  const r = document.getElementById('resFactor'); r.classList.add('hidden'); r.innerHTML = '';
+}
+(function () {
+  const q = new URLSearchParams(location.search);
+  if (q.has('cvar')) { document.getElementById('cvar').value = q.get('cvar'); calcFactor(); }
+})();
+</script>
+
+</body>
+        </html>
