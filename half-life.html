@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Half-Life Calculator — Half-Life, Mean Lifetime &amp; Decay Constant | CalcNova</title>
+<meta name="description" content="Free half-life calculator: compute any value in the half-life formula from the other three, and convert between half-life, mean lifetime, and decay constant." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/half-life" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.1rem;padding:.5rem .6rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .eq{font-size:1.25rem;line-height:1.8;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is half-life?","acceptedAnswer":{"@type":"Answer","text":"Half-life is the time it takes for a quantity to decrease to half of its initial value. After one half-life 50% remains, after two half-lives 25%, after three 12.5%, and so on. The term is most often used for radioactive decay, but it applies to any exponential decay."}},
+{"@type":"Question","name":"How is carbon-14 dating calculated?","acceptedAnswer":{"@type":"Answer","text":"Carbon-14 has a half-life of about 5,730 years. Living material holds a steady level of carbon-14; once the organism dies the carbon-14 decays, so the fraction remaining in a sample gives its age: t = t1/2 × log2(N0/Nt). A sample with 25% of the living level of carbon-14 is two half-lives old, about 11,460 years."}},
+{"@type":"Question","name":"How are half-life, mean lifetime, and decay constant related?","acceptedAnswer":{"@type":"Answer","text":"They describe the same decay in three ways: decay constant λ = ln(2) / t1/2, mean lifetime τ = 1 / λ = t1/2 / ln(2). A larger decay constant means a shorter half-life and a faster decay."}},
+{"@type":"Question","name":"Can the remaining quantity be larger than the initial quantity?","acceptedAnswer":{"@type":"Answer","text":"Not in a decay calculation — the remaining quantity must be smaller than the initial quantity. A growing quantity follows exponential growth instead, which uses the same mathematics with a negative decay constant."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Half-Life Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Half-Life Calculator</h1>
+  <p class="text-slate-600 mb-5 max-w-3xl">The following tools can generate any one of the values from the other three in the half-life formula for a substance undergoing decay to decrease by half.</p>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2">
+      <section class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-2">Half-Life Calculator</h2>
+        <p class="text-slate-600 text-sm mb-4">Please provide any three of the following to calculate the fourth value.</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <label class="block text-center"><span class="text-sm font-medium text-slate-600">quantity remains<br />N<sub>t</sub></span><input id="nt" class="fin mt-1" value="10" /></label>
+          <label class="block text-center"><span class="text-sm font-medium text-slate-600">initial quantity<br />N<sub>0</sub></span><input id="n0" class="fin mt-1" value="100" /></label>
+          <label class="block text-center"><span class="text-sm font-medium text-slate-600">time<br />t</span><input id="t" class="fin mt-1" value="50" /></label>
+          <label class="block text-center"><span class="text-sm font-medium text-slate-600">half-life<br />t<sub>1/2</sub></span><input id="t12" class="fin mt-1" value="" /></label>
+        </div>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcHL()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearHL()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resHL" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-5 mt-6" id="conversion">
+        <h2 class="text-xl font-bold mb-2">Half-Life, Mean Lifetime, and Decay Constant Conversion</h2>
+        <p class="text-slate-600 text-sm mb-4">Please provide any one of the following to get the other two.</p>
+        <div class="flex flex-wrap items-end gap-2">
+          <label class="block flex-1 min-w-[120px] text-center"><span class="text-sm font-medium text-slate-600">half-life<br />t<sub>1/2</sub></span><input id="chalflife" class="fin mt-1" value="" /></label>
+          <span class="text-2xl font-bold pb-1">=</span>
+          <label class="block flex-1 min-w-[120px] text-center"><span class="text-sm font-medium text-slate-600">mean lifetime<br />τ</span><input id="cmeanlifetime" class="fin mt-1" value="" /></label>
+          <span class="text-2xl font-bold pb-1">=</span>
+          <label class="block flex-1 min-w-[120px] text-center"><span class="text-sm font-medium text-slate-600">decay constant<br />λ</span><input id="cdecayconstant" class="fin mt-1" value="" /></label>
+        </div>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcConv()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearConv()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resConv" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-3">Definition and Formula</h2>
+        <p class="text-slate-600">Half-life is defined as the amount of time it takes a given quantity to decrease to half of its initial value. The term is most commonly used for atoms undergoing radioactive decay, but it describes any process of exponential decay. One of its best-known applications is carbon-14 dating. The half-life of carbon-14 is approximately 5,730 years, and it can be used reliably to date samples up to around 50,000 years old. The method, developed by Willard Libby, rests on the fact that carbon-14 is constantly produced in the atmosphere: it is incorporated into plants through photosynthesis and into animals when they eat the plants. Once the plant or animal dies, its carbon-14 decays away, so measuring how much remains in a sample reveals when it died.</p>
+        <p class="text-slate-600 mt-3">Three equivalent formulas describe exponential decay:</p>
+        <p class="text-center my-3 text-lg">N(t) = N<sub>0</sub> × (1/2)<sup>t / t<sub>1/2</sub></sup> &nbsp;&nbsp;=&nbsp;&nbsp; N<sub>0</sub> × e<sup>−t / τ</sup> &nbsp;&nbsp;=&nbsp;&nbsp; N<sub>0</sub> × e<sup>−λt</sup></p>
+        <ul class="text-slate-600 list-disc pl-6 space-y-1">
+          <li><b>N<sub>0</sub></b> is the initial quantity</li>
+          <li><b>N<sub>t</sub></b> is the quantity remaining after time <b>t</b></li>
+          <li><b>t<sub>1/2</sub></b> is the half-life</li>
+          <li><b>τ</b> is the mean lifetime</li>
+          <li><b>λ</b> is the decay constant</li>
+        </ul>
+        <p class="text-slate-600 mt-3">If an archaeologist found a fossil sample containing 25% of the carbon-14 level of a living sample, the age of the fossil could be found by rearranging the first formula, since N<sub>t</sub>, N<sub>0</sub>, and t<sub>1/2</sub> are known: 25% is two halvings (100% → 50% → 25%), so t = 2 × 5,730 = <b>11,460 years</b>.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Derivation of the Relationship Between Half-Life Constants</h3>
+        <p class="text-slate-600">Using the equations above, a relationship can be derived between t<sub>1/2</sub>, τ, and λ, which makes it possible to determine all three as long as at least one is known. Set t = t<sub>1/2</sub> in N(t) = N<sub>0</sub>e<sup>−λt</sup>: the remaining quantity is by definition N<sub>0</sub>/2, so e<sup>−λ·t<sub>1/2</sub></sup> = 1/2. Taking logarithms gives λ·t<sub>1/2</sub> = ln(2), hence:</p>
+        <p class="text-center my-3 text-lg">λ = ln(2) / t<sub>1/2</sub> &nbsp;&nbsp;and&nbsp;&nbsp; τ = 1 / λ = t<sub>1/2</sub> / ln(2)</p>
+        <p class="text-slate-600">The mean lifetime τ is the average time a particle survives before decaying; because some particles live much longer than one half-life, τ is always larger than t<sub>1/2</sub>, by the factor 1/ln(2) ≈ 1.4427.</p>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div class="space-y-4 text-slate-600">
+          <div><h3 class="font-semibold text-slate-800">What is half-life?</h3><p>Half-life is the time it takes for a quantity to decrease to half of its initial value. After one half-life 50% remains, after two half-lives 25%, after three 12.5%, and so on. The term is most often used for radioactive decay, but it applies to any exponential decay.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How is carbon-14 dating calculated?</h3><p>Carbon-14 has a half-life of about 5,730 years. Living material holds a steady level of carbon-14; once the organism dies the carbon-14 decays, so the fraction remaining in a sample gives its age: t = t<sub>1/2</sub> × log<sub>2</sub>(N<sub>0</sub>/N<sub>t</sub>). A sample with 25% of the living level of carbon-14 is two half-lives old, about 11,460 years.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How are half-life, mean lifetime, and decay constant related?</h3><p>They describe the same decay in three ways: decay constant λ = ln(2) / t<sub>1/2</sub>, mean lifetime τ = 1 / λ = t<sub>1/2</sub> / ln(2). A larger decay constant means a shorter half-life and a faster decay.</p></div>
+          <div><h3 class="font-semibold text-slate-800">Can the remaining quantity be larger than the initial quantity?</h3><p>Not in a decay calculation — the remaining quantity must be smaller than the initial quantity. A growing quantity follows exponential growth instead, which uses the same mathematics with a negative decay constant.</p></div>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/exponent">Exponent Calculator</a></li>
+          <li><a class="hover:underline" href="/log">Log Calculator</a></li>
+          <li><a class="hover:underline" href="/scientific">Scientific Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">Carbon-14 quick check</h3>
+        <p>With a half-life of 5,730 years, a sample at 50% of the living carbon-14 level is 5,730 years old; at 25% it is 11,460 years; at 12.5% it is 17,190 years — each halving adds one more half-life.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+const L = 0.6931471806; /* ln(2) rounded to 10 decimal places - the reference's working constant for tau/lambda conversions */
+function fmtPHP(x) { /* PHP float-to-string at 14 significant digits */
+  if (Number.isNaN(x)) return 'NAN';
+  if (x === Infinity) return 'INF';
+  if (x === -Infinity) return '-INF';
+  if (x === 0) return '0';
+  const neg = x < 0, ax = Math.abs(x);
+  const parts = ax.toExponential(13).split('e');
+  const e10 = parseInt(parts[1], 10);
+  let digits = parts[0].replace('.', '').replace(/0+$/, '');
+  if (digits === '') digits = '0';
+  let out;
+  if (e10 >= 14 || e10 <= -5) {
+    const m = digits.length > 1 ? digits[0] + '.' + digits.slice(1) : digits + '.0';
+    out = m + 'E' + (e10 < 0 ? '-' : '+') + Math.abs(e10);
+  } else if (e10 >= 0) {
+    out = digits.length > e10 + 1 ? digits.slice(0, e10 + 1) + '.' + digits.slice(e10 + 1) : digits + '0'.repeat(e10 + 1 - digits.length);
+  } else {
+    out = '0.' + '0'.repeat(-e10 - 1) + digits;
+  }
+  return (neg ? '-' : '') + out;
+}
+function showRes(id, html) { const e = document.getElementById(id); e.innerHTML = html; e.classList.remove('hidden'); }
+function resBlock(lines, share) {
+  return '<div class="bg-[#3F51B5] text-white font-bold rounded-lg px-4 py-3"><div class="text-base mb-1">Result</div>' +
+    lines.map(l => '<div class="eq">' + l + '</div>').join('') + '</div>' + share;
+}
+function msgBlock(id, t, share) { showRes(id, resBlock([t], share)); }
+function parsePos(s) { /* '' -> undefined (absent); non-numeric -> null; number -> value */
+  s = s.trim();
+  if (s === '') return undefined;
+  if (!/^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/.test(s)) return null;
+  return parseFloat(s);
+}
+function calcHL() {
+  const nt = parsePos(document.getElementById('nt').value);
+  const n0 = parsePos(document.getElementById('n0').value);
+  const t = parsePos(document.getElementById('t').value);
+  const t12 = parsePos(document.getElementById('t12').value);
+  if (nt === null || n0 === null || t === null || t12 === null) return msgBlock('resHL', 'Please provide numeric values.', shareHL());
+  const vals = [nt, n0, t, t12];
+  if (vals.some(v => v !== undefined && !(v > 0))) return msgBlock('resHL', 'Please provide positive values.', shareHL());
+  if (nt !== undefined && n0 !== undefined && nt >= n0) return msgBlock('resHL', 'The quantity remains needs to be smaller than the initial quantity.', shareHL());
+  if (nt !== undefined && n0 !== undefined && t !== undefined) {
+    const h = t / (Math.log(n0 / nt) / Math.LN2);
+    return showRes('resHL', resBlock([
+      'half-life, t<sub>1/2</sub> = ' + fmtPHP(h),
+      'mean lifetime, τ = ' + fmtPHP(h / L),
+      'decay constant, λ = ' + fmtPHP(L / h)], shareHL()));
+  }
+  if (n0 !== undefined && t !== undefined && t12 !== undefined) {
+    return showRes('resHL', resBlock(['quantity remains, N<sub>t</sub> = ' + fmtPHP(n0 * Math.pow(2, -t / t12))], shareHL()));
+  }
+  if (nt !== undefined && t !== undefined && t12 !== undefined) {
+    return showRes('resHL', resBlock(['initial quantity, N<sub>0</sub> = ' + fmtPHP(nt * Math.pow(2, t / t12))], shareHL()));
+  }
+  if (nt !== undefined && n0 !== undefined && t12 !== undefined) {
+    return showRes('resHL', resBlock(['time, t = ' + fmtPHP(t12 * (Math.log(n0 / nt) / Math.LN2))], shareHL()));
+  }
+  return msgBlock('resHL', 'Please provide any three of the values to calculate the fourth.', shareHL());
+}
+function calcConv() {
+  const rawH = document.getElementById('chalflife').value;
+  const rawT = document.getElementById('cmeanlifetime').value;
+  const rawD = document.getElementById('cdecayconstant').value;
+  const h = parsePos(rawH), tau = parsePos(rawT), lam = parsePos(rawD);
+  if (h === null || tau === null || lam === null) return msgBlock('resConv', 'Please provide a numeric value.', shareConv());
+  const canon = [
+    ['half-life (t<sub>1/2</sub>): ', 'h'],
+    ['mean lifetime (τ): ', 'tau'],
+    ['decay constant (λ): ', 'lam']];
+  if (h !== undefined) {
+    if (!(h > 0)) return msgBlock('resConv', 'Please provide a positive value.', shareConv());
+    const vals = { h: rawH.trim(), tau: fmtPHP(h / L), lam: fmtPHP(L / h) };
+    return showRes('resConv', resBlock(canon.map(c => c[0] + vals[c[1]]), shareConv()));
+  }
+  if (tau !== undefined) {
+    if (!(tau > 0)) return msgBlock('resConv', 'Please provide a positive value.', shareConv());
+    const vals = { tau: rawT.trim(), h: fmtPHP(tau * L), lam: fmtPHP(1 / tau) };
+    return showRes('resConv', resBlock([canon[1][0] + vals.tau, canon[0][0] + vals.h, canon[2][0] + vals.lam], shareConv()));
+  }
+  if (lam !== undefined) {
+    if (!(lam > 0)) return msgBlock('resConv', 'Please provide a positive value.', shareConv());
+    const vals = { lam: rawD.trim(), h: fmtPHP(L / lam), tau: fmtPHP(1 / lam) };
+    return showRes('resConv', resBlock([canon[2][0] + vals.lam, canon[0][0] + vals.h, canon[1][0] + vals.tau], shareConv()));
+  }
+  return msgBlock('resConv', 'Please provide any one of the values to get the other two.', shareConv());
+}
+function shareBtn(fn, span) {
+  return '<div class="mt-4"><button onclick="' + fn + '" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="' + span + '" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function shareHL() { return shareBtn('copyHL()', 'shHL'); }
+function shareConv() { return shareBtn('copyConv()', 'shConv'); }
+function doShare(params, span, hash) {
+  const u = new URL(location.href); u.search = ''; u.hash = hash || '';
+  for (const k in params) u.searchParams.set(k, params[k]);
+  const done = () => { document.getElementById(span).textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+function copyHL() { doShare({ type: '1', nt: document.getElementById('nt').value, n0: document.getElementById('n0').value, t: document.getElementById('t').value, t12: document.getElementById('t12').value }, 'shHL'); }
+function copyConv() { doShare({ type: '2', chalflife: document.getElementById('chalflife').value, cmeanlifetime: document.getElementById('cmeanlifetime').value, cdecayconstant: document.getElementById('cdecayconstant').value }, 'shConv', 'conversion'); }
+function clearHL() {
+  document.getElementById('nt').value = '10'; document.getElementById('n0').value = '100';
+  document.getElementById('t').value = '50'; document.getElementById('t12').value = '';
+  hideRes('resHL');
+}
+function clearConv() {
+  document.getElementById('chalflife').value = ''; document.getElementById('cmeanlifetime').value = ''; document.getElementById('cdecayconstant').value = '';
+  hideRes('resConv');
+}
+function hideRes(id) { const r = document.getElementById(id); r.classList.add('hidden'); r.innerHTML = ''; }
+(function () {
+  const q = new URLSearchParams(location.search);
+  if (q.get('type') === '1') {
+    for (const k of ['nt', 'n0', 't', 't12']) if (q.has(k)) document.getElementById(k).value = q.get(k);
+    calcHL();
+  } else if (q.get('type') === '2') {
+    for (const k of ['chalflife', 'cmeanlifetime', 'cdecayconstant']) if (q.has(k)) document.getElementById(k).value = q.get(k);
+    calcConv();
+  }
+})();
+</script>
+
+</body>
+</html>
