@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Matrix Calculator — Add, Multiply, Determinant, Inverse, Transpose | CalcNova</title>
+<meta name="description" content="Free matrix calculator: add, subtract, and multiply matrices, multiply by a scalar, raise to a power, and find the transpose, determinant, and inverse, for matrices up to 10x10." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/matrix" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .cell{width:3.4rem;font-size:.95rem;padding:.3rem .25rem;border:1.5px solid #94A3B8;border-radius:.375rem;text-align:center;background:#fff}
+  .cell:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .sz{width:3.6rem;font-size:1rem;padding:.3rem .4rem;border:1.5px solid #94A3B8;border-radius:.5rem;text-align:center;background:#fff}
+  .sz:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .chip{display:inline-block;background:#334155;color:#fff;border-radius:.375rem;padding:.3rem .6rem;font-size:.85rem;font-weight:600;cursor:pointer}
+  .chip:hover{background:#4CAF50}
+  .arrowbtn{cursor:pointer;user-select:none;font-size:.7rem;line-height:1;color:#334155;padding:1px 2px}
+  .arrowbtn:hover{color:#3F51B5}
+  .mtx{display:inline-table;border-collapse:collapse;border-left:2px solid #334155;border-right:2px solid #334155;margin:.25rem .35rem;vertical-align:middle}
+  .mtx td{padding:.15rem .55rem;text-align:right;font-size:1.02rem;white-space:nowrap}
+  .rmtx{display:inline-table;border-collapse:collapse;border-left:2px solid #fff;border-right:2px solid #fff;margin:.25rem .35rem;vertical-align:middle}
+  .rmtx td{padding:.15rem .55rem;text-align:right;font-size:1.05rem;white-space:nowrap}
+  .err{color:#DC2626;font-weight:600}
+  .stepsbox{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:.75rem;padding:1rem 1.25rem;line-height:1.9}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"When can two matrices be added or multiplied?","acceptedAnswer":{"@type":"Answer","text":"Addition and subtraction require exactly the same size — the same number of rows and columns in both matrices. Multiplication AB requires the number of columns of A to equal the number of rows of B, and the result has the rows of A and the columns of B."}},
+{"@type":"Question","name":"How do you find the determinant of a 2x2 matrix?","acceptedAnswer":{"@type":"Answer","text":"For a matrix with rows (a, b) and (c, d), the determinant is ad - bc. For example, the determinant of the matrix with rows (2, 4) and (6, 8) is 2x8 - 4x6 = -8."}},
+{"@type":"Question","name":"When does a matrix have no inverse?","acceptedAnswer":{"@type":"Answer","text":"A matrix has an inverse only if it is square and its determinant is not zero. A determinant of zero means the matrix collapses space onto a lower dimension, so there is no matrix that can undo it."}},
+{"@type":"Question","name":"What does raising a matrix to a power mean?","acceptedAnswer":{"@type":"Answer","text":"It means multiplying the matrix by itself that many times: A^3 = A x A x A. Only square matrices can be raised to a power, because a non-square matrix cannot be multiplied by itself."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Matrix Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Matrix Calculator</h1>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <section class="bg-white rounded-xl shadow p-5">
+    <div class="grid md:grid-cols-2 gap-6" id="panels"></div>
+    <div class="bg-slate-200 rounded-lg mt-5 py-3 px-4 flex flex-wrap gap-3 justify-center">
+      <button onclick="cAdd()" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-5 py-2 rounded-lg">A + B</button>
+      <button onclick="cSub()" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-5 py-2 rounded-lg">A – B</button>
+      <button onclick="cMultiple()" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-5 py-2 rounded-lg">AB</button>
+      <button onclick="cSwap()" class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold px-5 py-2 rounded-lg">A ↔ B</button>
+    </div>
+    <div id="resultout" class="mt-4"></div>
+    <div class="grid md:grid-cols-2 gap-6 mt-2">
+      <div id="resultouta"></div>
+      <div id="resultoutb"></div>
+    </div>
+  </section>
+
+  <section class="bg-white rounded-xl shadow p-6 mt-6">
+    <h2 class="text-xl font-bold mb-3">What is a Matrix?</h2>
+    <p class="text-slate-600">A matrix, in a mathematical context, is a rectangular array of numbers, symbols, or expressions that are arranged in rows and columns. Matrices are often used in scientific fields such as physics, computer graphics, probability theory, statistics, calculus, numerical analysis, and more.</p>
+    <p class="text-slate-600 mt-3">The dimensions of a matrix <b><i>A</i></b> are typically denoted as <b><i>m × n</i></b>. This means that <b><i>A</i></b> has <b><i>m</i></b> rows and <b><i>n</i></b> columns. When referring to a specific value in a matrix, called an element, a variable with two subscripts is often used to denote each element based on its position in the matrix. For example, given <b><i>a<sub>i,j</sub></i></b>, where <b><i>i = 1</i></b> and <b><i>j = 3</i></b>, <b><i>a<sub>1,3</sub></i></b> is the value of the element in the first row and the third column of the given matrix.</p>
+    <p class="text-slate-600 mt-3">Matrix operations such as addition, multiplication, subtraction, etc., are similar to what most people are likely accustomed to seeing in basic arithmetic and algebra, but do differ in some ways, and are subject to certain constraints. Below are descriptions of the matrix operations that this calculator can perform.</p>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Matrix addition</h3>
+    <p class="text-slate-600">Matrix addition can only be performed on matrices of the same size. This means that you can only add matrices if both matrices are <b><i>m × n</i></b>. For example, you can add two or more <b><i>3 × 3</i></b>, <b><i>1 × 2</i></b>, or <b><i>5 × 4</i></b> matrices. You cannot add a <b><i>2 × 3</i></b> and a <b><i>3 × 2</i></b> matrix, a <b><i>4 × 4</i></b> and a <b><i>3 × 3</i></b>, etc. The number of rows and columns of all the matrices being added must exactly match.</p>
+    <p class="text-slate-600 mt-3">If the matrices are the same size, matrix addition is performed by adding the corresponding elements in the matrices. For example, given two matrices, <b><i>A</i></b> and <b><i>B</i></b>, with elements <b><i>a<sub>i,j</sub></i></b> and <b><i>b<sub>i,j</sub></i></b>, the matrices are added by adding each element, then placing the result in a new matrix, <b><i>C</i></b>, in the corresponding position in the matrix:</p>
+    <div class="stepsbox text-center">A = <table class="mtx"><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table> ; B = <table class="mtx"><tbody><tr><td>5</td><td>6</td></tr><tr><td>7</td><td>8</td></tr></tbody></table></div>
+    <p class="text-slate-600 mt-3">In the above matrices, <b><i>a<sub>1,1</sub> = 1</i></b>; <b><i>a<sub>1,2</sub> = 2</i></b>; <b><i>b<sub>1,1</sub> = 5</i></b>; <b><i>b<sub>1,2</sub> = 6</i></b>; etc. We add the corresponding elements to obtain <b><i>c<sub>i,j</sub></i></b>. Adding the values in the corresponding rows and columns:</p>
+    <div class="stepsbox">
+      a<sub>1,1</sub> + b<sub>1,1</sub> = 1 + 5 = 6 = c<sub>1,1</sub><br />
+      a<sub>1,2</sub> + b<sub>1,2</sub> = 2 + 6 = 8 = c<sub>1,2</sub><br />
+      a<sub>2,1</sub> + b<sub>2,1</sub> = 3 + 7 = 10 = c<sub>2,1</sub><br />
+      a<sub>2,2</sub> + b<sub>2,2</sub> = 4 + 8 = 12 = c<sub>2,2</sub>
+    </div>
+    <p class="text-slate-600 mt-3">Thus, matrix <b><i>C</i></b> is:</p>
+    <div class="stepsbox text-center">C = <table class="mtx"><tbody><tr><td>6</td><td>8</td></tr><tr><td>10</td><td>12</td></tr></tbody></table></div>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Matrix subtraction</h3>
+    <p class="text-slate-600">Matrix subtraction is performed in much the same way as matrix addition, described above, with the exception that the values are subtracted rather than added. Like matrix addition, the matrices being subtracted must be the same size. If the matrices are the same size, then matrix subtraction is performed by subtracting the elements in the corresponding rows and columns:</p>
+    <div class="stepsbox">
+      a<sub>1,1</sub> − b<sub>1,1</sub> = 1 − 5 = −4 = c<sub>1,1</sub><br />
+      a<sub>1,2</sub> − b<sub>1,2</sub> = 2 − 6 = −4 = c<sub>1,2</sub><br />
+      a<sub>2,1</sub> − b<sub>2,1</sub> = 3 − 7 = −4 = c<sub>2,1</sub><br />
+      a<sub>2,2</sub> − b<sub>2,2</sub> = 4 − 8 = −4 = c<sub>2,2</sub>
+    </div>
+    <p class="text-slate-600 mt-3">Thus, matrix <b><i>C</i></b> is:</p>
+    <div class="stepsbox text-center">C = <table class="mtx"><tbody><tr><td>-4</td><td>-4</td></tr><tr><td>-4</td><td>-4</td></tr></tbody></table></div>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Matrix multiplication</h3>
+    <p class="text-slate-600"><b>Scalar multiplication:</b> Matrices can be multiplied by a scalar value by multiplying each element in the matrix by the scalar. For example, given a matrix <b><i>A</i></b> and a scalar <b><i>c = 5</i></b>, the product of <b><i>c</i></b> and <b><i>A</i></b> is:</p>
+    <div class="stepsbox text-center">5 × <table class="mtx"><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table> = <table class="mtx"><tbody><tr><td>5</td><td>10</td></tr><tr><td>15</td><td>20</td></tr></tbody></table></div>
+    <p class="text-slate-600 mt-3"><b>Matrix-matrix multiplication:</b> Multiplying two (or more) matrices is more involved than multiplying by a scalar. In order to multiply two matrices, the number of columns in the first matrix must match the number of rows in the second matrix. For example, you can multiply a <b><i>2 × 3</i></b> matrix by a <b><i>3 × 4</i></b> matrix, but not a <b><i>2 × 3</i></b> matrix by a <b><i>4 × 3</i></b>. Note that when multiplying matrices, <b><i>A × B</i></b> does not necessarily equal <b><i>B × A</i></b>. In fact, just because <b><i>A</i></b> can be multiplied by <b><i>B</i></b> doesn't mean that <b><i>B</i></b> can be multiplied by <b><i>A</i></b>.</p>
+    <p class="text-slate-600 mt-3">If the matrices are the correct sizes, matrices are multiplied by performing what is known as the dot product. The dot product involves multiplying the corresponding elements in the row of the first matrix by the columns of the second matrix, and summing the result, producing a single value. The dot product then becomes the value in the corresponding row and column of the new matrix, <b><i>C</i></b>: c<sub>1,1</sub> = a<sub>1,1</sub>×b<sub>1,1</sub> + a<sub>1,2</sub>×b<sub>2,1</sub> + a<sub>1,3</sub>×b<sub>3,1</sub>. When multiplying two matrices, the resulting matrix will have the same number of rows as the first matrix and the same number of columns as the second, so with <b><i>A</i></b> at 2 × 3 and <b><i>B</i></b> at 3 × 4, <b><i>C</i></b> will be a 2 × 4 matrix:</p>
+    <div class="stepsbox text-center">A = <table class="mtx"><tbody><tr><td>1</td><td>2</td><td>1</td></tr><tr><td>3</td><td>4</td><td>1</td></tr></tbody></table> ; B = <table class="mtx"><tbody><tr><td>5</td><td>6</td><td>1</td><td>1</td></tr><tr><td>7</td><td>8</td><td>1</td><td>1</td></tr><tr><td>1</td><td>1</td><td>1</td><td>1</td></tr></tbody></table><br />C = <table class="mtx"><tbody><tr><td>20</td><td>23</td><td>4</td><td>4</td></tr><tr><td>44</td><td>51</td><td>8</td><td>8</td></tr></tbody></table></div>
+    <div class="stepsbox">
+      c<sub>1,1</sub> = 1×5 + 2×7 + 1×1 = 20<br />
+      c<sub>1,2</sub> = 1×6 + 2×8 + 1×1 = 23<br />
+      c<sub>1,3</sub> = 1×1 + 2×1 + 1×1 = 4<br />
+      c<sub>1,4</sub> = 1×1 + 2×1 + 1×1 = 4<br />
+      c<sub>2,1</sub> = 3×5 + 4×7 + 1×1 = 44<br />
+      c<sub>2,2</sub> = 3×6 + 4×8 + 1×1 = 51<br />
+      c<sub>2,3</sub> = 3×1 + 4×1 + 1×1 = 8<br />
+      c<sub>2,4</sub> = 3×1 + 4×1 + 1×1 = 8
+    </div>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Power of a matrix</h3>
+    <p class="text-slate-600">For the intents of this calculator, "power of a matrix" means to raise a given matrix to a given power. For example, "Power of 2" for a given matrix <b><i>A</i></b> means <b><i>A<sup>2</sup></i></b>. Exponents for matrices function in the same way as they normally do in math, except that matrix multiplication rules also apply, so only square matrices (matrices with an equal number of rows and columns) can be raised to a power. This is because a non-square matrix, <b><i>A</i></b>, cannot be multiplied by itself — <b><i>A × A</i></b>, in this case, is not possible to compute. Given:</p>
+    <div class="stepsbox text-center">A = <table class="mtx"><tbody><tr><td>1</td><td>3</td></tr><tr><td>2</td><td>1</td></tr></tbody></table><br />A<sup>2</sup> = A × A = <table class="mtx"><tbody><tr><td>7</td><td>6</td></tr><tr><td>4</td><td>7</td></tr></tbody></table></div>
+    <p class="text-slate-600 mt-3">As with exponents in other mathematical contexts, <b><i>A<sup>3</sup></i></b> would equal <b><i>A × A × A</i></b>, <b><i>A<sup>4</sup></i></b> would equal <b><i>A × A × A × A</i></b>, and so on.</p>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Transpose of a matrix</h3>
+    <p class="text-slate-600">The transpose of a matrix, typically indicated with a "T" as an exponent, is an operation that flips a matrix over its diagonal. This results in switching the row and column indices of a matrix, meaning that <b><i>a<sub>ij</sub></i></b> in matrix <b><i>A</i></b> becomes <b><i>a<sub>ji</sub></i></b> in <b><i>A<sup>T</sup></i></b>. An <b><i>m × n</i></b> matrix, transposed, would therefore become an <b><i>n × m</i></b> matrix, as shown in the examples below:</p>
+    <div class="stepsbox text-center">A = <table class="mtx"><tbody><tr><td>1</td><td>3</td></tr><tr><td>2</td><td>1</td></tr></tbody></table> &nbsp; A<sup>T</sup> = <table class="mtx"><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>1</td></tr></tbody></table><br />B = <table class="mtx"><tbody><tr><td>20</td><td>23</td><td>4</td><td>4</td></tr><tr><td>44</td><td>51</td><td>8</td><td>8</td></tr></tbody></table> &nbsp; B<sup>T</sup> = <table class="mtx"><tbody><tr><td>20</td><td>44</td></tr><tr><td>23</td><td>51</td></tr><tr><td>4</td><td>8</td></tr><tr><td>4</td><td>8</td></tr></tbody></table></div>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Determinant of a matrix</h3>
+    <p class="text-slate-600">The determinant of a matrix is a value that can be computed from the elements of a square matrix. It is used in linear algebra, calculus, and other mathematical contexts. For example, the determinant can be used to compute the inverse of a matrix or to solve a system of linear equations. There are a number of methods and formulas for calculating the determinant of a matrix; the Leibniz formula and the Laplace formula are two commonly used formulas.</p>
+    <p class="text-slate-600 mt-3"><b>Determinant of a 2 × 2 matrix:</b> using the Leibniz formula, for A = <table class="mtx"><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table> the determinant is |A| = ad − bc. Note that taking the determinant is typically indicated with "| |" surrounding the given matrix. Given A = <table class="mtx"><tbody><tr><td>2</td><td>4</td></tr><tr><td>6</td><td>8</td></tr></tbody></table>, |A| = 2×8 − 4×6 = <b>−8</b>.</p>
+    <p class="text-slate-600 mt-3"><b>Determinant of a 3 × 3 matrix:</b> one way is through the Laplace formula. Expanding along the first row of <table class="mtx"><tbody><tr><td>a</td><td>b</td><td>c</td></tr><tr><td>d</td><td>e</td><td>f</td></tr><tr><td>g</td><td>h</td><td>i</td></tr></tbody></table> gives |A| = a(ei − fh) − b(di − fg) + c(dh − eg), which simplifies to the Leibniz form |A| = aei + bfg + cdh − ceg − bdi − afh.</p>
+    <p class="text-slate-600 mt-3"><b>Determinant of a 4 × 4 matrix and higher:</b> the determinant can be computed in much the same way, using the Laplace or Leibniz formula. The process cycles through each element of the first row: each element becomes a scalar multiplied by the determinant of the smaller matrix left after blocking out that element's row and column, with alternating + − + − signs. A 4 × 4 matrix reduces to scalars times 3 × 3 determinants, those to scalars times 2 × 2 determinants, and so on until the 2 × 2 Leibniz formula finishes the job. As can be seen, this gets tedious very quickly, but it is a method that can be used for <b><i>n × n</i></b> matrices once you understand the pattern.</p>
+
+    <h3 class="text-lg font-bold mt-6 mb-2">Inverse of a matrix</h3>
+    <p class="text-slate-600">The inverse of a matrix <b><i>A</i></b> is denoted as <b><i>A<sup>−1</sup></i></b>, where <b><i>A<sup>−1</sup></i></b> is the inverse of <b><i>A</i></b> if A × A<sup>−1</sup> = A<sup>−1</sup> × A = I, where <b><i>I</i></b> is the identity matrix.</p>
+    <p class="text-slate-600 mt-3"><b>Identity matrix:</b> The identity matrix is a square matrix with "1" across its diagonal, and "0" everywhere else. The identity matrix is the matrix equivalent of the number "1": just as 1 × n = n for any number, A × I = A for a matrix of the same size. For example, I<sub>2</sub> = <table class="mtx"><tbody><tr><td>1</td><td>0</td></tr><tr><td>0</td><td>1</td></tr></tbody></table> and I<sub>3</sub> = <table class="mtx"><tbody><tr><td>1</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>0</td></tr><tr><td>0</td><td>0</td><td>1</td></tr></tbody></table>.</p>
+    <p class="text-slate-600 mt-3"><b>Inverse of a 2 × 2 matrix:</b> A<sup>−1</sup> = (1 / det(A)) × the matrix formed by swapping a and d and negating b and c — that is, (1 / (ad − bc)) × <table class="mtx"><tbody><tr><td>d</td><td>-b</td></tr><tr><td>-c</td><td>a</td></tr></tbody></table>. For example, given A = <table class="mtx"><tbody><tr><td>2</td><td>4</td></tr><tr><td>3</td><td>7</td></tr></tbody></table>:</p>
+    <div class="stepsbox text-center">A<sup>−1</sup> = (1 / (2×7 − 4×3)) × <table class="mtx"><tbody><tr><td>7</td><td>-4</td></tr><tr><td>-3</td><td>2</td></tr></tbody></table> = (1/2) × <table class="mtx"><tbody><tr><td>7</td><td>-4</td></tr><tr><td>-3</td><td>2</td></tr></tbody></table> = <table class="mtx"><tbody><tr><td>3.5</td><td>-2</td></tr><tr><td>-1.5</td><td>1</td></tr></tbody></table></div>
+    <p class="text-slate-600 mt-3">If you were to test that this is, in fact, the inverse of <b><i>A</i></b>, you would find that both A × A<sup>−1</sup> and A<sup>−1</sup> × A are equal to the identity matrix I<sub>2</sub> = <table class="mtx"><tbody><tr><td>1</td><td>0</td></tr><tr><td>0</td><td>1</td></tr></tbody></table>.</p>
+    <p class="text-slate-600 mt-3"><b>Inverse of a 3 × 3 matrix:</b> The inverse of a 3 × 3 matrix is more tedious to compute. In outline, M<sup>−1</sup> = (1 / det(M)) × the transpose of the cofactor matrix, where the cofactors of <table class="mtx"><tbody><tr><td>a</td><td>b</td><td>c</td></tr><tr><td>d</td><td>e</td><td>f</td></tr><tr><td>g</td><td>h</td><td>i</td></tr></tbody></table> are A = ei − fh; B = −(di − fg); C = dh − eg; D = −(bi − ch); E = ai − cg; F = −(ah − bg); G = bf − ce; H = −(af − cd); I = ae − bd. <b><i>4 × 4</i></b> and larger get increasingly more complicated, and there are other methods for computing them.</p>
+  </section>
+
+  <section class="bg-white rounded-xl shadow p-6 mt-6">
+    <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+    <div class="space-y-4 text-slate-600">
+      <div><h3 class="font-semibold text-slate-800">When can two matrices be added or multiplied?</h3><p>Addition and subtraction require exactly the same size — the same number of rows and columns in both matrices. Multiplication AB requires the number of columns of A to equal the number of rows of B, and the result has the rows of A and the columns of B.</p></div>
+      <div><h3 class="font-semibold text-slate-800">How do you find the determinant of a 2×2 matrix?</h3><p>For a matrix with rows (a, b) and (c, d), the determinant is ad − bc. For example, the determinant of the matrix with rows (2, 4) and (6, 8) is 2×8 − 4×6 = −8.</p></div>
+      <div><h3 class="font-semibold text-slate-800">When does a matrix have no inverse?</h3><p>A matrix has an inverse only if it is square and its determinant is not zero. A determinant of zero means the matrix collapses space onto a lower dimension, so there is no matrix that can undo it.</p></div>
+      <div><h3 class="font-semibold text-slate-800">What does raising a matrix to a power mean?</h3><p>It means multiplying the matrix by itself that many times: A<sup>3</sup> = A × A × A. Only square matrices can be raised to a power, because a non-square matrix cannot be multiplied by itself.</p></div>
+    </div>
+  </section>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+const MAXD = 10;
+const state = { a: { rows: 4, cols: 4 }, b: { rows: 4, cols: 4 } };
+const cells = { a: [], b: [] };
+for (const w of ['a', 'b']) { for (let i = 0; i < MAXD; i++) { cells[w][i] = []; for (let j = 0; j < MAXD; j++) cells[w][i][j] = ''; } }
+let lastResult = null;
+
+function panelHTML(w) {
+  const W = w.toUpperCase();
+  return '<div class="border border-slate-200 rounded-xl overflow-hidden">' +
+    '<div class="bg-[#3F51B5] text-white font-bold px-4 py-2">Matrix ' + W + ' Input</div>' +
+    '<div class="p-4">' +
+    '<div class="flex items-end gap-2 mb-3">' +
+      '<label class="block"><span class="block text-xs font-semibold text-slate-500 text-center">row</span>' +
+      '<span class="flex items-center gap-1"><input id="' + w + 'row" type="number" class="sz" min="1" max="10" value="4" onchange="sizeTyped(\'' + w + '\')" />' +
+      '<span class="flex flex-col"><span class="arrowbtn" onclick="stepSize(\'' + w + '\',\'row\',1)">&#9650;</span><span class="arrowbtn" onclick="stepSize(\'' + w + '\',\'row\',-1)">&#9660;</span></span></span></label>' +
+      '<span class="text-xl font-bold pb-1">&times;</span>' +
+      '<label class="block"><span class="block text-xs font-semibold text-slate-500 text-center">column</span>' +
+      '<span class="flex items-center gap-1"><input id="' + w + 'col" type="number" class="sz" min="1" max="10" value="4" onchange="sizeTyped(\'' + w + '\')" />' +
+      '<span class="flex"><span class="arrowbtn" onclick="stepSize(\'' + w + '\',\'col\',-1)">&#9664;</span><span class="arrowbtn" onclick="stepSize(\'' + w + '\',\'col\',1)">&#9654;</span></span></span></label>' +
+    '</div>' +
+    '<div id="minput' + w + '" class="overflow-x-auto"></div>' +
+    '<div class="text-center mt-3 space-x-1">' +
+      '<a class="chip" onclick="return fillM(\'' + w + '\',\'\')">Clear</a>' +
+      '<a class="chip" onclick="return fillM(\'' + w + '\',\'0\')">All 0</a>' +
+      '<a class="chip" onclick="return fillM(\'' + w + '\',\'1\')">All 1</a>' +
+      '<a class="chip" onclick="return fillM(\'' + w + '\',\'r\')">Random</a>' +
+    '</div>' +
+    '<div class="text-center mt-2 space-x-1">' +
+      '<a class="chip" onclick="return cTranspose(\'' + w + '\')">Transpose</a>' +
+      '<a class="chip" onclick="return cPower(\'' + w + '\')">Power of</a>' +
+      '<input id="p' + w + '" type="number" class="sz !w-14" value="2" />' +
+    '</div>' +
+    '<div class="text-center mt-2 space-x-1">' +
+      '<a class="chip" onclick="return cDeterminant(\'' + w + '\')">Determinant</a>' +
+      '<a class="chip" onclick="return cInverse(\'' + w + '\')">Inverse</a>' +
+      '<a class="chip" onclick="return cTimes(\'' + w + '\')">&times;</a>' +
+      '<input id="t' + w + '" type="number" class="sz !w-14" value="3" />' +
+    '</div></div></div>';
+}
+function renderGrid(w) {
+  let h = '<table class="mx-auto"><tbody>';
+  for (let i = 0; i < state[w].rows; i++) {
+    h += '<tr>';
+    for (let j = 0; j < state[w].cols; j++) {
+      h += '<td class="p-0.5"><input class="cell" id="' + w + i + j + '" value="' + cells[w][i][j] + '" oninput="setCell(\'' + w + '\',' + i + ',' + j + ',this.value)" /></td>';
+    }
+    h += '</tr>';
+  }
+  document.getElementById('minput' + w).innerHTML = h + '</tbody></table>';
+}
+function setCell(w, i, j, v) { cells[w][i][j] = v; }
+function syncSizeInputs(w) {
+  document.getElementById(w + 'row').value = state[w].rows;
+  document.getElementById(w + 'col').value = state[w].cols;
+}
+function clampSize(v) { v = parseInt(v, 10); if (Number.isNaN(v)) v = 1; return Math.max(1, Math.min(10, v)); }
+function sizeTyped(w) {
+  state[w].rows = clampSize(document.getElementById(w + 'row').value);
+  state[w].cols = clampSize(document.getElementById(w + 'col').value);
+  syncSizeInputs(w); renderGrid(w);
+}
+function stepSize(w, field, d) {
+  if (field === 'row') state[w].rows = clampSize(state[w].rows + d); else state[w].cols = clampSize(state[w].cols + d);
+  syncSizeInputs(w); renderGrid(w);
+  return false;
+}
+function fillM(w, kind) {
+  for (let i = 0; i < MAXD; i++) for (let j = 0; j < MAXD; j++) {
+    cells[w][i][j] = kind === 'r' ? String(Math.floor(Math.random() * 10)) : kind;
+  }
+  renderGrid(w);
+  return false;
+}
+const NUMRE = /^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/;
+function readMatrix(w) {
+  const sizeStrR = String(document.getElementById(w + 'row').value);
+  const sizeStrC = String(document.getElementById(w + 'col').value);
+  let valid = true;
+  if (!/^\d+$/.test(sizeStrR) || !/^\d+$/.test(sizeStrC)) valid = false;
+  const rows = parseInt(sizeStrR, 10), cols = parseInt(sizeStrC, 10);
+  if (!(rows >= 1 && rows <= 10 && cols >= 1 && cols <= 10)) valid = false;
+  const data = [];
+  if (valid) {
+    for (let i = 0; i < rows; i++) {
+      data[i] = [];
+      for (let j = 0; j < cols; j++) {
+        const s = String(cells[w][i][j]).trim();
+        if (s === '') data[i][j] = 0;
+        else if (NUMRE.test(s)) data[i][j] = parseFloat(s);
+        else { valid = false; data[i][j] = 0; }
+      }
+    }
+  }
+  return { rows, cols, data, valid };
+}
+function fmtCell(x) {
+  if (!Number.isFinite(x)) return String(x);
+  let r = Math.round(x * 1e10) / 1e10;
+  if (Object.is(r, -0)) r = 0;
+  return String(r);
+}
+function matrixHTML(M) {
+  let h = '<table class="rmtx"><tbody>';
+  for (const row of M) { h += '<tr>'; for (const v of row) h += '<td>' + fmtCell(v) + '</td>'; h += '</tr>'; }
+  return h + '</tbody></table>';
+}
+function clearZones() {
+  for (const id of ['resultout', 'resultouta', 'resultoutb']) document.getElementById(id).innerHTML = '';
+  lastResult = null;
+}
+function showErr(zone, msgs) {
+  document.getElementById(zone).innerHTML = msgs.map(ms => '<div class="err">' + ms + '</div>').join('');
+}
+function showResult(zone, labelHTML, M) {
+  lastResult = M;
+  document.getElementById(zone).innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-lg px-4 py-3"><div class="text-base font-bold mb-1">Result</div>' +
+    '<div class="flex flex-wrap items-center gap-2"><span class="text-xl font-bold">' + labelHTML + '</span>' + matrixHTML(M) + '</div></div>' +
+    '<div class="mt-2 space-x-3 text-sm font-medium text-[#3F51B5]"><a href="#" class="hover:underline" onclick="return cpTo(\'a\')">Copy To A</a><a href="#" class="hover:underline" onclick="return cpTo(\'b\')">Copy To B</a></div>';
+}
+function showDet(zone, label, det) {
+  document.getElementById(zone).innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-lg px-4 py-3"><div class="text-base font-bold mb-1">Result</div>' +
+    '<div class="text-xl font-bold">' + label + ' ' + fmtCell(det) + '</div></div>';
+}
+function matMul(A, B) {
+  const R = [];
+  for (let i = 0; i < A.length; i++) {
+    R[i] = [];
+    for (let j = 0; j < B[0].length; j++) {
+      let s = 0;
+      for (let k = 0; k < B.length; k++) s += A[i][k] * B[k][j];
+      R[i][j] = s;
+    }
+  }
+  return R;
+}
+function detBareiss(M) {
+  const n = M.length;
+  if (n === 1) return M[0][0];
+  const A = M.map(r => r.slice());
+  let sign = 1, prev = 1;
+  for (let k = 0; k < n - 1; k++) {
+    if (A[k][k] === 0) {
+      let sw = -1;
+      for (let i = k + 1; i < n; i++) if (A[i][k] !== 0) { sw = i; break; }
+      if (sw === -1) return 0;
+      const t = A[k]; A[k] = A[sw]; A[sw] = t; sign = -sign;
+    }
+    for (let i = k + 1; i < n; i++) for (let j = k + 1; j < n; j++) {
+      A[i][j] = (A[i][j] * A[k][k] - A[i][k] * A[k][j]) / prev;
+    }
+    prev = A[k][k];
+    if (prev === 0) return 0;
+  }
+  return sign * A[n - 1][n - 1];
+}
+function matInverse(M) {
+  const n = M.length;
+  const A = M.map((r, i) => r.concat(Array.from({ length: n }, (_, j) => (i === j ? 1 : 0))));
+  for (let c = 0; c < n; c++) {
+    let piv = c;
+    for (let r = c + 1; r < n; r++) if (Math.abs(A[r][c]) > Math.abs(A[piv][c])) piv = r;
+    if (A[piv][c] === 0) return null;
+    const t = A[c]; A[c] = A[piv]; A[piv] = t;
+    const d = A[c][c];
+    for (let j = 0; j < 2 * n; j++) A[c][j] /= d;
+    for (let r = 0; r < n; r++) {
+      if (r === c) continue;
+      const f = A[r][c];
+      if (f !== 0) for (let j = 0; j < 2 * n; j++) A[r][j] -= f * A[c][j];
+    }
+  }
+  return A.map(r => r.slice(n));
+}
+function validMsgs(w, needSquare) {
+  const m = readMatrix(w);
+  const msgs = [];
+  if (!m.valid) msgs.push('Please provide valid data in Matrix ' + w.toUpperCase() + '.');
+  if (needSquare && m.rows !== m.cols) msgs.push('The row and column size need to be the same.');
+  return { m, msgs };
+}
+function zoneOf(w) { return 'resultout' + w; }
+function cTranspose(w) {
+  clearZones();
+  const { m, msgs } = validMsgs(w, false);
+  if (msgs.length) { showErr(zoneOf(w), msgs); return false; }
+  const R = [];
+  for (let j = 0; j < m.cols; j++) { R[j] = []; for (let i = 0; i < m.rows; i++) R[j][i] = m.data[i][j]; }
+  showResult(zoneOf(w), w.toUpperCase() + '<sup>T</sup> =', R);
+  return false;
+}
+function cPower(w) {
+  clearZones();
+  const { m, msgs } = validMsgs(w, true);
+  const ps = String(document.getElementById('p' + w).value).trim();
+  if (!/^\d+$/.test(ps) || parseInt(ps, 10) < 1) msgs.push('Please provide a positive integer power value.');
+  if (msgs.length) { showErr(zoneOf(w), msgs); return false; }
+  const p = parseInt(ps, 10);
+  let R = m.data.map(r => r.slice());
+  for (let k = 1; k < p; k++) R = matMul(R, m.data);
+  showResult(zoneOf(w), w.toUpperCase() + '<sup>' + ps + '</sup> =', R);
+  return false;
+}
+function cTimes(w) {
+  clearZones();
+  const { m, msgs } = validMsgs(w, false);
+  const ss = String(document.getElementById('t' + w).value).trim();
+  if (!NUMRE.test(ss)) msgs.push('Please provide a value to multiple.');
+  if (msgs.length) { showErr(zoneOf(w), msgs); return false; }
+  const s = parseFloat(ss);
+  showResult(zoneOf(w), w.toUpperCase() + ' &#215; ' + ss + ' =', m.data.map(r => r.map(v => v * s)));
+  return false;
+}
+function cDeterminant(w) {
+  clearZones();
+  const { m, msgs } = validMsgs(w, true);
+  if (msgs.length) { showErr(zoneOf(w), msgs); return false; }
+  showDet(zoneOf(w), 'Determinant of ' + w.toUpperCase() + ' =', detBareiss(m.data));
+  return false;
+}
+function cInverse(w) {
+  clearZones();
+  const { m, msgs } = validMsgs(w, true);
+  if (msgs.length) { showErr(zoneOf(w), msgs); return false; }
+  if (detBareiss(m.data) === 0) { showErr(zoneOf(w), ['Determinant is 0. Inverse does not exist.']); return false; }
+  if (m.rows === 1) { showResult(zoneOf(w), w.toUpperCase() + '<sup>-1</sup> =', [[1 / m.data[0][0]]]); return false; }
+  const inv = matInverse(m.data);
+  if (!inv) { showErr(zoneOf(w), ['Determinant is 0. Inverse does not exist.']); return false; }
+  showResult(zoneOf(w), w.toUpperCase() + '<sup>-1</sup> =', inv);
+  return false;
+}
+function pairCheck() {
+  const a = readMatrix('a'), b = readMatrix('b');
+  const msgs = [];
+  if (!a.valid) msgs.push('Please provide valid data in Matrix A.');
+  if (!b.valid) msgs.push('Please provide valid data in Matrix B.');
+  return { a, b, msgs };
+}
+function cAdd() {
+  clearZones();
+  const { a, b, msgs } = pairCheck();
+  if (msgs.length) { showErr('resultout', msgs); return false; }
+  if (a.rows !== b.rows || a.cols !== b.cols) { showErr('resultout', ['Matrix A and B need to be the same in size.']); return false; }
+  showResult('resultout', 'A + B =', a.data.map((r, i) => r.map((v, j) => v + b.data[i][j])));
+  return false;
+}
+function cSub() {
+  clearZones();
+  const { a, b, msgs } = pairCheck();
+  if (msgs.length) { showErr('resultout', msgs); return false; }
+  if (a.rows !== b.rows || a.cols !== b.cols) { showErr('resultout', ['Matrix A and B need to be the same in size.']); return false; }
+  showResult('resultout', 'A &ndash; B =', a.data.map((r, i) => r.map((v, j) => v - b.data[i][j])));
+  return false;
+}
+function cMultiple() {
+  clearZones();
+  const { a, b, msgs } = pairCheck();
+  if (msgs.length) { showErr('resultout', msgs); return false; }
+  if (a.cols !== b.rows) { showErr('resultout', ['Matrix A column and B row amount need to be the same.']); return false; }
+  showResult('resultout', 'AB =', matMul(a.data, b.data));
+  return false;
+}
+function cSwap() {
+  clearZones();
+  const ts = state.a; state.a = state.b; state.b = ts;
+  const tc = cells.a; cells.a = cells.b; cells.b = tc;
+  syncSizeInputs('a'); syncSizeInputs('b');
+  renderGrid('a'); renderGrid('b');
+  document.getElementById('resultout').innerHTML =
+    '<div class="bg-[#3F51B5] text-white rounded-lg px-4 py-3"><div class="text-base font-bold mb-1">Result</div><div>Matrix A and B were swapped.</div></div>';
+  return false;
+}
+function cpTo(w) {
+  if (!lastResult) return false;
+  state[w].rows = lastResult.length;
+  state[w].cols = lastResult[0].length;
+  for (let i = 0; i < MAXD; i++) for (let j = 0; j < MAXD; j++) cells[w][i][j] = '';
+  for (let i = 0; i < lastResult.length; i++) for (let j = 0; j < lastResult[0].length; j++) cells[w][i][j] = fmtCell(lastResult[i][j]);
+  syncSizeInputs(w); renderGrid(w);
+  return false;
+}
+document.getElementById('panels').innerHTML = panelHTML('a') + panelHTML('b');
+renderGrid('a');
+renderGrid('b');
+</script>
+
+</body>
+  </html>
