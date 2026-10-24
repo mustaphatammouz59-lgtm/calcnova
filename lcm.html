@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Least Common Multiple Calculator — LCM with Steps | CalcNova</title>
+<meta name="description" content="Free LCM calculator: find the least common multiple of a set of numbers with prime-factorization and GCD-method steps shown." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/lcm" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.05rem;padding:.6rem .7rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .eq{font-size:1.25rem;line-height:1.8;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .sline{font-size:1.08rem;line-height:2;overflow-x:auto;white-space:nowrap;padding-bottom:.15rem}
+  .frac{display:inline-block;vertical-align:middle;text-align:center;margin:0 .12em}
+  .frac>span{display:block;padding:0 .25em;line-height:1.3;font-size:.92em}
+  .frac .top{border-bottom:1.5px solid currentColor}
+  .stepsbox{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:.75rem;padding:1rem 1.25rem;margin-top:1rem}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is the least common multiple (LCM)?","acceptedAnswer":{"@type":"Answer","text":"The least common multiple of two or more integers is the smallest positive integer that is divisible by all of them. It is written LCM(a, b): for example, LCM(18, 26) = 234 because 234 is the first number that appears in both the multiples of 18 and the multiples of 26."}},
+{"@type":"Question","name":"How do you find the LCM using the GCF?","acceptedAnswer":{"@type":"Answer","text":"Divide the product of the two numbers by their greatest common factor: LCM(a, b) = (a x b) / GCF(a, b). For more than two numbers, work in stages — find the LCM of the first two, then the LCM of that result and the next number, and so on."}},
+{"@type":"Question","name":"How do you find the LCM by prime factorization?","acceptedAnswer":{"@type":"Answer","text":"Break each number into its prime factors, then multiply together the highest power of every prime that appears. For 21 = 3 x 7, 14 = 2 x 7, and 38 = 2 x 19, the highest powers are 2, 3, 7, and 19, so the LCM is 2 x 3 x 7 x 19 = 798."}},
+{"@type":"Question","name":"What is the LCM if one of the numbers is 1?","acceptedAnswer":{"@type":"Answer","text":"The LCM is simply the other number (or the LCM of the rest), because 1 divides everything and adds no prime factors: LCM(1, 7) = 7."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Least Common Multiple Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Least Common Multiple Calculator</h1>
+  <p class="text-slate-600 mb-5 max-w-3xl">Please provide numbers separated by a comma "," and click the "Calculate" button to find the LCM.</p>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2">
+      <section class="bg-white rounded-xl shadow p-5">
+        <textarea id="numberinputs" class="fin" rows="4">330, 75, 450, 225</textarea>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcLCM()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearLCM()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resLcm" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-3">What is the Least Common Multiple (LCM)?</h2>
+        <p class="text-slate-600">In mathematics, the least common multiple, also known as the lowest common multiple of two (or more) integers <b>a</b> and <b>b</b>, is the smallest positive integer that is divisible by both. It is commonly denoted as LCM(a, b).</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Brute Force Method</h3>
+        <p class="text-slate-600">There are multiple ways to find a least common multiple. The most basic is simply using a "brute force" method that lists out each integer's multiples.</p>
+        <div class="stepsbox">
+          <b>EX:</b> Find LCM(18, 26)<br />
+          18: 18, 36, 54, 72, 90, 108, 126, 144, 162, 180, 198, 216, 234<br />
+          26: 52, 78, 104, 130, 156, 182, 208, 234
+        </div>
+        <p class="text-slate-600 mt-3">As can be seen, this method can be fairly tedious, and is far from ideal.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Prime Factorization Method</h3>
+        <p class="text-slate-600">A more systematic way to find the LCM of some given integers is to use prime factorization. Prime factorization involves breaking down each of the numbers being compared into its product of prime numbers. The LCM is then determined by multiplying the highest power of each prime number together. Note that computing the LCM this way, while more efficient than using the "brute force" method, is still limited to smaller numbers. Refer to the example below for clarification on how to use prime factorization to determine the LCM:</p>
+        <div class="stepsbox">
+          <b>EX:</b> Find LCM(21, 14, 38)<br />
+          21 = 3 × 7<br />
+          14 = 2 × 7<br />
+          38 = 2 × 19<br /><br />
+          The LCM is therefore:<br />
+          3 × 7 × 2 × 19 = 798
+        </div>
+        <h3 class="text-lg font-bold mt-6 mb-2">Greatest Common Divisor Method</h3>
+        <p class="text-slate-600">A third viable method for finding the LCM of some given integers is using the <a class="text-[#3F51B5] font-medium hover:underline" href="/gcf">greatest common divisor</a>. This is also frequently referred to as the greatest common factor (GCF), among other names. Given LCM(a, b), the procedure for finding the LCM using GCF is to divide the product of the numbers <b>a</b> and <b>b</b> by their GCF, i.e. (a × b)/GCF(a,b). When trying to determine the LCM of more than two numbers, for example LCM(a, b, c), find the LCM of <b>a</b> and <b>b</b> where the result will be <b>q</b>. Then find the LCM of <b>c</b> and <b>q</b>. The result will be the LCM of all three numbers. Using the previous example:</p>
+        <div class="stepsbox">
+          <b>EX:</b> Find LCM(21, 14, 38)<br /><br />
+          GCF(14, 38) = 2<br />
+          <span id="exf1"></span><br />
+          GCF(266, 21) = 7<br />
+          <span id="exf2"></span><br />
+          LCM(21, 14, 38) = 798
+        </div>
+        <p class="text-slate-600 mt-3">Note that it is not important which LCM is calculated first as long as all the numbers are used, and the method is followed accurately. Depending on the particular situation, each method has its own merits, and the user can decide which method to pursue at their own discretion.</p>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div class="space-y-4 text-slate-600">
+          <div><h3 class="font-semibold text-slate-800">What is the least common multiple (LCM)?</h3><p>The least common multiple of two or more integers is the smallest positive integer that is divisible by all of them. It is written LCM(a, b): for example, LCM(18, 26) = 234 because 234 is the first number that appears in both the multiples of 18 and the multiples of 26.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How do you find the LCM using the GCF?</h3><p>Divide the product of the two numbers by their greatest common factor: LCM(a, b) = (a × b) / GCF(a, b). For more than two numbers, work in stages — find the LCM of the first two, then the LCM of that result and the next number, and so on.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How do you find the LCM by prime factorization?</h3><p>Break each number into its prime factors, then multiply together the highest power of every prime that appears. For 21 = 3 × 7, 14 = 2 × 7, and 38 = 2 × 19, the highest powers are 2, 3, 7, and 19, so the LCM is 2 × 3 × 7 × 19 = 798.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What is the LCM if one of the numbers is 1?</h3><p>The LCM is simply the other number (or the LCM of the rest), because 1 divides everything and adds no prime factors: LCM(1, 7) = 7.</p></div>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/gcf">GCF Calculator</a></li>
+          <li><a class="hover:underline" href="/factor">Factor Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">LCM × GCF = a × b</h3>
+        <p>For any two positive integers, LCM(a, b) × GCF(a, b) = a × b. It is a fast sanity check: LCM(18, 26) = 234 and GCF(18, 26) = 2, and 234 × 2 = 468 = 18 × 26.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+function showRes(id, html) { const e = document.getElementById(id); e.innerHTML = html; e.classList.remove('hidden'); }
+function banner(lines, stepsHtml) {
+  return '<div class="bg-[#3F51B5] text-white font-bold rounded-lg px-4 py-3"><div class="text-base mb-1">Result</div>' +
+    lines.map(l => '<div class="eq">' + l + '</div>').join('') + '</div>' + (stepsHtml || '') + shareLcm();
+}
+function fracHTML(top, bot) { return '<span class="frac"><span class="top">' + top + '</span><span>' + bot + '</span></span>'; }
+function gcdB(a, b) { a = a < 0n ? -a : a; b = b < 0n ? -b : b; while (b !== 0n) { const t = a % b; a = b; b = t; } return a; }
+function factorize(n) { /* n: BigInt >= 1 -> ascending prime list with repetition */
+  const out = [];
+  let d = 2n;
+  while (d * d <= n) {
+    while (n % d === 0n) { out.push(d); n /= d; }
+    d = d === 2n ? 3n : d + 2n;
+  }
+  if (n > 1n) out.push(n);
+  return out;
+}
+function calcLCM() {
+  const raw = document.getElementById('numberinputs').value;
+  const tokens = raw.split(',').map(s => s.trim()).filter(s => s !== '');
+  if (tokens.length < 2) return showRes('resLcm', banner(['Please provide at least two numbers separated by commas.']));
+  if (tokens.some(t => !/^\d+$/.test(t))) {
+    if (tokens.some(t => /^-/.test(t) || t === '0')) return showRes('resLcm', banner(['Please provide positive integers (zero and negative numbers are not allowed).']));
+    return showRes('resLcm', banner(['Please provide whole numbers separated by commas.']));
+  }
+  const nums = tokens.map(t => BigInt(t));
+  if (nums.some(n => n === 0n)) return showRes('resLcm', banner(['Please provide positive integers (zero and negative numbers are not allowed).']));
+  const list = nums.map(n => n.toString()).join(', ');
+  let lcm = nums[0];
+  for (let i = 1; i < nums.length; i++) lcm = lcm / gcdB(lcm, nums[i]) * nums[i];
+  let gcdAll = nums[0];
+  for (let i = 1; i < nums.length; i++) gcdAll = gcdB(gcdAll, nums[i]);
+
+  const facs = nums.map(factorize);
+  const maxPow = new Map();
+  for (const f of facs) {
+    const cnt = new Map();
+    for (const p of f) cnt.set(p.toString(), (cnt.get(p.toString()) || 0) + 1);
+    for (const [ps, c] of cnt) if (c > (maxPow.get(ps) || 0)) maxPow.set(ps, c);
+  }
+  const primes = [...maxPow.keys()].map(BigInt).sort((x, y) => (x < y ? -1 : 1));
+  const lcmFactors = [];
+  for (const p of primes) for (let i = 0; i < maxPow.get(p.toString()); i++) lcmFactors.push(p.toString());
+  const pfLines = nums.map((n, i) => n.toString() + ' = ' + facs[i].map(String).join(' × ')).join('<br />');
+  const pfBlock = '<div class="sline">Prime factorization of the numbers:</div>' + pfLines.split('<br />').map(l => '<div class="sline">' + l + '</div>').join('') +
+    '<div class="sline">LCM(' + list + ') = ' + lcmFactors.join(' × ') + '</div>' +
+    '<div class="sline">= ' + lcm.toString() + '</div>';
+
+  let steps;
+  if (nums.length === 2) {
+    const a = nums[0], b = nums[1], g = gcdAll;
+    let gcdBlock = '<div class="font-bold text-slate-800 mb-2">Greatest Common Divisor (GCD) Method Steps:</div>' +
+      '<div class="sline">GCD(' + list + ') = ' + g.toString() + '</div>';
+    if (g === 1n) gcdBlock += '<div class="sline">Since GCD = 1, LCM = ' + a.toString() + ' × ' + b.toString() + ' = ' + lcm.toString() + '</div>';
+    else gcdBlock += '<div class="sline">LCM = ' + fracHTML(a.toString() + ' × ' + b.toString(), g.toString()) + ' = ' + lcm.toString() + '</div>';
+    steps = '<div class="stepsbox text-slate-700">' + gcdBlock +
+      '<div class="font-bold text-slate-800 mt-4 mb-2">Prime Factorization Method Steps:</div>' + pfBlock + '</div>';
+  } else {
+    steps = '<div class="stepsbox text-slate-700"><div class="font-bold text-slate-800 mb-2">Steps:</div>' + pfBlock +
+      '<div class="sline">GCD(' + list + ') = ' + gcdAll.toString() + '</div></div>';
+  }
+  return showRes('resLcm', banner(['LCM(' + list + ') = ' + lcm.toString()], steps));
+}
+function shareLcm() {
+  return '<div class="mt-4"><button onclick="copyLcm()" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="shLcm" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function copyLcm() {
+  const u = new URL(location.href); u.search = ''; u.hash = '';
+  u.searchParams.set('numberinputs', document.getElementById('numberinputs').value);
+  const done = () => { document.getElementById('shLcm').textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+function clearLCM() {
+  document.getElementById('numberinputs').value = '330, 75, 450, 225';
+  const r = document.getElementById('resLcm'); r.classList.add('hidden'); r.innerHTML = '';
+}
+document.getElementById('exf1').innerHTML = 'LCM(14, 38) = ' + fracHTML('38 × 14', '2') + ' = 266';
+document.getElementById('exf2').innerHTML = 'LCM(266, 21) = ' + fracHTML('266 × 21', '7') + ' = 798';
+(function () {
+  const q = new URLSearchParams(location.search);
+  if (q.has('numberinputs')) { document.getElementById('numberinputs').value = q.get('numberinputs'); calcLCM(); }
+})();
+</script>
+
+</body>
+        </html>
