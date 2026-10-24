@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Percent Error Calculator — Percentage Error Between Observed &amp; True Values | CalcNova</title>
+<meta name="description" content="Free percent error calculator: computes the percentage error between an observed (measured) value and a true (accepted) value, with step-by-step working and an explanation of negative percent error." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/percent-error" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.1rem;padding:.5rem .6rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .eq{font-size:1.25rem;line-height:1.7;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .steps{font-size:1.08rem;line-height:2.1;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 .12em;line-height:1.2}
+  .frac .fn{border-bottom:2px solid #1F2937;padding:0 .32em}
+  .frac .fd{padding:0 .32em}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is the formula for percent error?","acceptedAnswer":{"@type":"Answer","text":"Percent error = (observed value − true value) / true value × 100%. The sign shows the direction of the error: a positive result means the observed value is larger than the true value, and a negative result means it is smaller. Taking the absolute value gives the size of the error without its direction."}},
+{"@type":"Question","name":"Can percent error be negative?","acceptedAnswer":{"@type":"Answer","text":"Yes. When the observed value is smaller than the true value, the signed percent error is negative — for example, an observed value of 7 against a true value of 9 gives (7 − 9) / 9 × 100% = −22.2222%. A negative error is not better or worse than a positive one of the same size; the best possible result is 0%, when the two values agree exactly."}},
+{"@type":"Question","name":"What does a percent error of 0% mean?","acceptedAnswer":{"@type":"Answer","text":"It means the observed value equals the true value exactly, so there is no discrepancy between the measurement and the accepted value."}},
+{"@type":"Question","name":"What happens if the true value is 0?","acceptedAnswer":{"@type":"Answer","text":"Percent error is not defined for a true value of 0, because the formula divides by the true value. If the observed value is non-zero the error is infinitely large relative to a true value of zero; if both values are 0, the error is 0%."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Percent Error Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Percent Error Calculator</h1>
+  <p class="text-slate-600 mb-5 max-w-3xl">Find the percentage error between an observed (measured) value and the true (accepted) value of a measurement. Modify the values and click "Calculate" to see the result with its steps.</p>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2">
+      <section class="bg-white rounded-xl shadow p-5">
+        <div class="grid sm:grid-cols-2 gap-4 max-w-lg">
+          <label class="block"><span class="text-sm font-medium text-slate-600">Observed Value</span><input id="observedvalue" class="fin mt-1" value="10" inputmode="decimal" /></label>
+          <label class="block"><span class="text-sm font-medium text-slate-600">True Value</span><input id="truevalue" class="fin mt-1" value="11" inputmode="decimal" /></label>
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button onclick="calcErr()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearErr()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resErr" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-3">Percentage Error</h2>
+        <p class="text-slate-600">Percentage error measures the discrepancy between an observed (measured) value and a true (expected, accepted, or known) value. It is the standard way to compare a measurement against a known value and to judge whether the measurement can be trusted. Measured values almost always drift at least slightly from the true value — because of human error, estimations, or the limits of the instruments used — and percent error quantifies how large that drift is relative to the true value. A small percent error means the observed and true values are close; a large one means they differ greatly, and in most fields a small error is what you want. A very large error, such as 90%, usually means something went wrong, or that the experiment or measurement technique needs to be re-evaluated.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Computing percentage error</h3>
+        <p class="text-slate-600">Start with the <b>absolute error</b> — the size of the gap between the two values. Divide it by the true value to get the <b>relative error</b>, then multiply by 100 to express it as a percentage. Keeping the sign of the difference (rather than its absolute value) also shows the direction of the error:</p>
+        <p class="text-center my-3 text-lg">Absolute error = |V<sub>observed</sub> − V<sub>true</sub>|</p>
+        <p class="text-center my-3 text-lg">Relative error = <span class="frac"><span class="fn">|V<sub>observed</sub> − V<sub>true</sub>|</span><span class="fd">V<sub>true</sub></span></span></p>
+        <p class="text-center my-3 text-lg">Percentage error = <span class="frac"><span class="fn">V<sub>observed</sub> − V<sub>true</sub></span><span class="fd">V<sub>true</sub></span></span> × 100%</p>
+        <p class="text-slate-600">For example, with an observed value of 56.891 and a true value of 62.327, the percentage error is <span class="frac"><span class="fn">56.891 − 62.327</span><span class="fd">62.327</span></span> × 100% = <b>−8.7217%</b> — the measurement is about 8.72% below the true value. These formulas assume the true value is known. When it is not, the spread of repeated measurements is usually summarized with a <a class="text-[#3F51B5] font-medium hover:underline" href="/standard-deviation">standard deviation</a> instead.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Negative percentage error</h3>
+        <p class="text-slate-600">If the absolute value of the difference is used, percent error is always positive (for a positive true value) and only the size of the error is reported. Dropping the absolute value, as this calculator does, lets the error be negative: an observed value of 7 against a true value of 9 gives <span class="frac"><span class="fn">7 − 9</span><span class="fd">9</span></span> × 100% = <b>−22.2222%</b>. The negative sign simply means the measured value came in smaller than expected; if the observed value is larger, the error is positive. A negative error is neither better nor worse than a positive one of the same magnitude — the best possible outcome is 0%, when the observed and true values are equal.</p>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div class="space-y-4 text-slate-600">
+          <div><h3 class="font-semibold text-slate-800">What is the formula for percent error?</h3><p>Percent error = (observed value − true value) / true value × 100%. The sign shows the direction of the error: a positive result means the observed value is larger than the true value, and a negative result means it is smaller. Taking the absolute value gives the size of the error without its direction.</p></div>
+          <div><h3 class="font-semibold text-slate-800">Can percent error be negative?</h3><p>Yes. When the observed value is smaller than the true value, the signed percent error is negative — for example, an observed value of 7 against a true value of 9 gives (7 − 9) / 9 × 100% = −22.2222%. A negative error is not better or worse than a positive one of the same size; the best possible result is 0%, when the two values agree exactly.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What does a percent error of 0% mean?</h3><p>It means the observed value equals the true value exactly, so there is no discrepancy between the measurement and the accepted value.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What happens if the true value is 0?</h3><p>Percent error is not defined for a true value of 0, because the formula divides by the true value. If the observed value is non-zero the error is infinitely large relative to a true value of zero; if both values are 0, the error is 0%.</p></div>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/percent">Percentage Calculator</a></li>
+          <li><a class="hover:underline" href="/scientific">Scientific Calculator</a></li>
+          <li><a class="hover:underline" href="/statistics">Statistics Calculator</a></li>
+          <li><a class="hover:underline" href="/standard-deviation">Standard Deviation Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">Reading the result</h3>
+        <p>The headline rounds the error to 4 decimal places. The steps show the full-precision value, and when the error is negative a second line gives its magnitude — the number most lab reports quote.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+function fmtDec(x) { /* PHP-style: 14 significant digits */
+  if (!isFinite(x)) return String(x);
+  if (Number.isInteger(x)) return String(x);
+  return String(parseFloat(x.toPrecision(14)));
+}
+function fmt4(x) { /* round to 4 decimal places (half away from zero), thousands separators, trimmed */
+  const r = Math.round(Math.abs(x) * 10000) / 10000;
+  let s = r.toFixed(4);
+  if (s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
+  const parts = s.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return (x < 0 && r !== 0 ? '-' : '') + parts.join('.');
+}
+function fr(n, d) { return '<span class="frac"><span class="fn">' + n + '</span><span class="fd">' + d + '</span></span>'; }
+function showRes(html) { const e = document.getElementById('resErr'); e.innerHTML = html; e.classList.remove('hidden'); }
+function num(id) {
+  const s = document.getElementById(id).value.trim();
+  if (s === '') return null;
+  const v = parseFloat(s);
+  return isNaN(v) ? null : v;
+}
+function calcErr() {
+  const vo = num('observedvalue'), vt = num('truevalue');
+  const errs = [];
+  if (vo === null) errs.push('The observed value need to be numeric.');
+  if (vt === null) errs.push('The true value need to be numeric.');
+  if (errs.length) {
+    return showRes('<h3 class="text-lg font-bold text-[#3F51B5]">Result</h3>' + errs.map(m => '<p class="text-red-600 font-semibold mt-1">' + m + '</p>').join(''));
+  }
+  const diff = vo - vt;
+  const steps = 'Percent Error = ' + fr('V<sub>observed</sub> - V<sub>true</sub>', 'V<sub>true</sub>') +
+    ' = ' + fr(fmtDec(vo) + ' - ' + fmtDec(vt), fmtDec(vt)) +
+    ' = ' + fr(fmtDec(diff), fmtDec(vt));
+  let head, finalStep, absLine = '';
+  if (vt === 0) {
+    if (vo === 0) { head = 'Percent error: 0%'; finalStep = '0%'; }
+    else { head = 'Percent error: Infiniti'; finalStep = 'Infiniti'; }
+  } else {
+    const pct = diff / vt * 100;
+    head = 'Percent error = ' + fmt4(pct) + '%';
+    finalStep = fmtDec(pct) + '%';
+    if (pct < 0) absLine = '<div class="eq mt-2">= ' + fmtDec(Math.abs(pct)) + '% error</div>';
+  }
+  showRes('<div class="bg-[#3F51B5] text-white font-bold text-xl rounded-lg px-4 py-3">' + head + '</div>' +
+    '<div class="border-t mt-4 pt-3"><p class="font-bold mb-1">Steps:</p><div class="steps">' + steps + ' = ' + finalStep + '</div></div>' +
+    absLine +
+    shareRow());
+}
+function shareRow() {
+  return '<div class="mt-4"><button onclick="copyShare()" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="shErr" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function copyShare() {
+  const u = new URL(location.href); u.search = '';
+  u.searchParams.set('observedvalue', document.getElementById('observedvalue').value.trim());
+  u.searchParams.set('truevalue', document.getElementById('truevalue').value.trim());
+  const done = () => { document.getElementById('shErr').textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+function clearErr() {
+  document.getElementById('observedvalue').value = '10';
+  document.getElementById('truevalue').value = '11';
+  const r = document.getElementById('resErr'); r.classList.add('hidden'); r.innerHTML = '';
+}
+(function () {
+  const q = new URLSearchParams(location.search);
+  if (q.has('observedvalue') || q.has('truevalue')) {
+    if (q.has('observedvalue')) document.getElementById('observedvalue').value = q.get('observedvalue');
+    if (q.has('truevalue')) document.getElementById('truevalue').value = q.get('truevalue');
+    calcErr();
+  }
+})();
+</script>
+
+</body>
+  </html>
