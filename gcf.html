@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Greatest Common Factor Calculator — GCF with Steps | CalcNova</title>
+<meta name="description" content="Free GCF calculator: find the greatest common factor of a set of numbers with prime-factorization steps shown and the common factors underlined." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/gcf" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.05rem;padding:.6rem .7rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .eq{font-size:1.25rem;line-height:1.8;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .sline{font-size:1.08rem;line-height:2;overflow-x:auto;white-space:nowrap;padding-bottom:.15rem}
+  .stepsbox{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:.75rem;padding:1rem 1.25rem;margin-top:1rem}
+  .cf{text-decoration:underline;text-underline-offset:3px;font-weight:600}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is the greatest common factor (GCF)?","acceptedAnswer":{"@type":"Answer","text":"The greatest common factor of two or more non-zero integers is the largest positive integer that divides all of them. It is also called the greatest common divisor (GCD) and is written GCF(a, b): for example, GCF(32, 256) = 32."}},
+{"@type":"Question","name":"How do you find the GCF by prime factorization?","acceptedAnswer":{"@type":"Answer","text":"Factor each number into primes, find the factors they all share (each prime at the smallest count it appears with in any one number), and multiply those common factors together. For 16, 88, and 104 the shared factors are 2 x 2 x 2, so the GCF is 8."}},
+{"@type":"Question","name":"What is the Euclidean algorithm?","acceptedAnswer":{"@type":"Answer","text":"A faster method for two numbers: replace the larger number by the remainder of dividing the larger by the smaller, and repeat until the remainder is 0. The last non-zero remainder is the GCF. For more than two numbers, apply it in stages, carrying the GCF forward."}},
+{"@type":"Question","name":"What is the GCF if the numbers share no prime factors?","acceptedAnswer":{"@type":"Answer","text":"The GCF is 1 — the numbers are called coprime, or relatively prime. For example, GCF(7, 13) = 1, even though neither number is 1 itself."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Greatest Common Factor Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Greatest Common Factor Calculator</h1>
+  <p class="text-slate-600 mb-5 max-w-3xl">Please provide numbers separated by a comma "," and click the "Calculate" button to find the GCF.</p>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2">
+      <section class="bg-white rounded-xl shadow p-5">
+        <textarea id="numberinputs" class="fin" rows="4">330, 75, 450, 225</textarea>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcGCF()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearGCF()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resGcf" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-3">What is the Greatest Common Factor (GCF)?</h2>
+        <p class="text-slate-600">In mathematics, the greatest common factor (GCF), also known as the greatest common divisor, of two (or more) non-zero integers <b>a</b> and <b>b</b>, is the largest positive integer by which both integers can be divided. It is commonly denoted as GCF(a, b). For example, GCF(32, 256) = 32.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Prime Factorization Method</h3>
+        <p class="text-slate-600">There are multiple ways to find the greatest common factor of given integers. One of these involves computing the prime factorizations of each integer, determining which factors they have in common, and multiplying these factors to find the GCF. Refer to the example below (the common factors are underlined).</p>
+        <div class="stepsbox">
+          <b>EX:</b> GCF(16, 88, 104)<br />
+          16 = <span class="cf">2</span> × <span class="cf">2</span> × <span class="cf">2</span> × 2<br />
+          88 = <span class="cf">2</span> × <span class="cf">2</span> × <span class="cf">2</span> × 11<br />
+          104 = <span class="cf">2</span> × <span class="cf">2</span> × <span class="cf">2</span> × 13<br />
+          GCF(16, 88, 104) = 2 × 2 × 2 = 8
+        </div>
+        <p class="text-slate-600 mt-3">Prime factorization is only efficient for smaller integer values. Larger values would make the prime factorization of each and the determination of the common factors far more tedious.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Euclidean Algorithm</h3>
+        <p class="text-slate-600">Another method used to determine the GCF involves using the Euclidean algorithm. This method is far more efficient than prime factorization. It uses a division algorithm combined with the observation that the GCF of two integers also divides their difference. The algorithm is as follows:</p>
+        <div class="stepsbox">
+          GCF(a, a) = a<br />
+          GCF(a, b) = GCF(a − b, b), when a &gt; b<br />
+          GCF(a, b) = GCF(a, b − a), when b &gt; a
+        </div>
+        <p class="text-slate-600 mt-3">In practice, repeatedly replace the larger of the two numbers by the remainder of the division until the remainder is 0; the GCF is the remainder from the step before the zero result:</p>
+        <div class="stepsbox">
+          <b>EX:</b> GCF(268442, 178296)<br />
+          268442 = 178296 × 1 + 90146<br />
+          178296 = 90146 × 1 + 88150<br />
+          90146 = 88150 × 1 + 1996<br />
+          88150 = 1996 × 44 + 326<br />
+          1996 = 326 × 6 + 40<br />
+          326 = 40 × 8 + 6<br />
+          40 = 6 × 6 + 4<br />
+          6 = 4 × 1 + 2<br />
+          4 = 2 × 2 + 0 &nbsp;→&nbsp; GCF = 2
+        </div>
+        <p class="text-slate-600 mt-3">If more integers were present, the same process would be performed to find the GCF of the subsequent integer and the GCF of the previous two integers. Referring to the previous example, if instead the desired value were GCF(268442, 178296, 66888), after having found that GCF(268442, 178296) is 2, the next step would be to calculate GCF(66888, 2). In this particular case, it is clear that the GCF would also be 2, yielding GCF(268442, 178296, 66888) = 2.</p>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div class="space-y-4 text-slate-600">
+          <div><h3 class="font-semibold text-slate-800">What is the greatest common factor (GCF)?</h3><p>The greatest common factor of two or more non-zero integers is the largest positive integer that divides all of them. It is also called the greatest common divisor (GCD) and is written GCF(a, b): for example, GCF(32, 256) = 32.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How do you find the GCF by prime factorization?</h3><p>Factor each number into primes, find the factors they all share (each prime at the smallest count it appears with in any one number), and multiply those common factors together. For 16, 88, and 104 the shared factors are 2 × 2 × 2, so the GCF is 8.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What is the Euclidean algorithm?</h3><p>A faster method for two numbers: replace the larger number by the remainder of dividing the larger by the smaller, and repeat until the remainder is 0. The last non-zero remainder is the GCF. For more than two numbers, apply it in stages, carrying the GCF forward.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What is the GCF if the numbers share no prime factors?</h3><p>The GCF is 1 — the numbers are called coprime, or relatively prime. For example, GCF(7, 13) = 1, even though neither number is 1 itself.</p></div>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/lcm">LCM Calculator</a></li>
+          <li><a class="hover:underline" href="/factor">Factor Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">GCF, GCD, HCF — same number</h3>
+        <p>Greatest common factor, greatest common divisor, and highest common factor are three names for the same value — which is why the steps here also finish fraction simplification: dividing the numerator and denominator of 75/225 by their GCF, 75, gives 1/3.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+function showRes(id, html) { const e = document.getElementById(id); e.innerHTML = html; e.classList.remove('hidden'); }
+function banner(lines, stepsHtml) {
+  return '<div class="bg-[#3F51B5] text-white font-bold rounded-lg px-4 py-3"><div class="text-base mb-1">Result</div>' +
+    lines.map(l => '<div class="eq">' + l + '</div>').join('') + '</div>' + (stepsHtml || '') + shareGcf();
+}
+function gcdB(a, b) { while (b !== 0n) { const t = a % b; a = b; b = t; } return a; }
+function factorize(n) { /* n: BigInt >= 1 -> ascending prime list with repetition */
+  const out = [];
+  let d = 2n;
+  while (d * d <= n) {
+    while (n % d === 0n) { out.push(d); n /= d; }
+    d = d === 2n ? 3n : d + 2n;
+  }
+  if (n > 1n) out.push(n);
+  return out;
+}
+function calcGCF() {
+  const raw = document.getElementById('numberinputs').value;
+  const tokens = raw.split(',').map(s => s.trim()).filter(s => s !== '');
+  if (tokens.length < 2) return showRes('resGcf', banner(['Please provide at least two numbers separated by commas.']));
+  if (tokens.some(t => !/^\d+$/.test(t))) {
+    if (tokens.some(t => /^-/.test(t) || t === '0')) return showRes('resGcf', banner(['Please provide positive integers (zero and negative numbers are not allowed).']));
+    return showRes('resGcf', banner(['Please provide whole numbers separated by commas.']));
+  }
+  const nums = tokens.map(t => BigInt(t));
+  if (nums.some(n => n === 0n)) return showRes('resGcf', banner(['Please provide positive integers (zero and negative numbers are not allowed).']));
+  const list = nums.map(n => n.toString()).join(', ');
+  let g = nums[0];
+  for (let i = 1; i < nums.length; i++) g = gcdB(g, nums[i]);
+
+  const facs = nums.map(factorize);
+  const counts = facs.map(f => { const m = new Map(); for (const p of f) m.set(p.toString(), (m.get(p.toString()) || 0) + 1); return m; });
+  const common = new Map();
+  for (const [ps, c] of counts[0]) {
+    let mn = c;
+    for (let i = 1; i < counts.length; i++) mn = Math.min(mn, counts[i].get(ps) || 0);
+    if (mn > 0) common.set(ps, mn);
+  }
+  const pfLines = nums.map((n, i) => {
+    const used = new Map();
+    const parts = facs[i].map(p => {
+      const ps = p.toString();
+      const u = (used.get(ps) || 0);
+      if (u < (common.get(ps) || 0)) { used.set(ps, u + 1); return '<span class="cf">' + ps + '</span>'; }
+      return ps;
+    });
+    return '<div class="sline">' + n.toString() + ' = ' + parts.join(' × ') + '</div>';
+  }).join('');
+  const commonFactors = [];
+  for (const p of [...common.keys()].map(BigInt).sort((x, y) => (x < y ? -1 : 1))) {
+    for (let i = 0; i < common.get(p.toString()); i++) commonFactors.push(p.toString());
+  }
+  let closing;
+  if (commonFactors.length === 0) closing = '<div class="sline">GCF(' + list + ') = 1</div>';
+  else if (commonFactors.length === 1) closing = '<div class="sline">GCF(' + list + ') = ' + commonFactors[0] + '</div>';
+  else closing = '<div class="sline">GCF(' + list + ') = ' + commonFactors.join(' × ') + '</div><div class="sline">= ' + g.toString() + '</div>';
+  const steps = '<div class="stepsbox text-slate-700"><div class="font-bold text-slate-800 mb-2">Steps:</div>' +
+    '<div class="sline">Prime factorization of the numbers:</div>' + pfLines + closing + '</div>';
+  return showRes('resGcf', banner(['GCF(' + list + ') = ' + g.toString()], steps));
+}
+function shareGcf() {
+  return '<div class="mt-4"><button onclick="copyGcf()" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="shGcf" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function copyGcf() {
+  const u = new URL(location.href); u.search = ''; u.hash = '';
+  u.searchParams.set('numberinputs', document.getElementById('numberinputs').value);
+  const done = () => { document.getElementById('shGcf').textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+function clearGCF() {
+  document.getElementById('numberinputs').value = '330, 75, 450, 225';
+  const r = document.getElementById('resGcf'); r.classList.add('hidden'); r.innerHTML = '';
+}
+(function () {
+  const q = new URLSearchParams(location.search);
+  if (q.has('numberinputs')) { document.getElementById('numberinputs').value = q.get('numberinputs'); calcGCF(); }
+})();
+</script>
+
+</body>
+                                                                                          </html>
