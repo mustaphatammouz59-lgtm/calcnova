@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Root Calculator — Square Root, Cube Root &amp; nth Root | CalcNova</title>
+<meta name="description" content="Free root calculator: find the square root, cube root, or general nth root of any number, with the result verified by raising it back to the power n." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/root" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.1rem;padding:.5rem .6rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .eq{font-size:1.3rem;line-height:1.8;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .rad{border-top:2px solid currentColor;padding:0 .2em}
+  .stepsbox{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:.75rem;padding:1rem 1.25rem;font-size:1.02rem;line-height:1.9}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is the nth root of a number?","acceptedAnswer":{"@type":"Answer","text":"The nth root of a number a is another number b that, when multiplied by itself n times, equals a: if b^n = a, then b is the nth root of a. The square root is the case n = 2 and the cube root is n = 3."}},
+{"@type":"Question","name":"Can you take the root of a negative number?","acceptedAnswer":{"@type":"Answer","text":"For odd roots, yes: the cube root of -27 is -3, because (-3)^3 = -27. For even roots, no real answer exists — no real number squared or raised to the 4th power gives a negative — so the square root of a negative number is not a real number."}},
+{"@type":"Question","name":"How do you estimate a square root by hand?","acceptedAnswer":{"@type":"Answer","text":"Use the averaging method: guess a number b, divide the radicand a by b to get c, then average b and c and use the result as the new guess. Repeat until the guess stops changing at the precision you need. For example, estimating the square root of 27 from a guess of 5.125 settles at 5.196 in a few rounds."}},
+{"@type":"Question","name":"How are roots and exponents related?","acceptedAnswer":{"@type":"Answer","text":"A root is a fractional exponent: the nth root of a is a^(1/n). That is why this calculator can verify every answer by raising it back to the power n, and why a negative degree such as -2 gives the reciprocal: the degree -2 root of 16 is 1/sqrt(16) = 0.25."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Root Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Root Calculator</h1>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2">
+      <section class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-4">Square Root Calculator</h2>
+        <div class="flex items-end gap-2">
+          <span class="text-4xl font-light pb-1">√</span>
+          <input id="cvar1" class="fin flex-1" value="" placeholder="Enter a number" />
+          <span class="text-2xl font-bold pb-1">= ?</span>
+        </div>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcSqrt()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearRoot('cvar1','resSqrt')" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resSqrt" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-5 mt-6" id="cubic">
+        <h2 class="text-xl font-bold mb-4">Cube Root Calculator</h2>
+        <div class="flex items-end gap-2">
+          <span class="text-4xl font-light pb-1">∛</span>
+          <input id="cvar2" class="fin flex-1" value="" placeholder="Enter a number" />
+          <span class="text-2xl font-bold pb-1">= ?</span>
+        </div>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcCbrt()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearRoot('cvar2','resCbrt')" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resCbrt" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-5 mt-6" id="general">
+        <h2 class="text-xl font-bold mb-4">General Root Calculator</h2>
+        <div class="flex items-end gap-2">
+          <div class="w-20 shrink-0">
+            <input id="cvar3" class="fin !text-base text-right" value="" placeholder="n" aria-label="degree n" />
+          </div>
+          <span class="text-4xl font-light pb-1">√</span>
+          <input id="cvar4" class="fin flex-1" value="" placeholder="Enter a number" aria-label="radicand" />
+          <span class="text-2xl font-bold pb-1">= ?</span>
+        </div>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcGen()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearGen()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resGen" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-3">Roots in Mathematics</h2>
+        <p class="text-slate-600">In mathematics, the general root, or the <b>n</b><sup>th</sup> root of a number <b>a</b>, is another number <b>b</b> that, when multiplied by itself <b>n</b> times, equals <b>a</b>. In equation format:</p>
+        <p class="text-center my-3 text-xl"><sup>n</sup>√<span class="rad">a</span> = b &nbsp;&nbsp;and&nbsp;&nbsp; b<sup>n</sup> = a</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Estimating a Root</h3>
+        <p class="text-slate-600">Some common roots include the square root, where <b>n</b> = 2, and the cube root, where <b>n</b> = 3. Calculating square roots and <b>n</b><sup>th</sup> roots by hand is fairly intensive — it requires estimation and trial and error. More precise and efficient methods exist, but the one below needs no complicated mathematics. To calculate √<span class="rad">a</span>:</p>
+        <ol class="list-decimal pl-6 text-slate-600 space-y-1 mt-3">
+          <li>Estimate a number <b>b</b>.</li>
+          <li>Divide <b>a</b> by <b>b</b>. If the number <b>c</b> returned is precise to the desired decimal place, stop.</li>
+          <li>Average <b>b</b> and <b>c</b> and use the result as a new guess.</li>
+          <li>Repeat step two.</li>
+        </ol>
+        <div class="stepsbox mt-4">
+          <b>EX:</b> Find √<span class="rad">27</span> to 3 decimal places<br />
+          Guess: 5.125<br />
+          27 ÷ 5.125 = 5.268<br />
+          (5.125 + 5.268) / 2 = 5.197<br />
+          27 ÷ 5.197 = 5.195<br />
+          (5.195 + 5.197) / 2 = 5.196<br />
+          27 ÷ 5.196 = 5.196 &nbsp;→&nbsp; √27 ≈ 5.196
+        </div>
+        <h3 class="text-lg font-bold mt-6 mb-2">Estimating an n<sup>th</sup> Root</h3>
+        <p class="text-slate-600">Calculating <b>n</b><sup>th</sup> roots can be done with a similar method, with modifications to deal with <b>n</b>. While computing square roots entirely by hand is tedious, estimating higher <b>n</b><sup>th</sup> roots — even using a calculator for the intermediate steps — is significantly more tedious. To calculate <sup>n</sup>√<span class="rad">a</span>:</p>
+        <ol class="list-decimal pl-6 text-slate-600 space-y-1 mt-3">
+          <li>Estimate a number <b>b</b>.</li>
+          <li>Divide <b>a</b> by <b>b</b><sup>n−1</sup>. If the number <b>c</b> returned is precise to the desired decimal place, stop.</li>
+          <li>Average: <b>[b × (n−1) + c] / n</b>.</li>
+          <li>Repeat step two.</li>
+        </ol>
+        <div class="stepsbox mt-4">
+          <b>EX:</b> Find <sup>8</sup>√<span class="rad">15</span> to 3 decimal places<br />
+          Guess: 1.4<br />
+          15 ÷ 1.4<sup>7</sup> = 15 ÷ 10.541 = 1.423<br />
+          (1.4 × 7 + 1.423) / 8 = 1.4029<br />
+          15 ÷ 1.4029<sup>7</sup> = 1.4023<br />
+          (1.4029 × 7 + 1.4023) / 8 = 1.4028<br />
+          → <sup>8</sup>√15 ≈ 1.403
+        </div>
+        <p class="text-slate-600 mt-3">It should then be clear that computing any further will keep producing a number that rounds to 1.403, making 1.403 the final estimate to 3 decimal places.</p>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div class="space-y-4 text-slate-600">
+          <div><h3 class="font-semibold text-slate-800">What is the nth root of a number?</h3><p>The nth root of a number a is another number b that, when multiplied by itself n times, equals a: if b<sup>n</sup> = a, then b is the nth root of a. The square root is the case n = 2 and the cube root is n = 3.</p></div>
+          <div><h3 class="font-semibold text-slate-800">Can you take the root of a negative number?</h3><p>For odd roots, yes: the cube root of −27 is −3, because (−3)<sup>3</sup> = −27. For even roots, no real answer exists — no real number squared or raised to the 4th power gives a negative — so the square root of a negative number is not a real number.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How do you estimate a square root by hand?</h3><p>Use the averaging method: guess a number b, divide the radicand a by b to get c, then average b and c and use the result as the new guess. Repeat until the guess stops changing at the precision you need. Estimating √27 from a guess of 5.125 settles at 5.196 in a few rounds.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How are roots and exponents related?</h3><p>A root is a fractional exponent: the nth root of a is a<sup>1/n</sup>. That is why this calculator can verify every answer by raising it back to the power n, and why a negative degree such as −2 gives the reciprocal: the degree −2 root of 16 is 1/√16 = 0.25.</p></div>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/exponent">Exponent Calculator</a></li>
+          <li><a class="hover:underline" href="/scientific">Scientific Calculator</a></li>
+          <li><a class="hover:underline" href="/log">Log Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">Perfect powers to recognize</h3>
+        <p>Squares to 20² = 400 and cubes to 10³ = 1000 come up constantly: spotting that 144 = 12², 343 = 7³, or 625 = 25² makes many root problems instant.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+function fmtPHP(x) { /* PHP float-to-string at 14 significant digits */
+  if (Number.isNaN(x)) return 'NAN';
+  if (x === Infinity) return 'INF';
+  if (x === -Infinity) return '-INF';
+  if (x === 0) return '0';
+  const neg = x < 0, ax = Math.abs(x);
+  const parts = ax.toExponential(13).split('e');
+  const e10 = parseInt(parts[1], 10);
+  let digits = parts[0].replace('.', '').replace(/0+$/, '');
+  if (digits === '') digits = '0';
+  let out;
+  if (e10 >= 14 || e10 <= -5) {
+    const mm = digits.length > 1 ? digits[0] + '.' + digits.slice(1) : digits + '.0';
+    out = mm + 'E' + (e10 < 0 ? '-' : '+') + Math.abs(e10);
+  } else if (e10 >= 0) {
+    out = digits.length > e10 + 1 ? digits.slice(0, e10 + 1) + '.' + digits.slice(e10 + 1) : digits + '0'.repeat(e10 + 1 - digits.length);
+  } else {
+    out = '0.' + '0'.repeat(-e10 - 1) + digits;
+  }
+  return (neg ? '-' : '') + out;
+}
+function showRes(id, html) { const e = document.getElementById(id); e.innerHTML = html; e.classList.remove('hidden'); }
+function banner(id, lines) {
+  return '<div class="bg-[#3F51B5] text-white font-bold rounded-lg px-4 py-3"><div class="text-base mb-1">Result</div>' +
+    lines.map(l => '<div class="eq">' + l + '</div>').join('') + '</div>' + shareRoot(id);
+}
+function parseNum(s) {
+  s = s.trim();
+  if (s === '') return undefined;
+  if (!/^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/.test(s)) return null;
+  return parseFloat(s);
+}
+function radSpan(a) { return '<span class="rad">' + a + '</span>'; }
+function rootResult(id, nSup, sym, n, a, shareId) {
+  /* returns the banner HTML for a root computation, or a message banner */
+  let r;
+  if (a < 0) {
+    if (Number.isInteger(n) && Math.abs(n % 2) === 1) r = -Math.pow(-a, 1 / n);
+    else return banner(shareId, ['For a negative radicand, the degree must be an odd integer to give a real root.']);
+  } else {
+    r = Math.pow(a, 1 / n);
+  }
+  const line1 = (nSup !== '' ? '<sup>' + nSup + '</sup>' : '') + sym + radSpan(fmtPHP(a)) + ' = ' + fmtPHP(r);
+  const line2 = fmtPHP(r) + '<sup>' + fmtPHP(n) + '</sup> = ' + fmtPHP(a);
+  return banner(shareId, [line1, line2]);
+}
+function calcSqrt() {
+  const a = parseNum(document.getElementById('cvar1').value);
+  if (a === null || a === undefined) return showRes('resSqrt', banner('resSqrt', ['Please provide a number.']));
+  if (a < 0) return showRes('resSqrt', banner('resSqrt', ['The square root of a negative number is not a real number.']));
+  return showRes('resSqrt', rootResult('resSqrt', '', '√', 2, a, 'resSqrt'));
+}
+function calcCbrt() {
+  const a = parseNum(document.getElementById('cvar2').value);
+  if (a === null || a === undefined) return showRes('resCbrt', banner('resCbrt', ['Please provide a number.']));
+  return showRes('resCbrt', rootResult('resCbrt', '', '∛', 3, a, 'resCbrt'));
+}
+function calcGen() {
+  const n = parseNum(document.getElementById('cvar3').value);
+  const a = parseNum(document.getElementById('cvar4').value);
+  if (n === null || a === null || n === undefined || a === undefined) return showRes('resGen', banner('resGen', ['Please provide numbers for the degree and the radicand.']));
+  if (n === 0) return showRes('resGen', banner('resGen', ['The degree cannot be 0.']));
+  return showRes('resGen', rootResult('resGen', fmtPHP(n), '√', n, a, 'resGen'));
+}
+function shareRoot(id) {
+  const fn = id === 'resSqrt' ? 'copySqrt()' : id === 'resCbrt' ? 'copyCbrt()' : 'copyGen()';
+  const span = id === 'resSqrt' ? 'shSqrt' : id === 'resCbrt' ? 'shCbrt' : 'shGen';
+  return '<div class="mt-4"><button onclick="' + fn + '" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="' + span + '" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function doShare(params, span, hash) {
+  const u = new URL(location.href); u.search = ''; u.hash = hash || '';
+  for (const k in params) u.searchParams.set(k, params[k]);
+  const done = () => { document.getElementById(span).textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+function copySqrt() { doShare({ ctype: '1', cvar1: document.getElementById('cvar1').value }, 'shSqrt'); }
+function copyCbrt() { doShare({ ctype: '2', cvar2: document.getElementById('cvar2').value }, 'shCbrt', 'cubic'); }
+function copyGen() { doShare({ ctype: '3', cvar3: document.getElementById('cvar3').value, cvar4: document.getElementById('cvar4').value }, 'shGen', 'general'); }
+function clearRoot(inputId, resId) {
+  document.getElementById(inputId).value = '';
+  const r = document.getElementById(resId); r.classList.add('hidden'); r.innerHTML = '';
+}
+function clearGen() {
+  document.getElementById('cvar3').value = ''; document.getElementById('cvar4').value = '';
+  const r = document.getElementById('resGen'); r.classList.add('hidden'); r.innerHTML = '';
+}
+(function () {
+  const q = new URLSearchParams(location.search);
+  if (q.get('ctype') === '1') { if (q.has('cvar1')) document.getElementById('cvar1').value = q.get('cvar1'); calcSqrt(); }
+  else if (q.get('ctype') === '2') { if (q.has('cvar2')) document.getElementById('cvar2').value = q.get('cvar2'); calcCbrt(); }
+  else if (q.get('ctype') === '3') {
+    if (q.has('cvar3')) document.getElementById('cvar3').value = q.get('cvar3');
+    if (q.has('cvar4')) document.getElementById('cvar4').value = q.get('cvar4');
+    calcGen();
+  }
+})();
+</script>
+
+</body>
+          </html>
