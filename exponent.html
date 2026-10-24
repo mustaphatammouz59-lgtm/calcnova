@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Exponent Calculator — Solve for Base, Exponent or Result | CalcNova</title>
+<meta name="description" content="Free exponent calculator: enter any two of base, exponent and result to solve for the third. Supports the base e, negative and fractional exponents, with the multiplication steps shown." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/exponent" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.35rem;padding:.5rem .6rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .eq{font-size:1.7rem;line-height:1.6;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .steps{font-size:1.1rem;line-height:2.1;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 .12em;line-height:1.2}
+  .frac .fn{border-bottom:2px solid #fff;padding:0 .32em}
+  .frac .fd{padding:0 .32em}
+  .fracd{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 .12em;line-height:1.2}
+  .fracd .fn{border-bottom:2px solid #1F2937;padding:0 .32em}
+  .fracd .fd{padding:0 .32em}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do I solve for the exponent?","acceptedAnswer":{"@type":"Answer","text":"Enter the base and the result and leave the exponent blank. The calculator uses logarithms: exponent = ln(result) / ln(base). This needs positive values, and the base cannot be 1, since 1 raised to any power is 1."}},
+{"@type":"Question","name":"How do I solve for the base?","acceptedAnswer":{"@type":"Answer","text":"Enter the exponent and the result and leave the base blank. The base is the corresponding root of the result: base = result^(1/exponent). For example, a result of 32 with an exponent of 5 gives base = 32^(1/5) = 2."}},
+{"@type":"Question","name":"Can the base be e?","acceptedAnswer":{"@type":"Answer","text":"Yes. Type the letter e as the base (or use the 'use e as base' link) to calculate powers of Euler's number, approximately 2.718281828459. For example, e^2 = 7.3890560989307."}},
+{"@type":"Question","name":"What is 0 to the power of 0?","acceptedAnswer":{"@type":"Answer","text":"It is a debated special case. This calculator follows the common convention and returns 1, which keeps the exponent laws consistent: a^n × a^0 = a^(n+0) can only hold for every a if a^0 = 1."}},
+{"@type":"Question","name":"Why can't a negative base have a fractional exponent here?","acceptedAnswer":{"@type":"Answer","text":"A fractional exponent means taking a root, and even roots of negative numbers are not real numbers — they are imaginary. This calculator works with real numbers only, so such inputs report that they cannot be solved."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Exponent Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Exponent Calculator</h1>
+  <p class="text-slate-600 mb-5 max-w-3xl">Enter values into any two of the input fields to solve for the third.</p>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2">
+      <section class="bg-white rounded-xl shadow p-5">
+        <div class="flex items-start gap-2 max-w-xl">
+          <label class="block flex-1"><span class="text-sm font-medium text-slate-600">Base</span><input id="base" class="fin mt-1 text-right" value="2" /></label>
+          <span class="text-3xl font-bold pt-8">^</span>
+          <label class="block flex-1"><span class="text-sm font-medium text-slate-600">Exponent</span><input id="exponent" class="fin mt-1" value="5" /></label>
+          <span class="text-3xl font-bold pt-8">=</span>
+          <label class="block flex-1"><span class="text-sm font-medium text-slate-600">Result</span><input id="fresult" class="fin mt-1" value="" /></label>
+        </div>
+        <button type="button" onclick="useE()" class="text-[#3F51B5] font-medium text-sm hover:underline mt-2">use e as base</button>
+        <div class="flex gap-3 mt-4 max-w-xl">
+          <button onclick="calcExp()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearExp()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resExp" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-3">What is an exponent?</h2>
+        <p class="text-slate-600">Exponentiation is the operation written as <b>a<sup>n</sup></b>: a <b>base</b> a raised to an <b>exponent</b> n. When n is a positive integer, it is simply repeated multiplication of the base, n times:</p>
+        <p class="text-center my-3 text-lg">a<sup>n</sup> = a × a × … × a &nbsp;(n times)</p>
+        <p class="text-slate-600">This calculator accepts negative bases, but it does not compute imaginary numbers. It also does not accept fractions as input, although fractional exponents work fine when entered in decimal form — 2<sup>0.5</sup>, for example, is the square root of 2.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Basic exponent laws and rules</h3>
+        <p class="text-slate-600"><b>Multiplying like bases adds the exponents:</b> a<sup>n</sup> × a<sup>m</sup> = a<sup>(n+m)</sup>. Example: 2<sup>2</sup> × 2<sup>4</sup> = 4 × 16 = 64, and 2<sup>(2+4)</sup> = 2<sup>6</sup> = 64.</p>
+        <p class="text-slate-600 mt-3"><b>A negative exponent reciprocates the base:</b> a<sup>(−n)</sup> = <span class="fracd"><span class="fn">1</span><span class="fd">a<sup>n</sup></span></span>. Example: 2<sup>(−3)</sup> = 1 ÷ 2 ÷ 2 ÷ 2 = <span class="fracd"><span class="fn">1</span><span class="fd">8</span></span> = 0.125.</p>
+        <p class="text-slate-600 mt-3"><b>Dividing like bases subtracts the exponents:</b> <span class="fracd"><span class="fn">a<sup>m</sup></span><span class="fd">a<sup>n</sup></span></span> = a<sup>(m−n)</sup>. Example: <span class="fracd"><span class="fn">2<sup>2</sup></span><span class="fd">2<sup>4</sup></span></span> = <span class="fracd"><span class="fn">4</span><span class="fd">16</span></span> = <span class="fracd"><span class="fn">1</span><span class="fd">4</span></span>, and 2<sup>(2−4)</sup> = 2<sup>−2</sup> = <span class="fracd"><span class="fn">1</span><span class="fd">4</span></span>.</p>
+        <p class="text-slate-600 mt-3"><b>Raising a power to a power multiplies the exponents:</b> (a<sup>m</sup>)<sup>n</sup> = a<sup>(m×n)</sup>. Example: (2<sup>2</sup>)<sup>4</sup> = 4<sup>4</sup> = 256, and 2<sup>(2×4)</sup> = 2<sup>8</sup> = 256.</p>
+        <p class="text-slate-600 mt-3"><b>An exponent distributes over multiplication and division:</b> (a × b)<sup>n</sup> = a<sup>n</sup> × b<sup>n</sup>, and (<span class="fracd"><span class="fn">a</span><span class="fd">b</span></span>)<sup>n</sup> = <span class="fracd"><span class="fn">a<sup>n</sup></span><span class="fd">b<sup>n</sup></span></span>. Example: (2 × 4)<sup>2</sup> = 8<sup>2</sup> = 64 = 2<sup>2</sup> × 4<sup>2</sup> = 4 × 16.</p>
+        <p class="text-slate-600 mt-3"><b>Exponent 1 and 0:</b> a<sup>1</sup> = a, and a<sup>0</sup> = 1 for any base. The zero rule follows from the product law: since a<sup>n</sup> × a<sup>0</sup> = a<sup>(n+0)</sup> = a<sup>n</sup>, the factor a<sup>0</sup> must equal 1 for the value to stay unchanged. Whether 0<sup>0</sup> should be 1 or undefined is debated; defining it as 1, as this calculator does, is the convenient choice in most applications.</p>
+        <p class="text-slate-600 mt-3"><b>Fractional exponents are roots:</b> an exponent of <span class="fracd"><span class="fn">1</span><span class="fd">n</span></span> takes the n<sup>th</sup> root of the base, and other fractions combine a power with a root — 8<sup>2/3</sup>, entered as 8<sup>0.666666666667</sup>, is (∛8)<sup>2</sup> = 4.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Negative bases</h3>
+        <p class="text-slate-600">Negative bases follow the same laws. Raised to a positive integer, the magnitude matches the positive base: an even exponent gives a positive result ((−2)<sup>2</sup> = 4) and an odd exponent a negative one ((−2)<sup>3</sup> = −8). Fractional exponents on negative bases are different: they require roots of negative numbers, which are imaginary, so this calculator reports them as unsolvable rather than returning a real answer.</p>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div class="space-y-4 text-slate-600">
+          <div><h3 class="font-semibold text-slate-800">How do I solve for the exponent?</h3><p>Enter the base and the result and leave the exponent blank. The calculator uses logarithms: exponent = ln(result) / ln(base). This needs positive values, and the base cannot be 1, since 1 raised to any power is 1.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How do I solve for the base?</h3><p>Enter the exponent and the result and leave the base blank. The base is the corresponding root of the result: base = result<sup>(1/exponent)</sup>. For example, a result of 32 with an exponent of 5 gives base = 32<sup>(1/5)</sup> = 2.</p></div>
+          <div><h3 class="font-semibold text-slate-800">Can the base be e?</h3><p>Yes. Type the letter e as the base (or use the "use e as base" link) to calculate powers of Euler's number, approximately 2.718281828459. For example, e<sup>2</sup> = 7.3890560989307.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What is 0 to the power of 0?</h3><p>It is a debated special case. This calculator follows the common convention and returns 1, which keeps the exponent laws consistent: a<sup>n</sup> × a<sup>0</sup> = a<sup>(n+0)</sup> can only hold for every a if a<sup>0</sup> = 1.</p></div>
+          <div><h3 class="font-semibold text-slate-800">Why can't a negative base have a fractional exponent here?</h3><p>A fractional exponent means taking a root, and even roots of negative numbers are not real numbers — they are imaginary. This calculator works with real numbers only, so such inputs report that they cannot be solved.</p></div>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/scientific">Scientific Calculator</a></li>
+          <li><a class="hover:underline" href="/log">Log Calculator</a></li>
+          <li><a class="hover:underline" href="/root">Root Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">Three-way solver</h3>
+        <p>Leave any one field blank and the calculator solves for it — the result from a base and exponent, the exponent from a base and result (using logarithms), or the base from an exponent and result (using a root).</p>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+function fmtPHP(x) { /* PHP float-to-string at 14 significant digits */
+  if (Number.isNaN(x)) return 'NAN';
+  if (x === Infinity) return 'INF';
+  if (x === -Infinity) return '-INF';
+  if (x === 0) return '0';
+  const neg = x < 0, ax = Math.abs(x);
+  const parts = ax.toExponential(13).split('e');
+  const e10 = parseInt(parts[1], 10);
+  let digits = parts[0].replace('.', '').replace(/0+$/, '');
+  if (digits === '') digits = '0';
+  let out;
+  if (e10 >= 14 || e10 <= -5) {
+    const m = digits.length > 1 ? digits[0] + '.' + digits.slice(1) : digits + '.0';
+    out = m + 'E' + (e10 < 0 ? '-' : '+') + Math.abs(e10);
+  } else if (e10 >= 0) {
+    out = digits.length > e10 + 1 ? digits.slice(0, e10 + 1) + '.' + digits.slice(e10 + 1) : digits + '0'.repeat(e10 + 1 - digits.length);
+  } else {
+    out = '0.' + '0'.repeat(-e10 - 1) + digits;
+  }
+  return (neg ? '-' : '') + out;
+}
+function exactIntPow(b, e, r) { /* full digits when PHP would return a 64-bit int */
+  if (!Number.isInteger(b) || !Number.isInteger(e) || e < 0 || !isFinite(r)) return null;
+  try {
+    const v = BigInt(b) ** BigInt(e);
+    const M = 2n ** 63n;
+    if (v < M && v >= -M) return v.toString();
+  } catch (err) { /* fall through */ }
+  return null;
+}
+function fr(n, d, light) { return '<span class="' + (light ? 'frac' : 'fracd') + '"><span class="fn">' + n + '</span><span class="fd">' + d + '</span></span>'; }
+function showRes(html) { const e = document.getElementById('resExp'); e.innerHTML = html; e.classList.remove('hidden'); }
+function msgRes(t) { showRes('<p class="text-xl font-bold text-[#3F51B5]">' + t + '</p>' + shareRow()); }
+function parseNum(s) {
+  s = s.trim();
+  if (s === '') return null;
+  if (!/^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/.test(s)) return null;
+  const v = parseFloat(s);
+  return isNaN(v) ? null : v;
+}
+function field(id) { return document.getElementById(id).value; }
+function chainStr(disp, n) {
+  if (n <= 5) return Array(n).fill(disp).join(' × ');
+  return disp + ' × ' + disp + ' × ... × ' + disp;
+}
+function eqHTML(bD, eD, rD) {
+  return '<div class="bg-[#3F51B5] text-white font-bold rounded-lg px-4 py-3"><div class="eq">' + bD + '<sup>' + eD + '</sup> = ' + rD + '</div></div>';
+}
+function stepsHTML(inner) { return '<div class="border-t mt-4 pt-3"><p class="font-bold mb-1">Steps:</p><div class="steps">' + inner + '</div></div>'; }
+function calcExp() {
+  const bRaw = field('base').trim(), eRaw = field('exponent').trim(), rRaw = field('fresult').trim();
+  const bIsE = bRaw === 'e';
+  const b = bIsE ? Math.E : parseNum(bRaw);
+  const e = parseNum(eRaw), r = parseNum(rRaw);
+  if ((bRaw !== '' && b === null) || (eRaw !== '' && e === null) || (rRaw !== '' && r === null)) {
+    return msgRes('Please provide numeric values in the fields (the base may be the letter e).');
+  }
+  const given = (bRaw !== '') + (eRaw !== '') + (rRaw !== '');
+  if (given < 2) return msgRes('Please provide values for any two of the fields.');
+  const bD = bIsE ? 'e' : fmtPHP(b);
+  if (bRaw !== '' && eRaw !== '') { /* solve the result */
+    const res = bIsE ? Math.exp(e) : Math.pow(b, e); /* exp() matches the reference's last digit for e-powers (V8 pow differs by 1 ulp on e^2) */
+    if (Number.isNaN(res)) return msgRes('Unable to solve!');
+    const exact = exactIntPow(b, e, res);
+    const rD = exact !== null ? exact : fmtPHP(res);
+    let steps = '';
+    if (Number.isInteger(e) && e >= 2) {
+      steps = stepsHTML(bD + '<sup>' + fmtPHP(e) + '</sup> = ' + chainStr(bD, e) + ' = ' + rD);
+    } else if (Number.isInteger(e) && e <= -1) {
+      const n = -e;
+      steps = stepsHTML(bD + '<sup>' + fmtPHP(e) + '</sup> = ' + fr('1', bD + '<sup>' + n + '</sup>') + ' = ' + fr('1', chainStr(bD, n)) + ' = ' + rD);
+    }
+    return showRes(eqHTML(bD, fmtPHP(e), rD) + steps + shareRow());
+  }
+  if (bRaw !== '' && rRaw !== '') { /* solve the exponent */
+    if (b === 1) return msgRes('Cannot calculate if the base is 1.');
+    if (b <= 0 || r <= 0) return msgRes('This calculator can only deal with positive values in this case.');
+    const ex = Math.log(r) / Math.log(b);
+    return showRes(eqHTML(bD, fmtPHP(ex), fmtPHP(r)) + shareRow());
+  }
+  /* solve the base */
+  if (e === 0) return msgRes('Unable to solve!');
+  const bs = Math.pow(r, 1 / e);
+  if (Number.isNaN(bs) || !isFinite(bs)) return msgRes('Unable to solve!');
+  const steps = stepsHTML('base = ' + fmtPHP(r) + '<sup>1/' + fmtPHP(e) + '</sup> = ' + fmtPHP(bs));
+  return showRes(eqHTML(fmtPHP(bs), fmtPHP(e), fmtPHP(r)) + steps + shareRow());
+}
+function useE() { document.getElementById('base').value = 'e'; }
+function shareRow() {
+  return '<div class="mt-4"><button onclick="copyShare()" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="shExp" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function copyShare() {
+  const u = new URL(location.href); u.search = '';
+  u.searchParams.set('base', field('base').trim());
+  u.searchParams.set('exponent', field('exponent').trim());
+  u.searchParams.set('fresult', field('fresult').trim());
+  const done = () => { document.getElementById('shExp').textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+function clearExp() {
+  document.getElementById('base').value = '2';
+  document.getElementById('exponent').value = '5';
+  document.getElementById('fresult').value = '';
+  const r = document.getElementById('resExp'); r.classList.add('hidden'); r.innerHTML = '';
+}
+(function () {
+  const q = new URLSearchParams(location.search);
+  let any = false;
+  for (const k of ['base', 'exponent', 'fresult']) if (q.has(k)) { document.getElementById(k).value = q.get(k); any = true; }
+  if (any) calcExp();
+})();
+</script>
+
+</body>
+                                                                                                                                                                                                                                                                                                                               </html>
