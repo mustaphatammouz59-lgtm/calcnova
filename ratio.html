@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ratio Calculator — Solve Proportions &amp; Scale Ratios | CalcNova</title>
+<meta name="description" content="Free ratio calculator: solve for the missing value in the proportion A:B = C:D, normalize and visualize ratios, and enlarge or shrink a ratio by any number of times." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/ratio" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.1rem;padding:.5rem .6rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .eq{font-size:1.2rem;line-height:1.8;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem}
+  .frac{display:inline-block;vertical-align:middle;text-align:center;margin:0 .12em}
+  .frac>span{display:block;padding:0 .25em;line-height:1.3;font-size:.92em}
+  .frac .top{border-bottom:1.5px solid currentColor}
+  .ctable{border-collapse:collapse;margin:1rem auto}
+  .ctable th,.ctable td{border:1px solid #CBD5E1;padding:.35rem .9rem;text-align:left}
+  .ctable th{background:#EEF2FF;color:#3F51B5}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do you solve for the missing value in a proportion?","acceptedAnswer":{"@type":"Answer","text":"In the proportion A:B = C:D, the cross-products are equal (A x D = B x C), so any one value follows from the other three: D = B x C / A, A = B x C / D, B = A x D / C, and C = A x D / B. For example, 3:4 = 600:D gives D = 4 x 600 / 3 = 800."}},
+{"@type":"Question","name":"How do you simplify a ratio?","acceptedAnswer":{"@type":"Answer","text":"Divide both terms by their greatest common factor. For example, 600:800 divides by 200 to give 3:4. Ratios can also be written in the normalized forms 1:n (divide both terms by the first) or n:1 (divide both terms by the second)."}},
+{"@type":"Question","name":"What is the difference between enlarging and shrinking a ratio?","acceptedAnswer":{"@type":"Answer","text":"Enlarging multiplies both terms by the scale factor, shrinking divides both terms by it. Either way the relationship between the terms is unchanged: 250:280 shrunk 2.5 times is 100:112, the same ratio in smaller numbers."}},
+{"@type":"Question","name":"What is an aspect ratio?","acceptedAnswer":{"@type":"Answer","text":"An aspect ratio compares a shape's sizes in different dimensions — for a screen, its width to its height. Most modern screens and videos use 16:9, so a 1920x1080 display and a 3840x2160 (4K) display have the same shape at different sizes."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Ratio Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Ratio Calculator</h1>
+  <p class="text-slate-600 mb-5 max-w-3xl">Please provide any three values below to calculate the fourth in the ratio <b>A : B = C : D</b>.</p>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2">
+      <section class="bg-white rounded-xl shadow p-5">
+        <div class="flex flex-wrap items-end gap-2">
+          <label class="block flex-1 min-w-[90px] text-center"><span class="text-sm font-semibold text-slate-500">A</span><input id="t1" class="fin mt-1" value="3" /></label>
+          <span class="text-2xl font-bold pb-1">:</span>
+          <label class="block flex-1 min-w-[90px] text-center"><span class="text-sm font-semibold text-slate-500">B</span><input id="b1" class="fin mt-1" value="4" /></label>
+          <span class="text-2xl font-bold pb-1">=</span>
+          <label class="block flex-1 min-w-[90px] text-center"><span class="text-sm font-semibold text-slate-500">C</span><input id="t2" class="fin mt-1" value="600" /></label>
+          <span class="text-2xl font-bold pb-1">:</span>
+          <label class="block flex-1 min-w-[90px] text-center"><span class="text-sm font-semibold text-slate-500">D</span><input id="b2" class="fin mt-1" value="" /></label>
+        </div>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcRatio()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearRatio()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resRatio" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-5 mt-6">
+        <h2 class="text-xl font-bold mb-4">Ratio Scaling Calculator</h2>
+        <div class="flex flex-wrap items-end gap-2">
+          <input id="c2t1" class="fin flex-1 min-w-[90px]" value="250" aria-label="first value" />
+          <span class="text-2xl font-bold pb-1">:</span>
+          <input id="c2b1" class="fin flex-1 min-w-[90px]" value="280" aria-label="second value" />
+          <select id="c2type" class="fin !w-auto">
+            <option value="Enlarge">Enlarge</option>
+            <option value="Shrink" selected>Shrink</option>
+          </select>
+          <input id="c2time" class="fin flex-1 min-w-[90px]" value="2.5" aria-label="times" />
+          <span class="text-lg font-bold pb-1">times = ?</span>
+        </div>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcScale()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearScale()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resScale" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-3">What is Ratio?</h2>
+        <p class="text-slate-600">A ratio is a quantitative relationship between two numbers that describes how many times one value can contain another. Applications of ratios are ubiquitous, and the concept is quite intuitive — it could likely be demonstrated by giving a child half as many cookies as his sister. While the child may not be able to voice the injustice using ratios, the raucous protests that would most likely ensue should make it immediately obvious that he is well aware he has received 1:2 as many cookies as his sister, conceptually, if not mathematically.</p>
+        <p class="text-slate-600 mt-3">Ratios are often expressed as two numbers separated by a colon. They can also be written as "1 to 2" or as a fraction ½. The ratio represents the number that the denominator must be multiplied by in order to yield the numerator — in this case, ½. This is clearer when the first number is larger than the second: with the ratio 2:1, 2 can contain 1 exactly 2 times. It is also possible to have ratios with more than two terms.</p>
+        <p class="text-slate-600 mt-3">Ratios appear in many daily applications: aspect ratios for screens, maps and models described as scaled-down versions of their actual size, baking and cooking, the odds of something occurring, and rates in finance. If, for example, a person wanted to make 5 cakes, each requiring a 1:2:3 ratio of butter:sugar:flour, and wanted the total amounts needed, it would be simple to compute from the ratio: increasing the ratio by five times yields a 5:10:15 ratio of parts, which can then be multiplied by the actual amount per part in the recipe.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Typical Aspect Ratios and Sizes of Screens and Videos</h3>
+        <p class="text-slate-600">The aspect ratio is the ratio of a geometric shape's sizes in different dimensions — for a rectangle, the ratio of its width to its height. Aspect ratios are used in applications such as tire sizing, paper sizing, and standard photographic print sizes, but some of their most frequent uses involve computer screen dimensions, mobile phone screens, and video sizes. Below is a list of typical computer screen and video resolutions and their aspect ratios.</p>
+        <div class="overflow-x-auto"><table class="ctable"><tr><th>Name</th><th>Aspect ratio</th><th>Width (pixel)</th><th>Height (pixel)</th></tr>
+          <tr><td>480p</td><td>3:2</td><td>720</td><td>480</td></tr><tr><td>576p</td><td>5:4</td><td>720</td><td>576</td></tr><tr><td>720p</td><td>16:9</td><td>1280</td><td>720</td></tr><tr><td>1080p</td><td>16:9</td><td>1920</td><td>1080</td></tr><tr><td>2160p (4K UHD)</td><td>16:9</td><td>3840</td><td>2160</td></tr><tr><td>4320p (8K UHD)</td><td>16:9</td><td>7680</td><td>4320</td></tr><tr><td>8640p</td><td>16:9</td><td>15360</td><td>8640</td></tr><tr><td>SVGA</td><td>4:3</td><td>800</td><td>600</td></tr><tr><td>WSVGA</td><td>~17:10</td><td>1024</td><td>600</td></tr><tr><td>XGA</td><td>4:3</td><td>1024</td><td>768</td></tr><tr><td>XGA+</td><td>4:3</td><td>1152</td><td>864</td></tr><tr><td>WXGA</td><td>16:9</td><td>1280</td><td>720</td></tr><tr><td>WXGA</td><td>5:3</td><td>1280</td><td>768</td></tr><tr><td>WXGA</td><td>16:10</td><td>1280</td><td>800</td></tr><tr><td>SXGA (UVGA)</td><td>4:3</td><td>1280</td><td>960</td></tr><tr><td>SXGA</td><td>5:4</td><td>1280</td><td>1024</td></tr><tr><td>HD</td><td>~16:9</td><td>1360</td><td>768</td></tr><tr><td>HD</td><td>~16:9</td><td>1366</td><td>768</td></tr><tr><td>SXGA+</td><td>4:3</td><td>1400</td><td>1050</td></tr><tr><td>WXGA+</td><td>16:10</td><td>1440</td><td>900</td></tr><tr><td>HD+</td><td>16:9</td><td>1600</td><td>900</td></tr><tr><td>UXGA</td><td>4:3</td><td>1600</td><td>1200</td></tr><tr><td>WSXGA+</td><td>16:10</td><td>1680</td><td>1050</td></tr><tr><td>FHD</td><td>16:9</td><td>1920</td><td>1080</td></tr><tr><td>WUXGA</td><td>16:10</td><td>1920</td><td>1200</td></tr><tr><td>QWXGA</td><td>16:9</td><td>2048</td><td>1152</td></tr><tr><td>WQHD</td><td>16:9</td><td>2560</td><td>1440</td></tr><tr><td>WQXGA</td><td>16:10</td><td>2560</td><td>1600</td></tr>
+        </table></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div class="space-y-4 text-slate-600">
+          <div><h3 class="font-semibold text-slate-800">How do you solve for the missing value in a proportion?</h3><p>In the proportion A:B = C:D, the cross-products are equal (A × D = B × C), so any one value follows from the other three: D = B × C / A, A = B × C / D, B = A × D / C, and C = A × D / B. For example, 3:4 = 600:D gives D = 4 × 600 / 3 = 800.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How do you simplify a ratio?</h3><p>Divide both terms by their greatest common factor. For example, 600:800 divides by 200 to give 3:4. Ratios can also be written in the normalized forms 1:n (divide both terms by the first) or n:1 (divide both terms by the second).</p></div>
+          <div><h3 class="font-semibold text-slate-800">What is the difference between enlarging and shrinking a ratio?</h3><p>Enlarging multiplies both terms by the scale factor, shrinking divides both terms by it. Either way the relationship between the terms is unchanged: 250:280 shrunk 2.5 times is 100:112, the same ratio in smaller numbers.</p></div>
+          <div><h3 class="font-semibold text-slate-800">What is an aspect ratio?</h3><p>An aspect ratio compares a shape's sizes in different dimensions — for a screen, its width to its height. Most modern screens and videos use 16:9, so a 1920×1080 display and a 3840×2160 (4K) display have the same shape at different sizes.</p></div>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/fraction">Fraction Calculator</a></li>
+          <li><a class="hover:underline" href="/percent">Percentage Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">The cross-product check</h3>
+        <p>Two ratios are equal exactly when their cross-products match: A:B = C:D if and only if A × D = B × C. It is the quickest way to test a proportion — 3:4 and 600:800 both give 2,400.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+function fmtPHP(x) { /* PHP float-to-string at 14 significant digits */
+  if (Number.isNaN(x)) return 'NAN';
+  if (x === Infinity) return 'INF';
+  if (x === -Infinity) return '-INF';
+  if (x === 0) return '0';
+  const neg = x < 0, ax = Math.abs(x);
+  const parts = ax.toExponential(13).split('e');
+  const e10 = parseInt(parts[1], 10);
+  let digits = parts[0].replace('.', '').replace(/0+$/, '');
+  if (digits === '') digits = '0';
+  let out;
+  if (e10 >= 14 || e10 <= -5) {
+    const mm = digits.length > 1 ? digits[0] + '.' + digits.slice(1) : digits + '.0';
+    out = mm + 'E' + (e10 < 0 ? '-' : '+') + Math.abs(e10);
+  } else if (e10 >= 0) {
+    out = digits.length > e10 + 1 ? digits.slice(0, e10 + 1) + '.' + digits.slice(e10 + 1) : digits + '0'.repeat(e10 + 1 - digits.length);
+  } else {
+    out = '0.' + '0'.repeat(-e10 - 1) + digits;
+  }
+  return (neg ? '-' : '') + out;
+}
+function phpRound(x) { return Math.sign(x) * Math.round(Math.abs(x)); }
+function showRes(id, html) { const e = document.getElementById(id); e.innerHTML = html; e.classList.remove('hidden'); }
+function banner(lines, share) {
+  return '<div class="bg-[#3F51B5] text-white font-bold rounded-lg px-4 py-3"><div class="text-base mb-1">Result</div>' +
+    lines.map(l => '<div class="eq">' + l + '</div>').join('') + '</div>' + share;
+}
+function parseNum(s) {
+  s = s.trim();
+  if (s === '') return undefined;
+  if (!/^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/.test(s)) return null;
+  return parseFloat(s);
+}
+function fracHTML(top, bot) { return '<span class="frac"><span class="top">' + top + '</span><span>' + bot + '</span></span>'; }
+function pieSVG(g1, g2) {
+  const total = g1 + g2;
+  const a1 = (g1 / total) * Math.PI * 2;
+  const x1 = 60 + 52 * Math.sin(a1), y1 = 60 - 52 * Math.cos(a1);
+  const large = a1 > Math.PI ? 1 : 0;
+  let slice2;
+  if (g1 <= 0) slice2 = '<circle cx="60" cy="60" r="52" fill="#2b7ddb"/>';
+  else if (g2 <= 0) slice2 = '<circle cx="60" cy="60" r="52" fill="#3F51B5"/>';
+  else slice2 = '<circle cx="60" cy="60" r="52" fill="#2b7ddb"/><path d="M60,60 L60,8 A52,52 0 ' + large + ' 1 ' + x1.toFixed(2) + ',' + y1.toFixed(2) + ' Z" fill="#3F51B5"/>';
+  return '<svg width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="Ratio pie chart">' + slice2 + '</svg>';
+}
+function visualsHTML(g1, g2) {
+  const shareW = Math.round(150 * g1 / (g1 + g2));
+  const rectH = Math.ceil(150 * g1 / g2);
+  return '<div class="bg-white border border-slate-200 rounded-lg px-4 py-4 mt-4 text-slate-700">' +
+    '<div class="font-bold text-slate-800 mb-3">Visual Representations of the Ratio</div>' +
+    '<div class="flex flex-wrap gap-8 items-start">' +
+    '<div class="text-center"><div class="text-sm font-semibold mb-1">Pie Chart</div>' + pieSVG(g1, g2) +
+    '<div class="text-sm mt-1"><span class="inline-block w-3 h-3 rounded-sm align-middle" style="background:#3F51B5"></span> ' + fmtPHP(g1) +
+    ' &nbsp;<span class="inline-block w-3 h-3 rounded-sm align-middle" style="background:#2b7ddb"></span> ' + fmtPHP(g2) + '</div></div>' +
+    '<div><div class="relative" style="width:150px;height:50px;background:#2b7ddb"><div style="position:absolute;left:0;top:0;height:50px;width:' + shareW + 'px;background:#3F51B5"></div></div>' +
+    '<div class="text-sm mt-1">Left ' + fmtPHP(g1) + ', Right ' + fmtPHP(g2) + '</div>' +
+    '<div class="mt-4" style="width:150px;height:' + rectH + 'px;background:#3F51B5"></div>' +
+    '<div class="text-sm mt-1">Width ' + fmtPHP(g2) + ', Height ' + fmtPHP(g1) + '</div></div>' +
+    '</div></div>';
+}
+function calcRatio() {
+  const A = parseNum(document.getElementById('t1').value);
+  const B = parseNum(document.getElementById('b1').value);
+  const C = parseNum(document.getElementById('t2').value);
+  const D = parseNum(document.getElementById('b2').value);
+  const vals = [A, B, C, D];
+  if (vals.some(v => v === null) || vals.filter(v => v !== undefined).length < 3) {
+    return showRes('resRatio', banner(['Please provide three numerical values.'], shareRatio()));
+  }
+  let a = A, b = B, c = C, d = D, solvedPos;
+  if (D === undefined || (A !== undefined && B !== undefined && C !== undefined)) { solvedPos = 'D'; d = B * C / A; }
+  else if (A === undefined) { solvedPos = 'A'; a = B * C / D; }
+  else if (B === undefined) { solvedPos = 'B'; b = A * D / C; }
+  else { solvedPos = 'C'; c = A * D / B; }
+  if ((solvedPos === 'C' || solvedPos === 'D') && (A === 0 || B === 0)) {
+    return showRes('resRatio', banner(['Please provide non-zero values.'], shareRatio()));
+  }
+  if (solvedPos === 'A' && D === 0) return showRes('resRatio', banner(['Denominator cannot be 0.'], shareRatio()));
+  if (solvedPos === 'B' && C === 0) return showRes('resRatio', banner(['Denominator cannot be 0.'], shareRatio()));
+  const solvedVal = solvedPos === 'A' ? a : solvedPos === 'B' ? b : solvedPos === 'C' ? c : d;
+  const prop = fmtPHP(a) + ' : ' + fmtPHP(b) + ' = ' + fmtPHP(c) + ' : ' + fmtPHP(d);
+  const lines = [prop];
+  if (!Number.isInteger(solvedVal)) {
+    const rv = { A: a, B: b, C: c, D: d };
+    rv[solvedPos] = phpRound(solvedVal);
+    lines.push('If rounded: ' + fmtPHP(rv.A) + ' : ' + fmtPHP(rv.B) + ' = ' + fmtPHP(rv.C) + ' : ' + fmtPHP(rv.D));
+  }
+  const givenIsCD = (solvedPos === 'A' || solvedPos === 'B');
+  const g1 = givenIsCD ? c : a, g2 = givenIsCD ? d : b;
+  if (g1 !== 0) {
+    lines.push(fmtPHP(g1) + ' : ' + fmtPHP(g2) + ' = 1 : ' + fmtPHP(g2 / g1));
+    lines.push('= ' + fmtPHP(g1 / g2) + ' : 1');
+    if (givenIsCD) lines.push('= ' + fmtPHP(a) + ' : ' + fmtPHP(b));
+    lines.push(fracHTML(fmtPHP(g1), fmtPHP(g1) + ' + ' + fmtPHP(g2)) + ' = ' + fmtPHP(g1 / (g1 + g2) * 100) + '%');
+  }
+  let html = banner(lines, shareRatio());
+  if (g1 > 0 && g2 > 0) html += visualsHTML(g1, g2);
+  return showRes('resRatio', html);
+}
+function scaleVisualHTML(a1, b1v, a2, b2v, mode) {
+  const wB = b1v, wA = b2v;
+  const s = Math.min(1, 320 / Math.max(wB, wA));
+  const before = { w: Math.round(wB * s), h: Math.round(a1 * s) };
+  const after = { w: Math.round(wA * s), h: Math.round(a2 * s) };
+  const outer = before.w >= after.w ? before : after;
+  const inner = before.w >= after.w ? after : before;
+  const heading = mode === 'Enlarge'
+    ? 'Relative Visual Comparison of Before and After Enlarge'
+    : fmtPHP(a1) + '×' + fmtPHP(b1v) + ' and ' + fmtPHP(a2) + '×' + fmtPHP(b2v) + ' Size in Screen Pixels:';
+  return '<div class="bg-white border border-slate-200 rounded-lg px-4 py-4 mt-4 text-slate-700">' +
+    '<div class="font-bold text-slate-800 mb-3">' + heading + '</div>' +
+    '<div style="background:#2b7ddb;width:' + outer.w + 'px;height:' + outer.h + 'px;max-width:100%">' +
+    '<div style="background:#3F51B5;width:' + inner.w + 'px;height:' + inner.h + 'px"></div></div></div>';
+}
+function calcScale() {
+  const a = parseNum(document.getElementById('c2t1').value);
+  const b = parseNum(document.getElementById('c2b1').value);
+  const mode = document.getElementById('c2type').value;
+  const t = parseNum(document.getElementById('c2time').value);
+  if (a === null || b === null || t === null || a === undefined || b === undefined || t === undefined || t === 0 || a === 0 || b === 0) {
+    return showRes('resScale', banner(['Please provide numbers as inputs.'], shareScale()));
+  }
+  const a2 = mode === 'Enlarge' ? a * t : a / t;
+  const b2 = mode === 'Enlarge' ? b * t : b / t;
+  const head = fmtPHP(a) + ':' + fmtPHP(b) + ' ' + mode + ' ' + fmtPHP(t) + ' times = ' + fmtPHP(a2) + ':' + fmtPHP(b2);
+  const lines = [head];
+  const ra = phpRound(a2), rb = phpRound(b2);
+  const rounded = !Number.isInteger(a2) || !Number.isInteger(b2);
+  if (rounded) lines.push('If rounded: ' + fmtPHP(a) + ':' + fmtPHP(b) + ' ' + mode + ' ' + fmtPHP(t) + ' times = ' + fmtPHP(ra) + ':' + fmtPHP(rb));
+  let html = banner(lines, shareScale());
+  const da = rounded ? ra : a2, db = rounded ? rb : b2;
+  if (a > 0 && b > 0 && da > 0 && db > 0) html += scaleVisualHTML(a, b, da, db, mode);
+  return showRes('resScale', html);
+}
+function shareBtn(fn, span) {
+  return '<div class="mt-4"><button onclick="' + fn + '" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="' + span + '" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function shareRatio() { return shareBtn('copyRatio()', 'shRatio'); }
+function shareScale() { return shareBtn('copyScale()', 'shScale'); }
+function doShare(params, span, hash) {
+  const u = new URL(location.href); u.search = ''; u.hash = hash || '';
+  for (const k in params) u.searchParams.set(k, params[k]);
+  const done = () => { document.getElementById(span).textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+function copyRatio() { doShare({ ctype: '1', t1: document.getElementById('t1').value, b1: document.getElementById('b1').value, t2: document.getElementById('t2').value, b2: document.getElementById('b2').value }, 'shRatio'); }
+function copyScale() { doShare({ ctype: '2', c2t1: document.getElementById('c2t1').value, c2b1: document.getElementById('c2b1').value, c2type: document.getElementById('c2type').value, c2time: document.getElementById('c2time').value }, 'shScale'); }
+function clearRatio() {
+  document.getElementById('t1').value = '3'; document.getElementById('b1').value = '4';
+  document.getElementById('t2').value = '600'; document.getElementById('b2').value = '';
+  hideRes('resRatio');
+}
+function clearScale() {
+  document.getElementById('c2t1').value = '250'; document.getElementById('c2b1').value = '280';
+  document.getElementById('c2type').value = 'Shrink'; document.getElementById('c2time').value = '2.5';
+  hideRes('resScale');
+}
+function hideRes(id) { const r = document.getElementById(id); r.classList.add('hidden'); r.innerHTML = ''; }
+(function () {
+  const q = new URLSearchParams(location.search);
+  if (q.get('ctype') === '1') {
+    for (const k of ['t1', 'b1', 't2', 'b2']) if (q.has(k)) document.getElementById(k).value = q.get(k);
+    calcRatio();
+  } else if (q.get('ctype') === '2') {
+    for (const k of ['c2t1', 'c2b1', 'c2time']) if (q.has(k)) document.getElementById(k).value = q.get(k);
+    if (q.has('c2type')) document.getElementById('c2type').value = q.get('c2type');
+    calcScale();
+  }
+})();
+</script>
+
+</body>
+                                                                                                                                                              </html>
