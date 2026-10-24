@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Binary Calculator — Add, Subtract, Multiply, Divide &amp; Convert | CalcNova</title>
+<meta name="description" content="Free binary calculator: add, subtract, multiply and divide binary values, and convert between binary and decimal values, with results shown in both systems." />
+<link rel="canonical" href="https://calcnova.mustaphatammouz59.workers.dev/binary" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body{font-family:'Inter',system-ui,sans-serif;background:#F8FAFC;color:#1E293B}
+  .fin{width:100%;font-size:1.1rem;padding:.5rem .6rem;border:1.5px solid #94A3B8;border-radius:.5rem;background:#fff;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .fin:focus{outline:2px solid #3F51B5;border-color:#3F51B5}
+  .eq{font-size:1.15rem;line-height:1.8;overflow-x:auto;white-space:nowrap;padding-bottom:.25rem;font-family:ui-monospace,Menlo,Consolas,monospace}
+  .ctable{border-collapse:collapse;margin:0 auto}
+  .ctable th,.ctable td{border:1px solid #CBD5E1;padding:.35rem 1rem;text-align:center}
+  .ctable th{background:#EEF2FF;color:#3F51B5}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How do you convert binary to decimal?","acceptedAnswer":{"@type":"Answer","text":"Read the binary number from right to left: the rightmost digit is worth 2^0, the next 2^1, then 2^2, and so on. Add up the values of the positions that hold a 1. For example, 10111 = 16 + 4 + 2 + 1 = 23."}},
+{"@type":"Question","name":"How do you convert decimal to binary?","acceptedAnswer":{"@type":"Answer","text":"Find the largest power of 2 that fits in the number, subtract it, and repeat with the remainder until nothing is left. Write 1 in each place value that was used and 0 in the rest: 18 = 16 + 2, so 18 is 10010 in binary."}},
+{"@type":"Question","name":"How does binary addition work?","acceptedAnswer":{"@type":"Answer","text":"Exactly like decimal addition, except you carry when a column adds up to 2 instead of 10: 0 + 0 = 0, 0 + 1 = 1, 1 + 0 = 1, and 1 + 1 = 0 with a 1 carried to the next column."}},
+{"@type":"Question","name":"Why do computers use binary?","acceptedAnswer":{"@type":"Answer","text":"Because digital circuits only need to distinguish two states — on and off, true and false, voltage present or absent. Hardware that detects 2 states is far simpler and more reliable than hardware that would need to detect the 10 states of decimal digits."}}]}
+</script>
+</head>
+<body>
+<header class="bg-[#3F51B5] text-white shadow">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="/" class="text-xl font-extrabold tracking-tight">CalcNova</a>
+    <a href="/sign-in" class="bg-white text-[#3F51B5] font-semibold px-4 py-1.5 rounded-lg text-sm">Sign in</a>
+  </div>
+</header>
+<main class="max-w-6xl mx-auto px-4 py-6">
+  <nav class="text-sm text-slate-500 mb-3"><a class="hover:underline" href="/">Home</a> &gt; <a class="hover:underline" href="/math">Math</a> &gt; <span class="text-slate-700">Binary Calculator</span></nav>
+  <h1 class="text-3xl font-extrabold text-[#3F51B5] mb-3">Binary Calculator</h1>
+  <p class="text-slate-600 mb-5 max-w-3xl">Use the following calculators to perform the addition, subtraction, multiplication, or division of two binary values, as well as convert binary values to decimal values, and vice versa.</p>
+  <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-6 mb-6">AdSense Space (In-Article Fluid)</div>
+
+  <div class="grid lg:grid-cols-3 gap-6 items-start">
+    <div class="lg:col-span-2">
+      <section class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-xl font-bold mb-4">Binary Calculation — Add, Subtract, Multiply, or Divide</h2>
+        <div class="flex flex-wrap items-end gap-2">
+          <input id="number1" class="fin flex-1 min-w-[140px]" value="10101010" maxlength="256" />
+          <select id="c2op" class="fin !w-auto font-sans">
+            <option value="+" selected>+</option>
+            <option value="-">−</option>
+            <option value="x">×</option>
+            <option value="/">÷</option>
+          </select>
+          <input id="number2" class="fin flex-1 min-w-[140px]" value="11001100" maxlength="256" />
+          <span class="text-2xl font-bold pb-1">= ?</span>
+        </div>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcOp()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearOp()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resOp" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-5 mt-6" id="binary2decimal">
+        <h2 class="text-xl font-bold mb-4">Convert Binary Value to Decimal Value</h2>
+        <label class="block"><span class="text-sm font-medium text-slate-600">Binary Value:</span>
+          <span class="flex items-end gap-2 mt-1"><input id="b2dnumber1" class="fin flex-1" value="10101010" maxlength="256" /><span class="text-2xl font-bold pb-1">= ?</span></span></label>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcB2d()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearB2d()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resB2d" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-5 mt-6" id="decimal2binary">
+        <h2 class="text-xl font-bold mb-4">Convert Decimal Value to Binary Value</h2>
+        <label class="block"><span class="text-sm font-medium text-slate-600">Decimal Value:</span>
+          <span class="flex items-end gap-2 mt-1"><input id="d2bnumber1" class="fin flex-1" value="170" /><span class="text-2xl font-bold pb-1">= ?</span></span></label>
+        <div class="flex gap-3 mt-4">
+          <button onclick="calcD2b()" class="flex-1 bg-[#4CAF50] hover:bg-[#43A047] text-white font-bold py-2.5 rounded-lg">Calculate</button>
+          <button onclick="clearD2b()" class="px-5 bg-slate-200 hover:bg-slate-300 font-semibold rounded-lg">Clear</button>
+        </div>
+        <div id="resD2b" class="hidden mt-5"></div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-3">The Binary System</h2>
+        <p class="text-slate-600">The binary system works almost identically to the decimal number system most people use every day. The difference is the base: decimal counts in powers of 10 and uses the digits 0 through 9, while binary counts in powers of 2 and uses only the digits 0 and 1. Each binary digit is called a <b>bit</b>. Apart from that, addition, subtraction, multiplication, and division all follow the same rules as in decimal.</p>
+        <p class="text-slate-600 mt-3">Almost all modern technology and computers use binary because it maps directly onto digital circuitry built from logic gates: a circuit only has to detect two states, on and off (equivalently true/false, or voltage present/absent). A decimal machine would need hardware able to distinguish 10 states per digit, which is far more complicated to build.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Binary/Decimal Conversion</h3>
+        <table class="ctable"><tr><th>Decimal</th><th>Binary</th></tr>
+          <tr><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td></tr><tr><td>2</td><td>10</td></tr><tr><td>3</td><td>11</td></tr><tr><td>4</td><td>100</td></tr><tr><td>7</td><td>111</td></tr><tr><td>8</td><td>1000</td></tr><tr><td>10</td><td>1010</td></tr><tr><td>16</td><td>10000</td></tr><tr><td>20</td><td>10100</td></tr>
+        </table>
+        <h3 class="text-lg font-bold mt-6 mb-2">Place values</h3>
+        <p class="text-slate-600">Each binary place represents 2<sup>n</sup>, just as each decimal place represents 10<sup>n</sup>. In decimal, 18 is (1 × 10<sup>1</sup>) + (8 × 10<sup>0</sup>) = 10 + 8. In binary, 18 is written 10010, because 18 = 16 + 2 = 2<sup>4</sup> + 2<sup>1</sup>:</p>
+        <p class="text-center my-3">10010 = (1 × 2<sup>4</sup>) + (0 × 2<sup>3</sup>) + (0 × 2<sup>2</sup>) + (1 × 2<sup>1</sup>) + (0 × 2<sup>0</sup>) = 18</p>
+        <p class="text-slate-600">To convert a decimal number to binary: find the largest power of 2 within the number, subtract it, and repeat with the remainder until there is no remainder; then write a 1 in every place value that was used and a 0 in the rest. Converting back is simpler still — just add up the place values wherever a 1 occurs: 10111 = 16 + 4 + 2 + 1 = 23.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Binary Addition</h3>
+        <p class="text-slate-600">Binary addition follows the decimal rules, except the carry happens when a column reaches 2 rather than 10: 0 + 0 = 0, 0 + 1 = 1, 1 + 0 = 1, and 1 + 1 = 0 with a 1 carried over. Watch out for columns where 1 + 1 = 0 also receives a carried 1 from the column to its right — the result there is 1, not 0.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Binary Subtraction</h3>
+        <p class="text-slate-600">Subtraction likewise mirrors decimal, with borrowing needed only when subtracting 1 from 0: the 0 then becomes "2" (2 − 1 = 1) and the column to its left is reduced by 1, cascading further left through any run of 0s until a 1 can be reduced: 0 − 0 = 0, 1 − 0 = 1, 1 − 1 = 0, and 0 − 1 = 1 with a borrow.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Binary Multiplication</h3>
+        <p class="text-slate-600">Multiplication is simpler than in decimal: each digit of the multiplier is only 0 or 1, so every partial row is either zero or the multiplicand itself, shifted one place left per row (0 × 0 = 0, 0 × 1 = 0, 1 × 0 = 0, 1 × 1 = 1). The partial rows are then added. The tedium of adding many rows is where mistakes creep in — and remember that a 0 to the right of a 1 is significant, while leading 0s are not: 10101100 = 0010101100 ≠ 1010110000.</p>
+        <h3 class="text-lg font-bold mt-6 mb-2">Binary Division</h3>
+        <p class="text-slate-600">Binary division is long division with binary subtraction: at each step the divisor either fits into the current part of the dividend (quotient bit 1) or it does not (quotient bit 0), and the remainder carries on. The calculator above reports the quotient together with any remainder, just as in whole-number long division.</p>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6 mt-6">
+        <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div class="space-y-4 text-slate-600">
+          <div><h3 class="font-semibold text-slate-800">How do you convert binary to decimal?</h3><p>Read the binary number from right to left: the rightmost digit is worth 2<sup>0</sup>, the next 2<sup>1</sup>, then 2<sup>2</sup>, and so on. Add up the values of the positions that hold a 1. For example, 10111 = 16 + 4 + 2 + 1 = 23.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How do you convert decimal to binary?</h3><p>Find the largest power of 2 that fits in the number, subtract it, and repeat with the remainder until nothing is left. Write 1 in each place value that was used and 0 in the rest: 18 = 16 + 2, so 18 is 10010 in binary.</p></div>
+          <div><h3 class="font-semibold text-slate-800">How does binary addition work?</h3><p>Exactly like decimal addition, except you carry when a column adds up to 2 instead of 10: 0 + 0 = 0, 0 + 1 = 1, 1 + 0 = 1, and 1 + 1 = 0 with a 1 carried to the next column.</p></div>
+          <div><h3 class="font-semibold text-slate-800">Why do computers use binary?</h3><p>Because digital circuits only need to distinguish two states — on and off, true and false, voltage present or absent. Hardware that detects 2 states is far simpler and more reliable than hardware that would need to detect the 10 states of decimal digits.</p></div>
+        </div>
+      </section>
+    </div>
+    <aside class="space-y-6">
+      <div class="bg-slate-100 border border-dashed border-slate-300 rounded-xl text-slate-400 text-center py-10">AdSense Space (300x250)</div>
+      <div class="bg-white rounded-xl shadow p-5">
+        <h3 class="font-bold mb-3">Related Calculators</h3>
+        <ul class="space-y-2 text-[#3F51B5] font-medium">
+          <li><a class="hover:underline" href="/hex">Hex Calculator</a></li>
+          <li><a class="hover:underline" href="/ip-subnet">IP Subnet Calculator</a></li>
+          <li><a class="hover:underline" href="/math">All Math Calculators</a></li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-xl shadow p-5 text-sm text-slate-600">
+        <h3 class="font-bold text-slate-800 mb-2">Exact at any size</h3>
+        <p>All arithmetic here is exact integer arithmetic, so 64-bit values (and longer) convert and compute without the rounding that floating-point tools show at that scale.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+<footer class="bg-slate-800 text-slate-300 mt-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+    <a class="hover:underline" href="/about">About Us</a>
+    <a class="hover:underline" href="/sitemap">Sitemap</a>
+    <a class="hover:underline" href="/terms">Terms of Use</a>
+    <a class="hover:underline" href="/privacy">Privacy Policy</a>
+    <span class="ml-auto">© 2026 CalcNova</span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+function binPrint(v) { /* reference quirk: minimal digits, with a 0 prepended when the value has >= 2 one-bits */
+  const neg = v < 0n;
+  let s = (neg ? -v : v).toString(2);
+  let ones = 0;
+  for (const ch of s) if (ch === '1') ones++;
+  if (ones >= 2) s = '0' + s;
+  return (neg ? '-' : '') + s;
+}
+function parseBin(s) { /* returns BigInt or null when invalid; empty counts as 0 */
+  s = s.trim();
+  if (s === '') return 0n;
+  if (!/^[01]+$/.test(s)) return null;
+  return BigInt('0b' + s);
+}
+function showRes(id, html) { const e = document.getElementById(id); e.innerHTML = html; e.classList.remove('hidden'); }
+function resBlock(lines, share) {
+  return '<div class="bg-[#3F51B5] text-white font-bold rounded-lg px-4 py-3"><div class="text-base mb-1">Result</div>' +
+    lines.map(l => '<div class="eq">' + l + '</div>').join('') + '</div>' + share;
+}
+function opGlyph(op) { return op === '-' ? '−' : op === 'x' ? '×' : op === '/' ? '÷' : '+'; }
+function calcOp() {
+  const n1 = document.getElementById('number1').value, n2 = document.getElementById('number2').value;
+  const op = document.getElementById('c2op').value;
+  const a = parseBin(n1), b = parseBin(n2);
+  if (a === null || b === null) return showRes('resOp', resBlock(['Please enter binary values using only the digits 0 and 1.'], shareOp()));
+  if (op === '/' && b === 0n) return showRes('resOp', resBlock(['Cannot divide by zero.'], shareOp()));
+  const g = opGlyph(op);
+  let rb, rd;
+  if (op === '+') { rb = binPrint(a + b); rd = (a + b).toString(); }
+  else if (op === '-') { rb = binPrint(a - b); rd = (a - b).toString(); }
+  else if (op === 'x') { rb = binPrint(a * b); rd = (a * b).toString(); }
+  else {
+    const q = a / b, r = a % b;
+    rb = binPrint(q) + (r !== 0n ? ' Remainder : ' + binPrint(r) : '');
+    rd = q.toString() + (r !== 0n ? ' Remainder : ' + r.toString() : '');
+  }
+  showRes('resOp', resBlock([
+    'Binary value: ' + n1.trim() + ' ' + g + ' ' + n2.trim() + ' = ' + rb,
+    'Decimal value: ' + a.toString() + ' ' + g + ' ' + b.toString() + ' = ' + rd], shareOp()));
+}
+function calcB2d() {
+  const s = document.getElementById('b2dnumber1').value;
+  const v = parseBin(s);
+  if (v === null) return showRes('resB2d', resBlock(['Please enter a binary value using only the digits 0 and 1.'], shareB2d()));
+  showRes('resB2d', resBlock(['Decimal value: ' + v.toString()], shareB2d()));
+}
+function calcD2b() {
+  const s = document.getElementById('d2bnumber1').value.trim();
+  const m = /^[+-]?(\d+(\.\d*)?|\.\d+)$/.test(s);
+  if (!m) return showRes('resD2b', resBlock(['Please enter a decimal value.'], shareD2b()));
+  const neg = s.startsWith('-');
+  const intPart = s.replace(/^[+-]/, '').split('.')[0] || '0';
+  let v = BigInt(intPart);
+  if (neg) v = -v;
+  showRes('resD2b', resBlock(['Binary value: ' + binPrint(v)], shareD2b()));
+}
+function shareBtn(fn, span) {
+  return '<div class="mt-4"><button onclick="' + fn + '" class="text-sm bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg px-3 py-1.5 font-medium">Copy link to this calculation</button> <span id="' + span + '" class="text-sm text-green-700 font-medium"></span></div>';
+}
+function shareOp() { return shareBtn('copyOp()', 'shOp'); }
+function shareB2d() { return shareBtn('copyB2d()', 'shB2d'); }
+function shareD2b() { return shareBtn('copyD2b()', 'shD2b'); }
+function doShare(params, span) {
+  const u = new URL(location.href); u.search = ''; u.hash = '';
+  for (const k in params) u.searchParams.set(k, params[k]);
+  const done = () => { document.getElementById(span).textContent = 'Link copied!'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u.toString()).then(done, done); else { prompt('Copy this link:', u.toString()); done(); }
+}
+function copyOp() { doShare({ calctype: 'op', number1: document.getElementById('number1').value, c2op: document.getElementById('c2op').value, number2: document.getElementById('number2').value }, 'shOp'); }
+function copyB2d() { doShare({ calctype: 'b2d', b2dnumber1: document.getElementById('b2dnumber1').value }, 'shB2d'); }
+function copyD2b() { doShare({ calctype: 'd2b', d2bnumber1: document.getElementById('d2bnumber1').value }, 'shD2b'); }
+function clearOp() { document.getElementById('number1').value = '10101010'; document.getElementById('number2').value = '11001100'; document.getElementById('c2op').value = '+'; hideRes('resOp'); }
+function clearB2d() { document.getElementById('b2dnumber1').value = '10101010'; hideRes('resB2d'); }
+function clearD2b() { document.getElementById('d2bnumber1').value = '170'; hideRes('resD2b'); }
+function hideRes(id) { const r = document.getElementById(id); r.classList.add('hidden'); r.innerHTML = ''; }
+(function () {
+  const q = new URLSearchParams(location.search);
+  const ct = q.get('calctype');
+  if (ct === 'op') {
+    if (q.has('number1')) document.getElementById('number1').value = q.get('number1');
+    if (q.has('number2')) document.getElementById('number2').value = q.get('number2');
+    if (q.has('c2op')) document.getElementById('c2op').value = q.get('c2op');
+    calcOp();
+  } else if (ct === 'b2d') {
+    if (q.has('b2dnumber1')) document.getElementById('b2dnumber1').value = q.get('b2dnumber1');
+    calcB2d();
+  } else if (ct === 'd2b') {
+    if (q.has('d2bnumber1')) document.getElementById('d2bnumber1').value = q.get('d2bnumber1');
+    calcD2b();
+  }
+})();
+</script>
+
+</body>
+  </html>
